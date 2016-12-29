@@ -2,9 +2,6 @@
 var content = document.getElementById("content");
 var messages = [];
 var displayMessages = function() {
-  $.get("messages", function(data, status){
-
-  });
   $.ajax({
     url: 'messages',
     type: 'GET',
