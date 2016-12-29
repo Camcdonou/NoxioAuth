@@ -12,15 +12,10 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.springframework-version>4.3.5.RELEASE</org.springframework-version>
     </properties>
     
     <dependencies>
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
-            <version>7.0</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.infpls.noxio.auth.module</groupId>
             <artifactId>test-one</artifactId>
@@ -31,6 +26,27 @@
             <artifactId>test-two</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>7.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>jstl</artifactId>
+          <version>1.2</version>
+        </dependency>
+        <dependency> 
+          <groupId>org.springframework</groupId> 
+          <artifactId>spring-context</artifactId> 
+          <version>${org.springframework-version}</version>
+        </dependency>
+        <dependency> 
+            <groupId>org.springframework</groupId> 
+            <artifactId>spring-webmvc</artifactId> 
+            <version>${org.springframework-version}</version> 
+        </dependency> 
     </dependencies>
 
     <build>
