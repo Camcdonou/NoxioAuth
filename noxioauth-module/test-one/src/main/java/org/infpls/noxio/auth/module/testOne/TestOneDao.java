@@ -19,19 +19,17 @@ public class TestOneDao {
       return messages;
   }
   
-  public ReturnStatus putMessage(final TestMessageOne m) {
+  public void putMessage(final TestMessageOne m) {
     messages.add(new TestMessageOne(mid++,m.getAuthor(),m.getMessage()));
-    return new ReturnStatus(0);
   }
   
-  public ReturnStatus deleteMessage(final TestMessageOne m) {
+  public void deleteMessage(final TestMessageOne m) throws MessageException {
     for(int i=0;i<messages.size();i++) {
       if(messages.get(i).getId()==m.getId()) {
         messages.remove(i);
-        return new ReturnStatus(0);
       }
     }
-    return new ReturnStatus(1, "The requested message could not be deleted as it not longer exists!");
+    throw new MessageException("Cannot delete message as it no longer exists.");
   }
   
 }

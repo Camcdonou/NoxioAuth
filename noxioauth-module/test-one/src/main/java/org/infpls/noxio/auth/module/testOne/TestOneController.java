@@ -25,14 +25,21 @@ public class TestOneController {
     public @ResponseBody ResponseEntity putMessage(@RequestBody final String params) {
         final Gson gson = new GsonBuilder().create();
         final TestMessageOne m = gson.fromJson(params, TestMessageOne.class);
-        return new ResponseEntity(gson.toJson(messageDao.putMessage(m)), HttpStatus.OK);
+        messageDao.putMessage(m);
+        return new ResponseEntity(HttpStatus.OK);
     }
     
    @RequestMapping(value = "/messages", method = RequestMethod.DELETE, produces = "application/json")
     public @ResponseBody ResponseEntity deleteMessage(@RequestBody final String params) {
         final Gson gson = new GsonBuilder().create();
         final TestMessageOne m = gson.fromJson(params, TestMessageOne.class);
-        return new ResponseEntity(gson.toJson(messageDao.deleteMessage(m)), HttpStatus.OK);
+        try {
+          messageDao.deleteMessage(m);
+        }
+        catch(MessageException e) {
+          return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.OK);
     }
   
 }
