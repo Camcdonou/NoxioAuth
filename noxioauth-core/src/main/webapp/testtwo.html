@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>Robbie Rotten Fan Live Chat</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    
+    
+    <body style="width: 100%; height: 100%; background: url(img/rr2.png); background-size: contain; background-repeat: no-repeat;">
+      <div>
+          <input type="text" id="messageinput"/>
+      </div>
+      <div>
+          <button type="button" onclick="openSocket();" >Open</button>
+          <button type="button" onclick="send();" >Send</button>
+          <button type="button" onclick="closeSocket();" >Close</button>
+      </div>
+      <!-- Server responses get written here -->
+      <div id="messages"></div>
+      
+      <script src="js/lib/jquery/jquery-3.1.1.min.js"></script>
+      <script src="js/app/testtwo/testtwo.js"></script>
+    </body>        
+</html>
