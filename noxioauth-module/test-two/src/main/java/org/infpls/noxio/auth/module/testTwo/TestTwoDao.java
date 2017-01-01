@@ -5,10 +5,13 @@
  */
 package org.infpls.noxio.auth.module.testTwo;
 
+import org.springframework.stereotype.Component;
+
 /**
  *
  * @author inferno
  */
+@Component
 public class TestTwoDao {
   
   private final UserDao userDao;
