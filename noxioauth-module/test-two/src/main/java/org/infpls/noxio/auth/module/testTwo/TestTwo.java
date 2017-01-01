@@ -1,41 +1,50 @@
 package org.infpls.noxio.auth.module.testTwo;
 
 import java.io.IOException;
-
 import java.util.*;
- 
-import javax.websocket.*;
-import javax.websocket.server.ServerEndpoint;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.springframework.web.socket.CloseStatus;
 
-/* These are INSTANCED in a weird way not a base container type thing */
+public class TestTwo extends TextWebSocketHandler {
+    
+//    @Autowired
+    private Map<String, SessionInfo> sessionInfo = new HashMap();
+    
+    @Autowired
+    private TestTwoDao testTwoDao;
 
-@ServerEndpoint("/livemessages") 
-public class TestTwo {
-    private final Map<String, SessionInfo> sessionInfo = new HashMap();
-    private final TestTwoDao testTwoDao = new TestTwoDao();
-
-    @OnOpen
-    public void onOpen(Session session) {
-        try { session.
-            sessionInfo.put(session.getId(), new SessionInfo(session, testTwoDao));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) {
+      try {
+        sessionInfo.put(session.getId(), new SessionInfo(session, testTwoDao));
+      }
+      catch(IOException e) {
+        e.printStackTrace();
+      }
+    }
+  
+    @Override
+    public void handleTextMessage(WebSocketSession session, TextMessage message) {
+      try {
+          SessionInfo si = sessionInfo.get(session.getId());
+          si.handlePacket(message.getPayload());
+      } catch (IOException ex) {
+          ex.printStackTrace();
+      }
+    }
+    
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+      try {
+        SessionInfo si = sessionInfo.get(session.getId());
+        si.close();
+      }
+      catch(IOException e) {
+        e.printStackTrace();
+      }
     }
 
-    @OnMessage
-    public void onMessage(String p, Session session) {
-        try {
-            SessionInfo si = sessionInfo.get(session.getId());
-            si.handlePacket(p);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
- 
-    @OnClose
-    public void onClose(Session session) throws IOException {
-      SessionInfo si = sessionInfo.get(session.getId());
-      si.close();
-    }
 }

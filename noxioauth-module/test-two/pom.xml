@@ -10,6 +10,11 @@
   <packaging>jar</packaging>
   <name>NoxioAuth::Module::Test Two</name>
   
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <org.springframework-version>4.3.5.RELEASE</org.springframework-version>
+  </properties>
+  
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -23,6 +28,27 @@
       <version>7.0</version>
       <type>jar</type>
     </dependency>
+    <dependency> 
+      <groupId>org.springframework</groupId> 
+      <artifactId>spring-context</artifactId> 
+      <version>${org.springframework-version}</version>
+    </dependency>
+    <dependency> 
+        <groupId>org.springframework</groupId> 
+        <artifactId>spring-webmvc</artifactId> 
+        <version>${org.springframework-version}</version> 
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>${org.springframework-version}</version>
+      <type>jar</type>
+    </dependency>
+    <dependency> 
+        <groupId>org.springframework</groupId> 
+        <artifactId>spring-websocket</artifactId> 
+        <version>${org.springframework-version}</version> 
+    </dependency> 
   </dependencies>
   
   <build>
@@ -37,8 +63,5 @@
       </plugin>
     </plugins>
   </build>
-  
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+
 </project>

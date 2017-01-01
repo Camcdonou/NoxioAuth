@@ -1,16 +1,17 @@
 package org.infpls.noxio.auth.module.testTwo;
 
 import java.io.IOException;
-import javax.websocket.*;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.TextMessage;
 
 public class SessionInfo {
-  private final Session session;
+  private final WebSocketSession session;
   private final TestTwoDao dao;
   
   private String username;
   private SessionState sessionState;
  
-  public SessionInfo(Session s, TestTwoDao t) throws IOException {
+  public SessionInfo(WebSocketSession s, TestTwoDao t) throws IOException {
     session = s;
     dao = t;
     
@@ -24,7 +25,7 @@ public class SessionInfo {
   }
   
   public void sendPacket(final String p) throws IOException {
-    session.getBasicRemote().sendText(p);
+    session.sendMessage(new TextMessage(p));
   }
   
   /* State info
