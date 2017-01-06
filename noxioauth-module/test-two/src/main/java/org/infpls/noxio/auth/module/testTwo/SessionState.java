@@ -16,6 +16,10 @@ public abstract class SessionState {
     sessionInfo.sendPacket(p);
   }
   
-  public abstract void close() throws IOException;
+  public abstract void destroy() throws IOException;
+  
+  public final void close() throws IOException {
+    sessionInfo.close();
+  }
   
 }
