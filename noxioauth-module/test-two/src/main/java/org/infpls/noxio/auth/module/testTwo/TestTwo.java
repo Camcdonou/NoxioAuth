@@ -18,6 +18,7 @@ public class TestTwo extends TextWebSocketHandler {
         testTwoDao.getSessionInfoDao().createSessionInfo(session);
       }
       catch(IOException e) {
+        System.err.println("Exception thrown in '" + this.toString() + "' ::: afterConnectionEstablished");
         e.printStackTrace();
       }
     }
@@ -27,8 +28,10 @@ public class TestTwo extends TextWebSocketHandler {
       try {
         SessionInfo si = testTwoDao.getSessionInfoDao().getSessionInfo(session);
         si.handlePacket(message.getPayload());
-      } catch (IOException ex) {
-          ex.printStackTrace();
+      }
+      catch(IOException e) {
+        System.err.println("Exception thrown in '" + this.toString() + "' ::: handleTextMessage");
+        e.printStackTrace();
       }
     }
     
@@ -38,6 +41,7 @@ public class TestTwo extends TextWebSocketHandler {
         testTwoDao.getSessionInfoDao().destroySessionInfo(session);
       }
       catch(IOException ex) {
+        System.err.println("Exception thrown in '" + this.toString() + "' ::: afterConnectionClosed");
         ex.printStackTrace();
       }
     }

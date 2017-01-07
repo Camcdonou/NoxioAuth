@@ -11,7 +11,7 @@ public class Chat extends SessionState {
     
     chatDao = cd;
     
-    cd.joinChat(this);
+    cd.joinChat(this); //Pass SessionInfo instead of SessionState?
     
     sendPacket("c03;");
   }
@@ -24,12 +24,17 @@ public class Chat extends SessionState {
      < c05 send info
   */
   
+  @Override
   public void handlePacket(final String p) throws IOException {
-    final String params[] = p.split(";");
-    switch(params[0]) {
-      case "c00" : { recieveMessage(params); break; }
-      case "c01" : { close(); break; }
-      default : { close(); break; }
+    try {
+      final String params[] = p.split(";");
+      switch(params[0]) {
+        case "c00" : { recieveMessage(params); break; }
+        case "c01" : { close(); break; }
+        default : { close("Invalid data: " + p); break; }
+      }
+    } catch(IOException ex) {
+      close(ex);
     }
   }
   
@@ -61,6 +66,7 @@ public class Chat extends SessionState {
     return sessionInfo.getUserName();
   }
   
+  @Override
   public void destroy() throws IOException {
     chatDao.leaveChat(this);
   }

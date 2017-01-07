@@ -26,13 +26,18 @@ public class Authenticate extends SessionState {
      < a06 create account success
   */
   
+  @Override
   public void handlePacket(final String p) throws IOException {
-    final String params[] = p.split(";");
-    switch(params[0]) {
-      case "a00" : { createUser(params); break; }
-      case "a01" : { authenticate(params); break; }
-      case "a02" : { close(); break; }
-      default : { close(); break; }
+    try {
+      final String params[] = p.split(";");
+      switch(params[0]) {
+        case "a00" : { createUser(params); break; }
+        case "a01" : { authenticate(params); break; }
+        case "a02" : { close(); break; }
+        default : { close("Invalid data: " + p); break; }
+      }
+    } catch(IOException ex) {
+      close(ex);
     }
   }
   
@@ -60,6 +65,7 @@ public class Authenticate extends SessionState {
     }
   }
   
+  @Override
   public void destroy() throws IOException {
     
   }

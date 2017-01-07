@@ -2,6 +2,8 @@
     <head>
         <title>Robbie Rotten Fan Live Chat</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <link rel="stylesheet" type="text/css" href="css/errorModal.css">
     </head>
     
     
@@ -33,7 +35,25 @@
         <div id="chatwindow"></div>
       </div>
       
+      <!-- Error Modal -->
+      <div id="errorModal" class="error-modal">
+        <!-- Error Modal Content -->
+        <div class="error-modal-content">
+          <div class="error-modal-header">
+            <span id="errorModalClose" class="close">&times;</span>
+            <h2 id="errorModalTitle">Error</h2>
+          </div>
+          <div id="errorModalMessage" class="error-modal-body">
+            <p>...</p>
+          </div>
+          <div class="error-modal-footer">
+            <h3 id="errorModalFooter">...</h3>
+          </div>
+        </div>
+      </div>
+      
       <script src="js/lib/jquery/jquery-3.1.1.min.js"></script>
+      <script src="js/app/error/error.js"></script>
       <script src="js/app/testtwo/testtwo.js"></script>
     </body>        
 </html>

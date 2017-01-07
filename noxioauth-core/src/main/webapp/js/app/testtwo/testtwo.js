@@ -142,6 +142,8 @@ var handlePacket = function(data) {
     case "c03" : { pageChat(); break; }
     case "c04" : { pageChatMessage(params[1],params[2]); break; }
     case "c05" : { pageInfoMessage(params[1]); break; }
+    case "x00" : { error.showError("Connection Error",params[1]); break; }
+    case "x01" : { error.showErrorException("Server Exception",params[1],params[2]); break; }
     default : { close(); pageConnect("##ERROR## Invalid data recieved from server."); break; }
   }
 };

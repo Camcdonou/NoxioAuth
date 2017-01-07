@@ -18,8 +18,20 @@ public abstract class SessionState {
   
   public abstract void destroy() throws IOException;
   
+  
+  /* Normal connection close */
   public final void close() throws IOException {
     sessionInfo.close();
+  }
+  
+  /* Error connection close */
+  public final void close(final String message) throws IOException {
+    sessionInfo.close(message);
+  }
+  
+  /* Exception connection close */
+  public final void close(final Exception ex) throws IOException {
+    sessionInfo.close(ex);
   }
   
 }
