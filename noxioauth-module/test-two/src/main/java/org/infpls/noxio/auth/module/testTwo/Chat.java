@@ -11,36 +11,63 @@ public class Chat extends SessionState {
     
     chatDao = cd;
     
-    cd.joinChat(this);
+    cd.joinChat(this); //Pass SessionInfo instead of SessionState?
     
-    sendPacket("Connection State: Chat.");
+    sendPacket("c03;");
   }
   
-  /* Packet Info
-     - c00 send message
-     - c01 close
-     - c02 lise online users
+  /* Packet Info [ < outgoing | > incoming ]
+     > c00 recieve message
+     > c01 close
+     < c03 chat state
+     < c04 chat send message
+     < c05 send info
   */
   
+  @Override
   public void handlePacket(final String p) throws IOException {
-    final String params[] = p.split(";");
-    switch(params[0]) {
-      case "c00" : { sendMessage(params); break; }
-      case "c01" : { sendPacket("Disconnect by user."); sessionInfo.close(); break; }
-      case "c02" : { sendPacket(chatDao.listUsers()); break; }
-      default : { sendPacket("Invalid request: Disconnect by Server."); sessionInfo.close(); break; }
+    try {
+      final String params[] = p.split(";");
+      switch(params[0]) {
+        case "c00" : { recieveMessage(params); break; }
+        case "c01" : { close(); break; }
+        default : { close("Invalid data: " + p); break; }
+      }
+    } catch(IOException ex) {
+      close(ex);
     }
   }
   
-  private void sendMessage(final String params[]) throws IOException {
-    chatDao.sendMessage(sessionInfo.getUserName(), params[1]);
+  private void recieveMessage(final String params[]) throws IOException {
+    if(params[1].startsWith("/")) {
+      switch(params[1].trim()) {
+        case "/list" : { sendInfo(chatDao.listUsers()); break; }
+        case "/online" : { sendInfo(chatDao.listUsers()); break; }
+        case "/help" : { sendInfo("Valid commands /online /list /help /close /disconnect"); break; }
+        case "/close" : { close(); break; }
+        case "/disconnect" : { close(); break; }
+        default : { sendInfo("Invalid command. Use /help for more."); break; }
+      }
+    }
+    else {
+      chatDao.recieveMessage(sessionInfo.getUserName(), params[1]);
+    }
+  }
+  
+  public void sendMessage(final String username, final String message) throws IOException {
+    sendPacket("c04;" + username + ";" + message);
+  }
+  
+  public void sendInfo(final String message) throws IOException {
+    sendPacket("c05;" + message);
   }
   
   public String getUserName() {
     return sessionInfo.getUserName();
   }
   
-  public void close() throws IOException { //TODO: closing is really bad and confusing, pls fix kthx
+  @Override
+  public void destroy() throws IOException {
     chatDao.leaveChat(this);
   }
   

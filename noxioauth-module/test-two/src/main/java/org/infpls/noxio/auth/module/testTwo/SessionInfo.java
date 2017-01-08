@@ -1,8 +1,7 @@
 package org.infpls.noxio.auth.module.testTwo;
 
-import java.io.IOException;
-import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.TextMessage;
+import java.io.*;
+import org.springframework.web.socket.*;
 
 public class SessionInfo {
   private final WebSocketSession session;
@@ -14,10 +13,8 @@ public class SessionInfo {
   public SessionInfo(WebSocketSession s, TestTwoDao t) throws IOException {
     session = s;
     dao = t;
-    
-    sendPacket("Connected to server.");
-    
-    sessionState = new Authenticate(this, dao.getUserDao());
+        
+    sessionState = new Authenticate(this, dao.getUserDao(), dao.getSessionInfoDao());
   }
   
   public void handlePacket(final String p) throws IOException {
@@ -52,10 +49,27 @@ public class SessionInfo {
     return username;
   }
   
+  public void destroy() throws IOException {
+    sessionState.destroy();
+  }
+  
+  /* Normal connection close */
   public void close() throws IOException {
-    sessionState.close();
-    if(session.isOpen()) {
-      session.close();
-    }
+    session.close();
+  }
+  
+  /* Error connection close */
+  public void close(final String message) throws IOException {
+    sendPacket("x00;" + message);
+    session.close(CloseStatus.NOT_ACCEPTABLE);
+  }
+  
+  /* Exception connection close */
+  public void close(final Exception ex) throws IOException {
+    StringWriter sw = new StringWriter();
+    PrintWriter pw = new PrintWriter(sw);
+    ex.printStackTrace(pw);
+    sendPacket("x01;" + ex.getMessage() + ";" + sw.toString());
+    session.close(CloseStatus.NOT_ACCEPTABLE);
   }
 }

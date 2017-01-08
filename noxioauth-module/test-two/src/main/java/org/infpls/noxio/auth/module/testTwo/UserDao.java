@@ -10,15 +10,19 @@ public class UserDao {
     users = new HashMap();
   }
   
-  public boolean createUser(final String username, final String password) {
-    if(users.get(username) != null)
+  public synchronized boolean createUser(final String username, final String password) {
+    if(users.get(username.toLowerCase()) != null) {
       return false;
-    else
-      users.put(username,password); //TODO: this is 7 years of pox on your family
+    }
+    users.put(username.toLowerCase(),password); //TODO: this is 7 years of pox on your family
     return true;
   }
   
-  public boolean authenticate(final String username, final String password) {
-    return users.get(username).equals(password);
+  public synchronized boolean authenticate(final String username, final String password) { //check already logged in?
+    final String un = users.get(username.toLowerCase());
+    if(un != null) {
+      return un.equals(password);
+    }
+    return false;
   }
 }

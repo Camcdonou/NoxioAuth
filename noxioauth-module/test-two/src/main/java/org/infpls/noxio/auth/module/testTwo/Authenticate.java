@@ -4,53 +4,69 @@ import java.io.IOException;
 
 public class Authenticate extends SessionState {
   
-  private UserDao userDao;
+  private final UserDao userDao;
+  private final SessionInfoDao sessionInfoDao;
   
-  public Authenticate(SessionInfo si, UserDao ud) throws IOException {
+  public Authenticate(SessionInfo si, UserDao ud, SessionInfoDao sid) throws IOException {
     super(si);
     
     userDao = ud;
+    sessionInfoDao = sid;
     
-    sendPacket("Connection State: Authentication.");
+    sendPacket("a04;");
   }
   
-  /* Packet Info
-     - a00 create account 
-     - a01 login
-     - a02 close
+  /* Packet Info [ < outgoing | > incoming ]
+     > a00 create account
+     > a01 login
+     > a02 close
+     < a03 create account error
+     < a04 login state
+     < a05 login account error
+     < a06 create account success
   */
   
+  @Override
   public void handlePacket(final String p) throws IOException {
-    final String params[] = p.split(";");
-    switch(params[0]) {
-      case "a00" : { createUser(params); break; }
-      case "a01" : { authenticate(params); break; }
-      case "a02" : { sendPacket("Disconnect by user."); sessionInfo.close(); break; }
-      default : { sendPacket("Invalid request: Disconnect by Server."); sessionInfo.close(); break; }
+    try {
+      final String params[] = p.split(";");
+      switch(params[0]) {
+        case "a00" : { createUser(params); break; }
+        case "a01" : { authenticate(params); break; }
+        case "a02" : { close(); break; }
+        default : { close("Invalid data: " + p); break; }
+      }
+    } catch(IOException ex) {
+      close(ex);
     }
   }
   
   private void createUser(final String params[]) throws IOException {
-    if(userDao.createUser(params[1], params[2])) {
-      sendPacket("User '" + params[1] + "' created.");
-    }    
+    if(userDao.createUser(params[1].toLowerCase(), params[2])) {
+      sendPacket("a06;User '" + params[1].toLowerCase() + "' created.");
+    }
     else {
-      sendPacket("User '" + params[1] + "' already exists.");
+      sendPacket("a03;User '" + params[1].toLowerCase() + "' already exists.");
     }
   }
   
   private void authenticate(final String params[]) throws IOException {
-    if(userDao.authenticate(params[1], params[2])) {
-      sendPacket("Logged in as '" + params[1] + "'.");
-      sessionInfo.setUserName(params[1]);
-      sessionInfo.changeState(1);
+    if(userDao.authenticate(params[1].toLowerCase(), params[2])) {
+      if(sessionInfoDao.getSessionInfoByUsername(params[1].toLowerCase()) == null) {
+        sessionInfo.setUserName(params[1].toLowerCase());
+        sessionInfo.changeState(1);
+      }
+      else {
+        sendPacket("a05;User '" + params[1].toLowerCase() + "' is already logged in");
+      }
     }
     else {
-      sendPacket("Incorrect username or password.");
+      sendPacket("a05;Incorrect username or password");
     }
   }
   
-  public void close() throws IOException {
+  @Override
+  public void destroy() throws IOException {
     
   }
   

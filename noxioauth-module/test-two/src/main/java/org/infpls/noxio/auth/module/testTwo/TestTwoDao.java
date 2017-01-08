@@ -1,25 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.infpls.noxio.auth.module.testTwo;
 
 import org.springframework.stereotype.Component;
 
-/**
- *
- * @author inferno
- */
 @Component
 public class TestTwoDao {
   
   private final UserDao userDao;
   private final ChatDao chatDao;
+  private final SessionInfoDao sessionInfoDao;
   
   public TestTwoDao() {
     userDao = new UserDao();
     chatDao = new ChatDao();
+    sessionInfoDao = new SessionInfoDao(this);
   }
 
   public UserDao getUserDao() {
@@ -28,6 +21,10 @@ public class TestTwoDao {
   
   public ChatDao getChatDao() {
     return chatDao;
+  }
+  
+  public SessionInfoDao getSessionInfoDao() {
+    return sessionInfoDao;
   }
   
 }
