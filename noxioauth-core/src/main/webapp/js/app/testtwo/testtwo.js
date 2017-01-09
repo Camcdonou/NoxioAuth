@@ -3,11 +3,12 @@ var wsInitial;
 
 var establish = function() {
     wsInitial = false;
-    connect("68.34.229.231");
+    connect("localhost");
 
     var re = function() {
       if(!isConnected() && wsInitial === false) {
-        connect("localhost");
+        connect("68.34.229.231");
+
       }
       else {
         setTimeout(re, 1000);

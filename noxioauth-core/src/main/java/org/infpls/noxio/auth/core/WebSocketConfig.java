@@ -1,6 +1,6 @@
 package org.infpls.noxio.auth.core;
 
-import org.infpls.noxio.auth.module.testTwo.TestTwo;
+import org.infpls.noxio.auth.module.auth.websocket.AuthWebSocket;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -14,12 +14,12 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(TestTwoHandler(), "/livemessages");
+        registry.addHandler(AuthWebSocketHandler(), "/auth");
     }
 
     @Bean
-    public WebSocketHandler TestTwoHandler() {
-        return new TestTwo();
+    public WebSocketHandler AuthWebSocketHandler() {
+        return new AuthWebSocket();
     }
 
 }

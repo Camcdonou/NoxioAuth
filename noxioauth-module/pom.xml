@@ -10,8 +10,7 @@
   <packaging>pom</packaging>
   <name>NoxioAuth::Module</name>
   <modules>
-    <module>test-one</module>
-    <module>test-two</module>
+    <module>auth</module>
   </modules>
   
 </project>

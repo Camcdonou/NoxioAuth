@@ -5,10 +5,10 @@
                              http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.infpls.noxio.auth.module</groupId>
-  <artifactId>test-one</artifactId>
+  <artifactId>auth</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
-  <name>NoxioAuth::Module::Test One</name>
+  <name>NoxioAuth::Module::Auth</name>
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,6 +21,12 @@
       <artifactId>junit</artifactId>
       <version>4.12</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-web-api</artifactId>
+      <version>7.0</version>
+      <type>jar</type>
     </dependency>
     <dependency> 
       <groupId>org.springframework</groupId> 
@@ -37,6 +43,11 @@
       <artifactId>spring-beans</artifactId>
       <version>${org.springframework-version}</version>
       <type>jar</type>
+    </dependency>
+    <dependency> 
+        <groupId>org.springframework</groupId> 
+        <artifactId>spring-websocket</artifactId> 
+        <version>${org.springframework-version}</version> 
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>

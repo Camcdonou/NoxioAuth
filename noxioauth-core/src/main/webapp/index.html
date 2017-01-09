@@ -1,12 +1,51 @@
 <html>
     <head>
-        <title>Robbie Rotten Fan Club</title>
+        <title>Noxio</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <link rel="stylesheet" type="text/css" href="css/app.css">
+        <link rel="stylesheet" type="text/css" href="css/errorModal.css">
     </head>
     
     <body>
-      <a href="testone.html">Test Page 1</a>
-      <a href="testtwo.html">Test Page 2</a>
+      
+      <div id="connection" class="main-menu-container">
+        <div id="connection-info" class="main-menu lg" onclick="menu.items.login.show()">...</div>
+      </div>
+      
+      <div id="authenticate" class="main-menu-container" style="display: none;">
+        <div id="login" class="main-menu btn lg" onclick="menu.items.login.show()">Login</div>
+        <div id="login-username" class="main-menu inp sm"><input id="login-username-input" class="main-menu-input" type="text" placeholder="Username"/></div>
+        <div id="login-password" class="main-menu inp sm"><input id="login-password-input" class="main-menu-input" type="password" placeholder="Password"></div>
+          <div id="login-login" class="main-menu btn sm">Login</div>
+        <div id="create" class="main-menu btn lg" onclick="menu.items.create.show()">New User</div>
+          <div id="create-username" class="main-menu inp sm"><input id="create-username-input" class="main-menu-input" type="text" placeholder="Username"/></div>
+          <div id="create-password" class="main-menu inp sm"><input id="create-username-input" class="main-menu-input" type="text" placeholder="Password"/></div>
+          <div id="create-login" class="main-menu btn sm">Create</div>
+        <div id="about" class="main-menu btn lg" onclick="menu.items.about.show()">About</div>
+          <div id="about-about" class="main-menu sm">Noxio | InDev 0.0 | © InfernoPlus</div>
+      </div>
+      
+      <!-- Error Modal -->
+      <div id="errorModal" class="error-modal">
+        <!-- Error Modal Content -->
+        <div class="error-modal-content">
+          <div class="error-modal-header">
+            <span id="errorModalClose" class="close">&times;</span>
+            <h2 id="errorModalTitle">Error</h2>
+          </div>
+          <div id="errorModalMessage" class="error-modal-body">
+            <p>...</p>
+          </div>
+          <div class="error-modal-footer">
+            <h3 id="errorModalFooter">...</h3>
+          </div>
+        </div>
+      </div>
+      
+      <script src="js/app/error/error.js"></script>
+      <script src="js/app/menu/menu.js"></script>
+      <script src="js/app/app.js"></script>
       <script src="js/lib/jquery/jquery-3.1.1.min.js"></script>
     </body>        
 </html>

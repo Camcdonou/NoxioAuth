@@ -18,12 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>org.infpls.noxio.auth.module</groupId>
-            <artifactId>test-one</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.infpls.noxio.auth.module</groupId>
-            <artifactId>test-two</artifactId>
+            <artifactId>auth</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
