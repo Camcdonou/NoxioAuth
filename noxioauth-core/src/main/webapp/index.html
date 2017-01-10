@@ -9,21 +9,21 @@
     
     <body>
       
-      <div id="connection" class="main-menu-container">
-        <div id="connection-info" class="main-menu lg" onclick="menu.items.login.show()">...</div>
+      <div id="connect" class="main-menu-container">
+        <div id="connect-info" class="main-menu lg" onclick="menu.items.login.show()">...</div>
       </div>
       
-      <div id="authenticate" class="main-menu-container" style="display: none;">
-        <div id="login" class="main-menu btn lg" onclick="menu.items.login.show()">Login</div>
-        <div id="login-username" class="main-menu inp sm"><input id="login-username-input" class="main-menu-input" type="text" placeholder="Username"/></div>
-        <div id="login-password" class="main-menu inp sm"><input id="login-password-input" class="main-menu-input" type="password" placeholder="Password"></div>
-          <div id="login-login" class="main-menu btn sm">Login</div>
-        <div id="create" class="main-menu btn lg" onclick="menu.items.create.show()">New User</div>
-          <div id="create-username" class="main-menu inp sm"><input id="create-username-input" class="main-menu-input" type="text" placeholder="Username"/></div>
-          <div id="create-password" class="main-menu inp sm"><input id="create-username-input" class="main-menu-input" type="text" placeholder="Password"/></div>
-          <div id="create-login" class="main-menu btn sm">Create</div>
-        <div id="about" class="main-menu btn lg" onclick="menu.items.about.show()">About</div>
-          <div id="about-about" class="main-menu sm">Noxio | Development v0.1 | © InfernoPlus</div>
+      <div id="auth" class="main-menu-container" style="display: none;">
+        <div id="auth-login" class="main-menu btn lg" onclick="menu.auth.items.login.show()">Login</div>
+        <div id="auth-login-username" class="main-menu inp sm"><input id="auth-login-username-input" class="main-menu-input" type="text" placeholder="Username"/></div>
+        <div id="auth-login-password" class="main-menu inp sm"><input id="auth-login-password-input" class="main-menu-input" type="password" placeholder="Password"></div>
+          <div id="auth-login-login" class="main-menu btn sm" onclick="menu.auth.items.login.onEnter()">Login</div>
+        <div id="auth-create" class="main-menu btn lg" onclick="menu.auth.items.create.show()">New User</div>
+          <div id="auth-create-username" class="main-menu inp sm"><input id="auth-create-username-input" class="main-menu-input" type="text" placeholder="Username"/></div>
+          <div id="auth-create-password" class="main-menu inp sm"><input id="auth-create-password-input" class="main-menu-input" type="password" placeholder="Password"/></div>
+          <div id="auth-create-create" class="main-menu btn sm" onclick="menu.auth.items.create.onEnter()">Create</div>
+        <div id="auth-about" class="main-menu btn lg" onclick="menu.auth.items.about.show()">About</div>
+          <div id="auth-about-about" class="main-menu sm">Noxio | Development v0.1 | © InfernoPlus</div>
       </div>
       
       <!-- Error Modal -->
@@ -43,9 +43,21 @@
         </div>
       </div>
       
+      <!-- Libs -->
+      <script src="js/lib/jquery/jquery-3.1.1.min.js"></script>
+      <script src="js/lib/sha256/sha256.min.js"></script>
+      
+      <!-- UI Frontend -->
       <script src="js/app/error/error.js"></script>
       <script src="js/app/menu/menu.js"></script>
+      <script src="js/app/menu/connect.js"></script>
+      <script src="js/app/menu/auth.js"></script>
+      
+      <!-- Network -->
+      <script src="js/app/network/network.js"></script>
+      <script src="js/app/network/auth.js"></script>
+      
+      <!-- Main Exec -->
       <script src="js/app/app.js"></script>
-      <script src="js/lib/jquery/jquery-3.1.1.min.js"></script>
     </body>        
 </html>

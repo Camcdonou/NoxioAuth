@@ -1,10 +1,12 @@
 package org.infpls.noxio.auth.module.auth.session;
 
 import java.io.*;
+import com.google.gson.*;
 import org.springframework.web.socket.*;
 
 import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
 import org.infpls.noxio.auth.module.auth.session.authenticate.Authenticate;
+import org.infpls.noxio.auth.module.auth.session.error.*;
 
 public class NoxioSession {
   private final WebSocketSession webSocket;
@@ -20,12 +22,13 @@ public class NoxioSession {
     sessionState = new Authenticate(this, dao.getUserDao());
   }
   
-  public void handlePacket(final String p) throws IOException {
-    sessionState.handlePacket(p);
+  public void handlePacket(final String data) throws IOException {
+    sessionState.handlePacket(data);
   }
   
-  public void sendPacket(final String p) throws IOException {
-    webSocket.sendMessage(new TextMessage(p));
+  public void sendPacket(final Packet p) throws IOException {
+    final Gson gson = new GsonBuilder().create();
+    webSocket.sendMessage(new TextMessage(gson.toJson(p)));
   }
   
   /* State info
@@ -62,7 +65,7 @@ public class NoxioSession {
   
   /* Error connection close */
   public void close(final String message) throws IOException {
-    sendPacket("x00;" + message);
+    sendPacket(new PacketX00(message));
     webSocket.close(CloseStatus.NOT_ACCEPTABLE);
   }
   
@@ -71,7 +74,7 @@ public class NoxioSession {
     StringWriter sw = new StringWriter();
     PrintWriter pw = new PrintWriter(sw);
     ex.printStackTrace(pw);
-    sendPacket("x01;" + ex.getMessage() + ";" + sw.toString());
+    sendPacket(new PacketX01(ex.getMessage(), sw.toString()));
     webSocket.close(CloseStatus.NOT_ACCEPTABLE);
   }
 }

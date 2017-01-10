@@ -10,9 +10,9 @@ public abstract class SessionState {
     this.session = session;
   }
   
-  public abstract void handlePacket(final String p) throws IOException;
+  public abstract void handlePacket(final String data) throws IOException;
   
-  public final void sendPacket(final String p) throws IOException {
+  public final void sendPacket(final Packet p) throws IOException {
     session.sendPacket(p);
   }
   

@@ -29,7 +29,7 @@ public class AuthWebSocket extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession webSocket, TextMessage data) {
       try {
-        NoxioSession session = (NoxioSession)webSocket.getAttributes().get("session");
+        NoxioSession session = (NoxioSession)(webSocket.getAttributes().get("session"));
         session.handlePacket(data.getPayload());
       }
       catch(Exception e) {

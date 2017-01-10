@@ -6,6 +6,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import org.infpls.noxio.auth.module.auth.session.NoxioSession;
 import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
+import org.infpls.noxio.auth.module.auth.util.Hash;
 
 /* UserDao handles both user info and logged in user NoxioSessions.
    This is because theres is an overlap in data here
@@ -32,12 +33,17 @@ public class UserDao {
     return true;
   }
   
-  public synchronized boolean authenticate(final String user, final String salt, final String hash) {
+  /*  returns int
+    0 - success
+    1 - user is already logged in
+    2 - incorrect password or username
+    3 - user does not exist
+  */
+  public synchronized int authenticate(final String user, final String hash, final String salt) {
     User u = getUserByName(user);
-    
-    //TODO!!!
-    
-    return true;
+    if(u == null) { return 3; } //Does user exist?
+    if(getSessionByUser(u.getUser()) != null) { return 1; } //Is this user already logged in?
+    return Hash.generate(salt+u.getHash()).equals(hash) ? 0 : 2; //Does the password hash match?
   }
   
   public User getUserByName(final String user) {
@@ -56,7 +62,6 @@ public class UserDao {
   }
   
   public void destroySession(final WebSocketSession webSocket) throws IOException {
-    System.out.println("HI?");
     for(int i=0;i<sessions.size();i++) {
       if(sessions.get(i).getSessionId().equals(webSocket.getId())) {
         sessions.get(i).destroy();
@@ -68,8 +73,10 @@ public class UserDao {
   
   public NoxioSession getSessionByUser(final String user) {
     for(int i=0;i<sessions.size();i++) {
-      if(sessions.get(i).getUser().equals(user)) {
-        return sessions.get(i);
+      if(sessions.get(i).loggedIn()) {
+        if(sessions.get(i).getUser().equals(user)) {
+          return sessions.get(i);
+        }
       }
     }
     return null;
