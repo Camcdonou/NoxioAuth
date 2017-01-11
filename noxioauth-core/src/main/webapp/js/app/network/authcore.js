@@ -50,7 +50,6 @@ net.auth.connect = function(ws){
       net.auth.close();
       return;
     }
-    setTimeout(function(){ menu.auth.show(); }, 1000);
   };
 
   net.auth.webSocket.onmessage = function(event){
@@ -64,38 +63,47 @@ net.auth.connect = function(ws){
 };
 
 net.auth.handlePacket = function(packet) {
+  /* For Debug @FIXME */
   console.log(packet);
+  
+  /* Allow state to handle packet. If state returns false then packet was not handled and forward it to general handling. */
+  if(net.auth.state !== undefined) {
+    if(net.auth.state.handlePacket(packet)) {
+      return;
+    }
+  }
   switch(packet.type) {
+    case "s00" : { net.auth.setState(packet.state); break; }
+    case "s01" : { net.auth.login(packet); break; }
     case "x00" : { error.showError("Connection Error", packet.message); break; }
     case "x01" : { error.showErrorException("Server Exception", packet.message, packet.trace); break; }
-    /* @FIXME Please seperate this into states as to match the design of the server side */
-    case "a03" : { break; }
-    case "a04" : { break; }
-    case "a05" : { break; }
-    case "a06" : { break; }
-    case "a07" : { net.auth.salt = packet.salt; break; }
     default : { net.auth.close(); error.showErrorException("Connection Error", "Recieved invalid packet type: " + packet.type, JSON.stringify(packet)); break; }
   }
 };
 
-/* @FIXME Please seperate some of these functions into states as to match the design of the server side */
-net.auth.login = function(username, password) {
-  if(net.auth.salt === undefined) {
-    error.showError("Login Error", "Client never recieved salt from server. Aborting.");
-    net.auth.close();
-    return;
+/*  State Ids
+    - a = auth
+    - o = online
+ */
+net.auth.setState = function(state) {
+  switch(state) {
+    case "a" : { net.auth.state = net.auth.auth; break; }
+    case "o" : { net.auth.state = net.auth.online; break; }
+    default : { net.auth.close(); error.showError("Connection Error", "Received invalid state ID: " + state); return; }
   }
-  net.auth.send({type: "a01", user: username, hash: sha256(net.auth.salt+sha256(password))});
+  net.auth.state.ready();
 };
 
-net.auth.create = function(username, password) {
-  net.auth.send({type: "a00", user: username, hash: sha256(password)});
+net.auth.login = function(packet) {
+  net.user = packet.user;
+  net.sid = packet.sid;
 };
 
 net.auth.send = function(packet){
   net.auth.webSocket.send(JSON.stringify(packet));
 };
 
+/* @FIXME if this is called for pretty much any reason we will need to shut down network.js as well likely. */
 net.auth.close = function(){
   net.auth.webSocket.close();
 };

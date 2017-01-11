@@ -9,6 +9,6 @@ public class PacketA01 extends Packet {
     this.user = user; this.hash = hash;
   }
   
-  public String getUser() { return user; }
+  public String getUser() { return user.toLowerCase(); }
   public String getHash() { return hash; }
 }

@@ -6,7 +6,8 @@ menu.init = function() {
   /* Registers all menus here so they can be managed */
   menu.menus = [
     menu.connect,
-    menu.auth
+    menu.auth,
+    menu.online
   ];
   menu.hideAll();
 };

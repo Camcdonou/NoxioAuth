@@ -7,15 +7,17 @@ import org.springframework.web.socket.*;
 import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
 import org.infpls.noxio.auth.module.auth.session.authenticate.Authenticate;
 import org.infpls.noxio.auth.module.auth.session.error.*;
+import org.infpls.noxio.auth.module.auth.session.online.Online;
+import org.infpls.noxio.auth.module.auth.util.Salt;
 
 public class NoxioSession {
   private final WebSocketSession webSocket;
   private final DaoContainer dao;
   
-  private String user;
+  private String user, sid;
   private SessionState sessionState;
  
-  public NoxioSession(WebSocketSession webSocket, DaoContainer dao) throws IOException {
+  public NoxioSession(final WebSocketSession webSocket, final DaoContainer dao) throws IOException {
     this.webSocket = webSocket;
     this.dao = dao;
         
@@ -33,13 +35,22 @@ public class NoxioSession {
   
   /* State info
     00 - Authentication State
+    01 - Online State
   */
-  public void changeState(int s) throws IOException { /* Not a huge fan of how this works */
-//    switch(s) {
-//      case 0 : { close(); break; } //Login state should never be returned to after inital connection.
-//      case 1 : { sessionState = new Chat(this, dao.getChatDao()); break; }
-//      default : { close(); break; } //NO.
-//    }
+  public void changeState(final int s) throws IOException { /* Not a huge fan of how this works */
+    sessionState.destroy();
+    switch(s) {
+      case 1 : { sessionState = new Online(this); break; }
+      default : { close(); break; } //NO.
+    }
+  }
+  
+  public void login(final String user) throws IOException {
+    if(loggedIn()) { throw new IOException("This session is already logged in!"); }
+    this.user = user;
+    this.sid = Salt.generate();
+    sendPacket(new PacketS01(user, sid));
+    changeState(1);
   }
   
   public boolean loggedIn() {
