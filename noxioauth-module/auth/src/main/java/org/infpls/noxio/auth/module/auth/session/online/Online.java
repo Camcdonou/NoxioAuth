@@ -42,8 +42,8 @@ public class Online extends SessionState {
   private void serverInfo(final PacketO02 p) throws IOException {
     /* @TODO Dummy data */
     final List<ServerInfo> predef = new ArrayList();
-    predef.add(new ServerInfo("EXT Test Server #1", "NA Central", "68.34.229.231", 7002));
-    predef.add(new ServerInfo("LOC Test Server #1", "NA Central", "localhost", 7002));
+    predef.add(new ServerInfo("EXT Test Server #1", "NA Central", "68.34.229.231", 7001));
+    predef.add(new ServerInfo("LOC Test Server #1", "NA Central", "localhost", 7001));
     sendPacket(new PacketO01(predef));
   }
   
