@@ -1,4 +1,5 @@
 "use strict";
+/* global main */
 
 /*  @FIXME @TODO
     There is a lot of jank here. 
@@ -7,12 +8,17 @@
     This kind of design will lead to weird problems and is a bad idea.
  */
 
-var main = {};
-
-main.init = function() {
-  menu.init();
-  net.auth.establish(); /* Check server status and open a connection with NoxioAuth */
+/* Define Main Class */
+function Main () {
+  this.menu = new Menu();
+  this.net = new Network();
 };
 
-//Starts the engine
+/* We can't start the engine during the constructino of new Main() so we do it here instead. */
+Main.prototype.init = function() {
+  this.net.auth.establish();
+};
+
+/* Starts the Engine */
+var main = new Main();
 main.init();

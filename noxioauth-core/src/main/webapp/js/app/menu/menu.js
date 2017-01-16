@@ -1,19 +1,26 @@
 "use strict";
+/* global main */
 
-var menu = {};
-
-menu.init = function() {
-  /* Registers all menus here so they can be managed */
-  menu.menus = [
-    menu.connect,
-    menu.auth,
-    menu.online
+function Menu() {
+  /* Register all menu classes here*/
+  var m = [
+    {id: "error", obj: new ErrorMenu()}, //Unique in that it displays on top as a modal.
+    {id: "connect", obj: new ConnectMenu()},
+    {id: "auth", obj: new AuthMenu()},
+    {id: "online", obj: new OnlineMenu()}
   ];
-  menu.hideAll();
+  
+  this.menus = [];
+  for(var i=0;i<m.length;i++) {
+    this.menus[i] = (m[i].obj);
+    this[m[i].id] = m[i].obj;
+  }
+  
+  this.hideAll();
 };
 
-menu.hideAll = function() {
-  for(var i=0;i<menu.menus.length;i++) {
-    menu.menus[i].hide();
+Menu.prototype.hideAll = function() {
+  for(var i=0;i<this.menus.length;i++) {
+    this.menus[i].hide();
   }
 };
