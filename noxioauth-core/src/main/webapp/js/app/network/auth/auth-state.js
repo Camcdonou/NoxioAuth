@@ -30,7 +30,7 @@ AuthState.prototype.create = function(username, password) {
 
 AuthState.prototype.ready = function() {
   this.send({type: "a08"});
-  setTimeout(function(){ main.menu.auth.show(); }, 1000); /* @FIXME For debug so I can see where I connected */
+  main.menu.auth.show();
 };
 
 AuthState.prototype.send = function(data) {

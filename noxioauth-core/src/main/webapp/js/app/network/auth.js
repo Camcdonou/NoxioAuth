@@ -110,5 +110,7 @@ Auth.prototype.send = function(packet){
 
 /* This should never be called directly, only network.js should call this. Use main.close() instead. */
 Auth.prototype.close = function(){
-  this.webSocket.close();
+  if(this.webSocket !== undefined) {
+    this.webSocket.close();
+  }
 };
