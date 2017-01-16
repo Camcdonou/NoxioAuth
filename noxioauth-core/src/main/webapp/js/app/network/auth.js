@@ -52,7 +52,7 @@ Auth.prototype.connect = function(ws){
   this.webSocket.onopen = function(event){
     if(event.type !== "open") {
       main.menu.error.showError("Connection Error", "ws openEvent.type mismatch!");
-      main.net.close();
+      main.close();
       return;
     }
   };
@@ -62,7 +62,7 @@ Auth.prototype.connect = function(ws){
   };
 
   this.webSocket.onclose = function(event){
-    main.menu.connect.show("Connection closed...");
+    main.close();
     main.net.auth.webSocket = undefined;
   };
 };
@@ -82,7 +82,7 @@ Auth.prototype.handlePacket = function(packet) {
     case "s01" : { this.login(packet); break; }
     case "x00" : { main.menu.error.showError("Connection Error", packet.message); break; }
     case "x01" : { main.menu.error.showErrorException("Server Exception", packet.message, packet.trace); break; }
-    default : { main.net.close(); main.menu.error.showErrorException("Connection Error", "Recieved invalid packet type: " + packet.type, JSON.stringify(packet)); break; }
+    default : { main.close(); main.menu.error.showErrorException("Connection Error", "Recieved invalid packet type: " + packet.type, JSON.stringify(packet)); break; }
   }
 };
 
@@ -94,7 +94,7 @@ Auth.prototype.setState = function(state) {
   switch(state) {
     case "a" : { this.state = new AuthState(); break; }
     case "o" : { this.state = new OnlineState(); break; }
-    default : { main.net.close(); main.menu.error.showError("Connection Error", "Received invalid state ID: " + state); return; }
+    default : { main.close(); main.menu.error.showError("Connection Error", "Received invalid state ID: " + state); return; }
   }
   this.state.ready();
 };
@@ -108,7 +108,7 @@ Auth.prototype.send = function(packet){
   this.webSocket.send(JSON.stringify(packet));
 };
 
-/* @FIXME if this is called for pretty much any reason we will need to shut down network.js as well likely. Also prolly do a js reset.*/
+/* This should never be called directly, only network.js should call this. Use main.close() instead. */
 Auth.prototype.close = function(){
   this.webSocket.close();
 };

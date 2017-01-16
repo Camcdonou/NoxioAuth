@@ -18,7 +18,7 @@ AuthState.prototype.handlePacket = function(packet) {
 AuthState.prototype.login = function(username, password) {
   if(this.salt === undefined) {
     main.menu.error.showError("Login Error", "Client never recieved salt from server. Aborting.");
-    main.net.close();
+    main.close();
     return;
   }
   this.send({type: "a01", user: username, hash: sha256(this.salt+sha256(password))});

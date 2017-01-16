@@ -23,10 +23,7 @@ function OnlineMenu() {
   this.items = {
     server: {
       element: document.getElementById("online-server"),
-      hide: function() {
-        this.element.classList.remove("selected");
-        this.container.style.display = "none";
-      },
+      hide: hide,
       show: function() {
         main.menu.online.hideAll();
         this.element.classList.add("selected");
@@ -40,7 +37,8 @@ function OnlineMenu() {
           this.container.innerHTML += "<div class='main-menu sm btn' onclick=\"console.log('" + info.servers[i].adress + ":" + info.servers[i].port + "')\">" + info.servers[i].name + " | " + info.servers[i].location + "</div>";
         }
       },
-      container: document.getElementById("online-server-cont")
+      container: document.getElementById("online-server-cont"),
+      items: []
     },
     setting: {
       element: document.getElementById("online-setting"),
@@ -53,6 +51,13 @@ function OnlineMenu() {
         document.getElementById("online-setting-4"),
         document.getElementById("online-setting-5")
       ]
+    },
+    logout: {
+      element: document.getElementById("online-logout"),
+      hide: hide,
+      show: show,
+      onEnter: function() { reset(); }, //This is a unique function call only used for restarting the JS client on a new session.
+      items: []
     }
   };
 };
@@ -74,4 +79,5 @@ OnlineMenu.prototype.hide = function() {
 OnlineMenu.prototype.hideAll = function() {
   this.items.server.hide();
   this.items.setting.hide();
+  this.items.logout.hide();
 };

@@ -19,6 +19,19 @@ Main.prototype.init = function() {
   this.net.auth.establish();
 };
 
+/* Close connections and stop page */
+Main.prototype.close = function() {
+  this.net.close();
+  this.menu.connect.show("Connection closed.");
+};
+
 /* Starts the Engine */
 var main = new Main();
 main.init();
+
+/* Disconnect and reset page */
+function reset() {
+  main.close();
+  main = new Main();
+  main.init();
+};
