@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class AuthStatusController {
     @RequestMapping(value = "/status", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody ResponseEntity getMessages() {
+    public @ResponseBody ResponseEntity getStatus() {
         return new ResponseEntity("{\"status\":\"OK\"}", HttpStatus.OK);
     }
 }

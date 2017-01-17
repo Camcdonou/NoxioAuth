@@ -7,7 +7,8 @@ function Menu() {
     {id: "error", obj: new ErrorMenu()}, //Unique in that it displays on top as a modal.
     {id: "connect", obj: new ConnectMenu()},
     {id: "auth", obj: new AuthMenu()},
-    {id: "online", obj: new OnlineMenu()}
+    {id: "online", obj: new OnlineMenu()},
+    {id: "lobby", obj: new LobbyMenu()}
   ];
   
   this.menus = [];

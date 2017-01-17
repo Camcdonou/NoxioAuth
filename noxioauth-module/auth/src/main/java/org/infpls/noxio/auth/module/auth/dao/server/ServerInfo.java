@@ -1,15 +1,14 @@
 package org.infpls.noxio.auth.module.auth.dao.server;
 
 public class ServerInfo {
-  private final String name, location, adress;
+  private final String id, address;
   private final int port;
-  public ServerInfo(final String name, final String location, final String adress, final int port) {
-    this.name = name; this.location = location;
-    this.adress = adress; this.port = port;
+  public ServerInfo(final String id, final String address, final int port) {
+    this.id = id;
+    this.address = address; this.port = port;
   }
   
-  public String getName() { return name; }
-  public String getLocation() { return location; }
-  public String getAdress() { return adress; }
+  public String getId() { return id; }
+  public String getAddress() { return address; }
   public int getPort() { return port; }
 }

@@ -62,6 +62,10 @@ public class NoxioSession {
   }
   
   public String getSessionId() {
+    return sid;
+  }
+  
+  public String getWebSocketId() {
     return webSocket.getId();
   }
   

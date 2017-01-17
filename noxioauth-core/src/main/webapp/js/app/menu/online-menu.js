@@ -33,12 +33,27 @@ function OnlineMenu() {
       },
       showServerInfo: function(info) {
         this.container.innerHTML = "";
-        for(var i=0;i<info.servers.length;i++) {
-          this.container.innerHTML += "<div class='main-menu sm btn' onclick=\"console.log('" + info.servers[i].adress + ":" + info.servers[i].port + "')\">" + info.servers[i].name + " | " + info.servers[i].location + "</div>";
+        for(var i=0;i<info.length;i++) {
+          this.container.innerHTML += "<div id='online-server-list-" + i + "' class='main-menu sm'>" + info[i].address + ":" + info[i].port + " | <img alt='Loading...' src='img/aes/ring-alt.svg' style='width: 16px; height: 16px;'/></div>";
+          main.net.auth.state.checkServerStatus(i, info[i].address, info[i].port, info[i]);
+        }
+      },
+      updateServerInfo: function(id, address, port, info) {
+        var elm = document.getElementById("online-server-list-" + id);
+        
+        if(info === undefined) { //Server Offline
+          elm.innerHTML = address + ":" + port + " | ❌";
+        }
+        else { //Server Online
+          elm.classList.add("btn");
+          elm.onclick = function() { main.net.game.establish(address, port); };
+          elm.innerHTML = info.name + " | " + info.location  + " | ○ ";
         }
       },
       container: document.getElementById("online-server-cont"),
-      items: []
+      items: [
+        document.getElementById("online-server-cont")
+      ]
     },
     setting: {
       element: document.getElementById("online-setting"),
