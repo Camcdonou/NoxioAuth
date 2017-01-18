@@ -8,7 +8,8 @@ function Menu() {
     {id: "connect", obj: new ConnectMenu()},
     {id: "auth", obj: new AuthMenu()},
     {id: "online", obj: new OnlineMenu()},
-    {id: "lobby", obj: new LobbyMenu()}
+    {id: "lobby", obj: new LobbyMenu()},
+    {id: "game", obj: new GameMenu()}
   ];
   
   this.menus = [];

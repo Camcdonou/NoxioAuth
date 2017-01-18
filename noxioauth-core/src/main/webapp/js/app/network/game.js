@@ -78,6 +78,7 @@ Game.prototype.setState = function(state) {
   switch(state) {
     case "l" : { this.state = new LoginState(); break; }
     case "b" : { this.state = new LobbyState(); break; }
+    case "g" : { this.state = new GameState(); break; }
     default : { main.menu.error.showError("Connection Error", "Received invalid state ID: " + state); main.close(); return; }
   }
   this.state.ready();

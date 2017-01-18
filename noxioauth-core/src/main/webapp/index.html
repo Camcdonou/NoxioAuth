@@ -46,9 +46,23 @@
       </div>
       
       <!-- Game Server Lobby -->
-      <div id="lobby" class="main-menu-container">
-        <div id="lobby-server" class="main-menu-inverse lg">User @ Server Name</div>
-        <div id="lobby-leave" class="main-menu btn lg" onclick="main.menu.lobby.items.leave.onEnter()">Leave Server</div>
+      <div id="lobby">
+        <div class="main-menu-container">
+          <div id="lobby-server" class="main-menu-inverse lg">User @ Server Name</div>
+          <div id="lobby-create" class="main-menu btn lg" onclick="main.menu.lobby.items.create.show()">Create Lobby</div>
+            <div id="lobby-create-name" class="main-menu inp sm"><input id="lobby-create-name-input" class="main-menu-input" type="text" placeholder="Lobby Name"/></div>
+            <div id="lobby-create-create" class="main-menu btn sm" onclick="main.menu.lobby.items.create.onEnter()">Create</div>
+          <div id="lobby-leave" class="main-menu btn lg" onclick="main.menu.lobby.items.leave.onEnter()">Leave Server</div>
+        </div>
+        <div class="right-menu-container">
+          <div class="right-menu-header">Game Lobbies<span class="menu-refresh-button" onclick="main.menu.lobby.list.refresh()"> ↺ </span></div>
+          <div id="lobby-list-container"></div>
+        </div>
+      </div>
+      
+      <!-- Game -->
+      <div id="game">
+        <center><object data="img/prank/classy.swf" style="width: 640px; height: 480px; margin-top: 10%;"></object></center>
       </div>
       
       <!-- Error Modal -->
@@ -78,6 +92,7 @@
       <script src="js/app/menu/auth-menu.js"></script>
       <script src="js/app/menu/online-menu.js"></script>
       <script src="js/app/menu/lobby-menu.js"></script>
+      <script src="js/app/menu/game-menu.js"></script>
       <script src="js/app/menu/menu.js"></script>
       
       <!-- Network -->
@@ -88,6 +103,7 @@
       <script src="js/app/network/game.js"></script>
       <script src="js/app/network/game/login-state.js"></script>
       <script src="js/app/network/game/lobby-state.js"></script>
+      <script src="js/app/network/game/game-state.js"></script>
       
       <!-- Main Exec -->
       <script src="js/app/app.js"></script>
