@@ -64,6 +64,14 @@ public class Authenticate extends SessionState {
       sendPacket(new PacketA03("Username must be at least 4 characters."));
       return;
     }
+    if(p.getUser().length() > 32) {
+      sendPacket(new PacketA03("Username cannot be longer than 32 characters."));
+      return;
+    }
+    if(p.getHash().length() != 64) {
+      sendPacket(new PacketA03("Password hash is an invalid length."));
+      return;
+    }
     if(!Validation.isAlphaNumeric(p.getHash())) {
       sendPacket(new PacketA03("Password hash is bogus."));
       return;

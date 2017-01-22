@@ -1,6 +1,11 @@
 "use strict";
 /* global main */
 
+/* @FIXME
+   Calls from inputs and etc from menu could be made into some kind of generic event.
+   Maybe look into it, it would be a minor improvement but might be worth it.
+ */
+
 function Menu() {
   /* Register all menu classes here*/
   var m = [

@@ -62,7 +62,12 @@
       
       <!-- Game -->
       <div id="game">
-        <center><object data="img/prank/classy.swf" style="width: 640px; height: 480px; margin-top: 10%;"></object></center>
+        <div class="main-menu-container">
+          <div id="game-name" class="main-menu-inverse lg">User @ Server Name @ Lobby Name</div>
+          <div id="game-leave" class="main-menu btn lg" onclick="main.menu.game.leaveGameButton()">Leave Game</div>
+          <div id="game-players">...</div>
+        </div>
+        <center><object data="img/prank/classy.swf" style="width: 640px; height: 480px;"></object></center>
       </div>
       
       <!-- Error Modal -->

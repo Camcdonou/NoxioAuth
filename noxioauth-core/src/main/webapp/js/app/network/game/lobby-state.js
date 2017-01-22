@@ -8,8 +8,14 @@ function LobbyState() {
 LobbyState.prototype.handlePacket = function(packet) {
   switch(packet.type) {
     case "b01" : { main.menu.lobby.list.displayList(packet.lobbies); return true; }
+    case "b05" : { this.joinLobbyError(packet); return true; }
     default : { return false; }
   }
+};
+
+LobbyState.prototype.joinLobbyError = function(packet) {
+  main.menu.connect.show(packet.message);
+  setTimeout(function() { main.menu.lobby.show(); }, 2000); /* @FIXME Timeout used to show info before returning to main screen. */
 };
 
 LobbyState.prototype.joinLobby = function(lid) {

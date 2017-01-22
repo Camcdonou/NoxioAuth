@@ -14,7 +14,7 @@ function LobbyMenu() {
     displayList: function(lobbies) {
       this.element.innerHTML = "";
       for(var i=0;i<lobbies.length;i++) {
-        this.element.innerHTML += "<div class='right-menu-item btn' onclick='main.net.game.state.joinLobby(\"" + lobbies[i].lid + "\")'>" + lobbies[i].name + " | " + lobbies[i].gametype + " | " + lobbies[i].host +  " | " + lobbies[i].players + "</div>";
+        this.element.innerHTML += "<div class='right-menu-item btn' onclick='main.net.game.state.joinLobby(\"" + lobbies[i].lid + "\")'>" + lobbies[i].name + " | " + lobbies[i].gametype + " | " + lobbies[i].host +  " | " + lobbies[i].players + "/" + lobbies[i].maxPlayers + "</div>";
       }
     }
   };
