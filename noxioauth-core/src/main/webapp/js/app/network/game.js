@@ -54,9 +54,6 @@ Game.prototype.connect = function(address, port){
 };
 
 Game.prototype.handlePacket = function(packet) {
-  /* For Debug @FIXME */
-  console.log("NoxioGame: " + JSON.stringify(packet));
-  
   /* Allow state to handle packet. If state returns false then packet was not handled and forward it to general handling. */
   if(this.state !== undefined) {
     if(this.state.handlePacket(packet)) {

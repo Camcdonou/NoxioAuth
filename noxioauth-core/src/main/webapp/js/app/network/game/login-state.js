@@ -28,3 +28,7 @@ LoginState.prototype.send = function(data) {
 LoginState.prototype.type = function() {
   return "l";
 };
+
+LoginState.prototype.destroy = function() {
+  
+};

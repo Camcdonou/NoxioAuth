@@ -23,7 +23,7 @@ GameMenu.prototype.updatePlayerList = function(maxPlayers, players) {
 
 GameMenu.prototype.show = function() {
   main.menu.hideAll();
-  this.title.innerHTML = main.net.user + "@" + main.net.game.info.name + "@" + main.net.game.state.info.name;
+  this.title.innerHTML = main.net.user + "@" + main.net.game.state.info.name + "@" + main.net.game.info.name;
   this.element.style.display = "block";
 };
 

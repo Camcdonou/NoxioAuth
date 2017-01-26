@@ -1,13 +1,6 @@
 "use strict";
 /* global main */
 
-/*  @FIXME @TODO
-    There is a lot of jank here. 
-    This should be refactored entirely to create new objects of each part
-    instaed of creating them as pseudo classes like I'm doing here.
-    This kind of design will lead to weird problems and is a bad idea.
- */
-
 /* Define Main Class */
 function Main () {
   this.menu = new Menu();
@@ -19,9 +12,25 @@ Main.prototype.init = function() {
   this.net.auth.establish();
 };
 
+Main.prototype.startGame = function() {
+  this.game = new NoxioGame();
+};
+
+Main.prototype.inGame = function() {
+  return this.game !== undefined;
+};
+
+Main.prototype.endGame = function() {
+  if(this.inGame()) {
+    this.game.destroy();
+    this.game = undefined;
+  }
+};
+
 /* Close connections and stop page */
 Main.prototype.close = function() {
   this.net.close();
+  this.endGame();
   this.menu.connect.show("Connection closed.");
 };
 

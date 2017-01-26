@@ -43,3 +43,7 @@ LobbyState.prototype.send = function(data) {
 LobbyState.prototype.type = function() {
   return "b";
 };
+
+LobbyState.prototype.destroy = function() {
+  
+};

@@ -69,10 +69,7 @@ Auth.prototype.connect = function(address){
   };
 };
 
-Auth.prototype.handlePacket = function(packet) {
-  /* For Debug @FIXME */
-  console.log("NoxioAuth: " + JSON.stringify(packet));
-  
+Auth.prototype.handlePacket = function(packet) {  
   /* Allow state to handle packet. If state returns false then packet was not handled and forward it to general handling. */
   if(this.state !== undefined) {
     if(this.state.handlePacket(packet)) {

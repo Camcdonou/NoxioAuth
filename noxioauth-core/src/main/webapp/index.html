@@ -48,7 +48,7 @@
       <!-- Game Server Lobby -->
       <div id="lobby">
         <div class="main-menu-container">
-          <div id="lobby-server" class="main-menu-inverse lg">User @ Server Name</div>
+          <div id="lobby-server" class="main-menu-inverse lg">User@Server Name</div>
           <div id="lobby-create" class="main-menu btn lg" onclick="main.menu.lobby.items.create.show()">Create Lobby</div>
             <div id="lobby-create-name" class="main-menu inp sm"><input id="lobby-create-name-input" class="main-menu-input" type="text" placeholder="Lobby Name"/></div>
             <div id="lobby-create-create" class="main-menu btn sm" onclick="main.menu.lobby.items.create.onEnter()">Create</div>
@@ -63,11 +63,13 @@
       <!-- Game -->
       <div id="game">
         <div class="main-menu-container">
-          <div id="game-name" class="main-menu-inverse lg">User @ Server Name @ Lobby Name</div>
+          <div id="game-name" class="main-menu-inverse lg">User@Lobby Name@Server Name</div>
           <div id="game-leave" class="main-menu btn lg" onclick="main.menu.game.leaveGameButton()">Leave Game</div>
           <div id="game-players">...</div>
         </div>
-        <center><object data="img/prank/classy.swf" style="width: 640px; height: 480px;"></object></center>
+        <div id="canvas-container" class="right-menu-container">
+          <canvas id="canvas" width="320" height="240"><canvas>
+        </div>
       </div>
       
       <!-- Error Modal -->
@@ -109,6 +111,14 @@
       <script src="js/app/network/game/login-state.js"></script>
       <script src="js/app/network/game/lobby-state.js"></script>
       <script src="js/app/network/game/game-state.js"></script>
+      
+      <!-- Game -->
+      <script src="js/app/game/game.js"></script>
+      <script src="js/app/game/input.js"></script>
+      <!-- Game Objects -->
+      <script src="js/app/game/object/object.js"></script>
+      <script src="js/app/game/object/player.js"></script>
+      <script src="js/app/game/object/bullet.js"></script>
       
       <!-- Main Exec -->
       <script src="js/app/app.js"></script>

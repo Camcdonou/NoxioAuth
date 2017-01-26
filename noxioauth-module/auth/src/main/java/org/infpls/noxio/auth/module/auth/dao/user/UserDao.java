@@ -14,12 +14,16 @@ import org.infpls.noxio.auth.module.auth.util.Hash;
 */
 
 public class UserDao {
-  private final List<User> users; /* This WILL be changed to a database in time */
+  private final List<User> users; /* @FIXME This WILL be changed to a database in time */
   private final List<NoxioSession> sessions; /* This is a list of all active user NoxioSessions. */
   
   public UserDao() {
     users = new ArrayList();
     sessions = new ArrayList();
+    
+    /* @FIXME DEBUG */
+    users.add(new User("test",Hash.generate("test")));
+    users.add(new User("infernoplus",Hash.generate("test")));
   }
   
   public synchronized boolean createUser(final String user, final String hash) {

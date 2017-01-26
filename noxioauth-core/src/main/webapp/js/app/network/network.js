@@ -20,6 +20,7 @@ Network.prototype.leaveServer = function() {
   if(this.game.isConnected() && this.auth.isConnected() && this.game.state.type() === "b" && this.auth.state.type() === "o") {
     this.game.safeClose();
     this.game = new Game();
+    main.endGame();
     main.menu.online.show();
   }
   else {
