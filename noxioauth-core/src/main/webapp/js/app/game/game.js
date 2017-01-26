@@ -24,7 +24,7 @@ NoxioGame.prototype.update = function(packet) {
   switch(packet.type) {
     /* Ingame Type Packets gxx */
     case "g10" : { this.packHand.createObject(packet); return true; }
-    case "g11" : { this.packhand.deleteObject(packet); return true; }
+    case "g11" : { this.packHand.deleteObject(packet); return true; }
     case "g12" : { this.packHand.updateObjectPosVel(packet); return true; }
     /* Input Type Packets ixx */
     case "i03" : { this.packHand.playerControl(packet); return true; }
@@ -178,8 +178,29 @@ NoxioGame.prototype.draw = function() {
   context.lineTo(cursor.x-10, cursor.y);
   context.stroke();
   
+  /* Draw Target Line */
+  if(this.control !== -1) {
+    var obj = this.getObject(this.control);
+    context.beginPath();
+    context.strokeStyle = 'rgba(255, 255, 255, 0.33)';
+    context.lineWidth = 5;
+    context.setLineDash([5, 15]);
+    context.moveTo(cursor.x, cursor.y);
+    context.lineTo(obj.pos.x, obj.pos.y);
+    context.stroke();
+  }
+  
+  /* Draw Helper Text */
+  if(this.control === -1) {
+    context.font = '24px Calibri';
+    context.textAlign = 'center';
+    context.fillStyle = 'white';
+    context.fillText("Press space to respawn!", this.window.width/2, this.window.height-24);
+  }
+  
   /* Draw Border */
   context.beginPath();
+  context.setLineDash([]);
   context.strokeStyle = '#FFFFFF';
   context.lineWidth = 10;
   context.moveTo(0, 0);
