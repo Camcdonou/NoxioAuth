@@ -11,8 +11,13 @@ GameState.prototype.handlePacket = function(packet) {
     case "g01" : { this.gameInfo(packet); return true; }
     case "g04" : { this.playerList(packet); return true; }
     case "g06" : { this.joinGameError(packet); return true; }
+    case "g15" : { this.gameMessages(packet); return true; } /* @FIXME bad packet handling on this oen */
     default : { return this.gameData(packet); }
   }
+};
+
+GameState.prototype.gameMessages = function(packet) {
+  main.menu.game.updateMessages(packet.message);
 };
 
 GameState.prototype.gameData = function(packet) {
@@ -31,7 +36,7 @@ GameState.prototype.gameInfo = function(packet) {
 };
 
 GameState.prototype.playerList = function(packet) {
-  main.menu.game.updatePlayerList(this.info.maxPlayers, packet.players);
+  //main.menu.game.updatePlayerList(this.info.maxPlayers, packet.players);
 };
 
 GameState.prototype.ready = function() {

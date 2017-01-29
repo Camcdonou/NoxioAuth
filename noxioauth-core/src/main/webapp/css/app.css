@@ -63,6 +63,16 @@ body {
   opacity: 0;
 }
 
+.main-menu-text {
+  padding: 4px 8px 0px 4px;
+  margin: 0px 12px 0px 0px;
+  text-align: right;
+  width: 100%;
+  
+  font-weight: bold;
+  float: left;
+}
+
 .info-animate {
   animation: info-fade 8s;
   -moz-animation: info-fade 8s;

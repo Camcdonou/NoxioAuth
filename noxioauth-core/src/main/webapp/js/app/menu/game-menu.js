@@ -7,23 +7,30 @@ function GameMenu() {
   /* @FIXME for debug */
   this.title = document.getElementById("game-name");
   this.leave = document.getElementById("game-leave");
-  this.playerList = document.getElementById("game-players");
+  this.log = document.getElementById("game-messages");
+  
+  this.messages = [];
 };
 
 GameMenu.prototype.leaveGameButton = function() {
   main.net.game.state.leaveGame();
 };
 
-GameMenu.prototype.updatePlayerList = function(maxPlayers, players) {
-  this.playerList.innerHTML = "Players: " + players.length + "/" + maxPlayers + "<br/>";
-  for(var i=0;i<players.length;i++) {
-    this.playerList.innerHTML += players[i] + "<br/>";
+GameMenu.prototype.updateMessages = function(message) {
+  var max = 6;
+  
+  this.log.innerHTML = "";
+  this.messages.push(message);
+  if(this.messages.length > max) { this.messages.splice(0,1); }
+  for(var i=0;i<this.messages.length;i++) {
+    this.log.innerHTML += this.messages[i] + "</br>";
   }
 };
 
 GameMenu.prototype.show = function() {
   main.menu.hideAll();
   this.title.innerHTML = main.net.user + "@" + main.net.game.state.info.name + "@" + main.net.game.info.name;
+  this.message = [];
   this.element.style.display = "block";
 };
 

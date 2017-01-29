@@ -8,6 +8,8 @@ function NoxioGame() {
   
   this.input = new Input(this.window);
   
+  this.scores = [];
+  
   this.debug = {ss: 128, stime: [], ctime: [], ping: [], frames: [], sAvg: 0, cAvg: 0, pAvg: 0, fAvg: 0}; /* SS is Sample Size: The number of frames to sample for data. */
   for(var i=0;i<this.debug.ss;i++) { this.debug.stime[i] = 0; this.debug.ctime[i] = 0; this.debug.ping[i] = 0; this.debug.frames[i] = 0; }
   
@@ -26,6 +28,7 @@ NoxioGame.prototype.update = function(packet) {
     case "g11" : { this.packHand.deleteObject(packet); return true; }
     case "g12" : { this.packHand.updateObjectPosVel(packet); return true; }
     case "g13" : { this.packHand.shineAbility(packet); return true; }
+    case "g14" : { this.packHand.scoreUpdate(packet); return true; }
     /* Input Type Packets ixx */
     case "i03" : { this.packHand.playerControl(packet); return true; }
     /* Game Step End g05 */
@@ -69,6 +72,17 @@ NoxioGame.prototype.packHand.shineAbility = function(packet) {
   if(obj !== undefined) {
     obj.shineCooldown = 5;
   }
+};
+
+/* PacketG14 */
+NoxioGame.prototype.packHand.scoreUpdate = function(packet) {
+  for(var i=0;i<this.game.scores.length;i++) {
+    if(this.game.scores[i].user === packet.score.user) {
+      this.game.scores[i] = packet.score;
+      return;
+    }
+  }
+  this.game.scores.push(packet.score);
 };
 
 /* PacketI00 */
@@ -180,6 +194,15 @@ NoxioGame.prototype.draw = function() {
   context.textAlign = 'right';
   context.fillStyle = 'white';
   context.fillText("STIME " + (this.debug.sAvg).toFixed(2) + " | CTIME " + (this.debug.cAvg).toFixed(2) + " | FPS " + (this.debug.fAvg).toFixed(2) + " | PING " + (this.debug.pAvg).toFixed(2), this.window.width-8, 24);
+  
+  /* Draw Score List */
+  context.font = '16px Calibri';
+  context.textAlign = 'left';
+  context.fillStyle = 'white';
+  for(var i=0;i<this.scores.length;i++) {
+    context.fillText(this.scores[i].user + " " + this.scores[i].kills, 8, 24*(i+1));
+  }
+  
   
   /* Draw Cursor */
   var cursor = this.input.getMouseActual();
