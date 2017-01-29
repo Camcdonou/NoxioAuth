@@ -8,9 +8,8 @@ function NoxioGame() {
   
   this.input = new Input(this.window);
   
-  this.debug = {stime: [], ctime: [], ping: []};
-  for(var i=0;i<100;i++) { this.debug.stime[i] = 0; this.debug.ctime[i] = 0; this.debug.ping[i] = 0; }
-  this.debug.slast = new Date().getTime();
+  this.debug = {ss: 128, stime: [], ctime: [], ping: [], frames: [], sAvg: 0, cAvg: 0, pAvg: 0, fAvg: 0}; /* SS is Sample Size: The number of frames to sample for data. */
+  for(var i=0;i<this.debug.ss;i++) { this.debug.stime[i] = 0; this.debug.ctime[i] = 0; this.debug.ping[i] = 0; this.debug.frames[i] = 0; }
   
   this.control = -1;
   this.objects = [];
@@ -26,6 +25,7 @@ NoxioGame.prototype.update = function(packet) {
     case "g10" : { this.packHand.createObject(packet); return true; }
     case "g11" : { this.packHand.deleteObject(packet); return true; }
     case "g12" : { this.packHand.updateObjectPosVel(packet); return true; }
+    case "g13" : { this.packHand.shineAbility(packet); return true; }
     /* Input Type Packets ixx */
     case "i03" : { this.packHand.playerControl(packet); return true; }
     /* Game Step End g05 */
@@ -60,6 +60,14 @@ NoxioGame.prototype.packHand.updateObjectPosVel = function(packet) {
   if(obj !== undefined) {
     obj.setPos(packet.pos);
     obj.setVel(packet.vel);
+  }
+};
+
+/* PacketG13 */
+NoxioGame.prototype.packHand.shineAbility = function(packet) {
+  var obj = this.game.getObject(packet.oid);
+  if(obj !== undefined) {
+    obj.shineCooldown = 5;
   }
 };
 
@@ -98,13 +106,14 @@ NoxioGame.prototype.sendInput = function() {
   for(var i=0;i<inputs.length;i++) {
     switch(inputs[i]) {
       case 32 : { main.net.game.send({type: "i02"}); break; } //Space
-      case 81 : { if(obj !== undefined) { main.net.game.send({type: "i10", action: "q", pos: cursor}); } break; } //Q
-      case 87 : { if(obj !== undefined) { main.net.game.send({type: "i10", action: "w", pos: cursor}); } break; } //W
-      case 69 : { if(obj !== undefined) { main.net.game.send({type: "i10", action: "e", pos: cursor}); } break; } //E
-      case 82 : { if(obj !== undefined) { main.net.game.send({type: "i10", action: "r", pos: cursor}); } break; } //R
       default : { break; }
     }
   }
+       if(this.input.keyboard.keys[81]) { main.net.game.send({type: "i10", action: "q", pos: cursor}); } //Q
+  else if(this.input.keyboard.keys[87]) { main.net.game.send({type: "i10", action: "w", pos: cursor}); } //W
+  else if(this.input.keyboard.keys[69]) { main.net.game.send({type: "i10", action: "e", pos: cursor}); } //E
+  else if(this.input.keyboard.keys[82]) { main.net.game.send({type: "i10", action: "r", pos: cursor}); } //R
+  
   if(this.input.mouse.lmb && obj !== undefined) {
     main.net.game.send({type: "i00", pos: cursor});
   }
@@ -118,32 +127,37 @@ NoxioGame.prototype.step = function(packet) {
   var now = new Date().getTime();
   var ping = (now - packet.sent) < 0 ? 0 : (now - packet.sent);
   
-  for(var i=0;i<99;i++) {
-    this.debug.ping[i+1] = this.debug.ping[i];
-    this.debug.stime[i+1] = this.debug.stime[i];
+  for(var i=this.debug.ss;i>0;i--) {
+    this.debug.ping[i] = this.debug.ping[i-1];
+    this.debug.stime[i] = this.debug.stime[i-1];
   }
   this.debug.ping[0] = ping;
-  this.debug.stime[0] = packet.tick - this.debug.slast;
-  this.debug.slast = packet.tick;
+  this.debug.stime[0] = packet.tick;
   
-  var sAvg = 0; var cAvg = 0; var pAvg = 0;
-  for(var i=0;i<99;i++) {
+  var sAvg = 0, cAvg = 0, pAvg = 0, fAvg = 0;
+  for(var i=0;i<this.debug.ss;i++) {
     sAvg += this.debug.stime[i];
     cAvg += this.debug.ctime[i];
     pAvg += this.debug.ping[i];
   }
-  this.debug.sAvg = sAvg/99;
-  this.debug.cAvg = cAvg/99;
-  this.debug.pAvg = pAvg/99;
+  for(var i=0;i<this.debug.ss-1&&this.debug.frames[i+1]!==0;i++) {
+    fAvg += this.debug.frames[i] - this.debug.frames[i+1];
+  }
+  this.debug.sAvg = sAvg/this.debug.ss;
+  this.debug.cAvg = cAvg/this.debug.ss;
+  this.debug.pAvg = pAvg/this.debug.ss;
+  this.debug.fAvg = (1000*(i/(this.debug.ss-1)))/(fAvg/(this.debug.ss-1));
   
   /* Draw game and send input data */
   this.draw();
   this.sendInput();
   
-  /* DEBUG INFORMATION */
-  for(var i=0;i<99;i++) {
-    this.debug.ctime[i+1] = this.debug.ctime[i];
+  /* DEBUG INFORMATION */  
+  for(var i=this.debug.ss;i>0;i--) {
+    this.debug.ctime[i] = this.debug.ctime[i-1];
+    this.debug.frames[i] = this.debug.frames[i-1];
   }
+  this.debug.frames[0] = new Date().getTime();
   this.debug.ctime[0] = new Date().getTime() - now;
 };
 
@@ -165,7 +179,7 @@ NoxioGame.prototype.draw = function() {
   context.font = '16px Calibri';
   context.textAlign = 'right';
   context.fillStyle = 'white';
-  context.fillText('STIME - ' + (this.debug.sAvg).toFixed(2) + " | CTIME - " + (this.debug.cAvg).toFixed(2) + " | PING - " + (this.debug.pAvg).toFixed(2), this.window.width-8, 24);
+  context.fillText("STIME " + (this.debug.sAvg).toFixed(2) + " | CTIME " + (this.debug.cAvg).toFixed(2) + " | FPS " + (this.debug.fAvg).toFixed(2) + " | PING " + (this.debug.pAvg).toFixed(2), this.window.width-8, 24);
   
   /* Draw Cursor */
   var cursor = this.input.getMouseActual();
