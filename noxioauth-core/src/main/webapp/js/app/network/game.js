@@ -37,7 +37,6 @@ Game.prototype.connect = function(address, port){
       main.close();
       return;
     }
-    main.menu.connect.show("Connection test success!");
   };
 
   this.webSocket.onmessage = function(event){
@@ -72,6 +71,7 @@ Game.prototype.handlePacket = function(packet) {
     - l = login
  */
 Game.prototype.setState = function(state) {
+  if(this.state !== undefined) { this.state.destroy(); }
   switch(state) {
     case "l" : { this.state = new LoginState(); break; }
     case "b" : { this.state = new LobbyState(); break; }

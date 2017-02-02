@@ -8,6 +8,7 @@ function NoxioGame() {
   
   this.input = new Input(this.window);
   
+  this.gameOver = false;
   this.scores = [];
   
   this.debug = {ss: 128, stime: [], ctime: [], ping: [], frames: [], sAvg: 0, cAvg: 0, pAvg: 0, fAvg: 0}; /* SS is Sample Size: The number of frames to sample for data. */
@@ -29,6 +30,8 @@ NoxioGame.prototype.update = function(packet) {
     case "g12" : { this.packHand.updateObjectPosVel(packet); return true; }
     case "g13" : { this.packHand.shineAbility(packet); return true; }
     case "g14" : { this.packHand.scoreUpdate(packet); return true; }
+    case "g16" : { this.packHand.gameOver(packet); return true; }
+    case "g18" : { this.packHand.gameRules(packet); return true; }
     /* Input Type Packets ixx */
     case "i03" : { this.packHand.playerControl(packet); return true; }
     /* Game Step End g05 */
@@ -83,6 +86,17 @@ NoxioGame.prototype.packHand.scoreUpdate = function(packet) {
     }
   }
   this.game.scores.push(packet.score);
+};
+
+/* PacketG16 */
+NoxioGame.prototype.packHand.gameOver = function(packet) {
+  this.game.gameOver = true;
+  this.game.gameWinner = packet.player;
+};
+
+/* PacketG18 */
+NoxioGame.prototype.packHand.gameRules = function(packet) {
+  this.game.settings = {scoreToWin: packet.score};
 };
 
 /* PacketI00 */
@@ -196,11 +210,13 @@ NoxioGame.prototype.draw = function() {
   context.fillText("STIME " + (this.debug.sAvg).toFixed(2) + " | CTIME " + (this.debug.cAvg).toFixed(2) + " | FPS " + (this.debug.fAvg).toFixed(2) + " | PING " + (this.debug.pAvg).toFixed(2), this.window.width-8, 24);
   
   /* Draw Score List */
-  context.font = '16px Calibri';
-  context.textAlign = 'left';
-  context.fillStyle = 'white';
-  for(var i=0;i<this.scores.length;i++) {
-    context.fillText(this.scores[i].user + " " + this.scores[i].kills, 8, 24*(i+1));
+  if(this.settings !== undefined) {
+    context.font = '16px Calibri';
+    context.textAlign = 'left';
+    context.fillStyle = 'white';
+    for(var i=0;i<this.scores.length;i++) {
+      context.fillText(this.scores[i].user + " : " + this.scores[i].kills + "/" + this.settings.scoreToWin, 8, 24*(i+1));
+    }
   }
   
   
@@ -228,11 +244,19 @@ NoxioGame.prototype.draw = function() {
   }
   
   /* Draw Helper Text */
-  if(this.control === -1) {
+  if(this.control === -1 && !this.gameOver) {
     context.font = '24px Calibri';
     context.textAlign = 'center';
     context.fillStyle = 'white';
     context.fillText("Press space to respawn!", this.window.width/2, this.window.height-24);
+  }
+  
+  /* Draw Game Over Text */
+  if(this.gameOver) {
+    context.font = '64px Calibri';
+    context.textAlign = 'center';
+    context.fillStyle = 'white';
+    context.fillText(this.gameWinner + " won!", this.window.width/2, (this.window.height/2)-24);
   }
   
   /* Draw Border */

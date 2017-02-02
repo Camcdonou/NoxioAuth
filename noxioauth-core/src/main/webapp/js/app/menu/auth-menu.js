@@ -19,26 +19,13 @@ function AuthMenu() {
       this.items[i].style.display = "block";
     }
   };
-  var showInfo = function(message) {
-    this.info.innerHTML = message;
-    this.info.style.display = "block";
-    /*  Animation will not replay unless the DOM is given a chance to update.
-        This is a hacky fix for that problem. It doesn't work exactly as it should.
-        tmp is created because of javascript being literal cancer with scopes @FIXME
-    */
-    this.info.classList.remove("info-animate");
-    var tmp = this.info;
-    setTimeout(function() { tmp.classList.add("info-animate"); }, 1);
-  };
   
   /* Creates sub menus */
   this.items = {
     login: {
       element: document.getElementById("auth-login"),
-      info: document.getElementById("auth-login-info"),
       hide: hide,
       show: show,
-      showInfo: showInfo,
       items: [
         document.getElementById("auth-login-username"),
         document.getElementById("auth-login-password"),
@@ -53,10 +40,8 @@ function AuthMenu() {
     },
     create: {
       element: document.getElementById("auth-create"),
-      info: document.getElementById("auth-create-info"),
       hide: hide,
       show: show,
-      showInfo: showInfo,
       items: [
         document.getElementById("auth-create-username"),
         document.getElementById("auth-create-password"),

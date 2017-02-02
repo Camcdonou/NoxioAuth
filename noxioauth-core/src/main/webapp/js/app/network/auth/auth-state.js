@@ -7,9 +7,9 @@ function AuthState() {
 
 AuthState.prototype.handlePacket = function(packet) {
   switch(packet.type) {
-    case "a03" : { main.menu.auth.items.create.showInfo(packet.message); return true; }
-    case "a05" : { main.menu.auth.items.login.showInfo(packet.message); return true; }
-    case "a06" : { main.menu.auth.items.create.showInfo("Account created successfully."); return true; }
+    case "a03" : { main.menu.warning.show(packet.message); return true; }
+    case "a05" : { main.menu.warning.show(packet.message); return true; }
+    case "a06" : { main.menu.warning.show("Account created successfully."); return true; }
     case "a07" : { this.salt = packet.salt; return true; }
     default : { return false; }
   }
@@ -39,4 +39,8 @@ AuthState.prototype.send = function(data) {
 
 AuthState.prototype.type = function() {
   return "a";
+};
+
+AuthState.prototype.destroy = function() {
+  
 };

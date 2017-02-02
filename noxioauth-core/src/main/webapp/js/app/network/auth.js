@@ -90,6 +90,7 @@ Auth.prototype.handlePacket = function(packet) {
     - o = online
  */
 Auth.prototype.setState = function(state) {
+  if(this.state !== undefined) { this.state.destroy(); }
   switch(state) {
     case "a" : { this.state = new AuthState(); break; }
     case "o" : { this.state = new OnlineState(); break; }

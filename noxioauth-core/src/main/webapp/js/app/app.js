@@ -7,13 +7,16 @@ function Main () {
   this.net = new Network();
 };
 
-/* We can't start the engine during the constructino of new Main() so we do it here instead. */
+/* We can't start the engine during the construction of new Main() so we do it here instead. */
 Main.prototype.init = function() {
   this.net.auth.establish();
 };
 
 Main.prototype.startGame = function() {
-  this.game = new NoxioGame();
+  if(!this.inGame()) {
+    this.game = new NoxioGame();
+  }
+  else { this.menu.error.showError("State Error", "Attempted to start a game while a game was running."); this.close(); }
 };
 
 Main.prototype.inGame = function() {

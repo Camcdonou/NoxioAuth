@@ -39,3 +39,7 @@ OnlineState.prototype.send = function(data) {
 OnlineState.prototype.type = function() {
   return "o";
 };
+
+OnlineState.prototype.destroy = function() {
+  
+};

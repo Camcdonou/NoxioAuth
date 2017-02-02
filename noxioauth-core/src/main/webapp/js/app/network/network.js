@@ -31,4 +31,5 @@ Network.prototype.leaveServer = function() {
 
 Network.prototype.close = function() {
   this.auth.close();
+  this.game.close();
 };

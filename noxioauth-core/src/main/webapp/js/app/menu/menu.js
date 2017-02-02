@@ -10,6 +10,7 @@ function Menu() {
   /* Register all menu classes here*/
   var m = [
     {id: "error", obj: new ErrorMenu()}, //Unique in that it displays on top as a modal.
+    {id: "warning", obj: new WarningMenu()}, //Unique in that it displays as as widget at the top left.
     {id: "connect", obj: new ConnectMenu()},
     {id: "auth", obj: new AuthMenu()},
     {id: "online", obj: new OnlineMenu()},
@@ -27,7 +28,7 @@ function Menu() {
 };
 
 Menu.prototype.hideAll = function() {
-  for(var i=0;i<this.menus.length;i++) {
+  for(var i=2;i<this.menus.length;i++) { /* Skip first 2 elements because they are ErrorMenu and WarningMenu */
     this.menus[i].hide();
   }
 };

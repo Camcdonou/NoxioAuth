@@ -14,8 +14,8 @@ LobbyState.prototype.handlePacket = function(packet) {
 };
 
 LobbyState.prototype.joinLobbyError = function(packet) {
-  main.menu.connect.show(packet.message);
-  setTimeout(function() { main.menu.lobby.show(); }, 2000); /* @FIXME Timeout used to show info before returning to main screen. */
+  main.menu.warning.show(packet.message);
+  main.menu.lobby.show();
 };
 
 LobbyState.prototype.joinLobby = function(lid) {

@@ -8,6 +8,9 @@
     </head>
     
     <body>
+      
+      <!-- Warning Class -->
+      <div id="warning" class="main-warn info-animate">...</div>
 
       <!-- Connection Display -->
       <div id="connect" class="main-menu-container">
@@ -20,12 +23,10 @@
         <div id="auth-login" class="main-menu btn lg" onclick="main.menu.auth.items.login.show()">Login</div>
           <div id="auth-login-username" class="main-menu inp sm"><input id="auth-login-username-input" class="main-menu-input" type="text" placeholder="Username"/></div>
           <div id="auth-login-password" class="main-menu inp sm"><input id="auth-login-password-input" class="main-menu-input" type="password" placeholder="Password"></div>
-          <span id="auth-login-info" class="main-menu-info info-animate"></span>
           <div id="auth-login-login" class="main-menu btn sm" onclick="main.menu.auth.items.login.onEnter()">Login</div>
         <div id="auth-create" class="main-menu btn lg" onclick="main.menu.auth.items.create.show()">New User</div>
           <div id="auth-create-username" class="main-menu inp sm"><input id="auth-create-username-input" class="main-menu-input" type="text" placeholder="Username"/></div>
           <div id="auth-create-password" class="main-menu inp sm"><input id="auth-create-password-input" class="main-menu-input" type="password" placeholder="Password"/></div>
-          <span id="auth-create-info" class="main-menu-info info-animate"></span>
           <div id="auth-create-create" class="main-menu btn sm" onclick="main.menu.auth.items.create.onEnter()">Create</div>
         <div id="auth-about" class="main-menu btn lg" onclick="main.menu.auth.items.about.show()">About</div>
           <div id="auth-about-about" class="main-menu sm">Noxio | Development v0.1 | © InfernoPlus</div>
@@ -70,6 +71,10 @@
         <div id="canvas-container" class="right-menu-container" style="width: 65% !important;">
           <canvas id="canvas" width="320" height="240"><canvas>
         </div>
+        <div class="right-menu-help-text" style="width: 65% !important;">
+          <small><b>LMB</b>: Move <b>Q</b>: Rapid Shot <b>W</b>: Emit Shot <b>E</b>: Scatter Shot <b>R</b>: Shine</small>
+        </div>
+        
       </div>
       
       <!-- Error Modal -->
@@ -95,6 +100,7 @@
       
       <!-- UI Frontend -->
       <script src="js/app/menu/error-menu.js"></script>
+      <script src="js/app/menu/warning-menu.js"></script>
       <script src="js/app/menu/connect-menu.js"></script>
       <script src="js/app/menu/auth-menu.js"></script>
       <script src="js/app/menu/online-menu.js"></script>
