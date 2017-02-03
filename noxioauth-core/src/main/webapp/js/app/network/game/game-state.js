@@ -11,7 +11,8 @@ GameState.prototype.handlePacket = function(packet) {
     case "g01" : { this.gameInfo(packet); return true; }
     case "g04" : { this.playerList(packet); return true; }
     case "g06" : { this.joinGameError(packet); return true; }
-    case "g15" : { this.gameMessages(packet); return true; } /* @FIXME bad packet handling on this oen */
+    case "g08" : { this.leftGame(packet); return true; }
+    case "g15" : { this.gameMessages(packet); return true; } /* @FIXME these 'will' be handled by the actual game class later. */
     case "g17" : { this.newGame(packet); return true; }
     default : { return main.inGame() ? this.gameData(packet) : false; }
   }
@@ -56,7 +57,13 @@ GameState.prototype.ready = function() {
 };
 
 GameState.prototype.leaveGame = function() {
+  main.menu.connect.show("Leaving game...");
   this.send({type: "g03"});
+};
+
+GameState.prototype.leftGame = function() {
+  main.endGame();
+  this.send({type: "g09"});
 };
 
 GameState.prototype.send = function(data) {

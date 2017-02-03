@@ -7,7 +7,7 @@
         <link rel="stylesheet" type="text/css" href="css/errorModal.css">
     </head>
     
-    <body>
+    <body ondragstart="return false;" ondrop="return false;">
       
       <!-- Warning Class -->
       <div id="warning" class="main-warn info-animate">...</div>
@@ -62,13 +62,13 @@
       </div>
       
       <!-- Game -->
-      <div id="game">
+      <div id="game" class="unselectable">
         <div class="main-menu-container" style="width: 30% !important;">
           <div id="game-name" class="main-menu-inverse lg">User@Lobby Name@Server Name</div>
           <div id="game-leave" class="main-menu btn lg" onclick="main.menu.game.leaveGameButton()">Leave Game</div>
           <div id="game-messages" class="main-menu-text">...</div>
         </div>
-        <div id="canvas-container" class="right-menu-container" style="width: 65% !important;">
+        <div id="canvas-container" class="right-menu-container" style="width: 65% !important;" oncontextmenu="return false">
           <canvas id="canvas" width="320" height="240"><canvas>
         </div>
         <div class="right-menu-help-text" style="width: 65% !important;">

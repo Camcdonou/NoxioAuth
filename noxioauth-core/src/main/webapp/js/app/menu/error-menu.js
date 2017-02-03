@@ -20,6 +20,7 @@ function ErrorMenu() {
 };
 
 ErrorMenu.prototype.showError = function(title, message) {
+  console.error("##ERROR## " + message);
   this.modal.style.display = "block";
   this.title.innerHTML = title;
   this.message.innerHTML = "<p>" + message + "</p>";
@@ -27,6 +28,7 @@ ErrorMenu.prototype.showError = function(title, message) {
 };
 
 ErrorMenu.prototype.showErrorException = function(title, message, trace) {
+  console.error("##EXCEPTION## " + message + "\n" + trace);
   this.modal.style.display = "block";
   this.title.innerHTML = title;
   this.message.innerHTML = "<p>" + message + "</p><div style='margin-bottom:12px;height:120px;width:100%;font-size:80%;border:1px solid #ccc;background-color:#DDDDDD;overflow:auto;'>" + trace + "</div>";

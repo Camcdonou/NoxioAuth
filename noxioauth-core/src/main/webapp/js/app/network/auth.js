@@ -16,7 +16,7 @@ Auth.prototype.establish = function() {
   var addresses = [
     "68.34.229.231",
     "localhost",
-    "10.0.0.6"
+    "10.0.0.253"
   ];
   
   var getStatus = function(r) {

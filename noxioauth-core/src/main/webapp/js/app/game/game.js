@@ -46,18 +46,18 @@ NoxioGame.prototype.packHand = {};
 /* PacketG10 */
 NoxioGame.prototype.packHand.createObject = function(packet) {
   var obj = this.game.getObject(packet.oid);
-  if(obj !== undefined) { return; } /* @FIXME error report, this object already exists for some reason... */ 
+  if(obj !== undefined) { main.menu.warning.show("Desync: Tried to create OBJ that already exists '" + packet.oid + "::" + packet.otype + "'."); return; } 
   switch(packet.otype) {
-    case "obj" : { break; } //NO. BAD DOG. I SAID NO.
+    case "obj" : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for abstract type '" + packet.otype + "'.", JSON.stringify(packet)); main.close(); break; }
     case "obj.player" : { this.game.objects.push(new PlayerObject(packet.oid, packet.pos, packet.vel)); break; }
     case "obj.bullet" : { this.game.objects.push(new BulletObject(packet.oid, packet.pos, packet.vel)); break; }
-    default : { /* @FIXME ERRORRRRRRRR */ break; }
+    default : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for '" + packet.otype + "' which does not exist.", JSON.stringify(packet)); main.close(); break; }
   }
 };
 
 /* PacketG11 */
 NoxioGame.prototype.packHand.deleteObject = function(packet) {
-  if(!this.game.deleteObject(packet.oid)) { /* @FIXME log this error cuz its bad if this happens */ }
+  if(!this.game.deleteObject(packet.oid)) { main.menu.warning.show("Desync: Tried to delete OBJ that does not exist '" + packet.oid + "'."); }
 };
 
 /* PacketG12 */

@@ -51,6 +51,10 @@ body {
   padding: 2px 6px 2px 2px;
 }
 
+.main-menu-input::-webkit-input-placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
 .main-menu-text {
   padding: 4px 8px 0px 4px;
   margin: 0px 12px 0px 0px;
@@ -163,4 +167,17 @@ body {
   float: right;
   display: inline;
   width: 45%;
+}
+
+.unselectable {
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
 }
