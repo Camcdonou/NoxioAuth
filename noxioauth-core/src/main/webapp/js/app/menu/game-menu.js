@@ -30,7 +30,8 @@ GameMenu.prototype.updateMessages = function(message) {
 GameMenu.prototype.show = function() {
   main.menu.hideAll();
   this.title.innerHTML = main.net.user + "@" + main.net.game.state.info.name + "@" + main.net.game.info.name;
-  this.message = [];
+  this.messages = [];
+  this.log.innerHTML = "";
   this.element.style.display = "block";
 };
 
