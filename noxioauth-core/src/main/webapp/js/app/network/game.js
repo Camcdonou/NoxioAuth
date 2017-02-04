@@ -61,6 +61,7 @@ Game.prototype.handlePacket = function(packet) {
   }
   switch(packet.type) {
     case "s00" : { this.setState(packet.state); break; }
+    case "s01" : { this.handleBlob(packet.packets); break; }
     case "x00" : { main.menu.error.showError("Connection Error", packet.message); main.close(); break; }
     case "x01" : { main.menu.error.showErrorException("Server Exception", packet.message, packet.trace); main.close(); break; }
     default : { main.menu.error.showErrorException("Connection Error", "Recieved invalid packet type: " + packet.type, JSON.stringify(packet)); main.close(); break; }
@@ -79,6 +80,12 @@ Game.prototype.setState = function(state) {
     default : { main.menu.error.showError("Connection Error", "Received invalid state ID: " + state); main.close(); return; }
   }
   this.state.ready();
+};
+
+Game.prototype.handleBlob = function(packets) {
+  for(var i=0;i<packets.length;i++) {
+    this.handlePacket(packets[i]);
+  }
 };
 
 Game.prototype.send = function(packet){
