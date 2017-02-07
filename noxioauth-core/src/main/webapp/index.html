@@ -69,11 +69,11 @@
           <div id="game-messages" class="main-menu-text">...</div>
         </div>
         <div id="canvas-container" class="right-menu-container" style="width: 65% !important;" oncontextmenu="return false">
-          <canvas id="canvas" width="320" height="240"><canvas>
+          <canvas id="canvas" width="320" height="240">
+            Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.
+          <canvas>
         </div>
-        <div class="right-menu-help-text" style="width: 65% !important;">
-          <small><b>LMB</b>: Move <b>Q</b>: Rapid Shot <b>W</b>: Emit Shot <b>E</b>: Scatter Shot <b>R</b>: Shine</small>
-        </div>
+        <div id="debug" class="right-menu-help-text" style="width: 65% !important;">...</div>
         
       </div>
       
@@ -97,6 +97,8 @@
       <!-- Libs -->
       <script src="js/lib/jquery/jquery-3.1.1.min.js"></script>
       <script src="js/lib/sha256/sha256.min.js"></script>
+      <script src="js/lib/sylvester/sylvester.min.js"></script> <!-- @FIXME out of date -->
+      <script src="js/lib/glutils/glutils.js"></script> <!-- @FIXME out of date & not min -->
       
       <!-- UI Frontend -->
       <script src="js/app/menu/error-menu.js"></script>
@@ -121,6 +123,10 @@
       <!-- Game -->
       <script src="js/app/game/game.js"></script>
       <script src="js/app/game/input.js"></script>
+      <script src="js/app/game/display.js"></script>
+      <script src="js/app/game/display/shader.js"></script>
+      <script src="js/app/game/display/model.js"></script>
+      
       <!-- Game Objects -->
       <script src="js/app/game/object/object.js"></script>
       <script src="js/app/game/object/player.js"></script>

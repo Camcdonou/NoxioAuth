@@ -7,6 +7,7 @@ function NoxioGame() {
   this.container = document.getElementById("canvas-container");
   
   this.input = new Input(this.window);
+  this.display = new Display(this, this.container, this.window);
   
   this.gameOver = false;
   this.scores = [];
@@ -174,7 +175,7 @@ NoxioGame.prototype.step = function(packet) {
   
   /* Draw game and send input data */
   var tmp = this;
-  if(this.debug.ctime[0] < 10) { setTimeout( function() { tmp.draw(); }, 16); }
+  if(this.debug.ctime[0] < 10) { setTimeout( function() { tmp.draw(); }, 15); }
   this.draw();
   this.sendInput();
   
@@ -183,107 +184,31 @@ NoxioGame.prototype.step = function(packet) {
     this.debug.ctime[i] = this.debug.ctime[i-1];
   }
   this.debug.ctime[0] = new Date().getTime() - now;
+  
+  main.menu.game.updateDebug("STIME " + (this.debug.sAvg).toFixed(2) + " | CTIME " + (this.debug.cAvg).toFixed(2) + " | FPS " + (this.debug.fAvg).toFixed(2) + " | PING " + (this.debug.pAvg).toFixed(2));
 };
 
 NoxioGame.prototype.draw = function() {
-  /* DEBUG FPS STUFF @FIXME */
-  var now = new Date().getTime();
-  var fAvg = 0;
-  for(var i=0;i<this.debug.ss-1&&this.debug.frames[i+1]!==0;i++) {
-    fAvg += this.debug.frames[i] - this.debug.frames[i+1];
-  }
-  this.debug.fAvg = (1000*(i/(this.debug.ss-1)))/(fAvg/(this.debug.ss-1));
-  
-  /* Update Canvas Size */
-  this.window.width = this.container.clientWidth;
-  this.window.height = (9/16)*(this.window.width);
-  
-  /* Clear Canvas */
-  var context = this.window.getContext('2d');
-  context.clearRect(0, 0, this.window.width, this.window.height);  
-   
-  /* Draw Game Objects */
-  for(var i=0;i<this.objects.length;i++) {
-    this.objects[i].draw(context);
-  }
-  
-  /* Draw Debug Info */
-  context.font = '16px Calibri';
-  context.textAlign = 'right';
-  context.fillStyle = 'white';
-  context.fillText("STIME " + (this.debug.sAvg).toFixed(2) + " | CTIME " + (this.debug.cAvg).toFixed(2) + " | FPS " + (this.debug.fAvg).toFixed(2) + " | PING " + (this.debug.pAvg).toFixed(2), this.window.width-8, 24);
-  
-  /* Draw Score List */
-  if(this.settings !== undefined) {
-    context.font = '16px Calibri';
-    context.textAlign = 'left';
-    context.fillStyle = 'white';
-    for(var i=0;i<this.scores.length;i++) {
-      context.fillText(this.scores[i].user + " : " + this.scores[i].kills + "/" + this.settings.scoreToWin, 8, 24*(i+1));
+    /* DEBUG FPS STUFF @FIXME */
+    var now = new Date().getTime();
+    var fAvg = 0;
+    for(var i=0;i<this.debug.ss-1&&this.debug.frames[i+1]!==0;i++) {
+      fAvg += this.debug.frames[i] - this.debug.frames[i+1];
     }
-  }
-  
-  
-  /* Draw Cursor */
-  var cursor = this.input.getMouseActual();
-  context.beginPath();
-  context.strokeStyle = '#FFFFFF';
-  context.lineWidth = 5;
-  context.moveTo(cursor.x, cursor.y+10);
-  context.lineTo(cursor.x, cursor.y-10);
-  context.moveTo(cursor.x+10, cursor.y);
-  context.lineTo(cursor.x-10, cursor.y);
-  context.stroke();
-  
-  /* Draw Target Line */
-  if(this.control !== -1) {
-    var obj = this.getObject(this.control);
-    context.beginPath();
-    context.strokeStyle = 'rgba(255, 255, 255, 0.33)';
-    context.lineWidth = 5;
-    context.setLineDash([5, 15]);
-    context.moveTo(cursor.x, cursor.y);
-    context.lineTo(obj.pos.x, obj.pos.y);
-    context.stroke();
-  }
-  
-  /* Draw Helper Text */
-  if(this.control === -1 && !this.gameOver) {
-    context.font = '24px Calibri';
-    context.textAlign = 'center';
-    context.fillStyle = 'white';
-    context.fillText("Press space to respawn!", this.window.width/2, this.window.height-24);
-  }
-  
-  /* Draw Game Over Text */
-  if(this.gameOver) {
-    context.font = '64px Calibri';
-    context.textAlign = 'center';
-    context.fillStyle = 'white';
-    context.fillText(this.gameWinner + " won!", this.window.width/2, (this.window.height/2)-24);
-  }
-  
-  /* Draw Border */
-  context.beginPath();
-  context.setLineDash([]);
-  context.strokeStyle = '#FFFFFF';
-  context.lineWidth = 10;
-  context.moveTo(0, 0);
-  context.lineTo(this.window.width, 0);
-  context.moveTo(this.window.width, this.window.height); //Not drawing right border
-  context.lineTo(0, this.window.height);
-  context.lineTo(0, 0);
-  context.stroke();
-  
-  /* DEBUG FPS STUFF @FIXME */
-  for(var i=this.debug.ss;i>0;i--) {
-    this.debug.ctime[i] = this.debug.ctime[i-1];
-    this.debug.frames[i] = this.debug.frames[i-1];
-  }
-  this.debug.frames[0] = new Date().getTime();
-  this.debug.ctime[0] = new Date().getTime() - now;
-};
+    this.debug.fAvg = (1000*(i/(this.debug.ss-1)))/(fAvg/(this.debug.ss-1));
+
+    this.display.draw();
+    
+    /* DEBUG FPS STUFF @FIXME */
+    for(var i=this.debug.ss;i>0;i--) {
+      this.debug.ctime[i] = this.debug.ctime[i-1];
+      this.debug.frames[i] = this.debug.frames[i-1];
+    }
+    this.debug.frames[0] = new Date().getTime();
+    this.debug.ctime[0] = new Date().getTime() - now;
+  };
 
 NoxioGame.prototype.destroy = function() {
   this.input.destroy();
+  this.display.destroy();
 };

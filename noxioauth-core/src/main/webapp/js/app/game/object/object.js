@@ -24,6 +24,6 @@ GameObject.prototype.setVel = function(vel) {
   this.vel = vel;
 };
 
-GameObject.prototype.draw = function(context) {
+GameObject.prototype.draw = function() {
   /* NO. */
 };

@@ -8,6 +8,7 @@ function GameMenu() {
   this.title = document.getElementById("game-name");
   this.leave = document.getElementById("game-leave");
   this.log = document.getElementById("game-messages");
+  this.debug = document.getElementById("debug");
   
   this.messages = [];
 };
@@ -25,6 +26,10 @@ GameMenu.prototype.updateMessages = function(message) {
   for(var i=0;i<this.messages.length;i++) {
     this.log.innerHTML += this.messages[i] + "</br>";
   }
+};
+
+GameMenu.prototype.updateDebug = function(info) {
+  this.debug.innerHTML = info;
 };
 
 GameMenu.prototype.show = function() {
