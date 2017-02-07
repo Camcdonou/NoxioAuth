@@ -162,34 +162,38 @@ NoxioGame.prototype.step = function(packet) {
   this.debug.ping[0] = ping;
   this.debug.stime[0] = packet.tick;
   
-  var sAvg = 0, cAvg = 0, pAvg = 0, fAvg = 0;
+  var sAvg = 0, cAvg = 0, pAvg = 0;
   for(var i=0;i<this.debug.ss;i++) {
     sAvg += this.debug.stime[i];
     cAvg += this.debug.ctime[i];
     pAvg += this.debug.ping[i];
   }
-  for(var i=0;i<this.debug.ss-1&&this.debug.frames[i+1]!==0;i++) {
-    fAvg += this.debug.frames[i] - this.debug.frames[i+1];
-  }
   this.debug.sAvg = sAvg/this.debug.ss;
   this.debug.cAvg = cAvg/this.debug.ss;
   this.debug.pAvg = pAvg/this.debug.ss;
-  this.debug.fAvg = (1000*(i/(this.debug.ss-1)))/(fAvg/(this.debug.ss-1));
   
   /* Draw game and send input data */
+  var tmp = this;
+  if(this.debug.ctime[0] < 10) { setTimeout( function() { tmp.draw(); }, 16); }
   this.draw();
   this.sendInput();
   
   /* DEBUG INFORMATION */  
   for(var i=this.debug.ss;i>0;i--) {
     this.debug.ctime[i] = this.debug.ctime[i-1];
-    this.debug.frames[i] = this.debug.frames[i-1];
   }
-  this.debug.frames[0] = new Date().getTime();
   this.debug.ctime[0] = new Date().getTime() - now;
 };
 
 NoxioGame.prototype.draw = function() {
+  /* DEBUG FPS STUFF @FIXME */
+  var now = new Date().getTime();
+  var fAvg = 0;
+  for(var i=0;i<this.debug.ss-1&&this.debug.frames[i+1]!==0;i++) {
+    fAvg += this.debug.frames[i] - this.debug.frames[i+1];
+  }
+  this.debug.fAvg = (1000*(i/(this.debug.ss-1)))/(fAvg/(this.debug.ss-1));
+  
   /* Update Canvas Size */
   this.window.width = this.container.clientWidth;
   this.window.height = (9/16)*(this.window.width);
@@ -271,6 +275,13 @@ NoxioGame.prototype.draw = function() {
   context.lineTo(0, 0);
   context.stroke();
   
+  /* DEBUG FPS STUFF @FIXME */
+  for(var i=this.debug.ss;i>0;i--) {
+    this.debug.ctime[i] = this.debug.ctime[i-1];
+    this.debug.frames[i] = this.debug.frames[i-1];
+  }
+  this.debug.frames[0] = new Date().getTime();
+  this.debug.ctime[0] = new Date().getTime() - now;
 };
 
 NoxioGame.prototype.destroy = function() {
