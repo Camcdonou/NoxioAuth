@@ -6,8 +6,9 @@ function NoxioGame() {
   this.window = document.getElementById("canvas");
   this.container = document.getElementById("canvas-container");
   
-  this.input = new Input(this.window);
+  this.asset = new Asset(); /* Loads all game files. */
   this.display = new Display(this, this.container, this.window);
+  this.input = new Input(this.window);
   
   this.gameOver = false;
   this.scores = [];

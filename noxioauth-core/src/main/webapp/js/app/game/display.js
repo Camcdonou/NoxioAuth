@@ -25,7 +25,7 @@ Display.prototype.initWebGL = function() {
     this.gl = this.window.getContext("experimental-webgl", { premultipliedalpha: false });
     return this.setupWebGL();
   }
-  catch(ex) { return false; }
+  catch(ex) { main.menu.error.showErrorException("WebGL Error", "Exception while initializing WebGL: ", ex.stack); return false; }
 };
 
 /* Returns boolean. If false then WebGL failed to setup and we should setup fallback rendering. If true we all good boyzzz. */
@@ -43,30 +43,30 @@ Display.prototype.setupWebGL = function() {
   
   /* @FIXME this is a temp thing */
   var defaultShaderSource = {
-    fragment: "precision mediump float; varying vec4 vcolor; void main(void) { gl_FragColor = vcolor; }",
-    vertex: "precision mediump float; attribute vec3 aVertexPosition; uniform mat4 uMVMatrix; uniform mat4 uPMatrix; varying vec4 vcolor; void main(void) { vcolor = vec4((aVertexPosition.x+1.0)*0.5, (aVertexPosition.y+1.0)*0.5, (aVertexPosition.z+1.0)*0.5, 1.0); gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0); }"
+    fragment: "precision mediump float; varying vec3 vnormal; varying vec3 vcoord; varying vec3 color;  void main(void) { gl_FragColor = vec4(color, 1.0+((vnormal.x+vcoord.x)*0.001)); }",
+    vertex: "precision mediump float; attribute vec3 position; attribute vec3 texcoord; attribute vec3 normal; uniform mat4 uMVMatrix; uniform mat4 uPMatrix; varying vec3 vnormal; varying vec3 vcoord; varying vec3 color; void main(void) { color = vec3(position.x+0.5,position.y+0.5,position.z+0.5); vnormal = normal; vcoord = texcoord; gl_Position = uPMatrix * uMVMatrix * vec4(position, 1.0); }"
   };
   
   /* @FIXME more temp stuff */
-  var defaultModelSource = {
-    vertices: [
-      -1.0, -1.0,  1.0, 1.0, -1.0,  1.0, 1.0,  1.0,  1.0, -1.0,  1.0,  1.0, -1.0, -1.0, -1.0, -1.0,  1.0, -1.0, 1.0,  1.0, -1.0,
-       1.0, -1.0, -1.0, -1.0,  1.0, -1.0, -1.0,  1.0,  1.0, 1.0,  1.0,  1.0, 1.0,  1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0,
-       1.0, -1.0,  1.0, -1.0, -1.0,  1.0, 1.0, -1.0, -1.0, 1.0,  1.0, -1.0,  1.0,  1.0,  1.0, 1.0, -1.0,  1.0, -1.0, -1.0, -1.0, 
-      -1.0, -1.0,  1.0, -1.0,  1.0,  1.0, -1.0,  1.0, -1.0
-    ],
-    indices: [
-      0,  1,  2,      0,  2,  3,    // front
-      4,  5,  6,      4,  6,  7,    // back
-      8,  9,  10,     8,  10, 11,   // top
-      12, 13, 14,     12, 14, 15,   // bottom
-      16, 17, 18,     16, 18, 19,   // right
-      20, 21, 22,     20, 22, 23    // left
-    ]
-  }
+//  var defaultModelSource = {
+//    vertices: [
+//      -1.0, -1.0,  1.0, 1.0, -1.0,  1.0, 1.0,  1.0,  1.0, -1.0,  1.0,  1.0, -1.0, -1.0, -1.0, -1.0,  1.0, -1.0, 1.0,  1.0, -1.0,
+//       1.0, -1.0, -1.0, -1.0,  1.0, -1.0, -1.0,  1.0,  1.0, 1.0,  1.0,  1.0, 1.0,  1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0,
+//       1.0, -1.0,  1.0, -1.0, -1.0,  1.0, 1.0, -1.0, -1.0, 1.0,  1.0, -1.0,  1.0,  1.0,  1.0, 1.0, -1.0,  1.0, -1.0, -1.0, -1.0, 
+//      -1.0, -1.0,  1.0, -1.0,  1.0,  1.0, -1.0,  1.0, -1.0
+//    ],
+//    indices: [
+//      0,  1,  2,      0,  2,  3,    // front
+//      4,  5,  6,      4,  6,  7,    // back
+//      8,  9,  10,     8,  10, 11,   // top
+//      12, 13, 14,     12, 14, 15,   // bottom
+//      16, 17, 18,     16, 18, 19,   // right
+//      20, 21, 22,     20, 22, 23    // left
+//    ]
+//  };
   
   if(!this.createShader("Default", defaultShaderSource)) { return false; }
-  if(!this.createModel("Default", defaultModelSource)) { return false; }
+  if(!this.createModel("Default", this.game.asset.basic.tilePillar)) { return false; }
   
   return true;
 };
@@ -119,12 +119,16 @@ Display.prototype.createShader = function(name, source) {
     return false;
   }
 
-  var vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+  var vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "position");
+  var textureCoordinateAttribute = gl.getAttribLocation(shaderProgram, "texcoord");
+  var vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "normal");
   gl.enableVertexAttribArray(vertexPositionAttribute);
   
-  var attributes = [
-    {vertexPositionAttribute: vertexPositionAttribute}
-  ];
+  var attributes = {
+    vertexPositionAttribute: vertexPositionAttribute,
+    textureCoordinateAttribute: textureCoordinateAttribute,
+    vertexNormalAttribute: vertexNormalAttribute
+  };
   this.shaders.push(new Shader(name, shaderProgram, attributes));
   return true;
 };
@@ -141,7 +145,7 @@ Display.prototype.createModel = function(name, source) {
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(source.indices), gl.STATIC_DRAW);
   
-  this.models.push(new Model(name, vertexBuffer, indexBuffer, this.getShader("Default"))); /* @FIXME shader retrieval stub */
+  this.models.push(new Model(name, vertexBuffer, indexBuffer, source.indices.length, this.getShader("Default"))); /* @FIXME shader retrieval stub */
   
   return true;
 };
@@ -159,6 +163,7 @@ Display.prototype.draw = function() {
 
   gl.viewport(0, 0, this.window.width, this.window.height); // Resize to canvas
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear Color and Depth from previous draw.
+  gl.clearColor(0.5, 0.5, 0.5, 1.0);  // Set clear color to black, fully opaque
   var perspectiveMatrix = makePerspective(90, this.window.width/this.window.height, 0.1, 100.0); //FOV, Aspect Ratio, Near Plane, Far Plane
   
   /* Test Draw */
