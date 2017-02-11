@@ -10,6 +10,8 @@ function NoxioGame() {
   this.display = new Display(this, this.container, this.window);
   this.input = new Input(this.window);
   
+  this.loadMap("test"); /* @FIXME DEBUG TEST */
+  
   this.gameOver = false;
   this.scores = [];
   
@@ -20,6 +22,11 @@ function NoxioGame() {
   this.objects = [];
   
   this.packHand.game = this;
+};
+
+NoxioGame.prototype.loadMap = function(map) {
+  if(this.asset.map[map] === undefined) { main.menu.error.showError("Game Error", "Could not load specified map: " + map); }
+  this.map = this.asset.map[map](this.display);
 };
 
 /* Returns false if failed handled packet */

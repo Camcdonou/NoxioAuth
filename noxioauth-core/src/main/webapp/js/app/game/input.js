@@ -5,27 +5,36 @@
 function Input(window) {
   this.window = window;
   
-  this.window.onmousemove = function(event) { main.game.input.mouse.move(event); };
-  this.window.onmousedown = function(event) { main.game.input.mouse.button(event, true); };
-  this.window.onmouseup = function(event) { main.game.input.mouse.button(event, false); };
+  this.window.onmousemove = function(event) { main.game.input.mouse.event(event, true); };
+  this.window.onmousedown = function(event) { main.game.input.mouse.event(event, true); };
+  this.window.onmouseup = function(event) { main.game.input.mouse.event(event, false); };
   document.onkeyup = function(event) { main.game.input.keyboard.event(event, false); };
   document.onkeydown = function(event) { main.game.input.keyboard.event(event, true); };
 };
 
 Input.prototype.mouse = {
   pos: {x: 0, y: 0},
+  mov: {x: 0, y: 0},
   lmb: false,
   rmb: false,
   mmb: false
 };
 
-Input.prototype.mouse.move = function(event) {
+Input.prototype.mouse.event = function(event, state) {
+  this.mov = {x: this.mov.x+(this.pos.x-event.offsetX), y: this.mov.y+((this.pos.y-event.offsetY)*-1)};
   this.pos = {x: event.offsetX, y: event.offsetY};
+  switch(event.buttons) {
+		case 1 : { this.lmb = state; break; }
+		case 2 : { this.rmb = state; break; }
+		case 4 : { this.mmb = state; break; }
+		default : { /* Ignore */ break; }
+	}
 };
 
-Input.prototype.mouse.button = function(event, state) {
-  this.pos = {x: event.offsetX, y: event.offsetY};
-  this.lmb = state;
+Input.prototype.mouse.popMovement = function() {
+  var mov = this.mov;
+  this.mov = {x: 0, y: 0};
+  return mov;
 };
 
 Input.prototype.keyboard = {

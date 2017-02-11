@@ -7,6 +7,8 @@ function Display(game, container, window) {
   this.container = container;
   this.window = window;
   
+  this.camera = {pos: {x: 0.0, y: 0.0, z: -6.0}};
+  
   if(!this.initWebGL()) { this.initFallback(); }
   
   this.rx = 0; /* @FIXME debug */
@@ -38,14 +40,22 @@ Display.prototype.setupWebGL = function() {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Set clear color to black, fully opaque
   gl.clearDepth(1.0);                 // Clear everything
   
+  this.textures = [];
   this.shaders = [];
   this.models = [];
   
   /* @FIXME this is a temp thing */
+  var defaultTextureSource = "img/multi/default.png";
+  
+  /* @FIXME this is a temp thing */
   var defaultShaderSource = {
-    fragment: "precision mediump float; varying vec3 vnormal; varying vec3 vcoord; varying vec3 color;  void main(void) { gl_FragColor = vec4(color, 1.0+((vnormal.x+vcoord.x)*0.001)); }",
-    vertex: "precision mediump float; attribute vec3 position; attribute vec3 texcoord; attribute vec3 normal; uniform mat4 uMVMatrix; uniform mat4 uPMatrix; varying vec3 vnormal; varying vec3 vcoord; varying vec3 color; void main(void) { color = vec3(position.x+0.5,position.y+0.5,position.z+0.5); vnormal = normal; vcoord = texcoord; gl_Position = uPMatrix * uMVMatrix * vec4(position, 1.0); }"
+    fragment: "precision mediump float; uniform sampler2D texture; varying vec3 vnormal; varying vec3 vcoord; void main(void) { gl_FragColor = (texture2D(texture, vcoord.st)*0.75)+(vec4(vnormal, 1.0)*0.25); }",
+    vertex: "precision mediump float; attribute vec3 position; attribute vec3 texcoord; attribute vec3 normal; uniform mat4 uMVMatrix; uniform mat4 uPMatrix; varying vec3 vnormal; varying vec3 vcoord; varying vec3 color; void main(void) { vnormal = normal; vcoord = texcoord; gl_Position = uPMatrix * uMVMatrix * vec4(position, 1.0); }"
   };
+//  var defaultShaderSource = {
+//    fragment: "precision mediump float; varying vec3 vnormal; varying vec3 vcoord; varying vec3 color;  void main(void) { gl_FragColor = vec4(color, 1.0+((vnormal.x+vcoord.x)*0.001)); }",
+//    vertex: "precision mediump float; attribute vec3 position; attribute vec3 texcoord; attribute vec3 normal; uniform mat4 uMVMatrix; uniform mat4 uPMatrix; varying vec3 vnormal; varying vec3 vcoord; varying vec3 color; void main(void) { color = vec3(position.x+0.5,position.y+0.5,position.z+0.5); vnormal = normal; vcoord = texcoord; gl_Position = uPMatrix * uMVMatrix * vec4(position, 1.0); }"
+//  };
   
   /* @FIXME more temp stuff */
 //  var defaultModelSource = {
@@ -65,9 +75,17 @@ Display.prototype.setupWebGL = function() {
 //    ]
 //  };
   
+  if(!this.createTexture(defaultTextureSource)) { return false; }
   if(!this.createShader("Default", defaultShaderSource)) { return false; }
   if(!this.createModel("Default", this.game.asset.basic.tilePillar)) { return false; }
   
+  return true;
+};
+
+Display.prototype.createTexture = function(path) {
+  var gl = this.gl; // Sanity Save
+  var glTexture = gl.createTexture();
+  this.textures.push(new Texture(gl, glTexture, path));
   return true;
 };
 
@@ -129,7 +147,7 @@ Display.prototype.createShader = function(name, source) {
     textureCoordinateAttribute: textureCoordinateAttribute,
     vertexNormalAttribute: vertexNormalAttribute
   };
-  this.shaders.push(new Shader(name, shaderProgram, attributes));
+  this.shaders.push(new Shader(gl, name, shaderProgram, attributes));
   return true;
 };
 
@@ -155,6 +173,10 @@ Display.prototype.draw = function() {
   this.window.width = this.container.clientWidth;
   this.window.height = (9/16)*(this.window.width);
   
+  /* Update Camera */
+  var mmov = this.game.input.mouse.popMovement();
+  if(this.game.input.mouse.rmb) { this.camera.pos.x += mmov.x/128; this.camera.pos.y += mmov.y/128; }
+  
   /* Check WebGL is OKAY */
   if(!this.gl) { this.drawFallback(); return; }
   
@@ -165,11 +187,23 @@ Display.prototype.draw = function() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear Color and Depth from previous draw.
   gl.clearColor(0.5, 0.5, 0.5, 1.0);  // Set clear color to black, fully opaque
   var perspectiveMatrix = makePerspective(90, this.window.width/this.window.height, 0.1, 100.0); //FOV, Aspect Ratio, Near Plane, Far Plane
+  this.getTexture("img/multi/default.png").bind(gl); /* @FIXME TESTING */
+  
+  /* Collect all geometry to draw.
+     Format: {model: <Model>, pos: {x: <float>, y: <float>, z: <float>}, rot: {x: <float>, y: <float>, z: <float>, w: <float>}} */
+  var geometry = [];
+  this.game.map.getDraw(geometry);
+  
+  /* Draw Geometry */
+  for(var i=0;i<geometry.length;i++) {
+    geometry[i].model.draw(gl, perspectiveMatrix, geometry[i].pos, geometry[i].rot, this.camera);
+  }
   
   /* Test Draw */
-  this.rx++;
-  var model = this.getModel("Default");
-  model.draw(gl, perspectiveMatrix, {x: (Math.sin(this.rx/100)*3), y: (Math.cos(this.rx/100)*3), z: -6.0}, {x: 0.0, y: 0.0, z: 1.0, w: (this.rx/66)});
+//  this.rx++;
+//  var model = this.getModel("Default");
+//  model.draw(gl, perspectiveMatrix, {x: (Math.sin(this.rx/100)*1)+10, y: (Math.cos(this.rx/100)*1), z: 0.0}, {x: 0.0, y: 0.0, z: 1.0, w: (this.rx/66)}, this.camera);
+//  model.draw(gl, perspectiveMatrix, {x: (Math.sin(this.rx/-10)*1), y: (Math.cos(this.rx/-10)*1)+10, z: 0.0}, {x: 0.0, y: 0.0, z: 1.0, w: (this.rx/133)}, this.camera);
 
 //  this.drawObjects(gl); /* Draw Game Objects */
 //  this.drawControl(gl); /* Draw Controls */
@@ -217,7 +251,17 @@ Display.prototype.multMatrix = function(m) {
 
 Display.prototype.mvTranslate = function(v) {
   this.multMatrix(Matrix.Translation($V([v[0], v[1], v[2]])).ensure4x4());
-}
+};
+
+/* Returns a texture by path. If texture is not found then returns default. */
+Display.prototype.getTexture = function(path) {
+  for(var i=0;i<this.textures.length;i++) {
+    if(this.textures[i].path === path) {
+      return this.textures[i];
+    }
+  }
+  return this.getTexture("img/multi/default.png");
+};
 
 /* Returns a shader by name. If shader is not found then returns default. */
 Display.prototype.getShader = function(name) {
@@ -226,17 +270,25 @@ Display.prototype.getShader = function(name) {
       return this.shaders[i];
     }
   }
-  this.getShader("Default");
+  return this.getShader("Default");
 };
 
-/* Returns a model by name. If model is not found then returns default. */
+/* Returns a model by name. If it is not loaded then it attempts to load it. If model is not found then returns default. */
 Display.prototype.getModel = function(name) {
   for(var i=0;i<this.models.length;i++) {
     if(this.models[i].name === name) {
       return this.models[i];
     }
   }
-  this.getModel("Default");
+  
+  var spl = name.split(".");
+  var src = this.game.asset;
+  for(var i=0;i<spl.length&&src!==undefined;i++) {
+    src = src[spl[i]];
+  }
+  if(src !== undefined) { this.createModel(name, src); return this.getModel(name); }
+  
+  return this.getModel("Default");
 };
 
 Display.prototype.destroy = function() {
