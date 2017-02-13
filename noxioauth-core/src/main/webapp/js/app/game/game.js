@@ -25,6 +25,7 @@ function NoxioGame() {
 };
 
 NoxioGame.prototype.loadMap = function(map) {
+  if(!this.display.gl) { return; }
   if(this.asset.map[map] === undefined) { main.menu.error.showError("Game Error", "Could not load specified map: " + map); }
   this.map = this.asset.map[map](this.display);
 };

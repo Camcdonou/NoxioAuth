@@ -18,7 +18,6 @@ Texture.prototype.bind = function(gl) {
 };
 
 Texture.prototype.handleTextureLoaded = function(gl) {
-  console.log("handleTextureLoaded, image = " + this.img);
   gl.bindTexture(gl.TEXTURE_2D, this.glTexture);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.img);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);

@@ -31,7 +31,7 @@ ErrorMenu.prototype.showErrorException = function(title, message, trace) {
   console.error("##EXCEPTION## " + message + "\n" + trace);
   this.modal.style.display = "block";
   this.title.innerHTML = title;
-  this.message.innerHTML = "<p>" + message + "</p><div style='margin-bottom:12px;height:120px;width:100%;font-size:80%;border:1px solid #ccc;background-color:#DDDDDD;overflow:auto;'>" + trace + "</div>";
+  this.message.innerHTML = "<p>" + message + "</p><div style='margin-bottom:12px;height:120px;width:100%;font-size:80%;border:1px solid #ccc;background-color:#DDDDDD;overflow:auto;'>" + trace.replace(/\n/g, "<br/>"); + "</div>";
   this.footer.innerHTML = "If you don't know what happened please report this error to help@help.help...";
 };
 

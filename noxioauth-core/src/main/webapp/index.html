@@ -10,15 +10,15 @@
     <body ondragstart="return false;" ondrop="return false;">
       
       <!-- Warning Class -->
-      <div id="warning" class="main-warn info-animate">...</div>
+      <div id="warning" class="main-warn info-animate" style="display: none">...</div>
 
       <!-- Connection Display -->
-      <div id="connect" class="main-menu-container">
+      <div id="connect" class="main-menu-container" style="display: none">
         <div id="connect-info" class="main-menu lg">...</div>
       </div>
       
       <!-- Login / Create Account Menu -->
-      <div id="auth" class="main-menu-container">
+      <div id="auth" class="main-menu-container" style="display: none">
         <div class="main-menu-inverse lg">Noxio</div>
         <div id="auth-login" class="main-menu btn lg" onclick="main.menu.auth.items.login.show()">Login</div>
           <div id="auth-login-username" class="main-menu inp sm"><input id="auth-login-username-input" class="main-menu-input" type="text" placeholder="Username"/></div>
@@ -33,7 +33,7 @@
       </div>
       
       <!-- Game Server / Settings Menu -->
-      <div id="online" class="main-menu-container">
+      <div id="online" class="main-menu-container" style="display: none">
         <div id="online-user" class="main-menu-inverse lg">User</div>
         <div id="online-server" class="main-menu btn lg" onclick="main.menu.online.items.server.show()">Servers</div>
           <span id="online-server-cont"></span>
@@ -47,7 +47,7 @@
       </div>
       
       <!-- Game Server Lobby -->
-      <div id="lobby">
+      <div id="lobby" style="display: none">
         <div class="main-menu-container">
           <div id="lobby-server" class="main-menu-inverse lg">User@Server Name</div>
           <div id="lobby-create" class="main-menu btn lg" onclick="main.menu.lobby.items.create.show()">Create Lobby</div>
@@ -62,7 +62,7 @@
       </div>
       
       <!-- Game -->
-      <div id="game" class="unselectable">
+      <div id="game" class="unselectable" style="display: none">
         <div class="main-menu-container" style="width: 30% !important;">
           <div id="game-name" class="main-menu-inverse lg">User@Lobby Name@Server Name</div>
           <div id="game-leave" class="main-menu btn lg" onclick="main.menu.game.leaveGameButton()">Leave Game</div>
@@ -99,6 +99,9 @@
       <script src="js/lib/sha256/sha256.min.js"></script>
       <script src="js/lib/sylvester/sylvester.min.js"></script> <!-- @FIXME out of date -->
       <script src="js/lib/glutils/glutils.js"></script> <!-- @FIXME out of date & not min -->
+      <script src="js/lib/glm/glm-js.min.js"></script>
+      <script src="js/lib/glm/glm-js-ext.js"></script> <!-- @FIXME self created & not minified -->
+      <script src="js/lib/libs/libs.js"></script> <!-- @FIXME TEMP DELET THIS -->
       
       <!-- UI Frontend -->
       <script src="js/app/menu/error-menu.js"></script>
@@ -135,6 +138,7 @@
       
       <!-- Game Assets -->
       <script src="js/app/game/asset/asset.js"></script>
+      <script src="js/app/game/asset/shader.js"></script>
       <script src="js/app/game/asset/basic.js"></script>
       <script src="js/app/game/asset/map.js"></script>
       
