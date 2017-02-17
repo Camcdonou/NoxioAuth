@@ -1,6 +1,8 @@
 "use strict";
 /* global main */
-/* global glm */
+/* global Texture */
+/* global mat4 */
+/* global vec3 */
 
 /* Define Game Rendering Class */
 function Display(game, container, window) {
@@ -8,7 +10,7 @@ function Display(game, container, window) {
   this.container = container;
   this.window = window;
   
-  this.camera = {pos: {x: 0.0, y: 0.0, z: 0.0}}; /* UNUSED! */
+  this.camera = {pos: {x: 0.0, y: 0.0, z: -10.0}}; /* UNUSED! */
   
   if(!this.initWebGL()) { this.initFallback(); }
 };
@@ -148,6 +150,7 @@ Display.prototype.createMaterial = function(source) {
   if(source.texture2) { texture.texture2 = this.getTexture(source.texture2); }
   if(source.texture3) { texture.texture3 = this.getTexture(source.texture3); }
   if(source.texture4) { texture.texture4 = this.getTexture(source.texture4); }
+  
   this.materials.push(new Material(source.name, shader, texture));
   
   return true;
@@ -221,25 +224,30 @@ Display.prototype.draw = function() {
   var geometry = [];
   this.game.map.getDraw(geometry);
   
-  /* Draw Geometry to Shadow FBO */
-  var PROJMATRIX=LIBS.get_projection(40, this.window.width/this.window.height, 1, 100); /* Perspective */
-  var MOVEMATRIX=LIBS.get_I4();
-  var VIEWMATRIX=LIBS.get_I4();
+  /* Generate all matrices for the render */
+  var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, 0.785398, this.window.width/this.window.height, 1.0, 64.0); // Perspective
+  var TRANSLATE  = vec3.create(); vec3.set(TRANSLATE, 0.0, 0.0, 0.0);
+  var MOVEMATRIX = mat4.create(); mat4.translate(MOVEMATRIX, MOVEMATRIX, TRANSLATE);
+  var VIEWMATRIX = mat4.create();
 
-  LIBS.translateZ(VIEWMATRIX, -10);
-  LIBS.translateY(VIEWMATRIX, 0);
-  var THETA=0,
-      PHI=0;
-
-  var LIGHTDIR=[0.58,0.58,-0.58];
-  var PROJMATRIX_SHADOW=LIBS.get_projection_ortho(16, 1, 8, 64);
-  var OFFSETMATRIX=LIBS.get_I4();
-  var LIGHTMATRIX=LIBS.lookAtDir(LIGHTDIR, [0,1,0], [0,0,0]);
+   /* We basically place the center of the shadow proj on the ground of the map and put the near clip behind us. Allows for easier centering. */
+  var PROJMATRIX_SHADOW = mat4.create(); mat4.ortho(PROJMATRIX_SHADOW, -8.0, 8.0,-8.0, 8.0, -16.0, 16.0);
   var SMSIZE=1; /* @FIXME my understanding is that you have to do this calculation against the PROJ * LIGHT * TRANSFORM matrix. */
-  LIBS.translateX(OFFSETMATRIX, (Math.floor(this.camera.pos.x*SMSIZE)-(this.camera.pos.x*SMSIZE))/SMSIZE);
-  LIBS.translateY(OFFSETMATRIX, (Math.floor(this.camera.pos.y*SMSIZE)-(this.camera.pos.y*SMSIZE))/SMSIZE);
-  LIBS.translateZ(OFFSETMATRIX, (Math.floor(this.camera.pos.z*SMSIZE)-(this.camera.pos.z*SMSIZE))/SMSIZE);
+  var OFFSET = vec3.create(); 
+    vec3.set(
+      OFFSET,
+      (Math.floor(this.camera.pos.x*SMSIZE)-(this.camera.pos.x*SMSIZE))/SMSIZE,
+      (Math.floor(this.camera.pos.y*SMSIZE)-(this.camera.pos.y*SMSIZE))/SMSIZE,
+      ((Math.floor(this.camera.pos.z*SMSIZE)-(this.camera.pos.z*SMSIZE))/SMSIZE)-this.camera.pos.z
+    );
+  var OFFSETMATRIX = mat4.create(); mat4.translate(OFFSETMATRIX, OFFSETMATRIX, OFFSET);
+  var LIGHTMATRIX = mat4.create();
+    mat4.translate(LIGHTMATRIX, LIGHTMATRIX, [0.0, 0.0, 1.0]);
+    mat4.rotate(LIGHTMATRIX, LIGHTMATRIX, -0.5, [1.0, 0.0, 0.0]);
+    mat4.rotate(LIGHTMATRIX, LIGHTMATRIX, 0.35, [0.0, 1.0, 0.0]);
+  var LIGHTDIR = vec3.create(); vec3.set(LIGHTDIR, LIGHTMATRIX[8], LIGHTMATRIX[9], -LIGHTMATRIX[10]);
   
+  /* Draw Geometry to Shadow FBO */
   gl.bindFramebuffer(gl.FRAMEBUFFER, this.shadow.fb); //Enable shadow frame buffers
   gl.viewport(0.0, 0.0, 512.0, 512.0); // Resize to FBO texture /* @FIXME hardcodedw4
   gl.clearColor(1.0, 0.0, 0.0, 1.0); // red -> Z=Zfar on the shadow map
@@ -277,20 +285,21 @@ Display.prototype.draw = function() {
   }
   
   /* DEBUG DRAW */
-//  var debugTexture = {glTexture: this.shadow.tex, bind: Texture.prototype.bind}; /* Hackyyyy */
-//  var debugShader = this.getShader("debug");
-//  var debugMaterial = new Material("!DEBUG", debugShader, {texture0: debugTexture}); /* Even hackier */
-//  var debugModel = this.getModel("model.multi.square");
-//  debugTexture.bind(gl, 0);
-//
-//  var PROJMATRIX_DEBUG=LIBS.get_projection_ortho(2, this.window.width/this.window.height, 0, 1);
-//  var VIEWMATRIX_DEBUG=LIBS.lookAtDir([0,0,-1.0], [0,1,0], [0,0,0]);
-//  var uniformDataDebug = [
-//    {name: "Pmatrix", data: PROJMATRIX_DEBUG},
-//    {name: "Vmatrix", data: VIEWMATRIX_DEBUG}
-//  ];
-//
-//  debugModel.draw(gl, debugMaterial, {x: 0.5, y: 0, z: 0}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}}, uniformDataDebug);
+  var debugTexture = {glTexture: this.shadow.tex, bind: Texture.prototype.bind}; /* Hackyyyy */
+  var debugShader = this.getShader("debug");
+  var debugMaterial = new Material("!DEBUG", debugShader, {texture0: debugTexture}); /* Even hackier */
+  var debugModel = this.getModel("model.multi.square");
+  debugTexture.bind(gl, 0);
+  
+  var ASPECT = this.window.height/this.window.width;
+  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, -1.0, 1.0,-1.0*ASPECT, 1.0*ASPECT, 0.0, 1.0);
+  var VIEWMATRIX_DEBUG= mat4.create();
+  var uniformDataDebug = [
+    {name: "Pmatrix", data: PROJMATRIX_DEBUG},
+    {name: "Vmatrix", data: VIEWMATRIX_DEBUG}
+  ];
+
+  debugModel.draw(gl, debugMaterial, {x: 0.5, y: 0, z: -0.5}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}}, uniformDataDebug);
 
   gl.flush();
 };
