@@ -9,15 +9,21 @@ function Shader(name, program, attributes, uniforms) {
   this.uniforms = uniforms;
 }
 
-Shader.prototype.use = function(gl, uniformData, uniformModelData, uniformMaterialData) {
+Shader.prototype.enable = function(gl) {
   gl.useProgram(this.program);
-   
-  this.applyUniformData(gl, uniformData);
-  this.applyUniformData(gl, uniformModelData);
-  this.applyUniformData(gl, uniformMaterialData);
+  
+  if(this.attributes.position) { gl.enableVertexAttribArray(this.attributes.position.location); }
+  if(this.attributes.texcoord) { gl.enableVertexAttribArray(this.attributes.texcoord.location); }
+  if(this.attributes.normal) { gl.enableVertexAttribArray(this.attributes.normal.location); }
 };
 
-Shader.prototype.applyUniformData = function(gl, uniformData) {
+Shader.prototype.disable = function(gl) {
+  if(this.attributes.position) { gl.disableVertexAttribArray(this.attributes.position.location); }
+  if(this.attributes.texcoord) { gl.disableVertexAttribArray(this.attributes.texcoord.location); }
+  if(this.attributes.normal) { gl.disableVertexAttribArray(this.attributes.normal.location); }
+};
+
+Shader.prototype.applyUniforms = function(gl, uniformData) {
   for(var i=0;i<uniformData.length;i++) {
     var uniform = this.uniforms[uniformData[i].name];
     if(!uniform) { continue; }

@@ -209,7 +209,7 @@ Display.prototype.draw = function() {
   this.window.width = this.container.clientWidth;
   this.window.height = (9/16)*(this.window.width);
   
-  /* Update Camera */
+  /* Update Camera Position */
   var mmov = this.game.input.mouse.popMovement();
   if(this.game.input.mouse.rmb) { this.camera.pos.x += mmov.x/128; this.camera.pos.y += mmov.y/128; }
   
@@ -219,18 +219,13 @@ Display.prototype.draw = function() {
   /* Begin WebGL draw */
   var gl = this.gl; // Sanity Save
   
-  /* Collect all geometry to draw.
-     Format: {model: <Model>, pos: {x: <float>, y: <float>, z: <float>}, rot: {x: <float>, y: <float>, z: <float>, w: <float>}} */
-  var geometry = [];
-  this.game.map.getDraw(geometry);
-  
   /* Generate all matrices for the render */
   var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, 0.785398, this.window.width/this.window.height, 1.0, 64.0); // Perspective
   var TRANSLATE  = vec3.create(); vec3.set(TRANSLATE, 0.0, 0.0, 0.0);
   var MOVEMATRIX = mat4.create(); mat4.translate(MOVEMATRIX, MOVEMATRIX, TRANSLATE);
   var VIEWMATRIX = mat4.create();
 
-   /* We basically place the center of the shadow proj on the ground of the map and put the near clip behind us. Allows for easier centering. */
+  // We basically place the center of the shadow proj on the ground of the map and put the near clip behind us. Allows for easier centering.
   var PROJMATRIX_SHADOW = mat4.create(); mat4.ortho(PROJMATRIX_SHADOW, -8.0, 8.0,-8.0, 8.0, -16.0, 16.0);
   var SMSIZE=1; /* @FIXME my understanding is that you have to do this calculation against the PROJ * LIGHT * TRANSFORM matrix. */
   var OFFSET = vec3.create(); 
@@ -247,6 +242,38 @@ Display.prototype.draw = function() {
     mat4.rotate(LIGHTMATRIX, LIGHTMATRIX, 0.35, [0.0, 1.0, 0.0]);
   var LIGHTDIR = vec3.create(); vec3.set(LIGHTDIR, LIGHTMATRIX[8], LIGHTMATRIX[9], -LIGHTMATRIX[10]);
   
+  /* Collect all geometry to draw.
+     Format: {model: <Model>, material: <Material>, pos: {x: <float>, y: <float>, z: <float>}, rot: {x: <float>, y: <float>, z: <float>, w: <float>}} */
+  var geometry = [];
+  this.game.map.getDraw(geometry, this.camera);
+  
+  /* Sort geometry by shader -> material -> draws */
+  var geomSorted = [];
+  for(var i=0;i<geometry.length;i++) {
+    var geom = geometry[i];
+    var shaderGroup = undefined;
+    for(var j=0;j<geomSorted.length;j++) {
+      if(geomSorted[j].shader.name === geom.material.shader.name) {
+        shaderGroup = geomSorted[j];
+      }
+    }
+    if(!shaderGroup) {
+      shaderGroup = {shader: geom.material.shader, materials: []};
+      geomSorted.push(shaderGroup);
+    }
+    var materialGroup = undefined;
+    for(var j=0;j<shaderGroup.materials.length;j++) {
+      if(shaderGroup.materials[j].material.name === geom.material.name) {
+        materialGroup = shaderGroup.materials[j];
+      }
+    }
+    if(!materialGroup) {
+      materialGroup = {material: geom.material, draws: []};
+      shaderGroup.materials.push(materialGroup);
+    }
+    materialGroup.draws.push({model: geom.model, pos: geom.pos, rot: geom.rot});
+  }
+  
   /* Draw Geometry to Shadow FBO */
   gl.bindFramebuffer(gl.FRAMEBUFFER, this.shadow.fb); //Enable shadow frame buffers
   gl.viewport(0.0, 0.0, 512.0, 512.0); // Resize to FBO texture /* @FIXME hardcodedw4
@@ -259,10 +286,16 @@ Display.prototype.draw = function() {
     {name: "Lmatrix", data: LIGHTMATRIX},
     {name: "Omatrix", data: OFFSETMATRIX}
   ];
+  
+  shadowMaterial.shader.enable(gl);
+  shadowMaterial.shader.applyUniforms(gl, shadowUniformData);
+  shadowMaterial.enable(gl);
   for(var i=0;i<geometry.length;i++) {
-    geometry[i].model.draw(gl, shadowMaterial, geometry[i].pos, geometry[i].rot, this.camera, shadowUniformData);
+    geometry[i].model.draw(gl, shadowMaterial.shader, geometry[i].pos, geometry[i].rot, this.camera);
   }
-
+  shadowMaterial.disable(gl);
+  shadowMaterial.shader.disable(gl);
+  
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); //Disable frame buffer
 
   /* Draw Geometry */
@@ -280,16 +313,27 @@ Display.prototype.draw = function() {
     {name: "sourceDirection", data: LIGHTDIR},
     {name: "texture5", data: 5}
   ];
-  for(var i=0;i<geometry.length;i++) {
-    geometry[i].model.draw(gl, geometry[i].material, geometry[i].pos, geometry[i].rot, this.camera, uniformData);
+  for(var i=0;i<geomSorted.length;i++) {
+    var shaderGroup = geomSorted[i];
+    shaderGroup.shader.enable(gl);
+    shaderGroup.shader.applyUniforms(gl, uniformData);
+    for(var j=0;j<shaderGroup.materials.length;j++) {
+      var materialGroup = shaderGroup.materials[j];
+      materialGroup.material.enable(gl);
+      for(var k=0;k<materialGroup.draws.length;k++) {
+        var draw = materialGroup.draws[k];
+        draw.model.draw(gl, shaderGroup.shader, draw.pos, draw.rot, this.camera);
+      }
+      materialGroup.material.disable(gl);
+    }
+    shaderGroup.shader.disable(gl);
   }
   
   /* DEBUG DRAW */
-  var debugTexture = {glTexture: this.shadow.tex, bind: Texture.prototype.bind}; /* Hackyyyy */
+  var debugTexture = {glTexture: this.shadow.tex, enable: Texture.prototype.enable, disable: Texture.prototype.disable}; /* Hackyyyy */
   var debugShader = this.getShader("debug");
   var debugMaterial = new Material("!DEBUG", debugShader, {texture0: debugTexture}); /* Even hackier */
   var debugModel = this.getModel("model.multi.square");
-  debugTexture.bind(gl, 0);
   
   var ASPECT = this.window.height/this.window.width;
   var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, -1.0, 1.0,-1.0*ASPECT, 1.0*ASPECT, 0.0, 1.0);
@@ -298,8 +342,13 @@ Display.prototype.draw = function() {
     {name: "Pmatrix", data: PROJMATRIX_DEBUG},
     {name: "Vmatrix", data: VIEWMATRIX_DEBUG}
   ];
-
-  debugModel.draw(gl, debugMaterial, {x: 0.5, y: 0, z: -0.5}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}}, uniformDataDebug);
+  
+  debugShader.enable(gl);
+  debugShader.applyUniforms(gl, uniformDataDebug);
+  debugMaterial.enable(gl);
+  debugModel.draw(gl, debugShader, {x: 0.5, y: 0, z: -0.5}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}});
+  debugMaterial.disable(gl);
+  debugShader.disable(gl);
 
   gl.flush();
 };

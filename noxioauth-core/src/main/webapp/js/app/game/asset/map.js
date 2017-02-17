@@ -3,7 +3,7 @@
 
 Asset.prototype.map = {};
 
-/* Private function, for use within this class only. */
+/* Template function, do not call directly. */
 Asset.prototype.map.loadPallete = function(display, tileList) {
   var pallete = [];
   for(var i=0;i<tileList.length;i++) {
@@ -14,10 +14,12 @@ Asset.prototype.map.loadPallete = function(display, tileList) {
   return pallete;
 };
 
-/* Private function, for use within this class only. */
-Asset.prototype.map.getDrawFunc = function(geometry) {
+/* Template function, do not call directly. */
+Asset.prototype.map.getDrawFunc = function(geometry, camera) {
   for(var j=0;j<this.size.y;j++) {
     for(var i=0;i<this.size.x;i++) {
+      /* @FIXME This is a temp solution for view frustum culling. Very unoptimized and not scalable. */
+      if(Math.abs(Math.floor(-camera.pos.x)-i) > 8 || Math.abs(Math.floor(-camera.pos.y)-(this.size.y-j-1)) > 6) { continue; }
       geometry.push({model: this.pallete[this.data[j][i]].model, material: this.pallete[this.data[j][i]].material, pos: {x: i, y: this.size.y-j-1, z: 0.0}, rot: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}});
     }
   }
@@ -49,7 +51,7 @@ Asset.prototype.map.test = function(display) {
   ];
   return {
     pallete: this.loadPallete(display, tileList),
-    size: {x: 24, y: 33},
+    size: {x: 32, y: 33},
     data: [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
