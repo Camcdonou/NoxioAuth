@@ -11,8 +11,6 @@ function Display(game, container, window) {
   this.camera = {pos: {x: 0.0, y: 0.0, z: 0.0}}; /* UNUSED! */
   
   if(!this.initWebGL()) { this.initFallback(); }
-  
-  this.rx = 0; /* @FIXME debug */
 };
 
 Display.prototype.initFallback = function() {
@@ -43,8 +41,6 @@ Display.prototype.setupWebGL = function() {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Set clear color to black, fully opaque
   gl.clearDepth(1.0);                 // Clear everything
   
-  //if(!gl.getExtension('OES_texture_float')) { return false; }   // Enable GL_Float textures for depth textures
-  //if(!gl.getExtension('WEBGL_depth_texture')) { return false; } // Enable Depth Texture support shadow mapping
   if(!(
     gl.getExtension("OES_element_index_uint") ||
     gl.getExtension("MOZ_OES_element_index_uint") ||
@@ -53,44 +49,20 @@ Display.prototype.setupWebGL = function() {
   
   this.textures = [];
   this.shaders = [];
+  this.materials = [];
   this.models = [];
   this.shadow = {};
   
   /* @FIXME this is a temp thing */
   var defaultTextureSource = "img/multi/default.png";
   
-  /* @FIXME this is a temp thing */
-//  var defaultShaderSource = {
-//    fragment: "precision mediump float; uniform sampler2D texture; varying vec3 vnormal; varying vec3 vcoord; void main(void) { gl_FragColor = (texture2D(texture, vcoord.st)*0.75)+(vec4(vnormal, 1.0)*0.25); }",
-//    vertex: "precision mediump float; attribute vec3 position; attribute vec3 texcoord; attribute vec3 normal; uniform mat4 uMVMatrix; uniform mat4 uPMatrix; varying vec3 vnormal; varying vec3 vcoord; varying vec3 color; void main(void) { vnormal = normal; vcoord = texcoord; gl_Position = uPMatrix * uMVMatrix * vec4(position, 1.0); }"
-//  };
-//  var defaultShaderSource = {
-//    fragment: "precision mediump float; varying vec3 vnormal; varying vec3 vcoord; varying vec3 color;  void main(void) { gl_FragColor = vec4(color, 1.0+((vnormal.x+vcoord.x)*0.001)); }",
-//    vertex: "precision mediump float; attribute vec3 position; attribute vec3 texcoord; attribute vec3 normal; uniform mat4 uMVMatrix; uniform mat4 uPMatrix; varying vec3 vnormal; varying vec3 vcoord; varying vec3 color; void main(void) { color = vec3(position.x+0.5,position.y+0.5,position.z+0.5); vnormal = normal; vcoord = texcoord; gl_Position = uPMatrix * uMVMatrix * vec4(position, 1.0); }"
-//  };
-  
-  /* @FIXME more temp stuff */
-//  var defaultModelSource = {
-//    vertices: [
-//      -1.0, -1.0,  1.0, 1.0, -1.0,  1.0, 1.0,  1.0,  1.0, -1.0,  1.0,  1.0, -1.0, -1.0, -1.0, -1.0,  1.0, -1.0, 1.0,  1.0, -1.0,
-//       1.0, -1.0, -1.0, -1.0,  1.0, -1.0, -1.0,  1.0,  1.0, 1.0,  1.0,  1.0, 1.0,  1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0,
-//       1.0, -1.0,  1.0, -1.0, -1.0,  1.0, 1.0, -1.0, -1.0, 1.0,  1.0, -1.0,  1.0,  1.0,  1.0, 1.0, -1.0,  1.0, -1.0, -1.0, -1.0, 
-//      -1.0, -1.0,  1.0, -1.0,  1.0,  1.0, -1.0,  1.0, -1.0
-//    ],
-//    indices: [
-//      0,  1,  2,      0,  2,  3,    // front
-//      4,  5,  6,      4,  6,  7,    // back
-//      8,  9,  10,     8,  10, 11,   // top
-//      12, 13, 14,     12, 14, 15,   // bottom
-//      16, 17, 18,     16, 18, 19,   // right
-//      20, 21, 22,     20, 22, 23    // left
-//    ]
-//  };
-  
   if(!this.createTexture(defaultTextureSource)) { return false; }
-  if(!this.createShader("Default", this.game.asset.shader.default)) { return false; }
-  if(!this.createShader("Shadow", this.game.asset.shader.shadow)) { return false; }
-  if(!this.createModel("Default", this.game.asset.basic.tilePillar)) { return false; }
+  if(!this.createShader(this.game.asset.shader.default)) { return false; }
+  if(!this.createShader(this.game.asset.shader.shadow)) { return false; }
+  //if(!this.createShader(this.game.asset.shader.debug)) { return false; } /* @FIXME DEBUG */
+  if(!this.createMaterial(this.game.asset.material.multi.default)) { return false; }
+  if(!this.createMaterial(this.game.asset.material.multi.shadow)) { return false; }
+  if(!this.createModel(this.game.asset.model.multi.box)) { return false; }
   if(!this.createShadowFramebuffer()) { return false; }
   
   return true;
@@ -132,7 +104,7 @@ Display.prototype.compileFragmentShader =  function(name, source) {
 };
 
 /* Returns boolean. If returns false then failed to create shader. If returns true then shader was created and added to shaders array. */
-Display.prototype.createShader = function(name, source) {
+Display.prototype.createShader = function(source) {
   var gl = this.gl; // Sanity Save
   
   var fragmentShader, vertexShader;
@@ -160,12 +132,29 @@ Display.prototype.createShader = function(name, source) {
     uniforms[source.uniforms[i].name] = {type: source.uniforms[i].type, location: gl.getUniformLocation(shaderProgram, source.uniforms[i].name)};
   }
   
-  this.shaders.push(new Shader(name, shaderProgram, attributes, uniforms));
+  this.shaders.push(new Shader(source.name, shaderProgram, attributes, uniforms));
+  
+  /* @FIXME Delete frag and vert objects as they dont do anything once the program is linked. */
+  
+  return true;
+};
+
+/* Returns boolean. If returns false then failed to create material. If returns true then material was created and added to materials array. */
+Display.prototype.createMaterial = function(source) {
+  var shader = this.getShader(source.shader);
+  var texture = {};
+  if(source.texture0) { texture.texture0 = this.getTexture(source.texture0); }
+  if(source.texture1) { texture.texture1 = this.getTexture(source.texture1); }
+  if(source.texture2) { texture.texture2 = this.getTexture(source.texture2); }
+  if(source.texture3) { texture.texture3 = this.getTexture(source.texture3); }
+  if(source.texture4) { texture.texture4 = this.getTexture(source.texture4); }
+  this.materials.push(new Material(source.name, shader, texture));
+  
   return true;
 };
 
 /* Returns boolean. If false then failed to setup shaders and we fallback to 2D. */
-Display.prototype.createModel = function(name, source) {
+Display.prototype.createModel = function(source) {
   var gl = this.gl; // Sanity Save
   
   var vertexBuffer = gl.createBuffer();
@@ -176,7 +165,7 @@ Display.prototype.createModel = function(name, source) {
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(source.indices), gl.STATIC_DRAW);
   
-  this.models.push(new Model(name, vertexBuffer, indexBuffer, source.indices.length, this.getShader("Default"))); /* @FIXME shader retrieval stub */
+  this.models.push(new Model(source.name, vertexBuffer, indexBuffer, source.indices.length));
   
   return true;
 };
@@ -210,30 +199,7 @@ Display.prototype.createShadowFramebuffer = function() {
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   
   return true;
-  
-//  var fbo = gl.createFramebuffer();
-//  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-//  fbo.width = 1024;
-//  fbo.height = 1024;
-//  
-//  var depthTexture = gl.createTexture();
-//  gl.bindTexture(gl.TEXTURE_2D, depthTexture);
-//  gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, 1024, 1024, 0, gl.DEPTH_COMPONENT, gl.FLOAT, null);
-//  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-//  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-//  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-//  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-//  
-//  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthTexture, 0);
-//  //gl.drawBuffer(gl.NONE); idk webgl lol
-//  
-//  if(gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) { return false; }
-//  
-//  this.shadow = {fbo: fbo, tex: depthTexture};
-//  return true;
 };
-
-  var LIGHTDIR=[0.58,0.58,-0.58];
 
 Display.prototype.draw = function() {
   /* Update Canvas Size */
@@ -256,42 +222,37 @@ Display.prototype.draw = function() {
   this.game.map.getDraw(geometry);
   
   /* Draw Geometry to Shadow FBO */
-  var PROJMATRIX=LIBS.get_projection(40, this.window.width/this.window.height, 1, 100);
+  var PROJMATRIX=LIBS.get_projection(40, this.window.width/this.window.height, 1, 100); /* Perspective */
   var MOVEMATRIX=LIBS.get_I4();
   var VIEWMATRIX=LIBS.get_I4();
 
-  LIBS.translateZ(VIEWMATRIX, -20);
-  LIBS.translateY(VIEWMATRIX, -4);
+  LIBS.translateZ(VIEWMATRIX, -10);
+  LIBS.translateY(VIEWMATRIX, 0);
   var THETA=0,
       PHI=0;
 
-
-  var PROJMATRIX_SHADOW=LIBS.get_projection_ortho(32, 1, 1, 64);
+  var LIGHTDIR=[0.58,0.58,-0.58];
+  var PROJMATRIX_SHADOW=LIBS.get_projection_ortho(16, 1, 8, 64);
+  var OFFSETMATRIX=LIBS.get_I4();
   var LIGHTMATRIX=LIBS.lookAtDir(LIGHTDIR, [0,1,0], [0,0,0]);
+  var SMSIZE=1; /* @FIXME my understanding is that you have to do this calculation against the PROJ * LIGHT * TRANSFORM matrix. */
+  LIBS.translateX(OFFSETMATRIX, (Math.floor(this.camera.pos.x*SMSIZE)-(this.camera.pos.x*SMSIZE))/SMSIZE);
+  LIBS.translateY(OFFSETMATRIX, (Math.floor(this.camera.pos.y*SMSIZE)-(this.camera.pos.y*SMSIZE))/SMSIZE);
+  LIBS.translateZ(OFFSETMATRIX, (Math.floor(this.camera.pos.z*SMSIZE)-(this.camera.pos.z*SMSIZE))/SMSIZE);
   
-//  var test = Matrix.I(4);
-//  test = test.x(Matrix.Translation($V([0, 0, 3])).ensure4x4());
-//  test = Matrix.Rotation(0.6, $V([1, 0, 0.7])).ensure4x4();
-//  
-//  var LIGHTMATRIX = test.flatten();
-//  var lightInvDir = glm.vec3(0.5, 2.0, 2.0);
-//  var depthProjectionMatrix = glm.perspective(90, this.window.width/this.window.height, 0.1, 32.0); //glm.ortho(0,this.window.width,0,this.window.height,1,25); 
-//  var depthViewMatrix = glm.look(lightInvDir, glm.vec3(0,0,0), glm.vec3(0,1,0));
-//  var depthModelMatrix = glm.mat4(1.0);
-//  var depthMVP = depthProjectionMatrix.mul(depthViewMatrix.mul(depthModelMatrix));
-
   gl.bindFramebuffer(gl.FRAMEBUFFER, this.shadow.fb); //Enable shadow frame buffers
-  gl.viewport(0.0, 0.0, 512.0, 512.0); // Resize to FBO texture /* @FIXME hardcoded
+  gl.viewport(0.0, 0.0, 512.0, 512.0); // Resize to FBO texture /* @FIXME hardcodedw4
   gl.clearColor(1.0, 0.0, 0.0, 1.0); // red -> Z=Zfar on the shadow map
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   
-  var shadowShader = this.getShader("Shadow");
+  var shadowMaterial = this.getMaterial("material.multi.shadow");
   var shadowUniformData = [
     {name: "Pmatrix", data: PROJMATRIX_SHADOW},
-    {name: "Lmatrix", data: LIGHTMATRIX}
+    {name: "Lmatrix", data: LIGHTMATRIX},
+    {name: "Omatrix", data: OFFSETMATRIX}
   ];
   for(var i=0;i<geometry.length;i++) {
-    geometry[i].model.draw(gl, shadowShader, geometry[i].pos, geometry[i].rot, this.camera, shadowUniformData);
+    geometry[i].model.draw(gl, shadowMaterial, geometry[i].pos, geometry[i].rot, this.camera, shadowUniformData);
   }
 
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); //Disable frame buffer
@@ -300,43 +261,38 @@ Display.prototype.draw = function() {
   gl.viewport(0, 0, this.window.width, this.window.height); // Resize to canvas
   gl.clearColor(0.5, 0.5, 0.5, 1.0);  // Opaque grey backdrop
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear Color and Depth from previous draw.
-//  var perspectiveMatrix = makePerspective(90, this.window.width/this.window.height, 0.1, 10.0); //FOV, Aspect Ratio, Near Plane, Far Plane
-//  var biasMatrix = glm.mat4(
-//    0.5, 0.0, 0.0, 0.0,
-//    0.0, 0.5, 0.0, 0.0,
-//    0.0, 0.0, 0.5, 0.0,
-//    0.5, 0.5, 0.5, 1.0
-//  );
-//  var depthBiasMVP = biasMatrix.mul(depthMVP);
-  var shader = this.getShader("Default");
-  this.getTexture("img/multi/default.png").bind(gl); /* @FIXME TESTING */
-  gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, this.shadow.tex); /* @FIXME TESTING */
+  gl.activeTexture(gl.TEXTURE5); gl.bindTexture(gl.TEXTURE_2D, this.shadow.tex); /* @FIXME TESTING */
   var uniformData = [
     {name: "Pmatrix", data: PROJMATRIX},
     {name: "Vmatrix", data: VIEWMATRIX},
     {name: "Mmatrix", data: MOVEMATRIX},
     {name: "Lmatrix", data: LIGHTMATRIX},
     {name: "PmatrixLight", data: PROJMATRIX_SHADOW},
+    {name: "Omatrix", data: OFFSETMATRIX},
     {name: "sourceDirection", data: LIGHTDIR},
-    {name: "sampler", data: 0},
-    {name: "samplerShadowMap", data: 1}
+    {name: "texture5", data: 5}
   ];
   for(var i=0;i<geometry.length;i++) {
-    geometry[i].model.draw(gl, shader, geometry[i].pos, geometry[i].rot, this.camera, uniformData);
+    geometry[i].model.draw(gl, geometry[i].material, geometry[i].pos, geometry[i].rot, this.camera, uniformData);
   }
   
-  gl.flush();
-  
-  /* Test Draw */
-//  this.rx++;
-//  var model = this.getModel("Default");
-//  model.draw(gl, perspectiveMatrix, {x: (Math.sin(this.rx/100)*1)+10, y: (Math.cos(this.rx/100)*1), z: 0.0}, {x: 0.0, y: 0.0, z: 1.0, w: (this.rx/66)}, this.camera);
-//  model.draw(gl, perspectiveMatrix, {x: (Math.sin(this.rx/-10)*1), y: (Math.cos(this.rx/-10)*1)+10, z: 0.0}, {x: 0.0, y: 0.0, z: 1.0, w: (this.rx/133)}, this.camera);
+  /* DEBUG DRAW */
+//  var debugTexture = {glTexture: this.shadow.tex, bind: Texture.prototype.bind}; /* Hackyyyy */
+//  var debugShader = this.getShader("debug");
+//  var debugMaterial = new Material("!DEBUG", debugShader, {texture0: debugTexture}); /* Even hackier */
+//  var debugModel = this.getModel("model.multi.square");
+//  debugTexture.bind(gl, 0);
+//
+//  var PROJMATRIX_DEBUG=LIBS.get_projection_ortho(2, this.window.width/this.window.height, 0, 1);
+//  var VIEWMATRIX_DEBUG=LIBS.lookAtDir([0,0,-1.0], [0,1,0], [0,0,0]);
+//  var uniformDataDebug = [
+//    {name: "Pmatrix", data: PROJMATRIX_DEBUG},
+//    {name: "Vmatrix", data: VIEWMATRIX_DEBUG}
+//  ];
+//
+//  debugModel.draw(gl, debugMaterial, {x: 0.5, y: 0, z: 0}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}}, uniformDataDebug);
 
-//  this.drawObjects(gl); /* Draw Game Objects */
-//  this.drawControl(gl); /* Draw Controls */
-//  this.drawText(gl); /* Draw Text */
-//  this.drawBorder(gl); /* Draw Border */
+  gl.flush();
 };
 
 /* Draws a 2D fallback render if WebGL fails to initialize */
@@ -351,36 +307,6 @@ Display.prototype.drawFallback = function() {
   context.fillText("Your browser does not support WebGL.", this.window.width/2, (this.window.height/2));
 };
 
-Display.prototype.drawObjects = function(context) {
-  for(var i=0;i<this.game.objects.length;i++) {
-    this.game.objects[i].draw();
-  }
-};
-
-Display.prototype.drawControl = function(context) {
-  
-};
-
-Display.prototype.drawText = function(context) {
-  
-};
-
-Display.prototype.drawBorder = function(context) {
-  
-};
-
-Display.prototype.loadIdentity = function() {
-  this.mvMatrix = Matrix.I(4);
-}
-
-Display.prototype.multMatrix = function(m) {
-  this.mvMatrix = this.mvMatrix.x(m);
-}
-
-Display.prototype.mvTranslate = function(v) {
-  this.multMatrix(Matrix.Translation($V([v[0], v[1], v[2]])).ensure4x4());
-};
-
 /* Returns a texture by path. If texture is not found then returns default. */
 Display.prototype.getTexture = function(path) {
   for(var i=0;i<this.textures.length;i++) {
@@ -388,6 +314,10 @@ Display.prototype.getTexture = function(path) {
       return this.textures[i];
     }
   }
+  
+  if(this.createTexture(path)) { return this.getTexture(path); }
+  
+  main.menu.warning.show("Failed to load texture: '" + path + "'");
   return this.getTexture("img/multi/default.png");
 };
 
@@ -398,7 +328,31 @@ Display.prototype.getShader = function(name) {
       return this.shaders[i];
     }
   }
-  return this.getShader("Default");
+
+  var src = this.game.asset.shader[name];
+  if(src !== undefined) { if(this.createShader(src)) { return this.getShader(name); } }
+  
+  main.menu.warning.show("Failed to load shader: '" + name + "'");
+  return this.getShader("default");
+};
+
+/* Returns a material by name. If it is not loaded then it attempts to load it. If material is not found then returns default. */
+Display.prototype.getMaterial = function(name) {
+  for(var i=0;i<this.materials.length;i++) {
+    if(this.materials[i].name === name) {
+      return this.materials[i];
+    }
+  }
+  
+  var spl = name.split(".");
+  var src = this.game.asset;
+  for(var i=0;i<spl.length&&src!==undefined;i++) {
+    src = src[spl[i]];
+  }
+  if(src !== undefined) { if(this.createMaterial(src)) { return this.getMaterial(name); } }
+  
+  main.menu.warning.show("Failed to load material: '" + name + "'");
+  return this.getMaterial("material.multi.default");
 };
 
 /* Returns a model by name. If it is not loaded then it attempts to load it. If model is not found then returns default. */
@@ -414,11 +368,21 @@ Display.prototype.getModel = function(name) {
   for(var i=0;i<spl.length&&src!==undefined;i++) {
     src = src[spl[i]];
   }
-  if(src !== undefined) { this.createModel(name, src); return this.getModel(name); }
+  if(src !== undefined) { if(this.createModel(src)) { return this.getModel(name); } }
   
-  return this.getModel("Default");
+  main.menu.warning.show("Failed to load model: '" + name + "'");
+  return this.getModel("model.multi.box");
 };
 
 Display.prototype.destroy = function() {
-  /* @FIXME yohoho we need to delete the gl instance or whatever */
+  /* @FIXME Make sure we unload and delete all resources loaded! */ 
+  if(!gl) { return; }
+  var gl = this.gl; // Sanity Save
+  for(var i=0;i<this.models.length;i++) { gl.deleteBuffer(this.models[i].vertexBuffer); gl.deleteBuffer(this.models[i].indexBuffer); }
+  for(var i=0;i<this.shaders.length;i++) { gl.deleteProgram(this.shaders[i].program); }
+  for(var i=0;i<this.textures.length;i++) { gl.deleteTexture(this.textures[i].glTexture); }
+  gl.deleteRenderbuffer(this.shadow.rb);
+  gl.deleteFramebuffer(this.shadow.fb);
+  gl.deleteTexture(this.shadow.tex);
+  this.window.width = 1; this.window.height = 1;
 };

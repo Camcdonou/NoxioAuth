@@ -3,27 +3,22 @@
 /* global Matrix */
 
 /* Define Model Data Class */
-function Model(name, vertexBuffer, indexBuffer, indexSize, shader) {
+function Model(name, vertexBuffer, indexBuffer, indexSize) {
   this.name = name;
   this.vertexBuffer = vertexBuffer;
   this.indexBuffer = indexBuffer;
   this.indexSize = indexSize;
-  this.shader = shader; /* DEPRECATED @FIXME */
 };
 
-Model.prototype.draw = function(gl, shader, pos, rot, camera, uniformData) { /* Please end my suffering... @FIXME Quaternion... */
-//  var transformMatrix = Matrix.I(4);
-  /* @FIXME rotation code? */
-  //transformMatrix = Matrix.Rotation(rot.w, $V([rot.x, rot.y, rot.z])).ensure4x4();
-//  transformMatrix = transformMatrix.x(Matrix.Translation($V([pos.x, pos.y, pos.z])).ensure4x4());
-//  transformMatrix = transformMatrix.x(Matrix.Translation($V([camera.pos.x, camera.pos.y, camera.pos.z])).ensure4x4());
+Model.prototype.draw = function(gl, material, pos, rot, camera, uniformData) { /* Please end my suffering... @FIXME Quaternion... */
   var transform = [pos.x+camera.pos.x, pos.y+camera.pos.y, pos.z+camera.pos.z];
   
   var uniformModelData = [
     {name: "transform", data: transform}
   ];
   
-  shader.use(gl, uniformData, uniformModelData); // Apply Default shader and set uniforms
+  material.use(gl, uniformData, uniformModelData); // Apply Default shader and set uniforms
+  var shader = material.shader;
   
   if(shader.attributes.position) { gl.enableVertexAttribArray(shader.attributes.position.location); }
   if(shader.attributes.texcoord) { gl.enableVertexAttribArray(shader.attributes.texcoord.location); }

@@ -1,8 +1,6 @@
 "use strict";
 /* global main */
 
-var ECHECHECH = 25;
-
 /* Define Shader Container Class */
 function Shader(name, program, attributes, uniforms) {
   this.name = name;
@@ -11,11 +9,12 @@ function Shader(name, program, attributes, uniforms) {
   this.uniforms = uniforms;
 }
 
-Shader.prototype.use = function(gl, uniformData, uniformModelData) {
+Shader.prototype.use = function(gl, uniformData, uniformModelData, uniformMaterialData) {
   gl.useProgram(this.program);
    
   this.applyUniformData(gl, uniformData);
   this.applyUniformData(gl, uniformModelData);
+  this.applyUniformData(gl, uniformMaterialData);
 };
 
 Shader.prototype.applyUniformData = function(gl, uniformData) {

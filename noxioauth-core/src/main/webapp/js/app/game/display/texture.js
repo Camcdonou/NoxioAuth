@@ -11,10 +11,16 @@ function Texture(gl, glTexture, path) {
   this.img.src = this.path;
 }
 
-Texture.prototype.bind = function(gl) {
-  gl.activeTexture(gl.TEXTURE0);
+Texture.prototype.bind = function(gl, location) {
+  switch(location) {
+    case 0 : { gl.activeTexture(gl.TEXTURE0); break; }
+    case 1 : { gl.activeTexture(gl.TEXTURE1); break; }
+    case 2 : { gl.activeTexture(gl.TEXTURE2); break; }
+    case 3 : { gl.activeTexture(gl.TEXTURE3); break; }
+    case 4 : { gl.activeTexture(gl.TEXTURE4); break; }
+    default : { /* @FIXME major error! */ return; }
+  }
   gl.bindTexture(gl.TEXTURE_2D, this.glTexture);
-  //gl.uniform1i(gl.getUniformLocation(shaderProgram, "texture"), 0); /* @FIXME stubby */
 };
 
 Texture.prototype.handleTextureLoaded = function(gl) {

@@ -220,4 +220,5 @@ NoxioGame.prototype.draw = function() {
 NoxioGame.prototype.destroy = function() {
   this.input.destroy();
   this.display.destroy();
+  this.asset.destroy();
 };

@@ -137,5 +137,9 @@ var LIBS={
 
   translateY: function(m, t){
     m[13]+=t;
+  },
+  
+  translateX: function(m, t){
+    m[12]+=t;
   }
 };
