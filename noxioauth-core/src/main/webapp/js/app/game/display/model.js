@@ -1,6 +1,5 @@
 "use strict";
 /* global main */
-/* global Matrix */
 
 /* Define Model Data Class */
 function Model(name, vertexBuffer, indexBuffer, indexSize) {

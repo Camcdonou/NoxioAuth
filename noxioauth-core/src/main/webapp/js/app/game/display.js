@@ -26,6 +26,7 @@ Display.prototype.initFallback = function() {
 Display.prototype.initWebGL = function() {
   try { 
     this.gl = this.window.getContext("experimental-webgl", {premultipliedalpha: false, antialias: true});
+    if(!this.gl) { return false; }
     return this.setupWebGL();
   }
   catch(ex) { main.menu.error.showErrorException("WebGL Error", "Exception while initializing WebGL: " + ex.message, ex.stack); return false; }
@@ -57,6 +58,11 @@ Display.prototype.setupWebGL = function() {
   
   /* @FIXME this is a temp thing */
   var defaultTextureSource = "img/multi/default.png";
+  
+  var maxUniform = gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS);
+  if(maxUniform < 64) { main.menu.error.showError("GLSL returned MAX_VERTEX_UNIFORM_VECTORS as : " + maxUniform); return false; }
+  this.PL_UNIFORM_MAX = maxUniform * 0.33;
+  this.LL_UNIFORM_MAX = maxUniform * 0.33;
   
   if(!this.createTexture(defaultTextureSource)) { return false; }
   if(!this.createShader(this.game.asset.shader.default)) { return false; }
@@ -203,7 +209,7 @@ Display.prototype.createShadowFramebuffer = function() {
   
   return true;
 };
-
+var RXD = 0;
 Display.prototype.draw = function() {
   /* Update Canvas Size */
   this.window.width = this.container.clientWidth;
@@ -297,7 +303,58 @@ Display.prototype.draw = function() {
   shadowMaterial.shader.disable(gl);
   
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); //Disable frame buffer
-
+  
+  /* Compile Dynamic Light Information */
+  var testA = new PointLight( /* @FIXME DEBUG */
+    {x: 6.0+(Math.sin(RXD*0.01)*4), y: 8.0+(Math.cos(RXD*0.01)*4), z: 0.5},
+    {r: 1.0, g: 0.0, b: 0.5, a: 1.0},
+    2.0
+  );
+  var testB = new PointLight(
+    {x: 22.0, y: 22.0, z: 0.5},
+    {r: 0.0, g: 1.0, b: 0.5, a: 1.0},
+    7.0
+  );
+  var testC = new PointLight( /* @FIXME DEBUG */
+    {x: 11.0+(Math.sin(RXD*0.05)*9), y: 5.0+(Math.cos(RXD*0.05)*9), z: 0.5},
+    {r: 0.0, g: 0.5, b: 0.5, a: 1.0},
+    3.0
+  );
+  var testD = new PointLight( /* @FIXME DEBUG */
+    {x: 16.0+(Math.sin(RXD*0.09)*2), y: 11.0+(Math.cos(RXD*0.09)*2), z: 0.5},
+    {r: 1.0, g: 0.5, b: 0.5, a: 1.0},
+    4.0
+  );
+  var testE = new PointLight( /* @FIXME DEBUG */
+    {x: 8.0+(Math.sin(RXD*0.02)*3), y: 22.0+(Math.cos(RXD*0.02)*3), z: 0.5},
+    {r: 1.0, g: 1.0, b: 1.0, a: 1.0},
+    6.0
+  );
+  RXD++;
+  
+  var lights = [testA, testB, testC, testD, testE];
+  var pLightLength = 0;
+  var pLightPos = [];
+  var pLightColor = [];
+  var pLightRadius = [];
+  for(var i=0;i<lights.length;i++) {
+    /* @FIXME CULL? Probably do it in the owners function... */
+    if(i*8 >= this.PL_UNIFORM_MAX) { break; } /* At max capacity for light rendering! @FIXME WARNING */
+    else {
+      var pl = lights[i];
+      pLightPos.push(pl.pos.x+this.camera.pos.x); pLightPos.push(pl.pos.y+this.camera.pos.y); pLightPos.push(pl.pos.z+this.camera.pos.z);
+      pLightColor.push(pl.color.r*pl.color.a); pLightColor.push(pl.color.g*pl.color.a); pLightColor.push(pl.color.b*pl.color.a);
+      pLightRadius.push(pl.rad);
+      pLightLength++;
+    }
+  }
+  var uniformLightData = [
+    {name: "pLightLength", data: pLightLength},
+    {name: "pLightPos", data: pLightPos},
+    {name: "pLightColor", data: pLightColor},
+    {name: "pLightRadius", data: pLightRadius}
+  ];
+  
   /* Draw Geometry */
   gl.viewport(0, 0, this.window.width, this.window.height); // Resize to canvas
   gl.clearColor(0.5, 0.5, 0.5, 1.0);  // Opaque grey backdrop
@@ -317,6 +374,7 @@ Display.prototype.draw = function() {
     var shaderGroup = geomSorted[i];
     shaderGroup.shader.enable(gl);
     shaderGroup.shader.applyUniforms(gl, uniformData);
+    shaderGroup.shader.applyUniforms(gl, uniformLightData); /* @FIXME Check if nesscary? */
     for(var j=0;j<shaderGroup.materials.length;j++) {
       var materialGroup = shaderGroup.materials[j];
       materialGroup.material.enable(gl);
@@ -330,25 +388,25 @@ Display.prototype.draw = function() {
   }
   
   /* DEBUG DRAW */
-  var debugTexture = {glTexture: this.shadow.tex, enable: Texture.prototype.enable, disable: Texture.prototype.disable}; /* Hackyyyy */
-  var debugShader = this.getShader("debug");
-  var debugMaterial = new Material("!DEBUG", debugShader, {texture0: debugTexture}); /* Even hackier */
-  var debugModel = this.getModel("model.multi.square");
-  
-  var ASPECT = this.window.height/this.window.width;
-  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, -1.0, 1.0,-1.0*ASPECT, 1.0*ASPECT, 0.0, 1.0);
-  var VIEWMATRIX_DEBUG= mat4.create();
-  var uniformDataDebug = [
-    {name: "Pmatrix", data: PROJMATRIX_DEBUG},
-    {name: "Vmatrix", data: VIEWMATRIX_DEBUG}
-  ];
-  
-  debugShader.enable(gl);
-  debugShader.applyUniforms(gl, uniformDataDebug);
-  debugMaterial.enable(gl);
-  debugModel.draw(gl, debugShader, {x: 0.5, y: 0, z: -0.5}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}});
-  debugMaterial.disable(gl);
-  debugShader.disable(gl);
+//  var debugTexture = {glTexture: this.shadow.tex, enable: Texture.prototype.enable, disable: Texture.prototype.disable}; /* Hackyyyy */
+//  var debugShader = this.getShader("debug");
+//  var debugMaterial = new Material("!DEBUG", debugShader, {texture0: debugTexture}); /* Even hackier */
+//  var debugModel = this.getModel("model.multi.square");
+//  
+//  var ASPECT = this.window.height/this.window.width;
+//  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, -1.0, 1.0,-1.0*ASPECT, 1.0*ASPECT, 0.0, 1.0);
+//  var VIEWMATRIX_DEBUG= mat4.create();
+//  var uniformDataDebug = [
+//    {name: "Pmatrix", data: PROJMATRIX_DEBUG},
+//    {name: "Vmatrix", data: VIEWMATRIX_DEBUG}
+//  ];
+//  
+//  debugShader.enable(gl);
+//  debugShader.applyUniforms(gl, uniformDataDebug);
+//  debugMaterial.enable(gl);
+//  debugModel.draw(gl, debugShader, {x: 0.5, y: 0, z: -0.5}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}});
+//  debugMaterial.disable(gl);
+//  debugShader.disable(gl);
 
   gl.flush();
 };

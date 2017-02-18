@@ -5,7 +5,7 @@
 function Input(window) {
   this.window = window;
   
-  this.window.onmousemove = function(event) { main.game.input.mouse.event(event, true); };
+  this.window.onmousemove = function(event) { main.game.input.mouse.event(event); };
   this.window.onmousedown = function(event) { main.game.input.mouse.event(event, true); };
   this.window.onmouseup = function(event) { main.game.input.mouse.event(event, false); };
   document.onkeyup = function(event) { main.game.input.keyboard.event(event, false); };
@@ -23,7 +23,8 @@ Input.prototype.mouse = {
 Input.prototype.mouse.event = function(event, state) {
   this.mov = {x: this.mov.x+(this.pos.x-event.offsetX), y: this.mov.y+((this.pos.y-event.offsetY)*-1)};
   this.pos = {x: event.offsetX, y: event.offsetY};
-  switch(event.buttons) {
+  if(state === undefined) { return; }
+  switch(event.button) {
 		case 1 : { this.lmb = state; break; }
 		case 2 : { this.rmb = state; break; }
 		case 4 : { this.mmb = state; break; }

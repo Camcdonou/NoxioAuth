@@ -22,8 +22,11 @@ GameState.prototype.newGame = function(packet) {
   main.menu.connect.show("Loading...");
   main.endGame();
   main.startGame();
-  this.send({type: "g07"});
   main.menu.game.show();
+    var tmp = this;
+    setTimeout(function() { /* @FIXME STUPID HACK PLS DELTE */
+      tmp.send({type: "g07"});
+    }, 5000);
 };
 
 GameState.prototype.gameMessages = function(packet) {
@@ -45,7 +48,10 @@ GameState.prototype.gameInfo = function(packet) {
   main.menu.connect.show("Loading...");
   main.startGame();
   main.menu.game.show();
-  this.send({type: "g07"});
+    var tmp = this;
+    setTimeout(function() { /* @FIXME STUPID HACK PLS DELTE */
+      tmp.send({type: "g07"});
+    }, 5000);
 };
 
 GameState.prototype.playerList = function(packet) {

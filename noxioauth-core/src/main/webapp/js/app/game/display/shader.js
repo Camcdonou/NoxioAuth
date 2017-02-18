@@ -28,8 +28,14 @@ Shader.prototype.applyUniforms = function(gl, uniformData) {
     var uniform = this.uniforms[uniformData[i].name];
     if(!uniform) { continue; }
     switch(uniform.type) {
+      case "int" : { gl.uniform1i(uniform.location, uniformData[i].data); break; }
+      case "int[]" : { gl.uniform1i(uniform.location, uniformData[i].data); break; }
+      case "float" : { gl.uniform1fv(uniform.location, uniformData[i].data); break; }
+      case "float[]" : { gl.uniform1fv(uniform.location, uniformData[i].data); break; }
       case "vec3" : { gl.uniform3fv(uniform.location, uniformData[i].data); break; }
+      case "vec3[]" : { gl.uniform3fv(uniform.location, uniformData[i].data); break; }
       case "vec4" : { gl.uniform4fv(uniform.location, uniformData[i].data); break; }
+      case "vec4[]" : { gl.uniform4fv(uniform.location, uniformData[i].data); break; }
       case "mat4" : { gl.uniformMatrix4fv(uniform.location, false, uniformData[i].data); break; }
       case "sampler2D" : { gl.uniform1i(uniform.location, uniformData[i].data); break; }
       default : { main.menu.warning.show("Shader Uniform Error: Invalid type '" + uniform.type + "' for variable '" + uniform.name + "'."); break; }
