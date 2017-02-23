@@ -25,7 +25,7 @@ Display.prototype.initFallback = function() {
 
 Display.prototype.initWebGL = function() {
   try { 
-    this.gl = this.window.getContext("experimental-webgl", {premultipliedalpha: false, antialias: true});
+    this.gl = this.window.getContext("webgl", {premultipliedalpha: false, antialias: true});
     if(!this.gl) { return false; }
     return this.setupWebGL();
   }
