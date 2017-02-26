@@ -252,7 +252,10 @@ Display.prototype.draw = function() {
      Format: {model: <Model>, material: <Material>, pos: {x: <float>, y: <float>, z: <float>}, rot: {x: <float>, y: <float>, z: <float>, w: <float>}} */
   var geometry = [];
   this.game.map.getDraw(geometry, this.camera);
-  
+  for(var i=0;i<this.game.objects.length;i++) {
+    this.game.objects[i].getDraw(geometry, this.camera);
+  }
+
   /* Sort geometry by shader -> material -> draws */
   var geomSorted = [];
   for(var i=0;i<geometry.length;i++) {
@@ -421,6 +424,41 @@ Display.prototype.drawFallback = function() {
   context.textAlign = 'center';
   context.fillStyle = '#e17fb0';
   context.fillText("Your browser does not support WebGL.", this.window.width/2, (this.window.height/2));
+};
+
+Display.prototype.unproject = function(cursor) {
+  var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, 0.785398, this.window.width/this.window.height, 1.0, 64.0); // Perspective
+  var TRANSLATE  = vec3.create(); vec3.set(TRANSLATE, 0.0, 0.0, 0.0);
+  var MOVEMATRIX = mat4.create(); mat4.translate(MOVEMATRIX, MOVEMATRIX, TRANSLATE);
+  var VIEWMATRIX = mat4.create();
+  
+  var MV = mat4.create(); mat4.multiply(MV, VIEWMATRIX, MOVEMATRIX);
+  var MVP = mat4.create(); mat4.multiply(MVP, PROJMATRIX, MV);
+  mat4.invert(MVP, MVP);
+
+  // from this line we see zNear and zFar
+  // this.perspectiveMatrix.perspective(30, canvas.clientWidth / canvas.clientHeight, 1, 10000);
+  var zNear = 1.0;
+  var zFar  = 64.0;
+
+  // var coord = new J3DIVector3(0.7, 0.5, 1)
+  // I'm going to assume since you put 1 for z you wanted zFar
+  var wx = (cursor.x/this.window.width*2)-1;
+  var wy = (cursor.y/this.window.height*-2)+1;
+  
+  var x = wx * zNear;
+  var y = wy * zNear;
+  var z = zFar;
+  var w = zNear;
+  
+  var upm = [
+    x * MVP[0] + y * MVP[4] + z * MVP[8] + w * MVP[12], 
+    x * MVP[1] + y * MVP[5] + z * MVP[9] + w * MVP[13],
+    x * MVP[2] + y * MVP[6] + z * MVP[10] + w * MVP[14],
+    x * MVP[3] + y * MVP[7] + z * MVP[11] + w * MVP[15],
+  ];
+  
+  return {x: (upm[0]*10.0)-this.camera.pos.x, y: (upm[1]*10.0)-this.camera.pos.y, z: (upm[2]*10.0)-this.camera.pos.z}; /* @FIXME only works on straight down projection */
 };
 
 /* Returns a texture by path. If texture is not found then returns default. */

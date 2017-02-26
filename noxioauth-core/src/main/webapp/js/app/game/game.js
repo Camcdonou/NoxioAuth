@@ -13,7 +13,6 @@ function NoxioGame() {
   this.loadMap("test"); /* @FIXME DEBUG TEST */
   
   this.gameOver = false;
-  this.scores = [];
   
   this.debug = {ss: 128, stime: [], ctime: [], ping: [], frames: [], sAvg: 0, cAvg: 0, pAvg: 0, fAvg: 0}; /* SS is Sample Size: The number of frames to sample for data. */
   for(var i=0;i<this.debug.ss;i++) { this.debug.stime[i] = 0; this.debug.ctime[i] = 0; this.debug.ping[i] = 0; this.debug.frames[i] = 0; }
@@ -21,7 +20,7 @@ function NoxioGame() {
   this.control = -1;
   this.objects = [];
   
-  this.packHand.game = this;
+  this.packHand = new PackHand(this);
 };
 
 NoxioGame.prototype.loadMap = function(map) {
@@ -35,11 +34,7 @@ NoxioGame.prototype.update = function(packet) {
   /* Parse packet and apply */
   switch(packet.type) {
     /* Ingame Type Packets gxx */
-    case "g10" : { this.packHand.createObject(packet); return true; }
-    case "g11" : { this.packHand.deleteObject(packet); return true; }
-    case "g12" : { this.packHand.updateObjectPosVel(packet); return true; }
-    case "g13" : { this.packHand.shineAbility(packet); return true; }
-    case "g14" : { this.packHand.scoreUpdate(packet); return true; }
+    case "g10" : { this.packHand.gameDataUpdate(packet); return true; }
     case "g16" : { this.packHand.gameOver(packet); return true; }
     case "g18" : { this.packHand.gameRules(packet); return true; }
     /* Input Type Packets ixx */
@@ -50,69 +45,6 @@ NoxioGame.prototype.update = function(packet) {
   }
 };
 
-/* NoxioGame Packet Handler Functions */
-NoxioGame.prototype.packHand = {};
-
-/* PacketG10 */
-NoxioGame.prototype.packHand.createObject = function(packet) {
-  var obj = this.game.getObject(packet.oid);
-  if(obj !== undefined) { main.menu.warning.show("Desync: Tried to create OBJ that already exists '" + packet.oid + "::" + packet.otype + "'."); return; } 
-  switch(packet.otype) {
-    case "obj" : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for abstract type '" + packet.otype + "'.", JSON.stringify(packet)); main.close(); break; }
-    case "obj.player" : { this.game.objects.push(new PlayerObject(packet.oid, packet.pos, packet.vel)); break; }
-    case "obj.bullet" : { this.game.objects.push(new BulletObject(packet.oid, packet.pos, packet.vel)); break; }
-    default : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for '" + packet.otype + "' which does not exist.", JSON.stringify(packet)); main.close(); break; }
-  }
-};
-
-/* PacketG11 */
-NoxioGame.prototype.packHand.deleteObject = function(packet) {
-  if(!this.game.deleteObject(packet.oid)) { main.menu.warning.show("Desync: Tried to delete OBJ that does not exist '" + packet.oid + "'."); }
-};
-
-/* PacketG12 */
-NoxioGame.prototype.packHand.updateObjectPosVel = function(packet) {
-  var obj = this.game.getObject(packet.oid);
-  if(obj !== undefined) {
-    obj.setPos(packet.pos);
-    obj.setVel(packet.vel);
-  }
-};
-
-/* PacketG13 */
-NoxioGame.prototype.packHand.shineAbility = function(packet) {
-  var obj = this.game.getObject(packet.oid);
-  if(obj !== undefined) {
-    obj.shineCooldown = 5;
-  }
-};
-
-/* PacketG14 */
-NoxioGame.prototype.packHand.scoreUpdate = function(packet) {
-  for(var i=0;i<this.game.scores.length;i++) {
-    if(this.game.scores[i].user === packet.score.user) {
-      this.game.scores[i] = packet.score;
-      return;
-    }
-  }
-  this.game.scores.push(packet.score);
-};
-
-/* PacketG16 */
-NoxioGame.prototype.packHand.gameOver = function(packet) {
-  this.game.gameOver = true;
-  this.game.gameWinner = packet.player;
-};
-
-/* PacketG18 */
-NoxioGame.prototype.packHand.gameRules = function(packet) {
-  this.game.settings = {scoreToWin: packet.score};
-};
-
-/* PacketI00 */
-NoxioGame.prototype.packHand.playerControl = function(packet) {
-  this.game.control = packet.oid;
-};
 
 /* Gets an object by it's OID */
 NoxioGame.prototype.getObject = function(oid) {
@@ -147,13 +79,14 @@ NoxioGame.prototype.sendInput = function() {
       default : { break; }
     }
   }
-       if(this.input.keyboard.keys[81]) { main.net.game.send({type: "i10", action: "q", pos: cursor}); } //Q
-  else if(this.input.keyboard.keys[87]) { main.net.game.send({type: "i10", action: "w", pos: cursor}); } //W
-  else if(this.input.keyboard.keys[69]) { main.net.game.send({type: "i10", action: "e", pos: cursor}); } //E
-  else if(this.input.keyboard.keys[82]) { main.net.game.send({type: "i10", action: "r", pos: cursor}); } //R
   
   if(this.input.mouse.lmb && obj !== undefined) {
-    main.net.game.send({type: "i00", pos: cursor});
+    var coords = this.display.unproject(cursor);
+    var dir = {x: coords.x-obj.pos.x, y: coords.y-obj.pos.y};
+    var mag = Math.sqrt((dir.x*dir.x) + (dir.y*dir.y));
+    var norm = {x: dir.x/mag, y: dir.y/mag};
+    if(mag >= 1.5) { main.net.game.send({type: "i05", pos: norm}); }
+    else { main.net.game.send({type: "i04", pos: norm}); }
   }
   else {
     main.net.game.send({type: "i01"});
@@ -206,6 +139,11 @@ NoxioGame.prototype.draw = function() {
     }
     this.debug.fAvg = (1000*(i/(this.debug.ss-1)))/(fAvg/(this.debug.ss-1));
 
+    /* Move camera to player */
+    var obj = this.getObject(this.control);
+    if(obj !== undefined) { this.display.camera.pos.x = -obj.pos.x; this.display.camera.pos.y = -obj.pos.y; }
+    
+    /* Draw */
     this.display.draw();
     
     /* DEBUG FPS STUFF @FIXME */

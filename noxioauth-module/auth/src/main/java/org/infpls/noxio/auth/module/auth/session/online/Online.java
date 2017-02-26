@@ -43,6 +43,7 @@ public class Online extends SessionState {
     /* @TODO Dummy data */
     final List<ServerInfo> predef = new ArrayList();
     predef.add(new ServerInfo("EXT-TEST-1", "68.34.229.231", 7001));
+    predef.add(new ServerInfo("INT-TEST-1", "10.0.0.253", 7001));
     predef.add(new ServerInfo("LOC-TEST-1", "localhost", 7001));
     sendPacket(new PacketO01(predef));
   }

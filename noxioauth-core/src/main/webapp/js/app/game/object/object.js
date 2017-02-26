@@ -1,16 +1,20 @@
 "use strict";
 /* global main */
+/* global util */
 
 /* Define GameObject class */
 /* GameObject is an abstract class and should never actually be created. 
  * Javascript doesn't really have any equivalent to 'abstract' so I'm 
  * just going to remind you that if you instaniate this class I will
- * come find you, and make you pay.
+ * come find you irl.
  * 
  * This class contains all required basic object functions and is
  * a mirror of the Java class located in the NoxioGame project.
+ * Be sure to override or inherit all functions here!
  */
-function GameObject(oid, pos, vel) {
+function GameObject(game, oid, pos, vel) {
+  this.game = game;
+  
   this.oid = oid;
   this.pos = pos;
   this.vel = vel;
@@ -24,6 +28,14 @@ GameObject.prototype.setVel = function(vel) {
   this.vel = vel;
 };
 
-GameObject.prototype.draw = function() {
+GameObject.prototype.update = function(data) {
+  var pos = util.parseVec2(data.shift());
+  var vel = util.parseVec2(data.shift());
+  
+  this.setPos(pos);
+  this.setVel(vel);
+};
+
+GameObject.prototype.getDraw = function(geometry, camera) {
   /* NO. */
 };
