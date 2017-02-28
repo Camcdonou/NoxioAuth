@@ -217,7 +217,7 @@ Display.prototype.draw = function() {
   
   /* Update Camera Position */
   var mmov = this.game.input.mouse.popMovement();
-  if(this.game.input.mouse.rmb) { this.camera.pos.x += mmov.x/128; this.camera.pos.y += mmov.y/128; }
+  if(this.game.input.mouse.rmb) { this.camera.pos.x += mmov.x/128; this.camera.pos.y += mmov.y/128; } /* @FIXME */
   
   /* Check WebGL is OKAY */
   if(!this.gl) { this.drawFallback(); return; }

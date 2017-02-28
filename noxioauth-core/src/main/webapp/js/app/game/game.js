@@ -2,7 +2,14 @@
 /* global main */
 
 /* Define NoxioGame Class */
-function NoxioGame() {
+function NoxioGame(name, description, gametype, maxPlayers, map) {  
+  this.info = {
+    name: name,
+    description: description,
+    gametype: gametype,
+    maxPlayers: maxPlayers
+  };
+  
   this.window = document.getElementById("canvas");
   this.container = document.getElementById("canvas-container");
   
@@ -10,7 +17,7 @@ function NoxioGame() {
   this.display = new Display(this, this.container, this.window);
   this.input = new Input(this.window);
   
-  this.loadMap("test"); /* @FIXME DEBUG TEST */
+  this.loadMap(map);
   
   this.gameOver = false;
   
@@ -24,9 +31,7 @@ function NoxioGame() {
 };
 
 NoxioGame.prototype.loadMap = function(map) {
-  if(!this.display.gl) { return; }
-  if(this.asset.map[map] === undefined) { main.menu.error.showError("Game Error", "Could not load specified map: " + map); }
-  this.map = this.asset.map[map](this.display);
+  this.map = new Map(this.display, map);
 };
 
 /* Returns false if failed handled packet */
@@ -35,6 +40,7 @@ NoxioGame.prototype.update = function(packet) {
   switch(packet.type) {
     /* Ingame Type Packets gxx */
     case "g10" : { this.packHand.gameDataUpdate(packet); return true; }
+    case "g15" : { this.packHand.message(packet); return true; }
     case "g16" : { this.packHand.gameOver(packet); return true; }
     case "g18" : { this.packHand.gameRules(packet); return true; }
     /* Input Type Packets ixx */
@@ -82,10 +88,10 @@ NoxioGame.prototype.sendInput = function() {
   
   if(this.input.mouse.lmb && obj !== undefined) {
     var coords = this.display.unproject(cursor);
-    var dir = {x: coords.x-obj.pos.x, y: coords.y-obj.pos.y};
-    var mag = Math.sqrt((dir.x*dir.x) + (dir.y*dir.y));
-    var norm = {x: dir.x/mag, y: dir.y/mag};
-    if(mag >= 1.5) { main.net.game.send({type: "i05", pos: norm}); }
+    var dir = util.vec2.subtract(coords, obj.pos);
+    var mag = util.vec2.magnitude(dir);
+    var norm = util.vec2.normalize(dir);
+    if(mag >= 1.5) { main.net.game.send({type: "i05", pos: norm}); } /* @FIXME Change to single packet with true/false */
     else { main.net.game.send({type: "i04", pos: norm}); }
   }
   else {

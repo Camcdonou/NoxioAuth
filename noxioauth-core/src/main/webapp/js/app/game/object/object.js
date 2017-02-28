@@ -29,8 +29,8 @@ GameObject.prototype.setVel = function(vel) {
 };
 
 GameObject.prototype.update = function(data) {
-  var pos = util.parseVec2(data.shift());
-  var vel = util.parseVec2(data.shift());
+  var pos = util.vec2.parse(data.shift());
+  var vel = util.vec2.parse(data.shift());
   
   this.setPos(pos);
   this.setVel(vel);

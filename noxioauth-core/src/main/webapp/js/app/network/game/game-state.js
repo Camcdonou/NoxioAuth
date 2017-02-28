@@ -12,7 +12,6 @@ GameState.prototype.handlePacket = function(packet) {
     case "g04" : { this.playerList(packet); return true; }
     case "g06" : { this.joinGameError(packet); return true; }
     case "g08" : { this.leftGame(packet); return true; }
-    case "g15" : { this.gameMessages(packet); return true; } /* @FIXME these 'will' be handled by the actual game class later. */
     case "g17" : { this.newGame(packet); return true; }
     default : { return main.inGame() ? this.gameData(packet) : false; }
   }
@@ -21,13 +20,9 @@ GameState.prototype.handlePacket = function(packet) {
 GameState.prototype.newGame = function(packet) {
   main.menu.connect.show("Loading...");
   main.endGame();
-  main.startGame();
+  main.startGame(packet.name, "STUB", "STUB", packet.maxPlayer, packet.map);
   main.menu.game.show();
   this.send({type: "g07"});
-};
-
-GameState.prototype.gameMessages = function(packet) {
-  main.menu.game.updateMessages(packet.message);
 };
 
 GameState.prototype.gameData = function(packet) {
@@ -43,7 +38,7 @@ GameState.prototype.gameInfo = function(packet) {
   this.info.name = packet.name;
   this.info.maxPlayers = packet.maxPlayers;
   main.menu.connect.show("Loading...");
-  main.startGame();
+  main.startGame(packet.name, "STUB", "STUB", packet.maxPlayer, packet.map);
   main.menu.game.show();
   this.send({type: "g07"});
 };

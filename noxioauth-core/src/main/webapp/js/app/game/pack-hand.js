@@ -16,7 +16,6 @@ PackHand.prototype.gameDataUpdate = function(packet) {
       case "crt" : { this.createObject(data); break; }
       case "del" : { this.deleteObject(data); break; }
       case "obj" : { this.updateObject(data); break; }
-      case "msg" : { this.message(data); break; }
       default : { main.menu.warning.show("Game data parsing interupted unexpectedly on '" + field + "' with " + data.length + " fields remaining."); break; }
     }
   }
@@ -27,8 +26,8 @@ PackHand.prototype.gameDataUpdate = function(packet) {
 PackHand.prototype.createObject = function(data) {
   var oid = parseInt(data.shift());
   var type = data.shift();
-  var pos = util.parseVec2(data.shift());
-  var vel = util.parseVec2(data.shift());
+  var pos = util.vec2.parse(data.shift());
+  var vel = util.vec2.parse(data.shift());
   
   var obj = this.game.getObject(oid);
   if(obj !== undefined) { main.menu.warning.show("Desync: Tried to create OBJ that already exists '" + oid + "::" + type + "'."); return; } 
@@ -56,14 +55,14 @@ PackHand.prototype.updateObject = function(data) {
   else { main.menu.warning.show("Desync: Tried to update OBJ that does not exist '" + oid + "'."); }
 };
 
-/* SYS::MESSAGE | msg */
-PackHand.prototype.message = function(data) {
-  
-};
-
 /* PacketI03 */
 PackHand.prototype.playerControl = function(packet) {
   this.game.control = packet.oid;
+};
+
+/* PacketG15 */
+PackHand.prototype.message = function(packet) {
+  main.menu.game.updateMessages(packet.message);
 };
 
 /* PacketG16 */

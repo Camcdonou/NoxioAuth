@@ -12,9 +12,9 @@ Main.prototype.init = function() {
   this.net.auth.establish();
 };
 
-Main.prototype.startGame = function() {
+Main.prototype.startGame = function(name, description, gametype, maxPlayers, map) {
   if(!this.inGame()) {
-    this.game = new NoxioGame();
+    this.game = new NoxioGame(name, description, gametype, maxPlayers, map);
   }
   else { this.menu.error.showError("State Error", "Attempted to start a game while a game was running."); this.close(); }
 };
