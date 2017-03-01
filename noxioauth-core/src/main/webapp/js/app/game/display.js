@@ -67,10 +67,14 @@ Display.prototype.setupWebGL = function() {
   if(!this.createTexture(defaultTextureSource)) { return false; }
   if(!this.createShader(this.game.asset.shader.default)) { return false; }
   if(!this.createShader(this.game.asset.shader.shadow)) { return false; }
+  
   //if(!this.createShader(this.game.asset.shader.debug)) { return false; } /* @FIXME DEBUG */
   if(!this.createMaterial(this.game.asset.material.multi.default)) { return false; }
   if(!this.createMaterial(this.game.asset.material.multi.shadow)) { return false; }
+  if(!this.createMaterial(this.game.asset.material.multi.gulm)) { return false; }
+  
   if(!this.createModel(this.game.asset.model.multi.box)) { return false; }
+  
   if(!this.createShadowFramebuffer()) { return false; }
   
   return true;
@@ -386,7 +390,35 @@ Display.prototype.draw = function() {
     shaderGroup.shader.disable(gl);
   }
   
-  /* DEBUG DRAW */
+  /* TEST TEXT DRAW */
+  var debugMaterial = this.getMaterial("material.multi.gulm");
+  var debugShader = debugMaterial.shader;
+  var debugModel = this.getModel("model.multi.square");
+  
+  var ASPECT = this.window.height/this.window.width;
+  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, -16.0, 16.0,-16.0*ASPECT, 16.0*ASPECT, 0.0, 1.0);
+  var VIEWMATRIX_DEBUG= mat4.create();
+  var uniformDataDebug = [
+    {name: "Pmatrix", data: PROJMATRIX_DEBUG},
+    {name: "Vmatrix", data: VIEWMATRIX_DEBUG}
+  ];
+  
+  var characters = [53,51,34,49,52,1,34,51,38,1,40,34,58,2];
+  
+  debugShader.enable(gl);
+  debugShader.applyUniforms(gl, uniformDataDebug);
+  debugMaterial.enable(gl);
+  for(var i=0;i<characters.length;i++) {
+    var uniformDataTextIndex = [
+      {name: "index", data: characters[i]}
+    ];
+    debugShader.applyUniforms(gl, uniformDataTextIndex);
+    debugModel.draw(gl, debugShader, {x: (1.0*i)-(characters.length*0.5), y: 8.0, z: -0.5}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}});
+  }
+  debugShader.disable(gl);
+  debugMaterial.disable(gl);
+  
+  /* DEBUG DRAW */ //I DOUBT ANY OF THIS STILL WORKS !!! <-----------------------
 //  var debugTexture = {glTexture: this.shadow.tex, enable: Texture.prototype.enable, disable: Texture.prototype.disable}; /* Hackyyyy */
 //  var debugShader = this.getShader("debug");
 //  var debugMaterial = new Material("!DEBUG", debugShader, {texture0: debugTexture}); /* Even hackier */

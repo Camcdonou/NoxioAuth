@@ -6,6 +6,14 @@ Asset.prototype.material = {};
 Asset.prototype.material.multi = {};
 Asset.prototype.material.test = {};
 
+/* Source File: gulm.mat */
+Asset.prototype.material.multi.gulm = {
+  name: "material.multi.gulm",
+  shader: "font",
+  shadow: "false",
+  texture0: "img/multi/gulm.png",
+};
+
 /* Source File: default.mat */
 Asset.prototype.material.multi.default = {
   name: "material.multi.default",
