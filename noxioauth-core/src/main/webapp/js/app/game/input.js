@@ -25,9 +25,9 @@ Input.prototype.mouse.event = function(event, state) {
   this.pos = {x: event.offsetX, y: event.offsetY};
   if(state === undefined) { return; }
   switch(event.button) {
-		case 1 : { this.lmb = state; break; }
+		case 0 : { this.lmb = state; break; }
 		case 2 : { this.rmb = state; break; }
-		case 4 : { this.mmb = state; break; }
+		case 1 : { this.mmb = state; break; }
 		default : { /* Ignore */ break; }
 	}
 };

@@ -34,7 +34,8 @@ PackHand.prototype.createObject = function(data) {
   
   switch(type) {
     case "obj" : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for abstract type '" + type + "'.", JSON.stringify(data)); main.close(); break; }
-    case "obj.player" : { this.game.objects.push(new PlayerObject(this.game, oid, pos, vel)); break; }
+    case "obj.mobile" : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for abstract type '" + type + "'.", JSON.stringify(data)); main.close(); break; }
+    case "obj.mobile.player" : { this.game.objects.push(new PlayerObject(this.game, oid, pos, vel)); break; }
     default : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for '" + type + "' which does not exist.", JSON.stringify(data)); main.close(); break; }
   }
 };

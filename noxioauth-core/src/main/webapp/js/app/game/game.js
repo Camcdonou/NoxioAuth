@@ -86,7 +86,7 @@ NoxioGame.prototype.sendInput = function() {
     }
   }
   
-  if(this.input.mouse.lmb && obj !== undefined) {
+  if(this.input.mouse.rmb && obj !== undefined) {
     var coords = this.display.unproject(cursor);
     var dir = util.vec2.subtract(coords, obj.pos);
     var mag = util.vec2.magnitude(dir);
