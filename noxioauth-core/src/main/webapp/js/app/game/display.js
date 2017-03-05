@@ -54,7 +54,7 @@ Display.prototype.setupWebGL = function() {
   this.shaders = [];
   this.materials = [];
   this.models = [];
-  this.shadow = {};
+  this.fbo = {};
   
   /* @FIXME this is a temp thing */
   var defaultTextureSource = "img/multi/default.png";
@@ -65,6 +65,7 @@ Display.prototype.setupWebGL = function() {
   this.LL_UNIFORM_MAX = maxUniform * 0.33;
   
   if(!this.createTexture(defaultTextureSource)) { return false; }
+  
   if(!this.createShader(this.game.asset.shader.default)) { return false; }
   if(!this.createShader(this.game.asset.shader.shadow)) { return false; }
   
@@ -75,7 +76,9 @@ Display.prototype.setupWebGL = function() {
   
   if(!this.createModel(this.game.asset.model.multi.box)) { return false; }
   
-  if(!this.createShadowFramebuffer()) { return false; }
+  if(!this.createShadowFramebuffer("shadow")) { return false; }
+  if(!this.createFramebuffer("world")) { return false; }
+  if(!this.createFramebuffer("ui")) { return false; }
   
   return true;
 };
@@ -183,36 +186,100 @@ Display.prototype.createModel = function(source) {
   return true;
 };
 
-/* Returns a shadow mapping framebuffer object */
-Display.prototype.createShadowFramebuffer = function() {
+/* Returns true if a shadow mapping framebuffer object is created */
+Display.prototype.createShadowFramebuffer = function(name) {
   var gl = this.gl; // Sanity Save
+  
+  var size = 512; /* @FIXME */
   
   var fb=gl.createFramebuffer();
   gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+  fb.width = size;
+  fb.height = size;
 
   var rb=gl.createRenderbuffer();
   gl.bindRenderbuffer(gl.RENDERBUFFER, rb);
-  gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16 , 512, 512);
+  gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, size, size);
 
   gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, rb);
 
-  var texture_rtt=gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, texture_rtt);
+  var tex=gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 512, 512, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size, size, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 
-  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture_rtt, 0);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
   
   if(gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) { return false; }
   
-  this.shadow = {fb: fb, rb: rb, tex: texture_rtt};
+  this.fbo[name] = {fb: fb, rb: rb, tex: tex};
   
   gl.bindTexture(gl.TEXTURE_2D, null);
+  gl.bindRenderbuffer(gl.RENDERBUFFER, null);
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   
   return true;
 };
+
+/* Returns true if a framebuffer object is created */
+Display.prototype.createFramebuffer = function(name) {
+  var gl = this.gl; // Sanity Save
+  
+  var size = 1024;
+  
+  var fb = gl.createFramebuffer();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+  fb.width = size;
+  fb.height = size;
+  
+  var tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  //gl.generateMipmap(gl.TEXTURE_2D); /* @FIXME why? Error? gl.LINEAR_MIPMAP_NEAREST */
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, fb.width, fb.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+  
+  var rb = gl.createRenderbuffer();
+  gl.bindRenderbuffer(gl.RENDERBUFFER, rb);
+  gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, fb.width, fb.height);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+  gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, rb);
+  
+  if(gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) { return false; }
+  
+  this.fbo[name] = {fb: fb, rb: rb, tex: tex};
+  
+  gl.bindTexture(gl.TEXTURE_2D, null);
+  gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  
+  return true;
+};
+
+/* Updates framebuffer texture size and shape based on window size */
+Display.prototype.updateFramebuffer = function(name) {
+  var gl = this.gl; // Sanity Save
+  var fbo = this.fbo[name];
+  
+  var x=2, y=2;
+  while(x<=this.window.width) { x = x*2; }
+  while(y<=this.window.height) { y = y*2; }
+  
+  if(x !== fbo.fb.width || y !== fbo.fb.height) {
+    main.menu.warning.show("FBO RESIZE OP: " + name + ":" + x + "," + y);
+    fbo.fb.width = x;
+    fbo.fb.height = y;
+    
+    gl.bindTexture(gl.TEXTURE_2D, fbo.tex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, fbo.fb.width, fbo.fb.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    gl.bindRenderbuffer(gl.RENDERBUFFER, fbo.rb);
+    gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, fbo.fb.width, fbo.fb.height);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+    gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+  }
+};
+
 var RXD = 0;
 Display.prototype.draw = function() {
   /* Update Canvas Size */
@@ -224,6 +291,10 @@ Display.prototype.draw = function() {
   
   /* Begin WebGL draw */
   var gl = this.gl; // Sanity Save
+  
+  /* Update Framebuffers */
+  this.updateFramebuffer("world");
+  this.updateFramebuffer("ui");
   
   /* Generate all matrices for the render */
   var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, 0.785398, this.window.width/this.window.height, 1.0, 64.0); // Perspective
@@ -284,8 +355,8 @@ Display.prototype.draw = function() {
   }
   
   /* Draw Geometry to Shadow FBO */
-  gl.bindFramebuffer(gl.FRAMEBUFFER, this.shadow.fb); //Enable shadow frame buffers
-  gl.viewport(0.0, 0.0, 512.0, 512.0); // Resize to FBO texture /* @FIXME hardcodedw4
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.shadow.fb); //Enable shadow frame buffers
+  gl.viewport(0.0, 0.0, this.fbo.shadow.fb.width, this.fbo.shadow.fb.height); // Resize to FBO texture /* @FIXME hardcodedw4
   gl.clearColor(1.0, 0.0, 0.0, 1.0); // red -> Z=Zfar on the shadow map
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   
@@ -359,10 +430,11 @@ Display.prototype.draw = function() {
   ];
   
   /* Draw Geometry */
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.world.fb); // Enable world framebuffer
   gl.viewport(0, 0, this.window.width, this.window.height); // Resize to canvas
   gl.clearColor(0.5, 0.5, 0.5, 1.0);  // Opaque grey backdrop
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear Color and Depth from previous draw.
-  gl.activeTexture(gl.TEXTURE5); gl.bindTexture(gl.TEXTURE_2D, this.shadow.tex); /* @FIXME TESTING */
+  gl.activeTexture(gl.TEXTURE5); gl.bindTexture(gl.TEXTURE_2D, this.fbo.shadow.tex); /* @FIXME TESTING */
   var uniformData = [
     {name: "Pmatrix", data: PROJMATRIX},
     {name: "Vmatrix", data: VIEWMATRIX},
@@ -389,37 +461,95 @@ Display.prototype.draw = function() {
     }
     shaderGroup.shader.disable(gl);
   }
+  gl.activeTexture(gl.TEXTURE5); gl.bindTexture(gl.TEXTURE_2D, null); /* @FIXME TESTING */
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null); //Disable world framebuffer
   
-  /* TEST TEXT DRAW */
+  var testText = [
+    {pos: {x: -9.0, y: -5.0}, size: 2.5, text: "This is a test!"},
+    {pos: {x: 16.0, y: 22.0}, size: 1.5, text: "This is also a TEST!"},
+    {pos: {x: -32.0, y: 0.0}, size: 6.0, text: "TESTS ARE GAY?"}
+  ];
+  
+  /* TEST UI DRAW */
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.ui.fb); // Enable menu framebuffer
+  gl.viewport(0, 0, this.window.width, this.window.height); // Resize to canvas
+  gl.clearColor(0.0, 0.0, 0.0, 0.0);  // Transparent Black Background
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear Color and Depth from previous draw.
+  gl.depthMask(false); // Disable depth write for UI Draw
+  gl.disable(gl.DEPTH_TEST);           // Disable depth testing for UI Draw
   var debugMaterial = this.getMaterial("material.multi.gulm");
   var debugShader = debugMaterial.shader;
   var debugModel = this.getModel("model.multi.square");
   
   var ASPECT = this.window.height/this.window.width;
-  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, -16.0, 16.0,-16.0*ASPECT, 16.0*ASPECT, 0.0, 1.0);
+  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, -50.0, 50.0,-50.0*ASPECT, 50.0*ASPECT, 0.0, 1.0);
   var VIEWMATRIX_DEBUG= mat4.create();
   var uniformDataDebug = [
     {name: "Pmatrix", data: PROJMATRIX_DEBUG},
     {name: "Vmatrix", data: VIEWMATRIX_DEBUG}
   ];
   
-  var characters = [53,51,34,49,52,1,34,51,38,1,40,34,58,2];
-  
   debugShader.enable(gl);
   debugShader.applyUniforms(gl, uniformDataDebug);
   debugMaterial.enable(gl);
-  for(var i=0;i<characters.length;i++) {
-    var uniformDataTextIndex = [
-      {name: "index", data: characters[i]}
+  for(var j=0;j<testText.length;j++) {
+    var text = testText[j];
+    var characters = this.stringToIndices(text.text);
+    var uniformFontSize = [
+      {name: "fontSize", data: text.size}
     ];
-    debugShader.applyUniforms(gl, uniformDataTextIndex);
-    debugModel.draw(gl, debugShader, {x: (1.0*i)-(characters.length*0.5), y: 8.0, z: -0.5}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}});
+    debugShader.applyUniforms(gl, uniformFontSize);
+    for(var i=0;i<characters.length;i++) {
+      var uniformDataTextIndex = [
+        {name: "index", data: characters[i]}
+      ];
+      debugShader.applyUniforms(gl, uniformDataTextIndex);
+      debugModel.draw(gl, debugShader, {x: (text.size*(i*0.9))+text.pos.x, y: text.pos.y, z: -0.5}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}});
+    }
   }
   debugShader.disable(gl);
   debugMaterial.disable(gl);
+  gl.depthMask(true); // Reenable depth write after UI draw
+  gl.enable(gl.DEPTH_TEST);           // Reenable after UI Draw
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable menu framebuffer
+  
+  /* Render to screen using world/ui framebuffers */
+  gl.viewport(0, 0, this.window.width, this.window.height); // Resize to canvas
+  gl.clearColor(0.5, 0.5, 0.5, 1.0);  // Opaque grey backdrop
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear Color and Depth from previous draw.
+  gl.depthMask(false); // Disable depth write for post Draw
+  gl.disable(gl.DEPTH_TEST);           // Disable depth testing for post Draw
+  gl.activeTexture(gl.TEXTURE6); gl.bindTexture(gl.TEXTURE_2D, this.fbo.world.tex); /* @FIXME TESTING */
+  gl.activeTexture(gl.TEXTURE7); gl.bindTexture(gl.TEXTURE_2D, this.fbo.ui.tex); /* @FIXME TESTING change thse so they use the Texture.js data type? */
+  var debugMaterial = this.getMaterial("material.multi.post");
+  var debugShader = debugMaterial.shader;
+  var debugModel = this.getModel("model.multi.square");
+  
+  var ASPECT = this.window.height/this.window.width;
+  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, -0.5, 0.5, -0.5, 0.5, 0.0, 1.0);
+  var VIEWMATRIX_DEBUG= mat4.create();
+  var TEXTURE_PROP = [this.window.width/this.fbo.world.fb.width, this.window.height/this.fbo.world.fb.height, (this.fbo.world.fb.height-this.window.height)/this.fbo.world.fb.height];
+  var uniformDataPost = [
+    {name: "Pmatrix", data: PROJMATRIX_DEBUG},
+    {name: "Vmatrix", data: VIEWMATRIX_DEBUG},
+    {name: "textureProp", data: TEXTURE_PROP},
+    {name: "texture6", data: 6},
+    {name: "texture7", data: 7}
+  ];
+  
+  debugShader.enable(gl);
+  debugShader.applyUniforms(gl, uniformDataPost);
+  debugMaterial.enable(gl);
+  debugModel.draw(gl, debugShader, {x: 0.0, y: 0.0, z: -0.5}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}});
+  debugShader.disable(gl);
+  debugMaterial.disable(gl);
+  gl.depthMask(true); // Reenable depth write after post draw
+  gl.enable(gl.DEPTH_TEST);           // Reenable depth testing after post draw
+  gl.activeTexture(gl.TEXTURE6); gl.bindTexture(gl.TEXTURE_2D, null); /* @FIXME TESTING */
+  gl.activeTexture(gl.TEXTURE7); gl.bindTexture(gl.TEXTURE_2D, null); /* @FIXME TESTING */
   
   /* DEBUG DRAW */ //I DOUBT ANY OF THIS STILL WORKS !!! <-----------------------
-//  var debugTexture = {glTexture: this.shadow.tex, enable: Texture.prototype.enable, disable: Texture.prototype.disable}; /* Hackyyyy */
+//  var debugTexture = {glTexture: this.fbo.shadow.tex, enable: Texture.prototype.enable, disable: Texture.prototype.disable}; /* Hackyyyy */
 //  var debugShader = this.getShader("debug");
 //  var debugMaterial = new Material("!DEBUG", debugShader, {texture0: debugTexture}); /* Even hackier */
 //  var debugModel = this.getModel("model.multi.square");
@@ -563,8 +693,8 @@ Display.prototype.destroy = function() {
   for(var i=0;i<this.models.length;i++) { gl.deleteBuffer(this.models[i].vertexBuffer); gl.deleteBuffer(this.models[i].indexBuffer); }
   for(var i=0;i<this.shaders.length;i++) { gl.deleteProgram(this.shaders[i].program); }
   for(var i=0;i<this.textures.length;i++) { gl.deleteTexture(this.textures[i].glTexture); }
-  gl.deleteRenderbuffer(this.shadow.rb);
-  gl.deleteFramebuffer(this.shadow.fb);
-  gl.deleteTexture(this.shadow.tex);
+  gl.deleteRenderbuffer(this.fbo.shadow.rb);
+  gl.deleteFramebuffer(this.fbo.shadow.fb);
+  gl.deleteTexture(this.fbo.shadow.tex);
   this.window.width = 1; this.window.height = 1;
 };

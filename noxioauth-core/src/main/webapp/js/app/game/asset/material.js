@@ -22,6 +22,13 @@ Asset.prototype.material.multi.default = {
   texture0: "img/multi/default.png",
 };
 
+/* Source File: post.mat */
+Asset.prototype.material.multi.post = {
+  name: "material.multi.post",
+  shader: "post",
+  shadow: "false",
+};
+
 /* Source File: shadow.mat */
 Asset.prototype.material.multi.shadow = {
   name: "material.multi.shadow",

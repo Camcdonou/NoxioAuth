@@ -15,11 +15,12 @@ Asset.prototype.shader.font = {
     {type: "mat4", name: "Pmatrix"},
     {type: "mat4", name: "Vmatrix"},
     {type: "vec3", name: "transform"},
+    {type: "float", name: "fontSize"},
     {type: "sampler2D", name: "texture0"},
     {type: "int", name: "index"},
   ],
-  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\n\nuniform vec3 transform;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4(position+transform, 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*cPos;\n}\n",
-  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\nuniform int index;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  int x=0, y=0, i=index;\n  for(int j=0;j<8;j++) { if(i<=16) { break; } i-=16; y++; }\n  x=i;\n  \n  gl_FragColor = texture2D(texture0, (vUV.st*vec2(-0.0625, -0.125))+vec2(0.0625*float(x),0.125*float(y-7)));\n}\n",
+  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\n\nuniform vec3 transform;\nuniform float fontSize;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4((position*fontSize)+transform, 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\nuniform int index;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  int x=0, y=0, i=index;\n  for(int j=0;j<8;j++) { if(i<=16) { break; } i-=16; y++; }\n  x=i;\n  \n  gl_FragColor = texture2D(texture0, (vUV.st*vec2(0.0625, 0.125))+vec2(0.0625*float(x),0.125*float(y)));\n}\n",
 };
 
 /* Source File: shadowg */
@@ -36,6 +37,25 @@ Asset.prototype.shader.shadow = {
   ],
   vertex: "precision mediump float;\n\nattribute vec3 position;\n\nuniform vec3 transform;\n\nuniform mat4 Pmatrix;\nuniform mat4 Lmatrix;\nuniform mat4 Omatrix;\n\nvarying float vDepth;\n\nvoid main(void) {\n  vec4 cPos = Pmatrix*Lmatrix*Omatrix*vec4((position+transform), 1.0);\n  float zBuf=cPos.z/cPos.w;\n  vDepth=0.5+zBuf*0.5;\n  gl_Position=cPos;\n}\n",
   fragment: "precision mediump float;\n\nvarying float vDepth;\n\nvoid main(void) {\n  gl_FragColor=vec4(vDepth, 0.,0.,1.);\n}\n",
+};
+
+/* Source File: postg */
+Asset.prototype.shader.post = {
+  name: "post",
+  attributes: [
+    {type: "vec3", name: "position"},
+    {type: "vec3", name: "texcoord"},
+  ],
+  uniforms: [
+    {type: "mat4", name: "Pmatrix"},
+    {type: "mat4", name: "Vmatrix"},
+    {type: "vec3", name: "transform"},
+    {type: "sampler2D", name: "texture6"},
+    {type: "sampler2D", name: "texture7"},
+    {type: "vec3", name: "textureProp"},
+  ],
+  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\n\nuniform vec3 transform;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4(position+transform, 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n\nuniform sampler2D texture6;\nuniform sampler2D texture7;\n\nuniform vec3 textureProp; //Proportions\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec2 vUVi = vec2(vUV.s, (-1.0*vUV.t))*textureProp.st; /* @FIXME Unknown why we need to render inverse y coords */\n  vUVi.t -= textureProp.z;\n  vec4 world = texture2D(texture6, vUVi);\n  vec4 ui = texture2D(texture7, vUVi);\n  vec4 color = ((1.0 - ui.a) * world) + (ui * ui.a);\n  gl_FragColor = vec4(color.rgb, 1.0);\n}\n",
 };
 
 /* Source File: defaultg */
@@ -62,8 +82,8 @@ Asset.prototype.shader.default = {
     {type: "vec3[]", name: "pLightColor"},
     {type: "float[]", name: "pLightRadius"},
   ],
-  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\nattribute vec3 normal;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform mat4 Lmatrix;\nuniform mat4 PmatrixLight;\nuniform mat4 Omatrix;\n\nuniform vec3 transform;\n\nvarying vec3 vPos;\nvarying vec3 vUV;\nvarying vec3 vNormal;\nvarying vec3 vLightPos;\n\nvoid main(void) {\n  vPos = position+transform;\n  vec4 cPos = vec4(vPos, 1.0);\n  vec4 lightPos = Lmatrix*Omatrix*cPos;\n\n  lightPos=PmatrixLight*lightPos;\n\n  vec3 lightPosDNC=lightPos.xyz/lightPos.w;\n\n  vLightPos=vec3(0.5,0.5,0.5)+lightPosDNC*0.5;\n  vNormal=normal;\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
-  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\nuniform sampler2D texture5;\n\nvarying vec3 vPos;\nvarying vec3 vUV;\nvarying vec3 vNormal;\nvarying vec3 vLightPos;\n\nconst vec3 sourceAmbientColor=vec3(0.8, 0.8, 0.8);\nconst vec3 sourceDiffuseColor=vec3(1.0, 1.0, 1.0);\nuniform vec3 sourceDirection;\n\nconst vec3 matAmbientColor=vec3(0.3, 0.3, 0.3);\nconst vec3 matDiffuseColor=vec3(1.0, 1.0, 1.0);\nconst float matShininess=10.0;\n\nuniform int pLightLength;\nuniform vec3 pLightPos[64];\nuniform vec3 pLightColor[64];\nuniform float pLightRadius[64];\n\nvoid main(void) {\n  vec2 uvShadowMap=vLightPos.xy;\n\n  /* PCF */\n  float sum=0.0;\n  vec2 duv;\n  for(float pcfX=-1.5; pcfX<=1.5; pcfX+=1.0) {\n    for(float pcfY=-1.5; pcfY<=1.5; pcfY+=1.0) {\n      duv=vec2(pcfX/512.0, pcfY/512.0);\n      sum+=texture2D(texture5, uvShadowMap+duv).r;\n    }\n  }\n  sum/=16.0;\n  float shadowCoeff=1.0-smoothstep(0.003, 0.01, vLightPos.z-sum);\n  /*float sum=0.0;\n  vec2 duv;\n  for(float pcfX=-1.5; pcfX<=1.5; pcfX+=1.0) {\n    for(float pcfY=-1.5; pcfY<=1.5; pcfY+=1.0) {\n      duv=vec2(pcfX/512.0, pcfY/512.0);\n      sum+=texture2D(texture5, uvShadowMap+duv).r < vLightPos.z-0.01 ? 0.0 : 1.0;\n    }\n  }\n  sum/=16.0;\n  float shadowCoeff=sum;*/\n\n  vec3 color=vec3(texture2D(texture0, vUV.st));\n  vec3 iAmbient=sourceAmbientColor*matAmbientColor;\n  vec3 iDiffuse=sourceDiffuseColor*matDiffuseColor*max(0., dot(vNormal, sourceDirection*-1.0));\n\n  /* Dynamic Light */\n  vec3 lightColor = vec3(0.1, 0.1, 0.1);\n  for(int i=0;i<64;i++) { /* @FIXME should be generated */\n    if(!(i<pLightLength)) { break; }\n\n    vec3 mag = (pLightPos[i]) - vPos;\n    float dist = sqrt((mag.x*mag.x) + (mag.y*mag.y) + (mag.z*mag.z));\n\n    if(dist < pLightRadius[i]) {\n      lightColor += pLightColor[i]*(1.0-(dist/pLightRadius[i]));\n    }\n  }\n\n  vec3 I=iAmbient+((iDiffuse*shadowCoeff)+lightColor);\n  gl_FragColor = vec4(I*color, 1.); /*(vec4(vNormal, 1.0)*0.1) */\n}\n",
+  vertex: "precision highp float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\nattribute vec3 normal;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform mat4 Lmatrix;\nuniform mat4 PmatrixLight;\nuniform mat4 Omatrix;\n\nuniform vec3 transform;\n\nvarying vec3 vPos;\nvarying vec3 vUV;\nvarying vec3 vNormal;\nvarying vec3 vLightPos;\n\nvoid main(void) {\n  vPos = position+transform;\n  vec4 cPos = vec4(vPos, 1.0);\n  vec4 lightPos = Lmatrix*Omatrix*cPos;\n\n  lightPos=PmatrixLight*lightPos;\n\n  vec3 lightPosDNC=lightPos.xyz/lightPos.w;\n\n  vLightPos=vec3(0.5,0.5,0.5)+lightPosDNC*0.5;\n  vNormal=normal;\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  fragment: "precision highp float;\n\nuniform sampler2D texture0;\nuniform sampler2D texture5;\n\nvarying vec3 vPos;\nvarying vec3 vUV;\nvarying vec3 vNormal;\nvarying vec3 vLightPos;\n\nconst vec3 sourceAmbientColor=vec3(0.8, 0.8, 0.8);\nconst vec3 sourceDiffuseColor=vec3(1.0, 1.0, 1.0);\nuniform vec3 sourceDirection;\n\nconst vec3 matAmbientColor=vec3(0.3, 0.3, 0.3);\nconst vec3 matDiffuseColor=vec3(1.0, 1.0, 1.0);\nconst float matShininess=10.0;\n\nuniform int pLightLength;\nuniform vec3 pLightPos[64];\nuniform vec3 pLightColor[64];\nuniform float pLightRadius[64];\n\nvoid main(void) {\n  vec2 uvShadowMap=vLightPos.xy;\n\n  /* PCF */\n  float sum=0.0;\n  vec2 duv;\n  for(float pcfX=-1.5; pcfX<=1.5; pcfX+=1.0) {\n    for(float pcfY=-1.5; pcfY<=1.5; pcfY+=1.0) {\n      duv=vec2(pcfX/512.0, pcfY/512.0);\n      sum+=texture2D(texture5, uvShadowMap+duv).r;\n    }\n  }\n  sum/=16.0;\n  float shadowCoeff=1.0-smoothstep(0.003, 0.01, vLightPos.z-sum);\n  /*float sum=0.0;\n  vec2 duv;\n  for(float pcfX=-1.5; pcfX<=1.5; pcfX+=1.0) {\n    for(float pcfY=-1.5; pcfY<=1.5; pcfY+=1.0) {\n      duv=vec2(pcfX/512.0, pcfY/512.0);\n      sum+=texture2D(texture5, uvShadowMap+duv).r < vLightPos.z-0.01 ? 0.0 : 1.0;\n    }\n  }\n  sum/=16.0;\n  float shadowCoeff=sum;*/\n\n  vec3 color=vec3(texture2D(texture0, vUV.st));\n  vec3 iAmbient=sourceAmbientColor*matAmbientColor;\n  vec3 iDiffuse=sourceDiffuseColor*matDiffuseColor*max(0., dot(vNormal, sourceDirection*-1.0));\n\n  /* Dynamic Light */\n  vec3 lightColor = vec3(0.1, 0.1, 0.1);\n  for(int i=0;i<64;i++) { /* @FIXME should be generated */\n    if(!(i<pLightLength)) { break; }\n\n    vec3 mag = (pLightPos[i]) - vPos;\n    float dist = sqrt((mag.x*mag.x) + (mag.y*mag.y) + (mag.z*mag.z));\n\n    if(dist < pLightRadius[i]) {\n      lightColor += pLightColor[i]*(1.0-(dist/pLightRadius[i]));\n    }\n  }\n\n  vec3 I=iAmbient+((iDiffuse*shadowCoeff)+lightColor);\n  gl_FragColor = vec4(I*color, 1.); /*(vec4(vNormal, 1.0)*0.1) */\n}\n",
 };
 
 /* Source File: testg */
