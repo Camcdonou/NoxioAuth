@@ -25,6 +25,14 @@ util.vec2.scale = function(a, s) {
   return {x: a.x*s, y: a.y*s};
 };
 
+util.vec2.multiply = function(a, b) {
+  return {x: a.x*b.x, y: a.y*b.y};
+};
+
+util.vec2.divide = function(a, b) {
+  return {x: a.x/b.x, y: a.y/b.y};
+};
+
 util.vec2.magnitude = function(a) {
   return Math.sqrt((a.x*a.x) + (a.y*a.y));
 };

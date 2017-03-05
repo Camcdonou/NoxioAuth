@@ -40,6 +40,9 @@ Display.prototype.setupWebGL = function() {
   gl.cullFace(gl.BACK);
   gl.enable(gl.DEPTH_TEST);           // Enable depth testing
   gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
+  gl.disable(gl.BLEND);               // No transparency by default
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE); // Transparency settings
+
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Set clear color to black, fully opaque
   gl.clearDepth(1.0);                 // Clear everything
@@ -464,36 +467,55 @@ Display.prototype.draw = function() {
   gl.activeTexture(gl.TEXTURE5); gl.bindTexture(gl.TEXTURE_2D, null); /* @FIXME TESTING */
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); //Disable world framebuffer
   
-  var testText = [
-    {pos: {x: -9.0, y: -5.0}, size: 2.5, text: "This is a test!"},
-    {pos: {x: 16.0, y: 22.0}, size: 1.5, text: "This is also a TEST!"},
-    {pos: {x: -32.0, y: 0.0}, size: 6.0, text: "TESTS ARE GAY?"}
-  ];
+//  var testText = [
+//    {pos: {x: -9.0, y: -5.0}, size: 2.5, text: "This is a test!"},
+//    {pos: {x: 16.0, y: 22.0}, size: 1.5, text: "This is also a TEST!"},
+//    {pos: {x: -32.0, y: 0.0}, size: 6.0, text: "TESTS ARE GAY?"}
+//  ];
   
   /* TEST UI DRAW */
+  var blocks = [];
+  var texts = [];
+  this.game.ui.getDraw(blocks, texts, this.game.input.mouse.pos, {x: this.window.width, y: this.window.height});
+  
   gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.ui.fb); // Enable menu framebuffer
   gl.viewport(0, 0, this.window.width, this.window.height); // Resize to canvas
   gl.clearColor(0.0, 0.0, 0.0, 0.0);  // Transparent Black Background
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear Color and Depth from previous draw.
   gl.depthMask(false); // Disable depth write for UI Draw
   gl.disable(gl.DEPTH_TEST);           // Disable depth testing for UI Draw
+  gl.enable(gl.BLEND);               // Enable Transparency 
   var debugMaterial = this.getMaterial("material.multi.gulm");
   var debugShader = debugMaterial.shader;
   var debugModel = this.getModel("model.multi.square");
   
   var ASPECT = this.window.height/this.window.width;
-  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, -50.0, 50.0,-50.0*ASPECT, 50.0*ASPECT, 0.0, 1.0);
+  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, 0.0, 100.0,0.0*ASPECT, 100.0*ASPECT, 0.0, 1.0);
   var VIEWMATRIX_DEBUG= mat4.create();
   var uniformDataDebug = [
     {name: "Pmatrix", data: PROJMATRIX_DEBUG},
     {name: "Vmatrix", data: VIEWMATRIX_DEBUG}
   ];
   
+  for(var i=0;i<blocks.length;i++) {
+    var block = blocks[i];
+    block.material.shader.enable(gl);
+    block.material.shader.applyUniforms(gl, uniformDataDebug);
+    block.material.enable(gl);
+    var uniformBlockSize = [
+      {name: "size", data: [block.size.x, block.size.y]}
+    ];
+    block.material.shader.applyUniforms(gl, uniformBlockSize);
+    debugModel.draw(gl, block.material.shader, {x: block.pos.x, y: block.pos.y, z: -0.5}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}}); /* @FIXME improve this while cleaing up */
+    block.material.disable(gl);
+    block.material.shader.disable(gl);
+  }
+  
   debugShader.enable(gl);
   debugShader.applyUniforms(gl, uniformDataDebug);
   debugMaterial.enable(gl);
-  for(var j=0;j<testText.length;j++) {
-    var text = testText[j];
+  for(var j=0;j<texts.length;j++) {
+    var text = texts[j];
     var characters = this.stringToIndices(text.text);
     var uniformFontSize = [
       {name: "fontSize", data: text.size}
@@ -511,6 +533,7 @@ Display.prototype.draw = function() {
   debugMaterial.disable(gl);
   gl.depthMask(true); // Reenable depth write after UI draw
   gl.enable(gl.DEPTH_TEST);           // Reenable after UI Draw
+  gl.disable(gl.BLEND);               // Disable transparency
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable menu framebuffer
   
   /* Render to screen using world/ui framebuffers */
@@ -526,7 +549,7 @@ Display.prototype.draw = function() {
   var debugModel = this.getModel("model.multi.square");
   
   var ASPECT = this.window.height/this.window.width;
-  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, -0.5, 0.5, -0.5, 0.5, 0.0, 1.0);
+  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0);
   var VIEWMATRIX_DEBUG= mat4.create();
   var TEXTURE_PROP = [this.window.width/this.fbo.world.fb.width, this.window.height/this.fbo.world.fb.height, (this.fbo.world.fb.height-this.window.height)/this.fbo.world.fb.height];
   var uniformDataPost = [
