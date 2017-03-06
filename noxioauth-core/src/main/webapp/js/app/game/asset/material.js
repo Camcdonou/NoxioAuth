@@ -23,6 +23,13 @@ Asset.prototype.material.ui.white = {
   texture0: "img/ui/white.png",
 };
 
+/* Source File: post_msaa.mat */
+Asset.prototype.material.multi.post_msaa = {
+  name: "material.multi.post_msaa",
+  shader: "post_msaa",
+  shadow: "false",
+};
+
 /* Source File: gulm.mat */
 Asset.prototype.material.multi.gulm = {
   name: "material.multi.gulm",
@@ -51,6 +58,13 @@ Asset.prototype.material.multi.shadow = {
   name: "material.multi.shadow",
   shader: "shadow",
   shadow: "true",
+};
+
+/* Source File: post_fxaa.mat */
+Asset.prototype.material.multi.post_fxaa = {
+  name: "material.multi.post_fxaa",
+  shader: "post_fxaa",
+  shadow: "false",
 };
 
 /* Source File: test3.mat */
