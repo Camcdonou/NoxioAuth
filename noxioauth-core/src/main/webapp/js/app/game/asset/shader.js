@@ -71,9 +71,10 @@ Asset.prototype.shader.post = {
     {type: "sampler2D", name: "texture6"},
     {type: "sampler2D", name: "texture7"},
     {type: "vec3", name: "textureProp"},
+    {type: "float", name: "msaa"},
   ],
   vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\n\nuniform vec3 transform;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4(position+transform, 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*cPos;\n}\n",
-  fragment: "precision mediump float;\n\nuniform sampler2D texture6;\nuniform sampler2D texture7;\n\nuniform vec3 textureProp; //Proportions\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec2 vUVi = vec2(vUV.s, (-1.0*vUV.t))*textureProp.st; /* @FIXME Unknown why we need to render inverse y coords */\n  vUVi.t -= textureProp.z;\n  vec4 world = texture2D(texture6, vUVi);\n  vec4 ui = texture2D(texture7, vUVi);\n  vec4 color = ((1.0 - ui.a) * world) + (ui * ui.a);\n  gl_FragColor = vec4(color.rgb, 1.0);\n}\n",
+  fragment: "precision mediump float;\n\nuniform sampler2D texture6;\nuniform sampler2D texture7;\n\nuniform vec3 textureProp; //Proportions\nuniform float msaa;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec2 vUVi = vec2(vUV.s, (-1.0*vUV.t))*textureProp.st; /* @FIXME Unknown why we need to render inverse y coords */\n  vUVi.t -= textureProp.z;\n  vUVi = vUVi*msaa;\n  vec4 world = texture2D(texture6, vUVi);\n  vec4 ui = texture2D(texture7, vUVi);\n  vec4 color = ((1.0 - ui.a) * world) + (ui * ui.a);\n  gl_FragColor = vec4(color.rgb, 1.0);\n}\n",
 };
 
 /* Source File: defaultg */

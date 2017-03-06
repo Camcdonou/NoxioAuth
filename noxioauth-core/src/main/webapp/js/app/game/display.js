@@ -25,7 +25,7 @@ Display.prototype.initFallback = function() {
 
 Display.prototype.initWebGL = function() {
   try { 
-    this.gl = this.window.getContext("webgl", {premultipliedalpha: false, antialias: true});
+    this.gl = this.window.getContext("webgl", {antialias: false});
     if(!this.gl) { return false; }
     return this.setupWebGL();
   }
@@ -43,7 +43,6 @@ Display.prototype.setupWebGL = function() {
   gl.disable(gl.BLEND);               // No transparency by default
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE); // Transparency settings
 
-
   gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Set clear color to black, fully opaque
   gl.clearDepth(1.0);                 // Clear everything
   
@@ -53,21 +52,19 @@ Display.prototype.setupWebGL = function() {
     gl.getExtension("WEBKIT_OES_element_index_uint")
   )) { return false; }
   
+  this.msaa = 2.0; /* @FIXME */  
+  
   this.textures = [];
   this.shaders = [];
   this.materials = [];
   this.models = [];
   this.fbo = {};
   
-  /* @FIXME this is a temp thing */
-  var defaultTextureSource = "img/multi/default.png";
-  
   var maxUniform = gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS);
   if(maxUniform < 64) { main.menu.error.showError("GLSL returned MAX_VERTEX_UNIFORM_VECTORS as : " + maxUniform); return false; }
-  this.PL_UNIFORM_MAX = maxUniform * 0.33;
-  this.LL_UNIFORM_MAX = maxUniform * 0.33;
+  this.PL_UNIFORM_MAX = maxUniform * 0.33; this.LL_UNIFORM_MAX = maxUniform * 0.33;
   
-  if(!this.createTexture(defaultTextureSource)) { return false; }
+  if(!this.createTexture("img/multi/default.png")) { return false; }
   
   if(!this.createShader(this.game.asset.shader.default)) { return false; }
   if(!this.createShader(this.game.asset.shader.shadow)) { return false; }
@@ -229,7 +226,7 @@ Display.prototype.createShadowFramebuffer = function(name) {
 Display.prototype.createFramebuffer = function(name) {
   var gl = this.gl; // Sanity Save
   
-  var size = 1024;
+  var size = 512;
   
   var fb = gl.createFramebuffer();
   gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
@@ -238,8 +235,8 @@ Display.prototype.createFramebuffer = function(name) {
   
   var tex = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, tex);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   //gl.generateMipmap(gl.TEXTURE_2D); /* @FIXME why? Error? gl.LINEAR_MIPMAP_NEAREST */
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, fb.width, fb.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
   
@@ -266,8 +263,8 @@ Display.prototype.updateFramebuffer = function(name) {
   var fbo = this.fbo[name];
   
   var x=2, y=2;
-  while(x<=this.window.width) { x = x*2; }
-  while(y<=this.window.height) { y = y*2; }
+  while(x<=(this.window.width*this.msaa)) { x = x*2; }
+  while(y<=(this.window.height*this.msaa)) { y = y*2; }
   
   if(x !== fbo.fb.width || y !== fbo.fb.height) {
     main.menu.warning.show("FBO RESIZE OP: " + name + ":" + x + "," + y);
@@ -433,8 +430,13 @@ Display.prototype.draw = function() {
   ];
   
   /* Draw Geometry */
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.clear(gl.DEPTH_BUFFER_BIT);
+  gl.clear(gl.STENCIL_BUFFER_BIT);
+  gl.flush();
+  
   gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.world.fb); // Enable world framebuffer
-  gl.viewport(0, 0, this.window.width, this.window.height); // Resize to canvas
+  gl.viewport(0, 0, (this.window.width*this.msaa), (this.window.height*this.msaa)); // Resize to canvas
   gl.clearColor(0.5, 0.5, 0.5, 1.0);  // Opaque grey backdrop
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear Color and Depth from previous draw.
   gl.activeTexture(gl.TEXTURE5); gl.bindTexture(gl.TEXTURE_2D, this.fbo.shadow.tex); /* @FIXME TESTING */
@@ -479,7 +481,7 @@ Display.prototype.draw = function() {
   this.game.ui.getDraw(blocks, texts, this.game.input.mouse.pos, {x: this.window.width, y: this.window.height});
   
   gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.ui.fb); // Enable menu framebuffer
-  gl.viewport(0, 0, this.window.width, this.window.height); // Resize to canvas
+  gl.viewport(0, 0, (this.window.width*this.msaa), (this.window.height*this.msaa)); // Resize to canvas
   gl.clearColor(0.0, 0.0, 0.0, 0.0);  // Transparent Black Background
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear Color and Depth from previous draw.
   gl.depthMask(false); // Disable depth write for UI Draw
@@ -556,6 +558,7 @@ Display.prototype.draw = function() {
     {name: "Pmatrix", data: PROJMATRIX_DEBUG},
     {name: "Vmatrix", data: VIEWMATRIX_DEBUG},
     {name: "textureProp", data: TEXTURE_PROP},
+    {name: "msaa", data: this.msaa},
     {name: "texture6", data: 6},
     {name: "texture7", data: 7}
   ];
