@@ -10,7 +10,7 @@ function Display(game, container, window) {
   this.container = container;
   this.window = window;
   
-  this.camera = {pos: {x: 0.0, y: 0.0, z: -10.0}}; /* UNUSED! */
+  this.camera = {pos: {x: 0.0, y: 0.0, z: -10.0}}; /* @FIXME rotation? */
   
   if(!this.initWebGL()) { this.initFallback(); }
 };
@@ -32,19 +32,19 @@ Display.prototype.initWebGL = function() {
   catch(ex) { main.menu.error.showErrorException("WebGL Error", "Exception while initializing WebGL: " + ex.message, ex.stack); return false; }
 };
 
-/* Returns boolean. If false then WebGL failed to setup and we should setup fallback rendering. If true we all good boyzzz. */
+/* Returns boolean. If false then WebGL failed to setup and we should setup fallback rendering. */
 Display.prototype.setupWebGL = function() {
   var gl = this.gl; /* Sanity Save */
   gl.viewport(0, 0, this.window.width, this.window.height); // Resize to canvas
-  gl.enable(gl.CULL_FACE);            // Do not draw backfacing triangles
-  gl.cullFace(gl.BACK);
-  gl.enable(gl.DEPTH_TEST);           // Enable depth testing
-  gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
-  gl.disable(gl.BLEND);               // No transparency by default
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE); // Transparency settings
+  gl.enable(gl.CULL_FACE);                                  // Enable culling triangles
+  gl.cullFace(gl.BACK);                                     // Cull triangles that aren't facing the camera
+  gl.enable(gl.DEPTH_TEST);                                 // Enable depth testing
+  gl.depthFunc(gl.LEQUAL);                                  // Near things obscure far things
+  gl.disable(gl.BLEND);                                     // Disable transparency blend by default
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE);                       // Transparency function
 
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Set clear color to black, fully opaque
-  gl.clearDepth(1.0);                 // Clear everything
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);                        // Set clear color to black, fully opaque
+  gl.clearDepth(1.0);                                       // Clear depth
   
   if(!(
     gl.getExtension("OES_element_index_uint") ||
@@ -52,7 +52,7 @@ Display.prototype.setupWebGL = function() {
     gl.getExtension("WEBKIT_OES_element_index_uint")
   )) { return false; }
   
-  this.upscale = 1.5; /* @FIXME */  
+  this.upscale = {world: 2.0, ui: 1.0}; /* @FIXME */
   
   this.textures = [];
   this.shaders = [];
@@ -69,14 +69,15 @@ Display.prototype.setupWebGL = function() {
   //if(!this.createShader(this.game.asset.shader.debug)) { return false; } /* @FIXME DEBUG */
   if(!this.createMaterial(this.game.asset.material.multi.default)) { return false; }
   if(!this.createMaterial(this.game.asset.material.multi.shadow)) { return false; }
-  if(!this.createMaterial(this.game.asset.material.multi.post_msaa)) { return false; } /* @FIXME default for testing */
+  if(!this.createMaterial(this.game.asset.material.multi.post_msaa)) { return false; } /* @FIXME default post_msaa for testing */
   if(!this.createMaterial(this.game.asset.material.multi.gulm)) { return false; }
   
   if(!this.createModel(this.game.asset.model.multi.box)) { return false; }
+  if(!this.createModel(this.game.asset.model.multi.square)) { return false; }
   
   if(!this.createShadowFramebuffer("shadow", 512)) { return false; }
-  if(!this.createFramebuffer("world", this.upscale)) { return false; }
-  if(!this.createFramebuffer("ui", 1.0)) { return false; }
+  if(!this.createFramebuffer("world", this.upscale.world)) { return false; }
+  if(!this.createFramebuffer("ui", this.upscale.ui)) { return false; }
   
   return true;
 };
@@ -209,7 +210,7 @@ Display.prototype.createShadowFramebuffer = function(name, size) {
   
   if(gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) { return false; }
   
-  this.fbo[name] = {fb: fb, rb: rb, tex: tex};
+  this.fbo[name] = {fb: fb, rb: rb, tex: new RenderTexture(tex)};
   
   gl.bindTexture(gl.TEXTURE_2D, null);
   gl.bindRenderbuffer(gl.RENDERBUFFER, null);
@@ -244,7 +245,7 @@ Display.prototype.createFramebuffer = function(name, upscale) {
   
   if(gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) { return false; }
   
-  this.fbo[name] = {fb: fb, rb: rb, tex: tex, upscale: upscale};
+  this.fbo[name] = {fb: fb, rb: rb, tex: new RenderTexture(tex), upscale: upscale};
   
   gl.bindTexture(gl.TEXTURE_2D, null);
   gl.bindRenderbuffer(gl.RENDERBUFFER, null);
@@ -267,7 +268,7 @@ Display.prototype.updateFramebuffer = function(name) {
     fbo.fb.width = x;
     fbo.fb.height = y;
     
-    gl.bindTexture(gl.TEXTURE_2D, fbo.tex);
+    gl.bindTexture(gl.TEXTURE_2D, fbo.tex.glTexture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, fbo.fb.width, fbo.fb.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
     gl.bindRenderbuffer(gl.RENDERBUFFER, fbo.rb);
     gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, fbo.fb.width, fbo.fb.height);
@@ -276,7 +277,7 @@ Display.prototype.updateFramebuffer = function(name) {
   }
 };
 
-var RXD = 0;
+var RXD = 0; /* @FIXME debug from lights */
 Display.prototype.draw = function() {
   /* Update Canvas Size */
   this.window.width = this.container.clientWidth;
@@ -284,8 +285,6 @@ Display.prototype.draw = function() {
   
   /* Check WebGL is OKAY */
   if(!this.gl) { this.drawFallback(); return; }
-  
-  /* Begin WebGL draw */
   var gl = this.gl; // Sanity Save
   
   /* Update Framebuffers */
@@ -299,9 +298,9 @@ Display.prototype.draw = function() {
   var VIEWMATRIX = mat4.create();
 
   // We basically place the center of the shadow proj on the ground of the map and put the near clip behind us. Allows for easier centering.
-  var PROJMATRIX_SHADOW = mat4.create(); mat4.ortho(PROJMATRIX_SHADOW, -8.0, 8.0,-8.0, 8.0, -16.0, 16.0);
+  var PROJMATRIX_SHADOW = mat4.create(); mat4.ortho(PROJMATRIX_SHADOW, -8.0, 8.0,-8.0, 8.0, -16.0, 16.0); /* @FIXME HARDCODED SIZE! NEEDS TO RESIZE TO VIEW FRUSTRUM */
   var SMSIZE=1; /* @FIXME my understanding is that you have to do this calculation against the PROJ * LIGHT * TRANSFORM matrix. */
-  var OFFSET = vec3.create(); 
+  var OFFSET = vec3.create();
     vec3.set(
       OFFSET,
       (Math.floor(this.camera.pos.x*SMSIZE)-(this.camera.pos.x*SMSIZE))/SMSIZE,
@@ -350,10 +349,11 @@ Display.prototype.draw = function() {
     materialGroup.draws.push({model: geom.model, pos: geom.pos, rot: geom.rot});
   }
   
-  /* Draw Geometry to Shadow FBO */
-  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.shadow.fb); //Enable shadow frame buffers
-  gl.viewport(0.0, 0.0, this.fbo.shadow.fb.width, this.fbo.shadow.fb.height); // Resize to FBO texture /* @FIXME hardcodedw4
-  gl.clearColor(1.0, 0.0, 0.0, 1.0); // red -> Z=Zfar on the shadow map
+  /* === Draw Geometry to Shadow FBO ===================================================================================== */
+  /* ===================================================================================================================== */
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.shadow.fb);                     // Enable shadow framebuffer
+  gl.viewport(0.0, 0.0, this.fbo.shadow.fb.width, this.fbo.shadow.fb.height); // Resize viewport to FBO texture
+  gl.clearColor(1.0, 0.0, 0.0, 1.0);                                          // red -> Z=Zfar on the shadow map
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   
   var shadowMaterial = this.getMaterial("material.multi.shadow");
@@ -371,7 +371,6 @@ Display.prototype.draw = function() {
   }
   shadowMaterial.disable(gl);
   shadowMaterial.shader.disable(gl);
-  
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); //Disable frame buffer
   
   /* Compile Dynamic Light Information */
@@ -425,17 +424,13 @@ Display.prototype.draw = function() {
     {name: "pLightRadius", data: pLightRadius}
   ];
   
-  /* Draw Geometry */
-  gl.clear(gl.COLOR_BUFFER_BIT);
-  gl.clear(gl.DEPTH_BUFFER_BIT);
-  gl.clear(gl.STENCIL_BUFFER_BIT);
-  gl.flush();
-  
-  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.world.fb); // Enable world framebuffer
-  gl.viewport(0, 0, (this.window.width*this.fbo.world.upscale), (this.window.height*this.fbo.world.upscale)); // Resize to canvas
-  gl.clearColor(0.5, 0.5, 0.5, 1.0);  // Opaque grey backdrop
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear Color and Depth from previous draw.
-  gl.activeTexture(gl.TEXTURE5); gl.bindTexture(gl.TEXTURE_2D, this.fbo.shadow.tex); /* @FIXME TESTING */
+  /* === Draw Geometry =================================================================================================== */
+  /* ===================================================================================================================== */  
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.world.fb);                                                      // Enable world framebuffer
+  gl.viewport(0, 0, (this.window.width*this.fbo.world.upscale), (this.window.height*this.fbo.world.upscale)); // Resize viewport to window size
+  gl.clearColor(0.5, 0.5, 0.5, 1.0);                                                                          // Opaque grey background
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);                                                        // Clear Color and Depth from previous draw.
+  this.fbo.shadow.tex.enable(gl, 5);                                                                          // Enable shadow depth texture
   var uniformData = [
     {name: "Pmatrix", data: PROJMATRIX},
     {name: "Vmatrix", data: VIEWMATRIX},
@@ -462,30 +457,25 @@ Display.prototype.draw = function() {
     }
     shaderGroup.shader.disable(gl);
   }
-  gl.activeTexture(gl.TEXTURE5); gl.bindTexture(gl.TEXTURE_2D, null); /* @FIXME TESTING */
-  gl.bindFramebuffer(gl.FRAMEBUFFER, null); //Disable world framebuffer
-  
-//  var testText = [
-//    {pos: {x: -9.0, y: -5.0}, size: 2.5, text: "This is a test!"},
-//    {pos: {x: 16.0, y: 22.0}, size: 1.5, text: "This is also a TEST!"},
-//    {pos: {x: -32.0, y: 0.0}, size: 6.0, text: "TESTS ARE GAY?"}
-//  ];
-  
-  /* TEST UI DRAW */
+  this.fbo.shadow.tex.disable(gl, 5);       // Disable shadow depth texture
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable world framebuffer
+    
+  /* === Draw UI ========================================================================================================= */
+  /* ===================================================================================================================== */
   var blocks = [];
   var texts = [];
-  this.game.ui.getDraw(blocks, texts, this.game.input.mouse.pos, {x: this.window.width, y: this.window.height});
+  this.game.ui.getDraw(blocks, texts, this.game.input.mouse.pos, {x: this.window.width, y: this.window.height}); //Get all UI elements to draw
   
-  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.ui.fb); // Enable menu framebuffer
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.ui.fb);                                                   // Enable menu framebuffer
   gl.viewport(0, 0, (this.window.width*this.fbo.ui.upscale), (this.window.height*this.fbo.ui.upscale)); // Resize to canvas
-  gl.clearColor(0.0, 0.0, 0.0, 0.0);  // Transparent Black Background
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear Color and Depth from previous draw.
-  gl.depthMask(false); // Disable depth write for UI Draw
-  gl.disable(gl.DEPTH_TEST);           // Disable depth testing for UI Draw
-  gl.enable(gl.BLEND);               // Enable Transparency 
-  var debugMaterial = this.getMaterial("material.multi.gulm");
-  var debugShader = debugMaterial.shader;
-  var debugModel = this.getModel("model.multi.square");
+  gl.clearColor(0.0, 0.0, 0.0, 0.0);                                                                    // Transparent Black Background
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);                                                  // Clear Color and Depth from previous draw.
+  gl.depthMask(false);                                                                                  // Disable depth write for UI Draw
+  gl.disable(gl.DEPTH_TEST);                                                                            // Disable depth testing for UI Draw
+  gl.enable(gl.BLEND);                                                                                  // Enable Transparency 
+  var fontMaterial = this.getMaterial("material.multi.gulm");
+  var fontShader = fontMaterial.shader;
+  var squareModel = this.getModel("model.multi.square");
   
   var ASPECT = this.window.height/this.window.width;
   var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, 0.0, 100.0,0.0*ASPECT, 100.0*ASPECT, 0.0, 1.0);
@@ -501,50 +491,53 @@ Display.prototype.draw = function() {
     block.material.shader.applyUniforms(gl, uniformDataDebug);
     block.material.enable(gl);
     var uniformBlockSize = [
+      {name: "transform", data: [block.pos.x, block.pos.y, -0.5]},
       {name: "size", data: [block.size.x, block.size.y]}
     ];
     block.material.shader.applyUniforms(gl, uniformBlockSize);
-    debugModel.draw(gl, block.material.shader, {x: block.pos.x, y: block.pos.y, z: -0.5}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}}); /* @FIXME improve this while cleaing up */
+    squareModel.drawDirect(gl, block.material.shader);
     block.material.disable(gl);
     block.material.shader.disable(gl);
   }
   
-  debugShader.enable(gl);
-  debugShader.applyUniforms(gl, uniformDataDebug);
-  debugMaterial.enable(gl);
+  fontShader.enable(gl);
+  fontShader.applyUniforms(gl, uniformDataDebug);
+  fontMaterial.enable(gl);
   for(var j=0;j<texts.length;j++) {
     var text = texts[j];
     var characters = this.stringToIndices(text.text);
     var uniformFontSize = [
       {name: "fontSize", data: text.size}
     ];
-    debugShader.applyUniforms(gl, uniformFontSize);
+    fontShader.applyUniforms(gl, uniformFontSize);
     for(var i=0;i<characters.length;i++) {
       var uniformDataTextIndex = [
+        {name: "transform", data: [(text.size*(i*0.9))+text.pos.x, text.pos.y, -0.5]},
         {name: "index", data: characters[i]}
       ];
-      debugShader.applyUniforms(gl, uniformDataTextIndex);
-      debugModel.draw(gl, debugShader, {x: (text.size*(i*0.9))+text.pos.x, y: text.pos.y, z: -0.5}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}});
+      fontShader.applyUniforms(gl, uniformDataTextIndex);
+      squareModel.drawDirect(gl, fontShader);
     }
   }
-  debugShader.disable(gl);
-  debugMaterial.disable(gl);
-  gl.depthMask(true); // Reenable depth write after UI draw
-  gl.enable(gl.DEPTH_TEST);           // Reenable after UI Draw
-  gl.disable(gl.BLEND);               // Disable transparency
+  fontShader.disable(gl);
+  fontMaterial.disable(gl);
+  gl.depthMask(true);                       // Reenable depth write after UI draw
+  gl.enable(gl.DEPTH_TEST);                 // Reenable after UI Draw
+  gl.disable(gl.BLEND);                     // Disable transparency
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable menu framebuffer
   
-  /* Render to screen using world/ui framebuffers */
+  /* === Render to screen ================================================================================================ */
+  /* ===================================================================================================================== */
   gl.viewport(0, 0, this.window.width, this.window.height); // Resize to canvas
-  gl.clearColor(0.5, 0.5, 0.5, 1.0);  // Opaque grey backdrop
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear Color and Depth from previous draw.
-  gl.depthMask(false); // Disable depth write for post Draw
-  gl.disable(gl.DEPTH_TEST);           // Disable depth testing for post Draw
-  gl.activeTexture(gl.TEXTURE6); gl.bindTexture(gl.TEXTURE_2D, this.fbo.world.tex); /* @FIXME TESTING */
-  gl.activeTexture(gl.TEXTURE7); gl.bindTexture(gl.TEXTURE_2D, this.fbo.ui.tex); /* @FIXME TESTING change thse so they use the Texture.js data type? */
-  var debugMaterial = this.getMaterial("material.multi.post_msaa");
-  var debugShader = debugMaterial.shader;
-  var debugModel = this.getModel("model.multi.square");
+  gl.clearColor(0.5, 0.5, 0.5, 1.0);                        // Opaque grey backdrop
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);      // Clear Color and Depth from previous draw.
+  gl.depthMask(false);                                      // Disable depth write for post Draw
+  gl.disable(gl.DEPTH_TEST);                                // Disable depth testing for post Draw
+  this.fbo.world.tex.enable(gl, 6);                         // Enable world FBO render texture
+  this.fbo.ui.tex.enable(gl, 7);                            // Enable ui FBO render texture
+  var renderMaterial = this.getMaterial("material.multi.post_msaa");
+  var renderShader = renderMaterial.shader;
+  var squareModel = this.getModel("model.multi.square");
   
   var ASPECT = this.window.height/this.window.width;
   var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0);
@@ -561,16 +554,16 @@ Display.prototype.draw = function() {
     {name: "texture7", data: 7}
   ];
   
-  debugShader.enable(gl);
-  debugShader.applyUniforms(gl, uniformDataPost);
-  debugMaterial.enable(gl);
-  debugModel.draw(gl, debugShader, {x: 0.0, y: 0.0, z: -0.5}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}});
-  debugShader.disable(gl);
-  debugMaterial.disable(gl);
-  gl.depthMask(true); // Reenable depth write after post draw
+  renderShader.enable(gl);
+  renderShader.applyUniforms(gl, uniformDataPost);
+  renderMaterial.enable(gl);
+  squareModel.drawDirect(gl, renderShader);
+  renderShader.disable(gl);
+  renderMaterial.disable(gl);
+  gl.depthMask(true);                 // Reenable depth write after post draw
   gl.enable(gl.DEPTH_TEST);           // Reenable depth testing after post draw
-  gl.activeTexture(gl.TEXTURE6); gl.bindTexture(gl.TEXTURE_2D, null); /* @FIXME TESTING */
-  gl.activeTexture(gl.TEXTURE7); gl.bindTexture(gl.TEXTURE_2D, null); /* @FIXME TESTING */
+  this.fbo.world.tex.disable(gl, 6);  // Disable world FBO render texture
+  this.fbo.ui.tex.disable(gl, 7);     // Disable ui FBO render texture
   
   /* DEBUG DRAW */ //I DOUBT ANY OF THIS STILL WORKS !!! <-----------------------
 //  var debugTexture = {glTexture: this.fbo.shadow.tex, enable: Texture.prototype.enable, disable: Texture.prototype.disable}; /* Hackyyyy */
@@ -729,6 +722,7 @@ Display.prototype.destroy = function() {
   deleteFBO(this.fbo.shadow);
   deleteFBO(this.fbo.world);
   deleteFBO(this.fbo.ui);
+  this.fbo = {};
   this.window.width = 1; this.window.height = 1;
   this.gl = null;
 };
