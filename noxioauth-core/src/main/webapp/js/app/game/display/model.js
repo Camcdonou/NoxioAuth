@@ -10,8 +10,8 @@ function Model(name, vertexBuffer, indexBuffer, indexSize) {
 };
 
 /* @FIXME in theory we could optimize draws by having seperate bind() and draw() calls. Might consider it in the future. */
-Model.prototype.draw = function(gl, shader, pos, rot, camera) { /* Please end my suffering... @FIXME Quaternion... */
-  var transform = [pos.x+camera.pos.x, pos.y+camera.pos.y, pos.z+camera.pos.z];
+Model.prototype.draw = function(gl, shader, pos, rot) { /* Please end my suffering... @FIXME Quaternion... */
+  var transform = [pos.x, pos.y, pos.z];
   
   var uniformModelData = [
     {name: "transform", data: transform}

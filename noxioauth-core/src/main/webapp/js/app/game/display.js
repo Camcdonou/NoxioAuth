@@ -10,7 +10,7 @@ function Display(game, container, window) {
   this.container = this.game.container;   // DOM element containing the canvas
   this.window = this.game.window;         // The canvas we are going to render to
   
-  this.camera = {pos: {x: 0.0, y: 0.0, z: -10.0}}; /* @FIXME rotation? */
+  this.camera = {pos: {x: 0.0, y: 0.0, z: 0.0}, rot: {x: -0.174533, y: 0.174533, z: 0.785398}, zoom: 15, fov: 0.698132, near: 1.0, far: 64.0}; //
   
   if(!this.initWebGL()) { this.initFallback(); }
 };
@@ -292,15 +292,19 @@ Display.prototype.draw = function() {
   this.updateFramebuffer("ui");
   
   /* Generate all matrices for the render */
-  var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, 0.785398, this.window.width/this.window.height, 1.0, 64.0); // Perspective
-  var TRANSLATE  = vec3.create(); vec3.set(TRANSLATE, 0.0, 0.0, 0.0);
-  var MOVEMATRIX = mat4.create(); mat4.translate(MOVEMATRIX, MOVEMATRIX, TRANSLATE);
+  var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, this.camera.fov, this.window.width/this.window.height, this.camera.near, this.camera.far); // Perspective
+  var MOVEMATRIX = mat4.create();
+    mat4.translate(MOVEMATRIX, MOVEMATRIX, [0.0, 0.0, -this.camera.zoom]);
+    mat4.rotate(MOVEMATRIX, MOVEMATRIX, this.camera.rot.z, [0.0, 0.0, 1.0]);
+    mat4.rotate(MOVEMATRIX, MOVEMATRIX, this.camera.rot.y, [0.0, 1.0, 0.0]);
+    mat4.rotate(MOVEMATRIX, MOVEMATRIX, this.camera.rot.x, [1.0, 0.0, 0.0]);
+    mat4.translate(MOVEMATRIX, MOVEMATRIX, [this.camera.pos.x, this.camera.pos.y, this.camera.pos.z]);
   var VIEWMATRIX = mat4.create();
 
   // We basically place the center of the shadow proj on the ground of the map and put the near clip behind us. Allows for easier centering.
   var PROJMATRIX_SHADOW = mat4.create(); mat4.ortho(PROJMATRIX_SHADOW, -8.0, 8.0,-8.0, 8.0, -16.0, 16.0); /* @FIXME HARDCODED SIZE! NEEDS TO RESIZE TO VIEW FRUSTRUM */
   var SMSIZE=1; /* @FIXME my understanding is that you have to do this calculation against the PROJ * LIGHT * TRANSFORM matrix. */
-  var OFFSET = vec3.create();
+  var OFFSET = vec3.create(); /* @FIXME we can probably ditch this since all it does is offset the camera position which we ditched from the draw call. */
     vec3.set(
       OFFSET,
       (Math.floor(this.camera.pos.x*SMSIZE)-(this.camera.pos.x*SMSIZE))/SMSIZE,
@@ -312,6 +316,7 @@ Display.prototype.draw = function() {
     mat4.translate(LIGHTMATRIX, LIGHTMATRIX, [0.0, 0.0, 1.0]);
     mat4.rotate(LIGHTMATRIX, LIGHTMATRIX, -0.5, [1.0, 0.0, 0.0]);
     mat4.rotate(LIGHTMATRIX, LIGHTMATRIX, 0.35, [0.0, 1.0, 0.0]);
+    mat4.translate(LIGHTMATRIX, LIGHTMATRIX, [this.camera.pos.x, this.camera.pos.y, this.camera.pos.z]);
   var LIGHTDIR = vec3.create(); vec3.set(LIGHTDIR, LIGHTMATRIX[8], LIGHTMATRIX[9], -LIGHTMATRIX[10]);
   
   /* Collect all geometry to draw.
@@ -321,7 +326,7 @@ Display.prototype.draw = function() {
   for(var i=0;i<this.game.objects.length;i++) {
     this.game.objects[i].getDraw(geometry, this.camera);
   }
-
+  
   /* Sort geometry by shader -> material -> draws */
   var geomSorted = [];
   for(var i=0;i<geometry.length;i++) {
@@ -367,7 +372,7 @@ Display.prototype.draw = function() {
   shadowMaterial.shader.applyUniforms(gl, shadowUniformData);
   shadowMaterial.enable(gl);
   for(var i=0;i<geometry.length;i++) {
-    geometry[i].model.draw(gl, shadowMaterial.shader, geometry[i].pos, geometry[i].rot, this.camera);
+    geometry[i].model.draw(gl, shadowMaterial.shader, geometry[i].pos, geometry[i].rot);
   }
   shadowMaterial.disable(gl);
   shadowMaterial.shader.disable(gl);
@@ -411,7 +416,7 @@ Display.prototype.draw = function() {
     if(i*8 >= this.PL_UNIFORM_MAX) { break; } /* At max capacity for light rendering! @FIXME WARNING */
     else {
       var pl = lights[i];
-      pLightPos.push(pl.pos.x+this.camera.pos.x); pLightPos.push(pl.pos.y+this.camera.pos.y); pLightPos.push(pl.pos.z+this.camera.pos.z);
+      pLightPos.push(pl.pos.x); pLightPos.push(pl.pos.y); pLightPos.push(pl.pos.z);
       pLightColor.push(pl.color.r*pl.color.a); pLightColor.push(pl.color.g*pl.color.a); pLightColor.push(pl.color.b*pl.color.a);
       pLightRadius.push(pl.rad);
       pLightLength++;
@@ -425,7 +430,7 @@ Display.prototype.draw = function() {
   ];
   
   /* === Draw Geometry =================================================================================================== */
-  /* ===================================================================================================================== */  
+  /* ===================================================================================================================== */
   gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.world.fb);                                                      // Enable world framebuffer
   gl.viewport(0, 0, (this.window.width*this.fbo.world.upscale), (this.window.height*this.fbo.world.upscale)); // Resize viewport to window size
   gl.clearColor(0.5, 0.5, 0.5, 1.0);                                                                          // Opaque grey background
@@ -451,7 +456,7 @@ Display.prototype.draw = function() {
       materialGroup.material.enable(gl);
       for(var k=0;k<materialGroup.draws.length;k++) {
         var draw = materialGroup.draws[k];
-        draw.model.draw(gl, shaderGroup.shader, draw.pos, draw.rot, this.camera);
+        draw.model.draw(gl, shaderGroup.shader, draw.pos, draw.rot);
       }
       materialGroup.material.disable(gl);
     }
@@ -600,41 +605,6 @@ Display.prototype.drawFallback = function() {
   context.textAlign = 'center';
   context.fillStyle = '#e17fb0';
   context.fillText("Your browser does not support WebGL.", this.window.width/2, (this.window.height/2));
-};
-
-Display.prototype.unproject = function(cursor) {
-  var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, 0.785398, this.window.width/this.window.height, 1.0, 64.0); // Perspective
-  var TRANSLATE  = vec3.create(); vec3.set(TRANSLATE, 0.0, 0.0, 0.0);
-  var MOVEMATRIX = mat4.create(); mat4.translate(MOVEMATRIX, MOVEMATRIX, TRANSLATE);
-  var VIEWMATRIX = mat4.create();
-  
-  var MV = mat4.create(); mat4.multiply(MV, VIEWMATRIX, MOVEMATRIX);
-  var MVP = mat4.create(); mat4.multiply(MVP, PROJMATRIX, MV);
-  mat4.invert(MVP, MVP);
-
-  // from this line we see zNear and zFar
-  // this.perspectiveMatrix.perspective(30, canvas.clientWidth / canvas.clientHeight, 1, 10000);
-  var zNear = 1.0;
-  var zFar  = 64.0;
-
-  // var coord = new J3DIVector3(0.7, 0.5, 1)
-  // I'm going to assume since you put 1 for z you wanted zFar
-  var wx = (cursor.x/this.window.width*2)-1;
-  var wy = (cursor.y/this.window.height*-2)+1;
-  
-  var x = wx * zNear;
-  var y = wy * zNear;
-  var z = zFar;
-  var w = zNear;
-  
-  var upm = [
-    x * MVP[0] + y * MVP[4] + z * MVP[8] + w * MVP[12], 
-    x * MVP[1] + y * MVP[5] + z * MVP[9] + w * MVP[13],
-    x * MVP[2] + y * MVP[6] + z * MVP[10] + w * MVP[14],
-    x * MVP[3] + y * MVP[7] + z * MVP[11] + w * MVP[15],
-  ];
-  
-  return {x: (upm[0]*10.0)-this.camera.pos.x, y: (upm[1]*10.0)-this.camera.pos.y, z: (upm[2]*10.0)-this.camera.pos.z}; /* @FIXME only works on straight down projection */
 };
 
 /* Returns a texture by path. If texture is not found then returns default. */

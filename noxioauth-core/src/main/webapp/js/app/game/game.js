@@ -100,8 +100,14 @@ NoxioGame.prototype.inputStep = function() {
   }
   
   if(this.input.mouse.rmb && obj !== undefined) {
-    var coords = this.display.unproject(cursor);
-    var dir = util.vec2.subtract(coords, obj.pos);
+    var near = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 0.0);
+    var far = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 1.0); /* @FIXME doing 2 unprojects is inefficent. Maybe calc camera center? */
+    var floorPlane = {a: {x: 0.0, y: 0.0, z: 0.0}, b: {x: 1.0, y: 0.0, z: 0.0}, c: {x: 0.0, y: 1.0, z: 0.0}, n: {x: 0.0, y: 0.0, z: 1.0}};
+    var result = util.intersection.linePlane({a: near, b: far}, floorPlane);
+    
+    if(!result) { main.net.game.send({type: "i01"}); return; } // Missed the floor plane.
+   
+    var dir = util.vec2.subtract(result.intersection, obj.pos);
     var mag = util.vec2.magnitude(dir);
     var norm = util.vec2.normalize(dir);
     if(mag >= 1.5) { main.net.game.send({type: "i05", pos: norm}); } /* @FIXME Change to single packet with true/false */
