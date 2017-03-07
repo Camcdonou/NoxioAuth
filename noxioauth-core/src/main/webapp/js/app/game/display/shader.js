@@ -30,8 +30,10 @@ Shader.prototype.applyUniforms = function(gl, uniformData) {
     switch(uniform.type) {
       case "int" : { gl.uniform1i(uniform.location, uniformData[i].data); break; }
       case "int[]" : { gl.uniform1i(uniform.location, uniformData[i].data); break; }
-      case "float" : { gl.uniform1fv(uniform.location, uniformData[i].data); break; }
+      case "float" : { gl.uniform1f(uniform.location, uniformData[i].data); break; }
       case "float[]" : { gl.uniform1fv(uniform.location, uniformData[i].data); break; }
+      case "vec2" : { gl.uniform2fv(uniform.location, uniformData[i].data); break; }
+      case "vec2[]" : { gl.uniform2fv(uniform.location, uniformData[i].data); break; }
       case "vec3" : { gl.uniform3fv(uniform.location, uniformData[i].data); break; }
       case "vec3[]" : { gl.uniform3fv(uniform.location, uniformData[i].data); break; }
       case "vec4" : { gl.uniform4fv(uniform.location, uniformData[i].data); break; }

@@ -1,5 +1,6 @@
 "use strict";
 /* global main */
+/* global util */
 
 /* Define NoxioGame Class */
 function NoxioGame(name, description, gametype, maxPlayers, map) {  
@@ -13,9 +14,10 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   this.window = document.getElementById("canvas");
   this.container = document.getElementById("canvas-container");
   
-  this.asset = new Asset(); /* Loads all game files. */
-  this.display = new Display(this, this.container, this.window);
-  this.input = new Input(this.window);
+  this.input = new Input(this);     // Mouse, keyboard, and controller handler
+  this.asset = new Asset();         // Raw data for models, animations, textures, shaders, sounds, etc, etc, etc...
+  this.display = new Display(this); // Game rendering and general WebGL stuff
+  this.ui = new GameUI(this);       // Ingame UI
   
   this.loadMap(map);
   
@@ -73,11 +75,22 @@ NoxioGame.prototype.deleteObject = function(oid) {
   return false;
 };
 
-NoxioGame.prototype.sendInput = function() {
+/* Input overhaul? @FIXME maybe handle inputs in real time but if they are not client inputs then queue them? */
+NoxioGame.prototype.handleInput = function(key) {
+  this.ui.handleInput(key);
+};
+
+NoxioGame.prototype.handleClick = function(button, mouse) {
+  this.ui.handleClick(button, mouse, {x: this.window.width, y: this.window.height});
+};
+
+NoxioGame.prototype.inputStep = function() {
   var cursor = this.input.getMouseActual();
   var obj = this.getObject(this.control);
   
   /* Send current user input to server */
+  if(this.ui.menuOpen()) { main.net.game.send({type: "i01"}); return; } // Menu is open so send mouse neutral and return
+  
   var inputs = this.input.keyboard.popInputs();
   for(var i=0;i<inputs.length;i++) {
     switch(inputs[i]) {
@@ -125,7 +138,7 @@ NoxioGame.prototype.step = function(packet) {
   var tmp = this;
   if(this.debug.ctime[0] < 10) { setTimeout( function() { tmp.draw(); }, 15); }
   this.draw();
-  this.sendInput();
+  this.inputStep();
   
   /* DEBUG INFORMATION */  
   for(var i=this.debug.ss;i>0;i--) {
@@ -133,7 +146,10 @@ NoxioGame.prototype.step = function(packet) {
   }
   this.debug.ctime[0] = new Date().getTime() - now;
   
-  main.menu.game.updateDebug("STIME " + (this.debug.sAvg).toFixed(2) + " | CTIME " + (this.debug.cAvg).toFixed(2) + " | FPS " + (this.debug.fAvg).toFixed(2) + " | PING " + (this.debug.pAvg).toFixed(2));
+  this.ui.getElement("debug").debug([
+    "STIME " + (this.debug.sAvg).toFixed(2) + " | CTIME " + (this.debug.cAvg).toFixed(2),
+    "FPS " + (this.debug.fAvg).toFixed(2) + " | PING " + (this.debug.pAvg).toFixed(2)
+  ]);
 };
 
 NoxioGame.prototype.draw = function() {
@@ -159,7 +175,12 @@ NoxioGame.prototype.draw = function() {
     }
     this.debug.frames[0] = new Date().getTime();
     this.debug.ctime[0] = new Date().getTime() - now;
-  };
+};
+
+/* Leave the game and return to lobby menu */
+NoxioGame.prototype.leave = function() {
+  main.net.game.state.leaveGame();
+};
 
 NoxioGame.prototype.destroy = function() {
   this.input.destroy();

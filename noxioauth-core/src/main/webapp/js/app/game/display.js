@@ -6,11 +6,11 @@
 
 /* Define Game Rendering Class */
 function Display(game, container, window) {
-  this.game = game; /* We will need to constantly get data from the game instance so we pass it through */
-  this.container = container;
-  this.window = window;
+  this.game = game;                       // We will need to constantly get data from the game instance so we pass it through
+  this.container = this.game.container;   // DOM element containing the canvas
+  this.window = this.game.window;         // The canvas we are going to render to
   
-  this.camera = {pos: {x: 0.0, y: 0.0, z: -10.0}}; /* UNUSED! */
+  this.camera = {pos: {x: 0.0, y: 0.0, z: -10.0}}; /* @FIXME rotation? */
   
   if(!this.initWebGL()) { this.initFallback(); }
 };
@@ -25,24 +25,26 @@ Display.prototype.initFallback = function() {
 
 Display.prototype.initWebGL = function() {
   try { 
-    this.gl = this.window.getContext("webgl", {premultipliedalpha: false, antialias: true});
+    this.gl = this.window.getContext("webgl", {antialias: false});
     if(!this.gl) { return false; }
     return this.setupWebGL();
   }
   catch(ex) { main.menu.error.showErrorException("WebGL Error", "Exception while initializing WebGL: " + ex.message, ex.stack); return false; }
 };
 
-/* Returns boolean. If false then WebGL failed to setup and we should setup fallback rendering. If true we all good boyzzz. */
+/* Returns boolean. If false then WebGL failed to setup and we should setup fallback rendering. */
 Display.prototype.setupWebGL = function() {
   var gl = this.gl; /* Sanity Save */
   gl.viewport(0, 0, this.window.width, this.window.height); // Resize to canvas
-  gl.enable(gl.CULL_FACE);            // Do not draw backfacing triangles
-  gl.cullFace(gl.BACK);
-  gl.enable(gl.DEPTH_TEST);           // Enable depth testing
-  gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
+  gl.enable(gl.CULL_FACE);                                  // Enable culling triangles
+  gl.cullFace(gl.BACK);                                     // Cull triangles that aren't facing the camera
+  gl.enable(gl.DEPTH_TEST);                                 // Enable depth testing
+  gl.depthFunc(gl.LEQUAL);                                  // Near things obscure far things
+  gl.disable(gl.BLEND);                                     // Disable transparency blend by default
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);                       // Transparency function
 
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Set clear color to black, fully opaque
-  gl.clearDepth(1.0);                 // Clear everything
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);                        // Set clear color to black, fully opaque
+  gl.clearDepth(1.0);                                       // Clear depth
   
   if(!(
     gl.getExtension("OES_element_index_uint") ||
@@ -50,32 +52,32 @@ Display.prototype.setupWebGL = function() {
     gl.getExtension("WEBKIT_OES_element_index_uint")
   )) { return false; }
   
+  this.upscale = {world: 2.0, ui: 1.0}; /* @FIXME */
+  
   this.textures = [];
   this.shaders = [];
   this.materials = [];
   this.models = [];
-  this.shadow = {};
-  
-  /* @FIXME this is a temp thing */
-  var defaultTextureSource = "img/multi/default.png";
+  this.fbo = {};
   
   var maxUniform = gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS);
   if(maxUniform < 64) { main.menu.error.showError("GLSL returned MAX_VERTEX_UNIFORM_VECTORS as : " + maxUniform); return false; }
-  this.PL_UNIFORM_MAX = maxUniform * 0.33;
-  this.LL_UNIFORM_MAX = maxUniform * 0.33;
+  this.PL_UNIFORM_MAX = maxUniform * 0.33; this.LL_UNIFORM_MAX = maxUniform * 0.33;
   
-  if(!this.createTexture(defaultTextureSource)) { return false; }
-  if(!this.createShader(this.game.asset.shader.default)) { return false; }
-  if(!this.createShader(this.game.asset.shader.shadow)) { return false; }
-  
+  if(!this.createTexture("img/multi/default.png")) { return false; }
+    
   //if(!this.createShader(this.game.asset.shader.debug)) { return false; } /* @FIXME DEBUG */
   if(!this.createMaterial(this.game.asset.material.multi.default)) { return false; }
   if(!this.createMaterial(this.game.asset.material.multi.shadow)) { return false; }
+  if(!this.createMaterial(this.game.asset.material.multi.post_msaa)) { return false; } /* @FIXME default post_msaa for testing */
   if(!this.createMaterial(this.game.asset.material.multi.gulm)) { return false; }
   
   if(!this.createModel(this.game.asset.model.multi.box)) { return false; }
+  if(!this.createModel(this.game.asset.model.multi.square)) { return false; }
   
-  if(!this.createShadowFramebuffer()) { return false; }
+  if(!this.createShadowFramebuffer("shadow", 512)) { return false; }
+  if(!this.createFramebuffer("world", this.upscale.world)) { return false; }
+  if(!this.createFramebuffer("ui", this.upscale.ui)) { return false; }
   
   return true;
 };
@@ -183,47 +185,111 @@ Display.prototype.createModel = function(source) {
   return true;
 };
 
-/* Returns a shadow mapping framebuffer object */
-Display.prototype.createShadowFramebuffer = function() {
+/* Returns true if a shadow mapping framebuffer object is created */
+Display.prototype.createShadowFramebuffer = function(name, size) {
   var gl = this.gl; // Sanity Save
   
   var fb=gl.createFramebuffer();
   gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+  fb.width = size;
+  fb.height = size;
 
   var rb=gl.createRenderbuffer();
   gl.bindRenderbuffer(gl.RENDERBUFFER, rb);
-  gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16 , 512, 512);
+  gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, size, size);
 
   gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, rb);
 
-  var texture_rtt=gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, texture_rtt);
+  var tex=gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 512, 512, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size, size, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 
-  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture_rtt, 0);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
   
   if(gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) { return false; }
   
-  this.shadow = {fb: fb, rb: rb, tex: texture_rtt};
+  this.fbo[name] = {fb: fb, rb: rb, tex: new RenderTexture(tex)};
   
   gl.bindTexture(gl.TEXTURE_2D, null);
+  gl.bindRenderbuffer(gl.RENDERBUFFER, null);
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   
   return true;
 };
-var RXD = 0;
+
+/* Returns true if a framebuffer object is created */
+Display.prototype.createFramebuffer = function(name, upscale) {
+  var gl = this.gl; // Sanity Save
+  
+  var size = 512;
+  
+  var fb = gl.createFramebuffer();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+  fb.width = size;
+  fb.height = size;
+  
+  var tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  //gl.generateMipmap(gl.TEXTURE_2D); /* @FIXME why? Error? gl.LINEAR_MIPMAP_NEAREST */
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, fb.width, fb.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+  
+  var rb = gl.createRenderbuffer();
+  gl.bindRenderbuffer(gl.RENDERBUFFER, rb);
+  gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, fb.width, fb.height);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+  gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, rb);
+  
+  if(gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) { return false; }
+  
+  this.fbo[name] = {fb: fb, rb: rb, tex: new RenderTexture(tex), upscale: upscale};
+  
+  gl.bindTexture(gl.TEXTURE_2D, null);
+  gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  
+  return true;
+};
+
+/* Updates framebuffer texture size and shape based on window size */
+Display.prototype.updateFramebuffer = function(name) {
+  var gl = this.gl; // Sanity Save
+  var fbo = this.fbo[name];
+  
+  var x=2, y=2;
+  while(x<=(this.window.width*fbo.upscale)) { x = x*2; }
+  while(y<=(this.window.height*fbo.upscale)) { y = y*2; }
+  
+  if(x !== fbo.fb.width || y !== fbo.fb.height) {
+    main.menu.warning.show("FBO RESIZE OP: " + name + ":" + x + "," + y);
+    fbo.fb.width = x;
+    fbo.fb.height = y;
+    
+    gl.bindTexture(gl.TEXTURE_2D, fbo.tex.glTexture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, fbo.fb.width, fbo.fb.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    gl.bindRenderbuffer(gl.RENDERBUFFER, fbo.rb);
+    gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, fbo.fb.width, fbo.fb.height);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+    gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+  }
+};
+
+var RXD = 0; /* @FIXME debug from lights */
 Display.prototype.draw = function() {
   /* Update Canvas Size */
   this.window.width = this.container.clientWidth;
-  this.window.height = (9/16)*(this.window.width);
+  this.window.height = this.container.clientHeight; // Does not enforce resonable aspect ratio. @FIXME...
   
   /* Check WebGL is OKAY */
   if(!this.gl) { this.drawFallback(); return; }
-  
-  /* Begin WebGL draw */
   var gl = this.gl; // Sanity Save
+  
+  /* Update Framebuffers */
+  this.updateFramebuffer("world");
+  this.updateFramebuffer("ui");
   
   /* Generate all matrices for the render */
   var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, 0.785398, this.window.width/this.window.height, 1.0, 64.0); // Perspective
@@ -232,9 +298,9 @@ Display.prototype.draw = function() {
   var VIEWMATRIX = mat4.create();
 
   // We basically place the center of the shadow proj on the ground of the map and put the near clip behind us. Allows for easier centering.
-  var PROJMATRIX_SHADOW = mat4.create(); mat4.ortho(PROJMATRIX_SHADOW, -8.0, 8.0,-8.0, 8.0, -16.0, 16.0);
+  var PROJMATRIX_SHADOW = mat4.create(); mat4.ortho(PROJMATRIX_SHADOW, -8.0, 8.0,-8.0, 8.0, -16.0, 16.0); /* @FIXME HARDCODED SIZE! NEEDS TO RESIZE TO VIEW FRUSTRUM */
   var SMSIZE=1; /* @FIXME my understanding is that you have to do this calculation against the PROJ * LIGHT * TRANSFORM matrix. */
-  var OFFSET = vec3.create(); 
+  var OFFSET = vec3.create();
     vec3.set(
       OFFSET,
       (Math.floor(this.camera.pos.x*SMSIZE)-(this.camera.pos.x*SMSIZE))/SMSIZE,
@@ -283,10 +349,11 @@ Display.prototype.draw = function() {
     materialGroup.draws.push({model: geom.model, pos: geom.pos, rot: geom.rot});
   }
   
-  /* Draw Geometry to Shadow FBO */
-  gl.bindFramebuffer(gl.FRAMEBUFFER, this.shadow.fb); //Enable shadow frame buffers
-  gl.viewport(0.0, 0.0, 512.0, 512.0); // Resize to FBO texture /* @FIXME hardcodedw4
-  gl.clearColor(1.0, 0.0, 0.0, 1.0); // red -> Z=Zfar on the shadow map
+  /* === Draw Geometry to Shadow FBO ===================================================================================== */
+  /* ===================================================================================================================== */
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.shadow.fb);                     // Enable shadow framebuffer
+  gl.viewport(0.0, 0.0, this.fbo.shadow.fb.width, this.fbo.shadow.fb.height); // Resize viewport to FBO texture
+  gl.clearColor(1.0, 0.0, 0.0, 1.0);                                          // red -> Z=Zfar on the shadow map
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   
   var shadowMaterial = this.getMaterial("material.multi.shadow");
@@ -304,7 +371,6 @@ Display.prototype.draw = function() {
   }
   shadowMaterial.disable(gl);
   shadowMaterial.shader.disable(gl);
-  
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); //Disable frame buffer
   
   /* Compile Dynamic Light Information */
@@ -358,11 +424,13 @@ Display.prototype.draw = function() {
     {name: "pLightRadius", data: pLightRadius}
   ];
   
-  /* Draw Geometry */
-  gl.viewport(0, 0, this.window.width, this.window.height); // Resize to canvas
-  gl.clearColor(0.5, 0.5, 0.5, 1.0);  // Opaque grey backdrop
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear Color and Depth from previous draw.
-  gl.activeTexture(gl.TEXTURE5); gl.bindTexture(gl.TEXTURE_2D, this.shadow.tex); /* @FIXME TESTING */
+  /* === Draw Geometry =================================================================================================== */
+  /* ===================================================================================================================== */  
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.world.fb);                                                      // Enable world framebuffer
+  gl.viewport(0, 0, (this.window.width*this.fbo.world.upscale), (this.window.height*this.fbo.world.upscale)); // Resize viewport to window size
+  gl.clearColor(0.5, 0.5, 0.5, 1.0);                                                                          // Opaque grey background
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);                                                        // Clear Color and Depth from previous draw.
+  this.fbo.shadow.tex.enable(gl, 5);                                                                          // Enable shadow depth texture
   var uniformData = [
     {name: "Pmatrix", data: PROJMATRIX},
     {name: "Vmatrix", data: VIEWMATRIX},
@@ -389,37 +457,117 @@ Display.prototype.draw = function() {
     }
     shaderGroup.shader.disable(gl);
   }
+  this.fbo.shadow.tex.disable(gl, 5);       // Disable shadow depth texture
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable world framebuffer
+    
+  /* === Draw UI ========================================================================================================= */
+  /* ===================================================================================================================== */
+  var blocks = [];
+  var texts = [];
+  this.game.ui.getDraw(blocks, texts, this.game.input.mouse.pos, {x: this.window.width, y: this.window.height}); //Get all UI elements to draw
   
-  /* TEST TEXT DRAW */
-  var debugMaterial = this.getMaterial("material.multi.gulm");
-  var debugShader = debugMaterial.shader;
-  var debugModel = this.getModel("model.multi.square");
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.ui.fb);                                                   // Enable menu framebuffer
+  gl.viewport(0, 0, (this.window.width*this.fbo.ui.upscale), (this.window.height*this.fbo.ui.upscale)); // Resize to canvas
+  gl.clearColor(0.0, 0.0, 0.0, 0.0);                                                                    // Transparent Black Background
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);                                                  // Clear Color and Depth from previous draw.
+  gl.depthMask(false);                                                                                  // Disable depth write for UI Draw
+  gl.disable(gl.DEPTH_TEST);                                                                            // Disable depth testing for UI Draw
+  gl.enable(gl.BLEND);                                                                                  // Enable Transparency 
+  var fontMaterial = this.getMaterial("material.multi.gulm");
+  var fontShader = fontMaterial.shader;
+  var squareModel = this.getModel("model.multi.square");
   
   var ASPECT = this.window.height/this.window.width;
-  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, -16.0, 16.0,-16.0*ASPECT, 16.0*ASPECT, 0.0, 1.0);
+  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, 0.0, 100.0,0.0*ASPECT, 100.0*ASPECT, 0.0, 1.0);
   var VIEWMATRIX_DEBUG= mat4.create();
   var uniformDataDebug = [
     {name: "Pmatrix", data: PROJMATRIX_DEBUG},
     {name: "Vmatrix", data: VIEWMATRIX_DEBUG}
   ];
   
-  var characters = [53,51,34,49,52,1,34,51,38,1,40,34,58,2];
-  
-  debugShader.enable(gl);
-  debugShader.applyUniforms(gl, uniformDataDebug);
-  debugMaterial.enable(gl);
-  for(var i=0;i<characters.length;i++) {
-    var uniformDataTextIndex = [
-      {name: "index", data: characters[i]}
+  for(var i=0;i<blocks.length;i++) {
+    var block = blocks[i];
+    block.material.shader.enable(gl);
+    block.material.shader.applyUniforms(gl, uniformDataDebug);
+    block.material.enable(gl);
+    var uniformBlockSize = [
+      {name: "transform", data: [block.pos.x, block.pos.y, -0.5]},
+      {name: "size", data: [block.size.x, block.size.y]}
     ];
-    debugShader.applyUniforms(gl, uniformDataTextIndex);
-    debugModel.draw(gl, debugShader, {x: (1.0*i)-(characters.length*0.5), y: 8.0, z: -0.5}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}});
+    block.material.shader.applyUniforms(gl, uniformBlockSize);
+    squareModel.drawDirect(gl, block.material.shader);
+    block.material.disable(gl);
+    block.material.shader.disable(gl);
   }
-  debugShader.disable(gl);
-  debugMaterial.disable(gl);
+  
+  fontShader.enable(gl);
+  fontShader.applyUniforms(gl, uniformDataDebug);
+  fontMaterial.enable(gl);
+  for(var j=0;j<texts.length;j++) {
+    var text = texts[j];
+    var characters = this.stringToIndices(text.text);
+    var uniformFontSize = [
+      {name: "fontSize", data: text.size},
+      {name: "color", data: text.color}
+    ];
+    fontShader.applyUniforms(gl, uniformFontSize);
+    for(var i=0;i<characters.length;i++) {
+      var uniformDataTextIndex = [
+        {name: "transform", data: [(text.size*(i*0.9))+text.pos.x, text.pos.y, -0.5]},
+        {name: "index", data: characters[i]}
+      ];
+      fontShader.applyUniforms(gl, uniformDataTextIndex);
+      squareModel.drawDirect(gl, fontShader);
+    }
+  }
+  fontShader.disable(gl);
+  fontMaterial.disable(gl);
+  gl.depthMask(true);                       // Reenable depth write after UI draw
+  gl.enable(gl.DEPTH_TEST);                 // Reenable after UI Draw
+  gl.disable(gl.BLEND);                     // Disable transparency
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable menu framebuffer
+  
+  /* === Render to screen ================================================================================================ */
+  /* ===================================================================================================================== */
+  gl.viewport(0, 0, this.window.width, this.window.height); // Resize to canvas
+  gl.clearColor(0.5, 0.5, 0.5, 1.0);                        // Opaque grey backdrop
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);      // Clear Color and Depth from previous draw.
+  gl.depthMask(false);                                      // Disable depth write for post Draw
+  gl.disable(gl.DEPTH_TEST);                                // Disable depth testing for post Draw
+  this.fbo.world.tex.enable(gl, 6);                         // Enable world FBO render texture
+  this.fbo.ui.tex.enable(gl, 7);                            // Enable ui FBO render texture
+  var renderMaterial = this.getMaterial("material.multi.post_msaa");
+  var renderShader = renderMaterial.shader;
+  var squareModel = this.getModel("model.multi.square");
+  
+  var ASPECT = this.window.height/this.window.width;
+  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0);
+  var VIEWMATRIX_DEBUG= mat4.create();
+  var TEXTURE_PROP = [this.window.width/this.fbo.world.fb.width, this.window.height/this.fbo.world.fb.height, (this.fbo.world.fb.height-(this.window.height*this.fbo.world.upscale))/this.fbo.world.fb.height,
+                      this.window.width/this.fbo.ui.fb.width, this.window.height/this.fbo.ui.fb.height, (this.fbo.ui.fb.height-(this.window.height*this.fbo.ui.upscale))/this.fbo.ui.fb.height];
+  var uniformDataPost = [
+    {name: "Pmatrix", data: PROJMATRIX_DEBUG},
+    {name: "Vmatrix", data: VIEWMATRIX_DEBUG},
+    {name: "textureProp", data: TEXTURE_PROP},
+    {name: "resolution", data: [(this.window.width*this.fbo.world.upscale), (this.window.width*this.fbo.world.upscale)]},
+    {name: "upscale", data: [this.fbo.world.upscale, this.fbo.ui.upscale]},
+    {name: "texture6", data: 6},
+    {name: "texture7", data: 7}
+  ];
+  
+  renderShader.enable(gl);
+  renderShader.applyUniforms(gl, uniformDataPost);
+  renderMaterial.enable(gl);
+  squareModel.drawDirect(gl, renderShader);
+  renderShader.disable(gl);
+  renderMaterial.disable(gl);
+  gl.depthMask(true);                 // Reenable depth write after post draw
+  gl.enable(gl.DEPTH_TEST);           // Reenable depth testing after post draw
+  this.fbo.world.tex.disable(gl, 6);  // Disable world FBO render texture
+  this.fbo.ui.tex.disable(gl, 7);     // Disable ui FBO render texture
   
   /* DEBUG DRAW */ //I DOUBT ANY OF THIS STILL WORKS !!! <-----------------------
-//  var debugTexture = {glTexture: this.shadow.tex, enable: Texture.prototype.enable, disable: Texture.prototype.disable}; /* Hackyyyy */
+//  var debugTexture = {glTexture: this.fbo.shadow.tex, enable: Texture.prototype.enable, disable: Texture.prototype.disable}; /* Hackyyyy */
 //  var debugShader = this.getShader("debug");
 //  var debugMaterial = new Material("!DEBUG", debugShader, {texture0: debugTexture}); /* Even hackier */
 //  var debugModel = this.getModel("model.multi.square");
@@ -563,8 +711,19 @@ Display.prototype.destroy = function() {
   for(var i=0;i<this.models.length;i++) { gl.deleteBuffer(this.models[i].vertexBuffer); gl.deleteBuffer(this.models[i].indexBuffer); }
   for(var i=0;i<this.shaders.length;i++) { gl.deleteProgram(this.shaders[i].program); }
   for(var i=0;i<this.textures.length;i++) { gl.deleteTexture(this.textures[i].glTexture); }
-  gl.deleteRenderbuffer(this.shadow.rb);
-  gl.deleteFramebuffer(this.shadow.fb);
-  gl.deleteTexture(this.shadow.tex);
+  this.models = [];
+  this.materials = [];
+  this.shaders = [];
+  this.textures = [];
+  var deleteFBO = function(fbo) {
+    gl.deleteFramebuffer(fbo.fb);
+    gl.deleteRenderbuffer(fbo.rb);
+    gl.deleteTexture(fbo.tex);
+  };
+  deleteFBO(this.fbo.shadow);
+  deleteFBO(this.fbo.world);
+  deleteFBO(this.fbo.ui);
+  this.fbo = {};
   this.window.width = 1; this.window.height = 1;
+  this.gl = null;
 };

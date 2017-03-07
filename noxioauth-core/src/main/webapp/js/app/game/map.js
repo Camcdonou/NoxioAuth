@@ -2,6 +2,7 @@
 /* global Asset */
 
 function Map(display, data) {
+  if(!display.gl) { return; } /* If no GL then no nothing */
   this.pallete = this.loadPallete(display, data.tileSet);
   this.size = {x: data.bounds[0], y: data.bounds[1]};
   this.data = data.map;
@@ -11,11 +12,9 @@ function Map(display, data) {
 Map.prototype.loadPallete = function(display, tileList) {
   var pallete = [];
   for(var i=0;i<tileList.length;i++) {
-    if(display.gl) { /* @FIXME fallback mode crash prevention */
-      var model = display.getModel(tileList[i].model);
-      var material = display.getMaterial(tileList[i].material);
-      pallete.push({model: model, material: material});
-    }
+    var model = display.getModel(tileList[i].model);
+    var material = display.getMaterial(tileList[i].material);
+    pallete.push({model: model, material: material});
   }
   return pallete;
 };

@@ -63,18 +63,11 @@
       
       <!-- Game -->
       <div id="game" class="unselectable" style="display: none">
-        <div class="main-menu-container" style="width: 30% !important;">
-          <div id="game-name" class="main-menu-inverse lg">User@Lobby Name@Server Name</div>
-          <div id="game-leave" class="main-menu btn lg" onclick="main.menu.game.leaveGameButton()">Leave Game</div>
-          <div id="game-messages" class="main-menu-text">...</div>
-        </div>
-        <div id="canvas-container" class="right-menu-container" style="width: 65% !important;" oncontextmenu="return false">
+        <div id="canvas-container" class="fullscreen" oncontextmenu="return false">
           <canvas id="canvas" width="320" height="240">
             Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.
           <canvas>
         </div>
-        <div id="debug" class="right-menu-help-text" style="width: 65% !important;">...</div>
-        
       </div>
       
       <!-- Error Modal -->
@@ -133,6 +126,11 @@
       <script src="js/app/game/display/shader.js"></script>
       <script src="js/app/game/display/material.js"></script>
       <script src="js/app/game/display/model.js"></script>
+      <script src="js/app/game/display/font.js"></script>
+      <script src="js/app/game/ui.js"></script>
+      <script src="js/app/game/ui/main.js"></script>
+      <script src="js/app/game/ui/log.js"></script>
+      <script src="js/app/game/ui/debug.js"></script>
       
       <!-- Game Objects -->
       <script src="js/app/game/object/object.js"></script>
