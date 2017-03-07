@@ -78,10 +78,11 @@ Asset.prototype.shader.font = {
     {type: "vec3", name: "transform"},
     {type: "float", name: "fontSize"},
     {type: "sampler2D", name: "texture0"},
+    {type: "vec3", name: "color"},
     {type: "int", name: "index"},
   ],
   vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\n\nuniform vec3 transform;\nuniform float fontSize;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4((position*fontSize)+transform, 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*cPos;\n}\n",
-  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\nuniform int index;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  int x=0, y=0, i=index;\n  for(int j=0;j<8;j++) { if(i<=16) { break; } i-=16; y++; }\n  x=i;\n  \n  gl_FragColor = texture2D(texture0, (vUV.st*vec2(0.0625, 0.125))+vec2(0.0625*float(x),0.125*float(y)));\n}\n",
+  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\nuniform vec3 color;\nuniform int index;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  int x=0, y=0, i=index;\n  for(int j=0;j<8;j++) { if(i<16) { break; } i-=16; y++; }\n  x=i;\n  float d = texture2D(texture0, (vUV.st*vec2(0.0625, 0.125))+vec2(0.0625*float(x),0.125*float(y))).r;\n  vec4 ss = vec4(smoothstep(0.35, 0.5, d));\n  gl_FragColor = ss*vec4(color,1.0);\n}\n",
 };
 
 /* Source File: shadowg */

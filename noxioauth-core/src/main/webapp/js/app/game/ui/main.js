@@ -3,9 +3,24 @@
 /* global util */
 
 /* Define Game UI Main Menu Class */
-function MainUI(display) {
-  this.create(display);
+function MainUI(game, name) {
+  this.game = game;
+  this.name = name;
+  this.create(this.game.display);
+  
+  this.hidden = true;
+  this.interactable = true;
 }
+
+MainUI.prototype.show = function() {
+  this.hidden = false;
+  this.blocks[0].text = main.net.user + "@" + main.net.game.state.info.name + "@" + main.net.game.info.name;
+  this.blocks[0].size.x = util.text.lengthOnScreen(this.blocks[0].text, this.blocks[0].fontSize);
+};
+
+MainUI.prototype.hide = function() {
+  this.hidden = true;
+};
 
 MainUI.prototype.create = function(display) {
   var containsProto = function(point, window) {
@@ -19,22 +34,29 @@ MainUI.prototype.create = function(display) {
            ss.y < pos.y+this.size.y;
   };
   
+  var tmp = this; // Fucking javascript get out reeeeeeeeeeeeeeeeeeeee
+  
   this.blocks = [
     {
       neutral: {
         material: display.getMaterial("material.ui.grey"),
         text: [1.0, 1.0, 1.0]
       },
-      hover: {
-        material: display.getMaterial("material.ui.white"),
-        text: [0.5, 0.5, 0.5]
-      },
-      text: "Muffin Button",
+      text: "[Server Info]",
       fontSize: 2.0,
       pos: {x: 0.0, y: -2.0},
       size: {x: 26.0, y: 2.0},
-      contains: containsProto,
-      click: function() {}
+      contains: function() { return false; },
+      click: function() { }
+    },
+    {
+      neutral: {
+        material: display.getMaterial("material.ui.white_solid"),
+      },
+      pos: {x: 0.0, y: -2.2},
+      size: {x: 18.0, y: 0.2},
+      contains: function() { return false; },
+      click: function() { }
     },
     {
       neutral: {
@@ -43,30 +65,76 @@ MainUI.prototype.create = function(display) {
       },
       hover: {
         material: display.getMaterial("material.ui.white"),
-        text: [0.5, 0.5, 0.5]
+        text: [0.0, 0.0, 0.0]
       },
-      text: "Space Button",
-      fontSize: 2.0,
-      pos: {x: 0.0, y: -4.0},
-      size: {x: 26.0, y: 2.0},
+      text: "Enable Debug",
+      fontSize: 1.5,
+      pos: {x: 0.0, y: -3.7},
+      size: {x: 18.0, y: 1.5},
       contains: containsProto,
-      click: function() {}
+      click: function() {
+        var debugMenu = tmp.game.ui.getElement("debug"); 
+        if(!debugMenu.hidden) { debugMenu.hide(); this.text = "Enable Debug"; }
+        else { debugMenu.show(); this.text = "Disable Debug"; }
+      }
+    },
+    {
+      neutral: {
+        material: display.getMaterial("material.ui.grey"),
+        text: [1.0, 1.0, 1.0]
+      },
+      hover: {
+        material: display.getMaterial("material.ui.white"),
+        text: [0.0, 0.0, 0.0]
+      },
+      text: "Leave Game",
+      fontSize: 1.5,
+      pos: {x: 0.0, y: -5.2},
+      size: {x: 18.0, y: 1.5},
+      contains: containsProto,
+      click: function(button) { tmp.game.leave(); }
     }
   ];
 };
 
-MainUI.prototype.getDraw = function(blocks, text, mouse, window) {
-  var align = {x: 0, y: 100.0*(window.y/window.x)};
+MainUI.prototype.handleInput = function(key) {
+  // Escape key toggles this menu
+  if(key === 27) {
+    if(this.hidden) { this.show(); }
+    else { this.hide(); }
+    return true;
+  } 
+  if(this.hidden) { return false; }
+  return false;
+};
+
+/* Window size is needed since UI is scaled to window size. */
+MainUI.prototype.handleClick = function(button, mouse, window) {
+  if(this.hidden) { return false; }
   
   for(var i=0;i<this.blocks.length;i++) {
     var block = this.blocks[i];
     if(block.contains(mouse, window)) {
+      block.click(button);
+      return true;
+    }
+  }
+  return false;
+};
+
+MainUI.prototype.getDraw = function(blocks, text, mouse, window) {
+  if(this.hidden) { return false; }
+  
+  var align = {x: 0, y: 100.0*(window.y/window.x)};
+  for(var i=0;i<this.blocks.length;i++) {
+    var block = this.blocks[i];
+    if(block.contains(mouse, window)) {
       blocks.push({material: block.hover.material, pos: util.vec2.add(block.pos, align), size: block.size});
-      text.push({text: block.text, size: block.fontSize, color: block.hover.text, pos: util.vec2.add(block.pos, align)});
+      if(block.text) { text.push({text: block.text, size: block.fontSize, color: block.hover.text, pos: util.vec2.add(block.pos, align)}); }
     }
     else {
       blocks.push({material: block.neutral.material, pos: util.vec2.add(block.pos, align), size: block.size});
-      text.push({text: block.text, size: block.fontSize, color: block.neutral.text, pos: util.vec2.add(block.pos, align)});
+      if(block.text) { text.push({text: block.text, size: block.fontSize, color: block.neutral.text, pos: util.vec2.add(block.pos, align)}); }
     }
   }
 };

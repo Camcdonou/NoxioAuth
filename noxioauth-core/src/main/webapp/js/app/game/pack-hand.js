@@ -63,7 +63,7 @@ PackHand.prototype.playerControl = function(packet) {
 
 /* PacketG15 */
 PackHand.prototype.message = function(packet) {
-  main.menu.game.updateMessages(packet.message);
+  this.game.ui.getElement("log").message(packet.message);
 };
 
 /* PacketG16 */

@@ -2,14 +2,18 @@
 /* global main */
 
 /* Define Input Class */
-function Input(window) {
-  this.window = window;
+function Input(game) {
+  this.game = game;
+  this.window = this.game.window;
   
   this.window.onmousemove = function(event) { main.game.input.mouse.event(event); };
   this.window.onmousedown = function(event) { main.game.input.mouse.event(event, true); };
   this.window.onmouseup = function(event) { main.game.input.mouse.event(event, false); };
   document.onkeyup = function(event) { main.game.input.keyboard.event(event, false); };
   document.onkeydown = function(event) { main.game.input.keyboard.event(event, true); };
+  
+  this.mouse.input = this;    // Le sigh...
+  this.keyboard.input = this; // Hnnggg
 };
 
 Input.prototype.mouse = {
@@ -29,7 +33,8 @@ Input.prototype.mouse.event = function(event, state) {
 		case 2 : { this.rmb = state; break; }
 		case 1 : { this.mmb = state; break; }
 		default : { /* Ignore */ break; }
-	}
+  }
+  if(state === true) { this.input.game.handleClick(event.button, this.pos); } // Why the FUCK do I have to write === true for a bool check. Fuck off Javascript.
 };
 
 Input.prototype.mouse.popMovement = function() {
@@ -51,7 +56,10 @@ Input.prototype.keyboard.popInputs = function() {
 
 Input.prototype.keyboard.event = function(evt, state) {
   this.keys[evt.keyCode] = state;  
-  if(state) { this.inputs.push(evt.keyCode); }
+  if(state) {
+    this.inputs.push(evt.keyCode);
+    this.input.game.handleInput(evt.keyCode);
+  }
 };
 
 /* Returns the mouse coordinates in game space */

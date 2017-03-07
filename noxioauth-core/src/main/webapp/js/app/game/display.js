@@ -6,9 +6,9 @@
 
 /* Define Game Rendering Class */
 function Display(game, container, window) {
-  this.game = game; /* We will need to constantly get data from the game instance so we pass it through */
-  this.container = container;
-  this.window = window;
+  this.game = game;                       // We will need to constantly get data from the game instance so we pass it through
+  this.container = this.game.container;   // DOM element containing the canvas
+  this.window = this.game.window;         // The canvas we are going to render to
   
   this.camera = {pos: {x: 0.0, y: 0.0, z: -10.0}}; /* @FIXME rotation? */
   
@@ -41,7 +41,7 @@ Display.prototype.setupWebGL = function() {
   gl.enable(gl.DEPTH_TEST);                                 // Enable depth testing
   gl.depthFunc(gl.LEQUAL);                                  // Near things obscure far things
   gl.disable(gl.BLEND);                                     // Disable transparency blend by default
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE);                       // Transparency function
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);                       // Transparency function
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);                        // Set clear color to black, fully opaque
   gl.clearDepth(1.0);                                       // Clear depth
@@ -281,7 +281,7 @@ var RXD = 0; /* @FIXME debug from lights */
 Display.prototype.draw = function() {
   /* Update Canvas Size */
   this.window.width = this.container.clientWidth;
-  this.window.height = (9/16)*(this.window.width);
+  this.window.height = this.container.clientHeight; // Does not enforce resonable aspect ratio. @FIXME...
   
   /* Check WebGL is OKAY */
   if(!this.gl) { this.drawFallback(); return; }
@@ -507,7 +507,8 @@ Display.prototype.draw = function() {
     var text = texts[j];
     var characters = this.stringToIndices(text.text);
     var uniformFontSize = [
-      {name: "fontSize", data: text.size}
+      {name: "fontSize", data: text.size},
+      {name: "color", data: text.color}
     ];
     fontShader.applyUniforms(gl, uniformFontSize);
     for(var i=0;i<characters.length;i++) {

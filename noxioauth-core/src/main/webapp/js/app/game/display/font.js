@@ -98,6 +98,10 @@ Display.prototype.stringToIndices = function(string) {
       case "x" : { ary.push(88); break; }
       case "y" : { ary.push(89); break; }
       case "z" : { ary.push(90); break; }
+      case "{" : { ary.push(91); break; }
+      case "|" : { ary.push(92); break; }
+      case "}" : { ary.push(93); break; }
+      case "~" : { ary.push(94); break; }
       default : { ary.push(95); break; }
     }
   }
