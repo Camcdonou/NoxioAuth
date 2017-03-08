@@ -6,9 +6,12 @@ function Input(game) {
   this.game = game;
   this.window = this.game.window;
   
+  /* These functions are wrapped since main.game.input does not exist yet. But it will before they can be called because javascript is synchronous. */
   this.window.onmousemove = function(event) { main.game.input.mouse.event(event); };
   this.window.onmousedown = function(event) { main.game.input.mouse.event(event, true); };
   this.window.onmouseup = function(event) { main.game.input.mouse.event(event, false); };
+  this.window.addEventListener("mousewheel", function(event) { main.game.input.mouse.wheel(event); }, false); // IE9, Chrome, Safari, Opera
+  this.window.addEventListener("DOMMouseScroll", function(event) { main.game.input.mouse.wheel(event); }, false); // Firefox
   document.onkeyup = function(event) { main.game.input.keyboard.event(event, false); };
   document.onkeydown = function(event) { main.game.input.keyboard.event(event, true); };
   
@@ -19,6 +22,7 @@ function Input(game) {
 Input.prototype.mouse = {
   pos: {x: 0, y: 0},
   mov: {x: 0, y: 0},
+  spin: 0.0,
   lmb: false,
   rmb: false,
   mmb: false
@@ -37,9 +41,18 @@ Input.prototype.mouse.event = function(event, state) {
   if(state === true) { this.input.game.handleClick(event.button, this.pos); } // Why the FUCK do I have to write === true for a bool check. Fuck off Javascript.
 };
 
+Input.prototype.mouse.wheel = function(event) {
+    var e = window.event || event;
+    var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+    this.spin += delta;
+    return false;
+};
+
 Input.prototype.mouse.popMovement = function() {
   var mov = this.mov;
+  mov.s = this.spin;
   this.mov = {x: 0, y: 0};
+  this.spin = 0.0;
   return mov;
 };
 
@@ -71,6 +84,8 @@ Input.prototype.destroy = function() {
   this.window.onmousemove=function() {};
   this.window.onmousedown=function() {};
   this.window.onmouseup=function() {};
+  this.window.removeEventListener("mousewheel", main.game.input.mouse.wheel, false); // IE9, Chrome, Safari, Opera
+  this.window.removeEventListener("DOMMouseScroll", main.game.input.mouse.wheel, false); // Firefox
   document.onkeyup = function() {};
   document.onkeydown = function() {};
 };

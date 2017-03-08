@@ -26,8 +26,8 @@ PlayerObject.prototype.update = function(data) {
   this.setVel(vel);
 };
 
-PlayerObject.prototype.getDraw = function(geometry, camera) {
-  if(util.vec2.distance(this.pos, {x: -camera.pos.x, y: -camera.pos.y}) < 8.0) {
+PlayerObject.prototype.getDraw = function(geometry, bounds) {
+  if(util.intersection.pointPoly(this.pos, bounds)) {
     var pos = {x: this.pos.x, y: this.pos.y, z: 0.0}; /* To Vec3 */
     geometry.push({model: this.model, material: this.material, pos: pos, rot: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}});
   }

@@ -1,6 +1,6 @@
 "use strict";
 /* global main */
-/* global Texture */
+/* global util */
 /* global mat4 */
 /* global vec3 */
 
@@ -10,7 +10,7 @@ function Display(game, container, window) {
   this.container = this.game.container;   // DOM element containing the canvas
   this.window = this.game.window;         // The canvas we are going to render to
   
-  this.camera = {pos: {x: 0.0, y: 0.0, z: 0.0}, rot: {x: -0.174533, y: 0.174533, z: 0.785398}, zoom: 15, fov: 0.698132, near: 1.0, far: 64.0}; //
+  this.camera = new Camera();
   
   if(!this.initWebGL()) { this.initFallback(); }
 };
@@ -264,7 +264,6 @@ Display.prototype.updateFramebuffer = function(name) {
   while(y<=(this.window.height*fbo.upscale)) { y = y*2; }
   
   if(x !== fbo.fb.width || y !== fbo.fb.height) {
-    main.menu.warning.show("FBO RESIZE OP: " + name + ":" + x + "," + y);
     fbo.fb.width = x;
     fbo.fb.height = y;
     
@@ -279,9 +278,10 @@ Display.prototype.updateFramebuffer = function(name) {
 
 var RXD = 0; /* @FIXME debug from lights */
 Display.prototype.draw = function() {
-  /* Update Canvas Size */
+  /* Update Canvas Size & Camera */
   this.window.width = this.container.clientWidth;
   this.window.height = this.container.clientHeight; // Does not enforce resonable aspect ratio. @FIXME...
+  this.camera.update();
   
   /* Check WebGL is OKAY */
   if(!this.gl) { this.drawFallback(); return; }
@@ -302,29 +302,34 @@ Display.prototype.draw = function() {
   var VIEWMATRIX = mat4.create();
 
   // We basically place the center of the shadow proj on the ground of the map and put the near clip behind us. Allows for easier centering.
-  var PROJMATRIX_SHADOW = mat4.create(); mat4.ortho(PROJMATRIX_SHADOW, -8.0, 8.0,-8.0, 8.0, -16.0, 16.0); /* @FIXME HARDCODED SIZE! NEEDS TO RESIZE TO VIEW FRUSTRUM */
+  var SHADOW_MAX_RADIUS = 12.0;                       // After this point everything is shadow. Prevents cheating via hacking camera around.
+  var sbnd = SHADOW_MAX_RADIUS+1.0;
+  var sclip = (SHADOW_MAX_RADIUS+1.0)*2.0;
+  var PROJMATRIX_SHADOW = mat4.create(); mat4.ortho(PROJMATRIX_SHADOW, -sbnd, sbnd,-sbnd, sbnd, -sclip, sclip); /* @FIXME HARDCODED SIZE! NEEDS TO RESIZE TO VIEW FRUSTRUM */
   var SMSIZE=1; /* @FIXME my understanding is that you have to do this calculation against the PROJ * LIGHT * TRANSFORM matrix. */
   var OFFSET = vec3.create(); /* @FIXME we can probably ditch this since all it does is offset the camera position which we ditched from the draw call. */
     vec3.set(
       OFFSET,
       (Math.floor(this.camera.pos.x*SMSIZE)-(this.camera.pos.x*SMSIZE))/SMSIZE,
       (Math.floor(this.camera.pos.y*SMSIZE)-(this.camera.pos.y*SMSIZE))/SMSIZE,
-      ((Math.floor(this.camera.pos.z*SMSIZE)-(this.camera.pos.z*SMSIZE))/SMSIZE)-this.camera.pos.z
+      ((Math.floor(this.camera.pos.z*SMSIZE)-(this.camera.pos.z*SMSIZE))/SMSIZE)
     );
   var OFFSETMATRIX = mat4.create(); mat4.translate(OFFSETMATRIX, OFFSETMATRIX, OFFSET);
   var LIGHTMATRIX = mat4.create();
     mat4.translate(LIGHTMATRIX, LIGHTMATRIX, [0.0, 0.0, 1.0]);
     mat4.rotate(LIGHTMATRIX, LIGHTMATRIX, -0.5, [1.0, 0.0, 0.0]);
     mat4.rotate(LIGHTMATRIX, LIGHTMATRIX, 0.35, [0.0, 1.0, 0.0]);
-    mat4.translate(LIGHTMATRIX, LIGHTMATRIX, [this.camera.pos.x, this.camera.pos.y, this.camera.pos.z]);
+    mat4.translate(LIGHTMATRIX, LIGHTMATRIX, [this.camera.pos.x, this.camera.pos.y, 0.0]);
   var LIGHTDIR = vec3.create(); vec3.set(LIGHTDIR, LIGHTMATRIX[8], LIGHTMATRIX[9], -LIGHTMATRIX[10]);
   
   /* Collect all geometry to draw.
      Format: {model: <Model>, material: <Material>, pos: {x: <float>, y: <float>, z: <float>}, rot: {x: <float>, y: <float>, z: <float>, w: <float>}} */
-  var geometry = [];
-  this.game.map.getDraw(geometry, this.camera);
+  var bounds = this.camera.getBounds(this.window.height/this.window.width); // An array of 4 vec2s that defines the view area on the z=0 plane
+  var geometry = [];                                                        // All game world geometry we need to draw
+  var preCalcBounds = util.matrix.expandPolygon(bounds, 5.0);               // Slightly innacurate way to precalc radius of tiles so we can just test a point
+  this.game.map.getDraw(geometry, preCalcBounds); /* @FIXME optimize? */
   for(var i=0;i<this.game.objects.length;i++) {
-    this.game.objects[i].getDraw(geometry, this.camera);
+    this.game.objects[i].getDraw(geometry, bounds);
   }
   
   /* Sort geometry by shader -> material -> draws */
@@ -443,7 +448,9 @@ Display.prototype.draw = function() {
     {name: "Lmatrix", data: LIGHTMATRIX},
     {name: "PmatrixLight", data: PROJMATRIX_SHADOW},
     {name: "Omatrix", data: OFFSETMATRIX},
+    {name: "cameraCenter", data: [-this.camera.pos.x, -this.camera.pos.y]},
     {name: "sourceDirection", data: LIGHTDIR},
+    {name: "shadowMaxRadius", data: SHADOW_MAX_RADIUS},
     {name: "texture5", data: 5}
   ];
   for(var i=0;i<geomSorted.length;i++) {

@@ -30,6 +30,19 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   this.objects = [];
   
   this.packHand = new PackHand(this);
+  
+  this.requestAnimFrameFunc = (function() {
+    return window.requestAnimationFrame || 
+           window.webkitRequestAnimationFrame ||
+           window.mozRequestAnimationFrame ||
+           window.oRequestAnimationFrame ||
+           window.msRequestAnimationFrame ||
+           function(callback) { window.setTimeout(callback, 33); };
+  })();
+  
+  console.log(this.requestAnimFrameFunc); /* @FIXME */
+  
+  this.requestAnimFrameFunc.call(window, function() { if(main.inGame()) { main.game.draw(); }}); // Javascript 🙄
 };
 
 NoxioGame.prototype.loadMap = function(map) {
@@ -84,14 +97,21 @@ NoxioGame.prototype.handleClick = function(button, mouse) {
   this.ui.handleClick(button, mouse, {x: this.window.width, y: this.window.height});
 };
 
-NoxioGame.prototype.inputStep = function() {
-  var cursor = this.input.getMouseActual();
+NoxioGame.prototype.inputStep = function() { /* @FIXME step should do some of the stuff this does, its just that step is overrun with debug shit. Cleanup. */
+  var cursor = this.input.getMouseActual(); /* mousActual deprecated? @FIXME */
   var obj = this.getObject(this.control);
+  var inputs = this.input.keyboard.popInputs();
+  var mouse = this.input.mouse.popMovement();
+  
+  /* Camera position */
+  if(obj !== undefined) { this.display.camera.setPos({x: -obj.pos.x, y: -obj.pos.y, z: 0.0}); }
   
   /* Send current user input to server */
   if(this.ui.menuOpen()) { main.net.game.send({type: "i01"}); return; } // Menu is open so send mouse neutral and return
   
-  var inputs = this.input.keyboard.popInputs();
+  /* Apply popped inputs */
+  this.display.camera.setZoom(mouse.s);
+  
   for(var i=0;i<inputs.length;i++) {
     switch(inputs[i]) {
       case 32 : { main.net.game.send({type: "i02"}); break; } //Space
@@ -140,10 +160,7 @@ NoxioGame.prototype.step = function(packet) {
   this.debug.cAvg = cAvg/this.debug.ss;
   this.debug.pAvg = pAvg/this.debug.ss;
   
-  /* Draw game and send input data */
-  var tmp = this;
-  if(this.debug.ctime[0] < 10) { setTimeout( function() { tmp.draw(); }, 15); }
-  this.draw();
+  /* Send input data */
   this.inputStep();
   
   /* DEBUG INFORMATION */  
@@ -154,22 +171,23 @@ NoxioGame.prototype.step = function(packet) {
   
   this.ui.getElement("debug").debug([
     "STIME " + (this.debug.sAvg).toFixed(2) + " | CTIME " + (this.debug.cAvg).toFixed(2),
-    "FPS " + (this.debug.fAvg).toFixed(2) + " | PING " + (this.debug.pAvg).toFixed(2)
+    "FPS " + (this.debug.fAvg).toFixed(2) + " | PING " + (this.debug.pAvg).toFixed(2),
+    "ASSET[" + this.display.models.length + "," + this.display.materials.length + "," + this.display.shaders.length + "," + this.display.textures.length +"] FBO[3]",
+    "SHADOW [" + this.display.fbo.shadow.fb.width + "," + this.display.fbo.shadow.fb.height + "]",
+    "WORLD  [" + this.display.fbo.world.fb.width + "," + this.display.fbo.world.fb.height + "]",
+    "UI     [" + this.display.fbo.ui.fb.width + "," + this.display.fbo.ui.fb.height + "]"
   ]);
 };
 
 NoxioGame.prototype.draw = function() {
     /* DEBUG FPS STUFF @FIXME */
+    /* @FIXME Something seems a little off with the FPS counter. Seems like it's taking to small a sample of the avalible times... Most notable when tabbing out */
     var now = new Date().getTime();
     var fAvg = 0;
     for(var i=0;i<this.debug.ss-1&&this.debug.frames[i+1]!==0;i++) {
       fAvg += this.debug.frames[i] - this.debug.frames[i+1];
     }
     this.debug.fAvg = (1000*(i/(this.debug.ss-1)))/(fAvg/(this.debug.ss-1));
-
-    /* Move camera to player */
-    var obj = this.getObject(this.control);
-    if(obj !== undefined) { this.display.camera.pos.x = -obj.pos.x; this.display.camera.pos.y = -obj.pos.y; }
     
     /* Draw */
     this.display.draw();
@@ -181,6 +199,8 @@ NoxioGame.prototype.draw = function() {
     }
     this.debug.frames[0] = new Date().getTime();
     this.debug.ctime[0] = new Date().getTime() - now;
+    
+  this.requestAnimFrameFunc.call(window, function() { if(main.inGame()) { main.game.draw(); }}); // Javascript 🙄
 };
 
 /* Leave the game and return to lobby menu */

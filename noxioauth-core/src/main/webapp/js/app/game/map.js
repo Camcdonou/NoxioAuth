@@ -1,5 +1,6 @@
 "use strict";
 /* global Asset */
+/* global util */
 
 function Map(display, data) {
   if(!display.gl) { return; } /* If no GL then no nothing */
@@ -19,11 +20,11 @@ Map.prototype.loadPallete = function(display, tileList) {
   return pallete;
 };
 
-Map.prototype.getDraw = function(geometry, camera) {
+Map.prototype.getDraw = function(geometry, bounds) {
   for(var j=0;j<this.size.y;j++) {
     for(var i=0;i<this.size.x;i++) {
       /* @FIXME This is a temp solution for view frustum culling. Very unoptimized and not scalable. */
-      if(Math.abs(Math.floor(-camera.pos.x)-i) > 8 || Math.abs(Math.floor(-camera.pos.y)-j) > 6) { continue; }
+      if(!util.intersection.pointPoly({x: i, y: j}, bounds)) { continue; }
       geometry.push({model: this.pallete[this.data[j][i]].model, material: this.pallete[this.data[j][i]].material, pos: {x: i, y: j, z: 0.0}, rot: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}});
     }
   }
