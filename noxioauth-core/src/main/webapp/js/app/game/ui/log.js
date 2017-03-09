@@ -63,3 +63,7 @@ LogUI.prototype.getDraw = function(blocks, text, mouse, window) {
     text.push({text: txt.text, size: txt.size, color: txt.color, pos: util.vec2.add(txt.pos, align)});
   }
 };
+
+LogUI.prototype.destroy = function() {
+  
+};

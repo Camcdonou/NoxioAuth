@@ -70,7 +70,7 @@ MainUI.prototype.create = function(display) {
       text: "Enable Debug",
       fontSize: 1.5,
       pos: {x: 0.0, y: -3.7},
-      size: {x: 18.0, y: 1.5},
+      size: {x: 20.0, y: 1.5},
       contains: containsProto,
       click: function() {
         var debugMenu = tmp.game.ui.getElement("debug"); 
@@ -87,10 +87,26 @@ MainUI.prototype.create = function(display) {
         material: display.getMaterial("material.ui.white"),
         text: [0.0, 0.0, 0.0]
       },
-      text: "Leave Game",
+      text: "Enable Cheats",
       fontSize: 1.5,
       pos: {x: 0.0, y: -5.2},
-      size: {x: 18.0, y: 1.5},
+      size: {x: 20.0, y: 1.5},
+      contains: containsProto,
+      click: function() { tmp.game.sound.setMusic(tmp.game.sound.getSound("audio/prank/classy.mp3"), true); this.text = "Hahahahaha"; }
+    },
+    {
+      neutral: {
+        material: display.getMaterial("material.ui.grey"),
+        text: [1.0, 1.0, 1.0]
+      },
+      hover: {
+        material: display.getMaterial("material.ui.white"),
+        text: [0.0, 0.0, 0.0]
+      },
+      text: "Leave Game",
+      fontSize: 1.5,
+      pos: {x: 0.0, y: -6.7},
+      size: {x: 20.0, y: 1.5},
       contains: containsProto,
       click: function(button) { tmp.game.leave(); }
     }
@@ -137,4 +153,8 @@ MainUI.prototype.getDraw = function(blocks, text, mouse, window) {
       if(block.text) { text.push({text: block.text, size: block.fontSize, color: block.neutral.text, pos: util.vec2.add(block.pos, align)}); }
     }
   }
+};
+
+MainUI.prototype.destroy = function() {
+  
 };

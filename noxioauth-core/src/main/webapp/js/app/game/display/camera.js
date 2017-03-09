@@ -70,6 +70,7 @@ Camera.prototype.getBounds = function(aspect) {
   var B = util.intersection.linePlane({a: b1, b: b2}, floorPlane);
   var C = util.intersection.linePlane({a: c1, b: c2}, floorPlane);
   var D = util.intersection.linePlane({a: d1, b: d2}, floorPlane);
-  
+    
+  if(!A || !B || !C || !D) { return [util.vec3.create(), util.vec3.create(), util.vec3.create(), util.vec3.create()]; }
   return [A.intersection, B.intersection, D.intersection, C.intersection];
 };

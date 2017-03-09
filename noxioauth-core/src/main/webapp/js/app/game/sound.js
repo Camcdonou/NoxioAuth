@@ -1,0 +1,90 @@
+"use strict";
+/* global main */
+/* global util */
+
+/* Define Game Sound Class */
+function Sound(game) {
+  this.game = game;
+  
+  if(!this.initWebAudio()) { this.initFallback(); }
+}
+
+/* Returns true if webaudio is set up correctly, false if fuck no. */
+Sound.prototype.initWebAudio = function() {
+  try {
+    this.game.window.AudioContext = this.game.window.AudioContext || this.game.window.webkitAudioContext;
+    this.context = new AudioContext();
+  }
+  catch(ex) {
+    main.menu.warning.show("WebAudio not supported. Sound disabled.");
+    return false;
+  }
+  
+  this.sounds = [];
+
+  if(!this.createSound("audio/multi/default.wav")) { return false; }
+  
+  this.loadAudio();
+  
+  return true;
+};
+
+/* Preloads all required audio assets for the game. */
+Sound.prototype.loadAudio = function() {
+  var paths = [
+    "audio/prank/classy.mp3",
+    "audio/prank/ata.wav",
+    "audio/prank/toriya.wav",
+    "audio/prank/ha.wav"
+  ];
+  for(var i=0;i<paths.length;i++) { this.createSound(paths[i]); }
+};
+
+/* @FIXME do something */
+Sound.prototype.initFallback = function() {
+  this.context = undefined;
+  // Lol ur fucked
+};
+
+Sound.prototype.stopMusic = function() {
+  if(this.music) { this.music.stop(); this.music = undefined; }
+};
+
+Sound.prototype.setMusic = function(sound, loop) {
+  if(this.music) { 
+    if(this.music.path === sound.path) { return; }
+    this.music.stop();
+  }
+  this.music = sound;
+  this.music.loop(loop);
+  this.music.play();
+};
+
+/* Returns boolean. True if created succesfully and false if failed to create. */
+Sound.prototype.createSound = function(path) {
+  var snd = new SoundData(this.context, path);
+  this.sounds.push(snd);
+  return true;
+};
+
+/* Gets the sound at the path given. If it's not already loaded it loads it. If file not found returns default sound. */
+Sound.prototype.getSound = function(path) {
+  for(var i=0;i<this.sounds.length;i++) {
+    if(this.sounds[i].path === path) {
+      return new SoundInstance(this.context, path, this.sounds[i]);
+    }
+  }
+  
+  if(this.createSound(path)) { return this.getSound(path); }
+  
+  main.menu.warning.show("Failed to load sound: '" + path + "'");
+  return this.getSound("audio/multi/default.wav");
+};
+
+/* Stop and unload all sounds */
+Sound.prototype.destroy = function() {
+  for(var i=0;i<this.sounds.length;i++) {
+    this.sounds[i].destroy();
+  }
+  this.stopMusic();
+};

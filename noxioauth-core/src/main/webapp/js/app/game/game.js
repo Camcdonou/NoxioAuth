@@ -17,6 +17,7 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   this.input = new Input(this);     // Mouse, keyboard, and controller handler
   this.asset = new Asset();         // Raw data for models, animations, textures, shaders, sounds, etc, etc, etc...
   this.display = new Display(this); // Game rendering and general WebGL stuff
+  this.sound = new Sound(this);     // Game audio handler
   this.ui = new GameUI(this);       // Ingame UI
   
   this.loadMap(map);
@@ -37,12 +38,19 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
            window.mozRequestAnimationFrame ||
            window.oRequestAnimationFrame ||
            window.msRequestAnimationFrame ||
-           function(callback) { window.setTimeout(callback, 33); };
+           function(callback) { window.setTimeout(callback, 33); }; /* @FIXME warn for this? */
   })();
   
-  console.log(this.requestAnimFrameFunc); /* @FIXME */
+  this.cancelAnimFrameFunc = (function() {
+    return window.cancelAnimationFrame          ||
+           window.webkitCancelRequestAnimationFrame    ||
+           window.mozCancelRequestAnimationFrame       ||
+           window.oCancelRequestAnimationFrame     ||
+           window.msCancelRequestAnimationFrame        ||
+           clearTimeout;
+  })();
   
-  this.requestAnimFrameFunc.call(window, function() { if(main.inGame()) { main.game.draw(); }}); // Javascript 🙄
+  this.nextFrame = this.requestAnimFrameFunc.call(window, function() { if(main.inGame()) { main.game.draw(); }}); // Javascript 🙄
 };
 
 NoxioGame.prototype.loadMap = function(map) {
@@ -104,7 +112,7 @@ NoxioGame.prototype.inputStep = function() { /* @FIXME step should do some of th
   var mouse = this.input.mouse.popMovement();
   
   /* Camera position */
-  if(obj !== undefined) { this.display.camera.setPos({x: -obj.pos.x, y: -obj.pos.y, z: 0.0}); }
+  if(obj) { this.display.camera.setPos({x: -obj.pos.x, y: -obj.pos.y, z: 0.0}); }
   
   /* Send current user input to server */
   if(this.ui.menuOpen()) { main.net.game.send({type: "i01"}); return; } // Menu is open so send mouse neutral and return
@@ -115,6 +123,9 @@ NoxioGame.prototype.inputStep = function() { /* @FIXME step should do some of th
   for(var i=0;i<inputs.length;i++) {
     switch(inputs[i]) {
       case 32 : { main.net.game.send({type: "i02"}); break; } //Space
+      case 82 : { this.sound.getSound("audio/prank/ata.wav").play(); break; } // R /* @FIXME DEBUG */
+      case 84 : { this.sound.getSound("audio/prank/ha.wav").play(); break; } // T /* @FIXME DEBUG */
+      case 89 : { this.sound.getSound("audio/prank/toriya.wav").play(); break; } // Y /* @FIXME DEBUG */
       default : { break; }
     }
   }
@@ -200,7 +211,7 @@ NoxioGame.prototype.draw = function() {
     this.debug.frames[0] = new Date().getTime();
     this.debug.ctime[0] = new Date().getTime() - now;
     
-  this.requestAnimFrameFunc.call(window, function() { if(main.inGame()) { main.game.draw(); }}); // Javascript 🙄
+  this.nextFrame = this.requestAnimFrameFunc.call(window, function() { if(main.inGame()) { main.game.draw(); }}); // Javascript 🙄
 };
 
 /* Leave the game and return to lobby menu */
@@ -209,7 +220,10 @@ NoxioGame.prototype.leave = function() {
 };
 
 NoxioGame.prototype.destroy = function() {
+  this.cancelAnimFrameFunc.call(window, this.nextFrame);
   this.input.destroy();
-  this.display.destroy();
   this.asset.destroy();
+  this.display.destroy();
+  this.sound.destroy();
+  this.ui.destroy();
 };

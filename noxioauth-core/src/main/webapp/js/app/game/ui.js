@@ -50,3 +50,9 @@ GameUI.prototype.getDraw = function(block, text, mouse, window) {
   }
 };
 
+
+GameUI.prototype.destroy = function() {
+  for(var i=0;i<this.elements.length;i++) {
+    this.elements[i].destroy();
+  }
+};

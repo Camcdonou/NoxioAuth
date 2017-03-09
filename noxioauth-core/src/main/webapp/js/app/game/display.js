@@ -5,7 +5,7 @@
 /* global vec3 */
 
 /* Define Game Rendering Class */
-function Display(game, container, window) {
+function Display(game) {
   this.game = game;                       // We will need to constantly get data from the game instance so we pass it through
   this.container = this.game.container;   // DOM element containing the canvas
   this.window = this.game.window;         // The canvas we are going to render to
@@ -279,6 +279,7 @@ Display.prototype.updateFramebuffer = function(name) {
 var RXD = 0; /* @FIXME debug from lights */
 Display.prototype.draw = function() {
   /* Update Canvas Size & Camera */
+  if(this.container.clientWidth < 1 || this.container.clientHeight < 1) { return; } // Draw window not visible. Don't draw.
   this.window.width = this.container.clientWidth;
   this.window.height = this.container.clientHeight; // Does not enforce resonable aspect ratio. @FIXME...
   this.camera.update();
@@ -683,7 +684,7 @@ Display.prototype.getModel = function(name) {
 
 Display.prototype.destroy = function() {
   /* @FIXME Make sure we unload and delete all resources loaded! */ 
-  if(!gl) { return; }
+  if(!this.gl) { return; }
   var gl = this.gl; // Sanity Save
   for(var i=0;i<this.models.length;i++) { gl.deleteBuffer(this.models[i].vertexBuffer); gl.deleteBuffer(this.models[i].indexBuffer); }
   for(var i=0;i<this.shaders.length;i++) { gl.deleteProgram(this.shaders[i].program); }
@@ -695,7 +696,7 @@ Display.prototype.destroy = function() {
   var deleteFBO = function(fbo) {
     gl.deleteFramebuffer(fbo.fb);
     gl.deleteRenderbuffer(fbo.rb);
-    gl.deleteTexture(fbo.tex);
+    gl.deleteTexture(fbo.tex.glTexture);
   };
   deleteFBO(this.fbo.shadow);
   deleteFBO(this.fbo.world);
