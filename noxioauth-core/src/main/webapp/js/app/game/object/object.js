@@ -36,6 +36,6 @@ GameObject.prototype.update = function(data) {
   this.setVel(vel);
 };
 
-GameObject.prototype.getDraw = function(geometry, camera) {
+GameObject.prototype.getDraw = function(geometry, lights, bounds) {
   /* NO. */
 };

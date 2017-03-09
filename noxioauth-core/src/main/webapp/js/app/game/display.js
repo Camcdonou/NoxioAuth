@@ -327,10 +327,11 @@ Display.prototype.draw = function() {
      Format: {model: <Model>, material: <Material>, pos: {x: <float>, y: <float>, z: <float>}, rot: {x: <float>, y: <float>, z: <float>, w: <float>}} */
   var bounds = this.camera.getBounds(this.window.height/this.window.width); // An array of 4 vec2s that defines the view area on the z=0 plane
   var geometry = [];                                                        // All game world geometry we need to draw
+  var lights = [];                                                          // All lights in game world
   var preCalcBounds = util.matrix.expandPolygon(bounds, 5.0);               // Slightly innacurate way to precalc radius of tiles so we can just test a point
   this.game.map.getDraw(geometry, preCalcBounds); /* @FIXME optimize? */
   for(var i=0;i<this.game.objects.length;i++) {
-    this.game.objects[i].getDraw(geometry, bounds);
+    this.game.objects[i].getDraw(geometry, lights, bounds);
   }
   
   /* Sort geometry by shader -> material -> draws */
@@ -383,36 +384,7 @@ Display.prototype.draw = function() {
   shadowMaterial.disable(gl);
   shadowMaterial.shader.disable(gl);
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); //Disable frame buffer
-  
-  /* Compile Dynamic Light Information */
-  var testA = new PointLight( /* @FIXME DEBUG */
-    {x: 6.0+(Math.sin(RXD*0.01)*4), y: 8.0+(Math.cos(RXD*0.01)*4), z: 0.5},
-    {r: 1.0, g: 0.0, b: 0.5, a: 1.0},
-    2.0
-  );
-  var testB = new PointLight(
-    {x: 22.0, y: 22.0, z: 0.5},
-    {r: 0.0, g: 1.0, b: 0.5, a: 1.0},
-    7.0
-  );
-  var testC = new PointLight( /* @FIXME DEBUG */
-    {x: 11.0+(Math.sin(RXD*0.05)*9), y: 5.0+(Math.cos(RXD*0.05)*9), z: 0.5},
-    {r: 0.0, g: 0.5, b: 0.5, a: 1.0},
-    3.0
-  );
-  var testD = new PointLight( /* @FIXME DEBUG */
-    {x: 16.0+(Math.sin(RXD*0.09)*2), y: 11.0+(Math.cos(RXD*0.09)*2), z: 0.5},
-    {r: 1.0, g: 0.5, b: 0.5, a: 1.0},
-    4.0
-  );
-  var testE = new PointLight( /* @FIXME DEBUG */
-    {x: 8.0+(Math.sin(RXD*0.02)*3), y: 22.0+(Math.cos(RXD*0.02)*3), z: 0.5},
-    {r: 1.0, g: 1.0, b: 1.0, a: 1.0},
-    6.0
-  );
-  RXD++;
-  
-  var lights = [testA, testB, testC, testD, testE];
+
   var pLightLength = 0;
   var pLightPos = [];
   var pLightColor = [];
