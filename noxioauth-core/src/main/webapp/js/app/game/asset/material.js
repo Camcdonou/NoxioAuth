@@ -6,6 +6,7 @@ Asset.prototype.material = {};
 Asset.prototype.material.ui = {};
 Asset.prototype.material.multi = {};
 Asset.prototype.material.test = {};
+Asset.prototype.material.prank = {};
 
 /* Source File: grey.mat */
 Asset.prototype.material.ui.grey = {
@@ -29,6 +30,14 @@ Asset.prototype.material.ui.white_solid = {
   shader: "simpletrans",
   shadow: "true",
   texture0: "img/ui/white_solid.png",
+};
+
+/* Source File: particle.mat */
+Asset.prototype.material.multi.particle = {
+  name: "material.multi.particle",
+  shader: "particle",
+  shadow: "true",
+  texture0: "img/multi/default.png",
 };
 
 /* Source File: post_msaa.mat */
@@ -97,5 +106,13 @@ Asset.prototype.material.test.test2 = {
   shader: "test",
   shadow: "true",
   texture0: "img/test/fat.png",
+};
+
+/* Source File: blip.mat */
+Asset.prototype.material.prank.blip = {
+  name: "material.prank.blip",
+  shader: "particle",
+  shadow: "true",
+  texture0: "img/prank/blip.png",
 };
 

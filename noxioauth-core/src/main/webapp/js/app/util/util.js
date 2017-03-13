@@ -8,6 +8,7 @@ var util = {
   vec2 : {},
   vec3 : {},
   vec4 : {},
+  quat : {},
   matrix: {},
   intersection: {},
   text : {}
@@ -120,11 +121,73 @@ util.vec3.lerp = function(a, b, i) {
   return util.vec3.add(util.vec3.scale(a, 1.0-i), util.vec3.scale(b, i));
 };
 
-/* === Vec3 =============================================================================== */
+util.vec3.toQuat = function(a) {
+  // Assuming the angles are in radians.
+  var c1 = Math.cos(a.x);
+  var s1 = Math.sin(a.x);
+  var c2 = Math.cos(a.y);
+  var s2 = Math.sin(a.y);
+  var c3 = Math.cos(a.z);
+  var s3 = Math.sin(a.z);
+  var w = Math.sqrt(1.0 + c1 * c2 + c1*c3 - s1 * s2 * s3 + c2*c3) / 2.0;
+  var w4 = (4.0 * w);
+  var x = (c2 * s3 + c1 * s3 + s1 * s2 * c3) / w4 ;
+  var y = (s1 * c2 + s1 * c3 + c1 * s2 * s3) / w4 ;
+  var z = (-s1 * s3 + c1 * s2 * c3 +s2) / w4 ;
+  return {x: x, y: y, z: z, w: w};
+};
+
+/* === Vec4 =============================================================================== */
 /* ======================================================================================== */
 
 util.vec4.create = function() {
   return {x: 0.0, y: 0.0, z: 0.0, w: 1.0};
+};
+
+/* === Quaternion ========================================================================= */
+/* ======================================================================================== */
+
+util.quat.create = function() {
+  return {x: 0.0, y: 0.0, z: 0.0, w: 1.0};
+};
+
+util.quat.generate = function(x, y, z, w) {
+  var mag = Math.sqrt((x*x) + (y*y) + (z*z) + (w*w));
+  if (mag > 0.0) {
+      return {x: x/mag, y: y/mag, z: z/mag, w: w/mag};
+  } else {
+    return {x: 0.0, y: 0.0, z: 0.0, w: 1.0};
+  }
+};
+
+util.quat.toEuler = function(q1) {
+    	var heading;
+    	var attitude;
+    	var bank;
+    	
+        var sqw = q1.w*q1.w;
+        var sqx = q1.x*q1.x;
+        var sqy = q1.y*q1.y;
+        var sqz = q1.z*q1.z;
+    	var unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+    	var test = q1.x*q1.y + q1.z*q1.w;
+    	if (test > 0.499*unit) { // singularity at north pole
+    		heading = 2.0 * Math.atan2(q1.x,q1.w);
+    		attitude = Math.PI/2.0;
+    		bank = 0.0;
+    		return {x: bank, y: heading, z: attitude};
+    	}
+    	if (test < -0.499*unit) { // singularity at south pole
+    		heading = -2.0 * Math.atan2(q1.x,q1.w);
+    		attitude = -Math.PI/2.0;
+    		bank = 0;
+    		return {x: bank, y: heading, z: attitude};
+    	}
+        heading = Math.atan2(2.0*q1.y*q1.w-2.0*q1.x*q1.z , sqx - sqy - sqz + sqw);
+    	attitude = Math.asin(2.0*test/unit);
+    	bank = Math.atan2((2.0*q1.x*q1.w)-(2.0*q1.y*q1.z) , -sqx + sqy - sqz + sqw);
+    	
+		return {x: bank, y: heading, z: attitude};
 };
 
 /* === Matrix ============================================================================= */
@@ -135,9 +198,9 @@ util.matrix.unprojection = function(window, camera, cursor, depth) {
   var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, camera.fov, window.width/window.height, camera.near, camera.far); // Perspective
   var MOVEMATRIX = mat4.create();
     mat4.translate(MOVEMATRIX, MOVEMATRIX, [0.0, 0.0, -camera.zoom]);
-    mat4.rotate(MOVEMATRIX, MOVEMATRIX, camera.rot.z, [0.0, 0.0, 1.0]);
-    mat4.rotate(MOVEMATRIX, MOVEMATRIX, camera.rot.y, [0.0, 1.0, 0.0]);
     mat4.rotate(MOVEMATRIX, MOVEMATRIX, camera.rot.x, [1.0, 0.0, 0.0]);
+    mat4.rotate(MOVEMATRIX, MOVEMATRIX, camera.rot.y, [0.0, 1.0, 0.0]);
+    mat4.rotate(MOVEMATRIX, MOVEMATRIX, camera.rot.z, [0.0, 0.0, 1.0]);
     mat4.translate(MOVEMATRIX, MOVEMATRIX, [camera.pos.x, camera.pos.y, camera.pos.z]);
   var VIEWMATRIX = mat4.create();
   var MV = mat4.create(); mat4.multiply(MV, VIEWMATRIX, MOVEMATRIX);

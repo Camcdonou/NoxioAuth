@@ -73,7 +73,7 @@ Display.prototype.setupWebGL = function() {
   if(!this.createMaterial(this.game.asset.material.multi.gulm)) { return false; }
   
   if(!this.createModel(this.game.asset.model.multi.box)) { return false; }
-  if(!this.createModel(this.game.asset.model.multi.square)) { return false; }
+  if(!this.createModel(this.game.asset.model.multi.sheet)) { return false; }
   
   if(!this.createShadowFramebuffer("shadow", 512)) { return false; }
   if(!this.createFramebuffer("world", this.upscale.world)) { return false; }
@@ -296,11 +296,15 @@ Display.prototype.draw = function() {
   var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, this.camera.fov, this.window.width/this.window.height, this.camera.near, this.camera.far); // Perspective
   var MOVEMATRIX = mat4.create();
     mat4.translate(MOVEMATRIX, MOVEMATRIX, [0.0, 0.0, -this.camera.zoom]);
-    mat4.rotate(MOVEMATRIX, MOVEMATRIX, this.camera.rot.z, [0.0, 0.0, 1.0]);
-    mat4.rotate(MOVEMATRIX, MOVEMATRIX, this.camera.rot.y, [0.0, 1.0, 0.0]);
     mat4.rotate(MOVEMATRIX, MOVEMATRIX, this.camera.rot.x, [1.0, 0.0, 0.0]);
+    mat4.rotate(MOVEMATRIX, MOVEMATRIX, this.camera.rot.y, [0.0, 1.0, 0.0]);
+    mat4.rotate(MOVEMATRIX, MOVEMATRIX, this.camera.rot.z, [0.0, 0.0, 1.0]);
     mat4.translate(MOVEMATRIX, MOVEMATRIX, [this.camera.pos.x, this.camera.pos.y, this.camera.pos.z]);
   var VIEWMATRIX = mat4.create();
+  var DEROTATEMATRIX = mat4.create();
+    mat4.rotate(DEROTATEMATRIX, DEROTATEMATRIX, this.camera.rot.x, [1.0, 0.0, 0.0]);
+    mat4.rotate(DEROTATEMATRIX, DEROTATEMATRIX, this.camera.rot.y, [0.0, 1.0, 0.0]);
+    mat4.rotate(DEROTATEMATRIX, DEROTATEMATRIX, this.camera.rot.z, [0.0, 0.0, 1.0]);
 
   // We basically place the center of the shadow proj on the ground of the map and put the near clip behind us. Allows for easier centering.
   var SHADOW_MAX_RADIUS = 12.0;                       // After this point everything is shadow. Prevents cheating via hacking camera around.
@@ -385,6 +389,8 @@ Display.prototype.draw = function() {
   shadowMaterial.shader.disable(gl);
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); //Disable frame buffer
 
+  /* === Compile Dynamic Lighting Information ============================================================================ */
+  /* ===================================================================================================================== */
   var pLightLength = 0;
   var pLightPos = [];
   var pLightColor = [];
@@ -400,6 +406,12 @@ Display.prototype.draw = function() {
       pLightLength++;
     }
   }
+  if(pLightLength <= 0) {                   // To avoid empty uniform array we use this default blank light.
+    pLightLength = 0;
+    pLightPos = [0.0, 0.0, 0.0];
+    pLightColor = [0.0, 0.0, 0.0];
+    pLightRadius = [0.0];
+  }
   var uniformLightData = [
     {name: "pLightLength", data: pLightLength},
     {name: "pLightPos", data: pLightPos},
@@ -413,11 +425,13 @@ Display.prototype.draw = function() {
   gl.viewport(0, 0, (this.window.width*this.fbo.world.upscale), (this.window.height*this.fbo.world.upscale)); // Resize viewport to window size
   gl.clearColor(0.5, 0.5, 0.5, 1.0);                                                                          // Opaque grey background
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);                                                        // Clear Color and Depth from previous draw.
+  gl.enable(gl.BLEND);                                                                                        // Enable Transparency 
   this.fbo.shadow.tex.enable(gl, 5);                                                                          // Enable shadow depth texture
   var uniformData = [
     {name: "Pmatrix", data: PROJMATRIX},
     {name: "Vmatrix", data: VIEWMATRIX},
     {name: "Mmatrix", data: MOVEMATRIX},
+    {name: "Dmatrix", data: DEROTATEMATRIX},
     {name: "Lmatrix", data: LIGHTMATRIX},
     {name: "PmatrixLight", data: PROJMATRIX_SHADOW},
     {name: "Omatrix", data: OFFSETMATRIX},
@@ -444,6 +458,7 @@ Display.prototype.draw = function() {
   }
   this.fbo.shadow.tex.disable(gl, 5);       // Disable shadow depth texture
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable world framebuffer
+  gl.disable(gl.BLEND);                     // Disable Transparency 
     
   /* === Draw UI ========================================================================================================= */
   /* ===================================================================================================================== */
@@ -460,7 +475,7 @@ Display.prototype.draw = function() {
   gl.enable(gl.BLEND);                                                                                  // Enable Transparency 
   var fontMaterial = this.getMaterial("material.multi.gulm");
   var fontShader = fontMaterial.shader;
-  var squareModel = this.getModel("model.multi.square");
+  var sheetModel = this.getModel("model.multi.sheet");
   
   var ASPECT = this.window.height/this.window.width;
   var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, 0.0, 100.0,0.0*ASPECT, 100.0*ASPECT, 0.0, 1.0);
@@ -480,7 +495,7 @@ Display.prototype.draw = function() {
       {name: "size", data: [block.size.x, block.size.y]}
     ];
     block.material.shader.applyUniforms(gl, uniformBlockSize);
-    squareModel.drawDirect(gl, block.material.shader);
+    sheetModel.drawDirect(gl, block.material.shader);
     block.material.disable(gl);
     block.material.shader.disable(gl);
   }
@@ -502,7 +517,7 @@ Display.prototype.draw = function() {
         {name: "index", data: characters[i]}
       ];
       fontShader.applyUniforms(gl, uniformDataTextIndex);
-      squareModel.drawDirect(gl, fontShader);
+      sheetModel.drawDirect(gl, fontShader);
     }
   }
   fontShader.disable(gl);
@@ -523,7 +538,7 @@ Display.prototype.draw = function() {
   this.fbo.ui.tex.enable(gl, 7);                            // Enable ui FBO render texture
   var renderMaterial = this.getMaterial("material.multi.post_msaa");
   var renderShader = renderMaterial.shader;
-  var squareModel = this.getModel("model.multi.square");
+  var sheetModel = this.getModel("model.multi.sheet");
   
   var ASPECT = this.window.height/this.window.width;
   var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0);
@@ -543,7 +558,7 @@ Display.prototype.draw = function() {
   renderShader.enable(gl);
   renderShader.applyUniforms(gl, uniformDataPost);
   renderMaterial.enable(gl);
-  squareModel.drawDirect(gl, renderShader);
+  sheetModel.drawDirect(gl, renderShader);
   renderShader.disable(gl);
   renderMaterial.disable(gl);
   gl.depthMask(true);                 // Reenable depth write after post draw
@@ -555,7 +570,7 @@ Display.prototype.draw = function() {
 //  var debugTexture = {glTexture: this.fbo.shadow.tex, enable: Texture.prototype.enable, disable: Texture.prototype.disable}; /* Hackyyyy */
 //  var debugShader = this.getShader("debug");
 //  var debugMaterial = new Material("!DEBUG", debugShader, {texture0: debugTexture}); /* Even hackier */
-//  var debugModel = this.getModel("model.multi.square");
+//  var debugModel = this.getModel("model.multi.sheet");
 //  
 //  var ASPECT = this.window.height/this.window.width;
 //  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, -1.0, 1.0,-1.0*ASPECT, 1.0*ASPECT, 0.0, 1.0);

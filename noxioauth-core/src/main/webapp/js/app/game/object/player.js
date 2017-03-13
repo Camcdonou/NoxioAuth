@@ -3,6 +3,7 @@
 /* global util */
 /* global GameObject */
 /* global PointLight */
+/* global Particle */
 
 /* Define Player Object Class */
 function PlayerObject(game, oid, pos, vel) {
@@ -16,8 +17,10 @@ function PlayerObject(game, oid, pos, vel) {
   this.material = this.game.display.getMaterial("material.multi.default");
   
   this.debugEffect = new Effect([ /* @FIXME set class var as new Light might be hype? */
-    {type: "light", class: PointLight, params: ["<vec3 pos>", {r: 0.45, g: 0.5, b: 1.0, a: 1.0}, 3.0], update: function(lit){}, attachment: true},
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSound, params: ["audio/prank/blip.wav"], update: function(snd){}, attachment: false}
+    {type: "light", class: PointLight, params: ["<vec3 pos>", {r: 0.45, g: 0.5, b: 1.0, a: 1.0}, 3.0], update: function(lit){}, attachment: true, delay: 0, length: 7},
+    {type: "light", class: PointLight, params: ["<vec3 pos>", {r: 0.35, g: 0.45, b: 0.9, a: 1.0}, 2.0], update: function(lit){}, attachment: true, delay: 7, length: 7},
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSound, params: ["audio/prank/blip.wav"], update: function(snd){}, attachment: false, delay: 0, length: 33},
+    {type: "particle", class: Particle, params: [this.game, "<vec3 pos>"], update: function(prt){}, attachment: true, delay: 0, length: 14}
   ]);
 };
 
@@ -37,7 +40,7 @@ PlayerObject.prototype.update = function(data) {
 PlayerObject.prototype.getDraw = function(geometry, lights, bounds) {
   if(util.intersection.pointPoly(this.pos, bounds)) {
     var pos = {x: this.pos.x, y: this.pos.y, z: 0.0}; /* To Vec3 */
-    geometry.push({model: this.model, material: this.material, pos: pos, rot: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}});
+    geometry.push({model: this.model, material: this.material, pos: pos, rot: util.quat.create()});
     this.debugEffect.getDraw(geometry, lights, bounds);
   }
 };

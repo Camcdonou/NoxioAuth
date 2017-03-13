@@ -5,7 +5,7 @@
 /* Define Camera Class */
 function Camera() {
   this.pos = {x: 0.0, y: 0.0, z: 0.0};
-  this.rot = {x: -0.174533, y: 0.174533, z: 0.785398};
+  this.rot = {x: -0.349066, y: 0.0, z: 0.785398};
   this.zoom = 15.0;
   this.fov = 0.698132;
   this.near = 1.0;
@@ -49,6 +49,10 @@ Camera.prototype.setPos = function(pos) {
 
 Camera.prototype.setRot = function(rot) {
   this.interp.rot = rot;
+};
+
+Camera.prototype.addRot = function(rot) {
+  this.interp.rot = util.vec3.add(this.interp.rot, rot);
 };
 
 Camera.prototype.getBounds = function(aspect) {

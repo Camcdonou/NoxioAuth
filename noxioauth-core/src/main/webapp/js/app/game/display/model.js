@@ -12,9 +12,11 @@ function Model(name, vertexBuffer, indexBuffer, indexSize) {
 /* @FIXME in theory we could optimize draws by having seperate bind() and draw() calls. Might consider it in the future. */
 Model.prototype.draw = function(gl, shader, pos, rot) { /* Please end my suffering... @FIXME Quaternion... */
   var transform = [pos.x, pos.y, pos.z];
+  var rotation = [rot.x, rot.y, rot.z, rot.w];
   
   var uniformModelData = [
-    {name: "transform", data: transform}
+    {name: "transform", data: transform},
+    {name: "rotation", data: rotation}
   ];
   
   shader.applyUniforms(gl, uniformModelData); // Apply draw specific uniforms EX: position, rotation, animation state

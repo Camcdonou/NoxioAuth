@@ -123,6 +123,10 @@ NoxioGame.prototype.inputStep = function() { /* @FIXME step should do some of th
   for(var i=0;i<inputs.length;i++) {
     switch(inputs[i]) {
       case 32 : { main.net.game.send({type: "i02"}); break; } //Space
+      case 37 : { this.display.camera.addRot({x: 0.0, y: 0.0, z: 0.1}); break; } //Left /* Debug camera controls @FIXME */
+      case 39 : { this.display.camera.addRot({x: 0.0, y: 0.0, z: -0.1}); break; } //Right
+      case 38 : { this.display.camera.addRot({x: 0.1, y: 0.0, z: 0.0}); break; } //Up
+      case 40 : { this.display.camera.addRot({x: -0.1, y: 0.0, z: 0.0}); break; } //Dowhn
       case 70 : { if(obj) { obj.debugEffect.trigger({x: obj.pos.x, y: obj.pos.y, z: 0.0}, util.vec3.create()); break; } break; } // F /* @FIXME DEBUG */
       case 82 : { this.sound.getSound("audio/prank/ata.wav").play(); break; } // R /* @FIXME DEBUG */
       case 84 : { this.sound.getSound("audio/prank/ha.wav").play(); break; } // T /* @FIXME DEBUG */
