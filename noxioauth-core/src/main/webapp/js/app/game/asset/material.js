@@ -14,7 +14,7 @@ Asset.prototype.material.ui.grey = {
   name: "material.ui.grey",
   shader: "simpletrans",
   shadow: true,
-  texture0: "img/ui/grey.png",
+  texture0: "ui/grey",
 };
 
 /* Source File: white.mat */
@@ -22,7 +22,7 @@ Asset.prototype.material.ui.white = {
   name: "material.ui.white",
   shader: "simpletrans",
   shadow: true,
-  texture0: "img/ui/white.png",
+  texture0: "ui/white",
 };
 
 /* Source File: white_solid.mat */
@@ -30,7 +30,7 @@ Asset.prototype.material.ui.white_solid = {
   name: "material.ui.white_solid",
   shader: "simpletrans",
   shadow: true,
-  texture0: "img/ui/white_solid.png",
+  texture0: "ui/white_solid",
 };
 
 /* Source File: post_msaa.mat */
@@ -45,7 +45,7 @@ Asset.prototype.material.multi.gulm = {
   name: "material.multi.gulm",
   shader: "font",
   shadow: false,
-  texture0: "img/multi/gulm_sdf.png",
+  texture0: "multi/gulm_sdf",
 };
 
 /* Source File: default.mat */
@@ -53,7 +53,7 @@ Asset.prototype.material.multi.default = {
   name: "material.multi.default",
   shader: "default",
   shadow: true,
-  texture0: "img/multi/default.png",
+  texture0: "multi/default",
 };
 
 /* Source File: post.mat */
@@ -82,7 +82,7 @@ Asset.prototype.material.test.test3 = {
   name: "material.test.test3",
   shader: "test",
   shadow: true,
-  texture0: "img/test/banned.png",
+  texture0: "test/banned",
 };
 
 /* Source File: test1.mat */
@@ -90,7 +90,7 @@ Asset.prototype.material.test.test1 = {
   name: "material.test.test1",
   shader: "test",
   shadow: true,
-  texture0: "img/test/pointdown.png",
+  texture0: "test/pointdown",
 };
 
 /* Source File: test2.mat */
@@ -98,7 +98,7 @@ Asset.prototype.material.test.test2 = {
   name: "material.test.test2",
   shader: "test",
   shadow: true,
-  texture0: "img/test/fat.png",
+  texture0: "test/fat",
 };
 
 /* Source File: shockwave.mat */
@@ -106,7 +106,7 @@ Asset.prototype.material.effect.shockwave = {
   name: "material.effect.shockwave",
   shader: "particle",
   shadow: false,
-  texture0: "img/effect/shockwave.png",
+  texture0: "effect/shockwave",
 };
 
 /* Source File: spark.mat */
@@ -114,7 +114,7 @@ Asset.prototype.material.effect.spark = {
   name: "material.effect.spark",
   shader: "particle",
   shadow: false,
-  texture0: "img/effect/spark.png",
+  texture0: "effect/spark",
 };
 
 /* Source File: blipBright.mat */
@@ -122,7 +122,7 @@ Asset.prototype.material.prank.blipBright = {
   name: "material.prank.blipBright",
   shader: "particle",
   shadow: false,
-  texture0: "img/prank/blip_bright.png",
+  texture0: "prank/blip_bright",
 };
 
 /* Source File: blip.mat */
@@ -130,6 +130,6 @@ Asset.prototype.material.prank.blip = {
   name: "material.prank.blip",
   shader: "particle",
   shadow: false,
-  texture0: "img/prank/blip.png",
+  texture0: "prank/blip",
 };
 

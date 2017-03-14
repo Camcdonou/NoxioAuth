@@ -15,7 +15,7 @@ function PlayerObject(game, oid, pos, vel) {
   this.debugEffect = new Effect([ /* @FIXME Sound breaking format... */
     {type: "light", class: PointLight, params: ["<vec3 pos>", {r: 0.45, g: 0.5, b: 1.0, a: 1.0}, 3.0], update: function(lit){}, attachment: true, delay: 0, length: 3},
     {type: "light", class: PointLight, params: ["<vec3 pos>", {r: 0.45, g: 0.5, b: 1.0, a: 1.0}, 3.0], update: function(lit){lit.color.a -= 1.0/12.0; lit.rad += 0.1; }, attachment: true, delay: 3, length: 12},
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSound, params: ["audio/prank/blip.wav"], update: function(snd){}, attachment: false, delay: 0, length: 33},
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSound, params: ["prank/blip.wav"], update: function(snd){}, attachment: false, delay: 0, length: 33},
     {type: "particle", class: ParticleBlip, params: [this.game, "<vec3 pos>", "<vec3 dir>"], update: function(prt){}, attachment: true, delay: 0, length: 33}
   ]);
 };

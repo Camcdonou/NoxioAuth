@@ -64,7 +64,7 @@ Display.prototype.setupWebGL = function() {
   if(maxUniform < 64) { main.menu.error.showError("GLSL returned MAX_VERTEX_UNIFORM_VECTORS as : " + maxUniform); return false; }
   this.PL_UNIFORM_MAX = maxUniform * 0.33; this.LL_UNIFORM_MAX = maxUniform * 0.33;
   
-  if(!this.createTexture("img/multi/default.png")) { return false; }
+  if(!this.createTexture("multi/default")) { return false; }
     
   //if(!this.createShader(this.game.asset.shader.debug)) { return false; } /* @FIXME DEBUG */
   if(!this.createMaterial(this.game.asset.material.multi.default)) { return false; }
@@ -618,7 +618,7 @@ Display.prototype.getTexture = function(path) {
   if(this.createTexture(path)) { return this.getTexture(path); }
   
   main.menu.warning.show("Failed to load texture: '" + path + "'");
-  return this.getTexture("img/multi/default.png");
+  return this.getTexture("multi/default");
 };
 
 /* Returns a shader by name. If shader is not found then returns default. */

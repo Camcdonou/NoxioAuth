@@ -22,7 +22,7 @@ Sound.prototype.initWebAudio = function() {
   
   this.sounds = [];
 
-  if(!this.createSound("audio/multi/default.wav")) { return false; }
+  if(!this.createSound("multi/default.wav")) { return false; }
   
   this.loadAudio();
   
@@ -32,10 +32,11 @@ Sound.prototype.initWebAudio = function() {
 /* Preloads all required audio assets for the game. */
 Sound.prototype.loadAudio = function() {
   var paths = [
-    "audio/prank/classy.mp3",
-    "audio/prank/ata.wav",
-    "audio/prank/toriya.wav",
-    "audio/prank/ha.wav"
+    "prank/classy.wav",
+    "prank/blip.wav",
+    "prank/ata.wav",
+    "prank/toriya.wav",
+    "prank/ha.wav"
   ];
   for(var i=0;i<paths.length;i++) { this.createSound(paths[i]); }
 };
@@ -78,7 +79,7 @@ Sound.prototype.getSound = function(path) {
   if(this.createSound(path)) { return this.getSound(path); }
   
   main.menu.warning.show("Failed to load sound: '" + path + "'");
-  return this.getSound("audio/multi/default.wav");
+  return this.getSound("multi/default.wav");
 };
 
 /* Stop and unload all sounds */

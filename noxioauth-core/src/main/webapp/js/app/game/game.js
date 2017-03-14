@@ -128,9 +128,9 @@ NoxioGame.prototype.inputStep = function() { /* @FIXME step should do some of th
       case 38 : { this.display.camera.addRot({x: 0.1, y: 0.0, z: 0.0}); break; } //Up
       case 40 : { this.display.camera.addRot({x: -0.1, y: 0.0, z: 0.0}); break; } //Dowhn
       case 70 : { if(obj) { obj.debugEffect.trigger(util.vec2.toVec3(obj.pos, 1.0), util.vec3.create()); break; } break; } // F /* @FIXME DEBUG */
-      case 82 : { this.sound.getSound("audio/prank/ata.wav").play(); break; } // R /* @FIXME DEBUG */
-      case 84 : { this.sound.getSound("audio/prank/ha.wav").play(); break; } // T /* @FIXME DEBUG */
-      case 89 : { this.sound.getSound("audio/prank/toriya.wav").play(); break; } // Y /* @FIXME DEBUG */
+      case 82 : { this.sound.getSound("prank/ata.wav").play(); break; } // R /* @FIXME DEBUG */
+      case 84 : { this.sound.getSound("prank/ha.wav").play(); break; } // T /* @FIXME DEBUG */
+      case 89 : { this.sound.getSound("prank/toriya.wav").play(); break; } // Y /* @FIXME DEBUG */
       default : { break; }
     }
   }

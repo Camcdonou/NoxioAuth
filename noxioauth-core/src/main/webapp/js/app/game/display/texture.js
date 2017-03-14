@@ -8,7 +8,7 @@ function Texture(gl, glTexture, path) {
   this.path = path;
   this.img = new Image();
   this.img.onload = function() { tmp.handleTextureLoaded(gl); };
-  this.img.src = this.path;
+  this.img.src = "img/game/" + this.path + ".png";
 }
 
 /* Texture location usage:

@@ -92,7 +92,7 @@ MainUI.prototype.create = function(display) {
       pos: {x: 0.0, y: -5.2},
       size: {x: 20.0, y: 1.5},
       contains: containsProto,
-      click: function() { tmp.game.sound.setMusic(tmp.game.sound.getSound("audio/prank/classy.mp3"), true); this.text = "Hahahahaha"; }
+      click: function() { tmp.game.sound.setMusic(tmp.game.sound.getSound("prank/classy.wav"), true); this.text = "Hahahahaha"; }
     },
     {
       neutral: {

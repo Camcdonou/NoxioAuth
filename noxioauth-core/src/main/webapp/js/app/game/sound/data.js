@@ -7,7 +7,7 @@ function SoundData(context, path) {
   
   var tmp = this; /* Oh look. Javascript. */
   var request = new XMLHttpRequest();
-  request.open('GET', path, true);
+  request.open('GET', "audio/" + path, true);
   request.responseType = 'arraybuffer';
 
   // Decode asynchronously

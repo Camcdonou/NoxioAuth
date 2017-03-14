@@ -10,6 +10,13 @@ echo [-- Copy Assets --]
 rm /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/js/app/game/asset/shader.js
 rm /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/js/app/game/asset/material.js
 rm /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/js/app/game/asset/model.js
+rm -r /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/img/game/*
+rm -r /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/audio/*
+cd /home/inferno/dev/NoxioAsset/asset/texture/
+find . -iname '*.png' | cpio -pdm /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/img/game
+cd /home/inferno/dev/NoxioAsset/asset/audio/
+find . -iname '*.wav' | cpio -pdm /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/audio
+cd /home/inferno/dev/NoxioAuth
 cp /home/inferno/dev/NoxioAsset/asset/shader.js /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/js/app/game/asset/shader.js
 cp /home/inferno/dev/NoxioAsset/asset/material.js /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/js/app/game/asset/material.js
 cp /home/inferno/dev/NoxioAsset/asset/model.js /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/js/app/game/asset/model.js
