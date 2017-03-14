@@ -41,7 +41,7 @@ Display.prototype.setupWebGL = function() {
   gl.enable(gl.DEPTH_TEST);                                 // Enable depth testing
   gl.depthFunc(gl.LEQUAL);                                  // Near things obscure far things
   gl.disable(gl.BLEND);                                     // Disable transparency blend by default
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);                       // Transparency function
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);       // Transparency function
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);                        // Set clear color to black, fully opaque
   gl.clearDepth(1.0);                                       // Clear depth
@@ -163,7 +163,7 @@ Display.prototype.createMaterial = function(source) {
   if(source.texture3) { texture.texture3 = this.getTexture(source.texture3); }
   if(source.texture4) { texture.texture4 = this.getTexture(source.texture4); }
   
-  this.materials.push(new Material(source.name, shader, texture));
+  this.materials.push(new Material(source.name, shader, texture, source.shadow));
   
   return true;
 };
@@ -276,7 +276,6 @@ Display.prototype.updateFramebuffer = function(name) {
   }
 };
 
-var RXD = 0; /* @FIXME debug from lights */
 Display.prototype.draw = function() {
   /* Update Canvas Size & Camera */
   if(this.container.clientWidth < 1 || this.container.clientHeight < 1) { return; } // Draw window not visible. Don't draw.
@@ -327,8 +326,8 @@ Display.prototype.draw = function() {
     mat4.translate(LIGHTMATRIX, LIGHTMATRIX, [this.camera.pos.x, this.camera.pos.y, 0.0]);
   var LIGHTDIR = vec3.create(); vec3.set(LIGHTDIR, LIGHTMATRIX[8], LIGHTMATRIX[9], -LIGHTMATRIX[10]);
   
-  /* Collect all geometry to draw.
-     Format: {model: <Model>, material: <Material>, pos: {x: <float>, y: <float>, z: <float>}, rot: {x: <float>, y: <float>, z: <float>, w: <float>}} */
+  /* Collect & sort all geometry to draw.
+     Format: {model: <Model>, material: <Material>, uniforms: <UniformData[]>} */
   var bounds = this.camera.getBounds(this.window.height/this.window.width); // An array of 4 vec2s that defines the view area on the z=0 plane
   var geometry = [];                                                        // All game world geometry we need to draw
   var lights = [];                                                          // All lights in game world
@@ -362,7 +361,7 @@ Display.prototype.draw = function() {
       materialGroup = {material: geom.material, draws: []};
       shaderGroup.materials.push(materialGroup);
     }
-    materialGroup.draws.push({model: geom.model, pos: geom.pos, rot: geom.rot});
+    materialGroup.draws.push({model: geom.model, uniforms: geom.uniforms});
   }
   
   /* === Draw Geometry to Shadow FBO ===================================================================================== */
@@ -383,7 +382,10 @@ Display.prototype.draw = function() {
   shadowMaterial.shader.applyUniforms(gl, shadowUniformData);
   shadowMaterial.enable(gl);
   for(var i=0;i<geometry.length;i++) {
-    geometry[i].model.draw(gl, shadowMaterial.shader, geometry[i].pos, geometry[i].rot);
+    if(geometry[i].material.castShadow) {
+      shadowMaterial.shader.applyUniforms(gl, geometry[i].uniforms);
+      geometry[i].model.draw(gl, shadowMaterial.shader);
+    }
   }
   shadowMaterial.disable(gl);
   shadowMaterial.shader.disable(gl);
@@ -444,19 +446,22 @@ Display.prototype.draw = function() {
     var shaderGroup = geomSorted[i];
     shaderGroup.shader.enable(gl);
     shaderGroup.shader.applyUniforms(gl, uniformData);
-    shaderGroup.shader.applyUniforms(gl, uniformLightData); /* @FIXME Check if nesscary? */
+    shaderGroup.shader.applyUniforms(gl, uniformLightData);
     for(var j=0;j<shaderGroup.materials.length;j++) {
       var materialGroup = shaderGroup.materials[j];
       materialGroup.material.enable(gl);
+      gl.depthMask(materialGroup.material.castShadow);
       for(var k=0;k<materialGroup.draws.length;k++) {
         var draw = materialGroup.draws[k];
-        draw.model.draw(gl, shaderGroup.shader, draw.pos, draw.rot);
+        shaderGroup.shader.applyUniforms(gl, draw.uniforms);
+        draw.model.draw(gl, shaderGroup.shader);
       }
       materialGroup.material.disable(gl);
     }
     shaderGroup.shader.disable(gl);
   }
   this.fbo.shadow.tex.disable(gl, 5);       // Disable shadow depth texture
+  gl.depthMask(true);                       // Enable writing to depth buffer
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable world framebuffer
   gl.disable(gl.BLEND);                     // Disable Transparency 
     
@@ -495,7 +500,7 @@ Display.prototype.draw = function() {
       {name: "size", data: [block.size.x, block.size.y]}
     ];
     block.material.shader.applyUniforms(gl, uniformBlockSize);
-    sheetModel.drawDirect(gl, block.material.shader);
+    sheetModel.draw(gl, block.material.shader);
     block.material.disable(gl);
     block.material.shader.disable(gl);
   }
@@ -517,7 +522,7 @@ Display.prototype.draw = function() {
         {name: "index", data: characters[i]}
       ];
       fontShader.applyUniforms(gl, uniformDataTextIndex);
-      sheetModel.drawDirect(gl, fontShader);
+      sheetModel.draw(gl, fontShader);
     }
   }
   fontShader.disable(gl);
@@ -558,7 +563,7 @@ Display.prototype.draw = function() {
   renderShader.enable(gl);
   renderShader.applyUniforms(gl, uniformDataPost);
   renderMaterial.enable(gl);
-  sheetModel.drawDirect(gl, renderShader);
+  sheetModel.draw(gl, renderShader);
   renderShader.disable(gl);
   renderMaterial.disable(gl);
   gl.depthMask(true);                 // Reenable depth write after post draw

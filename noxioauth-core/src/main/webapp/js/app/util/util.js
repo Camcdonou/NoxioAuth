@@ -76,11 +76,24 @@ util.vec2.average = function(ary) {
   return util.vec2.scale(c, 1/ary.length);
 };
 
+util.vec2.toVec3 = function(a, z) {
+  return {x: a.x, y: a.y, z: z};
+};
+
+util.vec2.toArray = function(a) {
+  return [a.x, a.y];
+};
+
+
 /* === Vec3 =============================================================================== */
 /* ======================================================================================== */
 
 util.vec3.create = function() {
   return {x: 0.0, y: 0.0, z: 0.0};
+};
+
+util.vec3.random = function() {
+  return util.vec3.normalize({x: (Math.random()*2.0)-1.0, y: (Math.random()*2.0)-1.0, z: (Math.random()*2.0)-1.0});
 };
 
 util.vec3.add = function(a, b) {
@@ -137,12 +150,25 @@ util.vec3.toQuat = function(a) {
   return {x: x, y: y, z: z, w: w};
 };
 
+util.vec3.toVec4 = function(a, w) {
+  return {x: a.x, y: a.y, z: a.z, w: w};
+};
+
+util.vec3.toArray = function(a) {
+  return [a.x, a.y, a.z];
+};
+
 /* === Vec4 =============================================================================== */
 /* ======================================================================================== */
 
 util.vec4.create = function() {
   return {x: 0.0, y: 0.0, z: 0.0, w: 1.0};
 };
+
+util.vec4.toArray = function(a) {
+  return [a.x, a.y, a.z, a.w];
+};
+
 
 /* === Quaternion ========================================================================= */
 /* ======================================================================================== */

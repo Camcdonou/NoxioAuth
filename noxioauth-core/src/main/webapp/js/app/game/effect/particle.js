@@ -4,19 +4,56 @@
 /* global Function */
 
 /* Define Particle Abstract Class */
-function Particle(game, pos) {
+/* Particle is an abstract class and should never actually be created. 
+ * Javascript doesn't really have any equivalent to 'abstract' so I'm 
+ * just going to remind you that if you instaniate this class I will
+ * come find you irl.
+ */
+function Particle(game, pos, dir) {  /* @FIXME maybe change DIRection to VELocity? */
   this.game = game;
   this.pos = pos;
+  this.dir = dir;
   
-  this.model = this.game.display.getModel("model.multi.square");
-  this.material = this.game.display.getMaterial("material.prank.blip");
+  this.delayed = [];    // Particles waiting to be active
+  this.particles = [];  // Active particles
+  this.create();
 }
 
-Particle.prototype.step = function(pos, dir) {
-  this.pos = pos;
+/* Creates the particles, override to define a particle system */
+/* Particles Spec: {model: <Model>, material: <Material>, delay: <int frames>, length: <int frames>, update: <function>, properties: <obj>} */
+Particle.prototype.create = function() {
+  
 };
 
+/* Final. Inherit this. */
+Particle.prototype.pushPart = function(part) {
+  if(part.delay > 0) { this.delayed.push(part); }
+  else { this.particles.push(part); }
+};
+
+/* Final. Inherit this. */
+/* if <vec3 pos> and <vec3 dir> are passed then they update the particle systems values. */
+Particle.prototype.step = function(pos, dir) {
+  /* Update position if passed */
+  if(pos) { this.pos = pos; }
+  if(dir) { this.dir = dir; }
+  /* Update Particles */
+  for(var i=0;i<this.particles.length;i++) {
+    if(--this.particles[i].length <= 0) { this.particles.splice(i,1); }
+    else {
+      this.particles[i].update(pos, dir);
+    }
+  }
+  /* Spawn Delayed */
+  for(var i=0;i<this.delayed.length;i++) {
+    if(--this.delayed[i].delay <= 0) {
+      this.particles.push(this.delayed[i]);
+      this.delayed.splice(i,1);
+    }
+  }
+};
+
+/* Override. Gets draw data for this particle system. */
 Particle.prototype.getDraw = function(geometry, lights, bounds) {
-    var pos = {x: this.pos.x, y: this.pos.y, z: 1.0}; /* To Vec3 */ /* @FIXME SCALE */
-    geometry.push({model: this.model, material: this.material, pos: pos, rot: util.quat.create()});
+    /* NO. */
 };

@@ -6,13 +6,14 @@ Asset.prototype.material = {};
 Asset.prototype.material.ui = {};
 Asset.prototype.material.multi = {};
 Asset.prototype.material.test = {};
+Asset.prototype.material.effect = {};
 Asset.prototype.material.prank = {};
 
 /* Source File: grey.mat */
 Asset.prototype.material.ui.grey = {
   name: "material.ui.grey",
   shader: "simpletrans",
-  shadow: "true",
+  shadow: true,
   texture0: "img/ui/grey.png",
 };
 
@@ -20,7 +21,7 @@ Asset.prototype.material.ui.grey = {
 Asset.prototype.material.ui.white = {
   name: "material.ui.white",
   shader: "simpletrans",
-  shadow: "true",
+  shadow: true,
   texture0: "img/ui/white.png",
 };
 
@@ -28,30 +29,22 @@ Asset.prototype.material.ui.white = {
 Asset.prototype.material.ui.white_solid = {
   name: "material.ui.white_solid",
   shader: "simpletrans",
-  shadow: "true",
+  shadow: true,
   texture0: "img/ui/white_solid.png",
-};
-
-/* Source File: particle.mat */
-Asset.prototype.material.multi.particle = {
-  name: "material.multi.particle",
-  shader: "particle",
-  shadow: "true",
-  texture0: "img/multi/default.png",
 };
 
 /* Source File: post_msaa.mat */
 Asset.prototype.material.multi.post_msaa = {
   name: "material.multi.post_msaa",
   shader: "post_msaa",
-  shadow: "false",
+  shadow: false,
 };
 
 /* Source File: gulm.mat */
 Asset.prototype.material.multi.gulm = {
   name: "material.multi.gulm",
   shader: "font",
-  shadow: "false",
+  shadow: false,
   texture0: "img/multi/gulm_sdf.png",
 };
 
@@ -59,7 +52,7 @@ Asset.prototype.material.multi.gulm = {
 Asset.prototype.material.multi.default = {
   name: "material.multi.default",
   shader: "default",
-  shadow: "true",
+  shadow: true,
   texture0: "img/multi/default.png",
 };
 
@@ -67,28 +60,28 @@ Asset.prototype.material.multi.default = {
 Asset.prototype.material.multi.post = {
   name: "material.multi.post",
   shader: "post",
-  shadow: "false",
+  shadow: false,
 };
 
 /* Source File: shadow.mat */
 Asset.prototype.material.multi.shadow = {
   name: "material.multi.shadow",
   shader: "shadow",
-  shadow: "true",
+  shadow: true,
 };
 
 /* Source File: post_fxaa.mat */
 Asset.prototype.material.multi.post_fxaa = {
   name: "material.multi.post_fxaa",
   shader: "post_fxaa",
-  shadow: "false",
+  shadow: false,
 };
 
 /* Source File: test3.mat */
 Asset.prototype.material.test.test3 = {
   name: "material.test.test3",
   shader: "test",
-  shadow: "true",
+  shadow: true,
   texture0: "img/test/banned.png",
 };
 
@@ -96,7 +89,7 @@ Asset.prototype.material.test.test3 = {
 Asset.prototype.material.test.test1 = {
   name: "material.test.test1",
   shader: "test",
-  shadow: "true",
+  shadow: true,
   texture0: "img/test/pointdown.png",
 };
 
@@ -104,15 +97,39 @@ Asset.prototype.material.test.test1 = {
 Asset.prototype.material.test.test2 = {
   name: "material.test.test2",
   shader: "test",
-  shadow: "true",
+  shadow: true,
   texture0: "img/test/fat.png",
+};
+
+/* Source File: shockwave.mat */
+Asset.prototype.material.effect.shockwave = {
+  name: "material.effect.shockwave",
+  shader: "particle",
+  shadow: false,
+  texture0: "img/effect/shockwave.png",
+};
+
+/* Source File: spark.mat */
+Asset.prototype.material.effect.spark = {
+  name: "material.effect.spark",
+  shader: "particle",
+  shadow: false,
+  texture0: "img/effect/spark.png",
+};
+
+/* Source File: blipBright.mat */
+Asset.prototype.material.prank.blipBright = {
+  name: "material.prank.blipBright",
+  shader: "particle",
+  shadow: false,
+  texture0: "img/prank/blip_bright.png",
 };
 
 /* Source File: blip.mat */
 Asset.prototype.material.prank.blip = {
   name: "material.prank.blip",
   shader: "particle",
-  shadow: "true",
+  shadow: false,
   texture0: "img/prank/blip.png",
 };
 

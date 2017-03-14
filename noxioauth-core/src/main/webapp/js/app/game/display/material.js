@@ -2,10 +2,11 @@
 /* global main */
 
 /* Define Material Class */
-function Material(name, shader, texture) {
+function Material(name, shader, texture, castShadow) {
   this.name = name;
   this.shader = shader;
   this.texture = texture; /* @FIXME The way this is compiled and stored is kind of weird, maybe change it to some kind of array with name ids or w/e */
+  this.castShadow = castShadow;
 }
 
 Material.prototype.enable = function(gl) {

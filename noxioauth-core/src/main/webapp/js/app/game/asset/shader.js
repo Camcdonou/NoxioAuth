@@ -156,21 +156,19 @@ Asset.prototype.shader.particle = {
   attributes: [
     {type: "vec3", name: "position"},
     {type: "vec3", name: "texcoord"},
-    {type: "vec3", name: "normal"},
   ],
   uniforms: [
     {type: "mat4", name: "Pmatrix"},
     {type: "mat4", name: "Vmatrix"},
     {type: "mat4", name: "Mmatrix"},
     {type: "mat4", name: "Dmatrix"},
-    {type: "mat4", name: "Lmatrix"},
-    {type: "mat4", name: "PmatrixLight"},
-    {type: "mat4", name: "Omatrix"},
     {type: "vec3", name: "transform"},
+    {type: "float", name: "scale"},
     {type: "sampler2D", name: "texture0"},
+    {type: "vec4", name: "color"},
   ],
-  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\nattribute vec3 normal;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\nuniform mat4 Dmatrix;\n\nuniform mat4 Lmatrix;\nuniform mat4 PmatrixLight;\nuniform mat4 Omatrix;\n\nuniform vec3 transform;\n\nvarying vec3 vPos;\nvarying vec3 vUV;\nvarying vec3 vNormal;\nvarying vec3 vLightPos;\n\nvoid main(void) {\n  vPos = (vec4(position*2.0, 1.0)*Dmatrix).xyz+transform;\n  vec4 cPos = vec4(vPos, 1.0);\n  vec4 lightPos = Lmatrix*Omatrix*cPos;\n\n  lightPos=PmatrixLight*lightPos;\n\n  vec3 lightPosDNC=lightPos.xyz/lightPos.w;\n\n  vLightPos=vec3(0.5,0.5,0.5)+lightPosDNC*0.5;\n  vNormal=normal;\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
-  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\n\nvarying vec3 vPos;\nvarying vec3 vUV;\nvarying vec3 vNormal;\nvarying vec3 vLightPos;\n\nvoid main(void) {\n  gl_FragColor = texture2D(texture0, vUV.st);\n}\n",
+  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\nuniform mat4 Dmatrix;\n\nuniform vec3 transform;\nuniform float scale;\n\nvarying vec3 vPos;\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4((vec4(position*scale, 1.0)*Dmatrix).xyz+transform, 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\n\nuniform vec4 color;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  gl_FragColor = texture2D(texture0, vUV.st)*color;\n}\n",
 };
 
 /* Source File: testg */

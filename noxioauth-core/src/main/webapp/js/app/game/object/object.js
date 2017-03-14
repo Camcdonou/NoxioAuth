@@ -16,6 +16,7 @@ function GameObject(game, oid, pos, vel) {
   this.game = game;
   
   this.oid = oid;
+  
   this.pos = pos;
   this.vel = vel;
 };

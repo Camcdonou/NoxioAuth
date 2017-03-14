@@ -4,7 +4,7 @@
 /* Define Light Classes */
 function PointLight(pos, color, rad) {
   this.pos = pos;
-  this.color = color;
+  this.color = {r: color.r, g: color.g, b: color.b, a: color.a}; /* @FIXME change to vec4 xyzw */
   this.rad = rad;
 };
 

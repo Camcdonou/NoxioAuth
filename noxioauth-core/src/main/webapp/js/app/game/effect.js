@@ -56,13 +56,6 @@ Effect.prototype.spawn = function(comp, pos, dir) {
 
 /* Updates components of the effect. */
 Effect.prototype.step = function(pos, dir) {
-  /* Spawn Delayed */
-  for(var i=0;i<this.delayed.length;i++) {
-    if(--this.delayed[i].delay <= 0) {
-      this.spawn(this.delayed[i].component, pos, dir);
-      this.delayed.splice(i, 1);
-    }
-  }
   /* Update Sounds */
   for(var i=0;i<this.sound.length;i++) {
     var snd = this.sound[i];
@@ -86,8 +79,16 @@ Effect.prototype.step = function(pos, dir) {
     var prt = this.particle[i];
     if(--prt.length <= 0) { this.particle.splice(i, 1); }
     else {
-      prt.obj.step(pos, dir);
+      if(prt.attachment) { prt.obj.step(pos, dir); }
+      else { prt.obj.step(); }
       prt.update(prt.obj);
+    }
+  }
+  /* Spawn Delayed */
+  for(var i=0;i<this.delayed.length;i++) {
+    if(--this.delayed[i].delay <= 0) {
+      this.spawn(this.delayed[i].component, pos, dir);
+      this.delayed.splice(i, 1);
     }
   }
 };

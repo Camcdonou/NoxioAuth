@@ -10,30 +10,9 @@ function Model(name, vertexBuffer, indexBuffer, indexSize) {
 };
 
 /* @FIXME in theory we could optimize draws by having seperate bind() and draw() calls. Might consider it in the future. */
-Model.prototype.draw = function(gl, shader, pos, rot) { /* Please end my suffering... @FIXME Quaternion... */
-  var transform = [pos.x, pos.y, pos.z];
-  var rotation = [rot.x, rot.y, rot.z, rot.w];
-  
-  var uniformModelData = [
-    {name: "transform", data: transform},
-    {name: "rotation", data: rotation}
-  ];
-  
-  shader.applyUniforms(gl, uniformModelData); // Apply draw specific uniforms EX: position, rotation, animation state
-  
+Model.prototype.draw = function(gl, shader) {
   gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
   if(shader.attributes.position) { gl.vertexAttribPointer(shader.attributes.position.location, 3, gl.FLOAT, false, 36, 0); } 
-  if(shader.attributes.texcoord) { gl.vertexAttribPointer(shader.attributes.texcoord.location, 3, gl.FLOAT, false, 36, 12); }
-  if(shader.attributes.normal) { gl.vertexAttribPointer(shader.attributes.normal.location, 3, gl.FLOAT, false, 36, 24); }
-  
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-  gl.drawElements(gl.TRIANGLES, this.indexSize, gl.UNSIGNED_SHORT, 0);
-};
-
-/* Draws without any transformation calculations. Used when rendering FBO textures to screen. */
-Model.prototype.drawDirect = function(gl, shader) { 
-  gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-  if(shader.attributes.position) { gl.vertexAttribPointer(shader.attributes.position.location, 3, gl.FLOAT, false, 36, 0); }
   if(shader.attributes.texcoord) { gl.vertexAttribPointer(shader.attributes.texcoord.location, 3, gl.FLOAT, false, 36, 12); }
   if(shader.attributes.normal) { gl.vertexAttribPointer(shader.attributes.normal.location, 3, gl.FLOAT, false, 36, 24); }
   
