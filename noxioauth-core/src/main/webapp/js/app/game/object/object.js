@@ -21,14 +21,7 @@ function GameObject(game, oid, pos, vel) {
   this.vel = vel;
 };
 
-GameObject.prototype.setPos = function(pos) {
-  this.pos = pos;
-};
-
-GameObject.prototype.setVel = function(vel) {
-  this.vel = vel;
-};
-
+/* Updates object properties with server data */
 GameObject.prototype.update = function(data) {
   var pos = util.vec2.parse(data.shift());
   var vel = util.vec2.parse(data.shift());
@@ -37,6 +30,30 @@ GameObject.prototype.update = function(data) {
   this.setVel(vel);
 };
 
+/* Steps object by <float delta> of one frame forward. */
+/* Uses prediction to determine how properties update. */
+GameObject.prototype.step = function(delta) {
+  var nxtpos = util.vec2.add(this.pos, this.vel);
+  this.pos = util.vec2.lerp(pos, nxtpos, delta);
+};
+
+GameObject.prototype.setPos = function(pos) {
+  this.pos = pos;
+};
+
+GameObject.prototype.setVel = function(vel) {
+  this.vel = vel;
+};
+
 GameObject.prototype.getDraw = function(geometry, lights, bounds) {
   /* NO. */
+};
+
+/* Called directly before deleting an object. */
+GameObject.prototype.destroy = function() {
+  
+};
+
+GameObject.prototype.getType = function() {
+  return "obj";
 };

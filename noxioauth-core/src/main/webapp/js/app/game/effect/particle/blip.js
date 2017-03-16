@@ -53,7 +53,8 @@ ParticleBlip.prototype.getDraw = function(geometry, lights, bounds) {
     var partUniformData = [
       {name: "transform", data: util.vec3.toArray(part.properties.pos)},
       {name: "scale", data: part.properties.scale},
-      {name: "color", data: util.vec4.toArray(part.properties.color)}
+      {name: "color", data: util.vec4.toArray(part.properties.color)},
+      {name: "rotation", data: 0.0}
     ];
     geometry.push({model: part.model, material: part.material, uniforms: partUniformData});
   }

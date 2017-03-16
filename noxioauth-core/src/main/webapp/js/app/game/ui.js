@@ -8,7 +8,9 @@ function GameUI(game) {
   this.elements = [
     new MainUI(this.game, "main"),
     new LogUI(this.game, "log"),
-    new DebugUI(this.game, "debug")
+    new DebugUI(this.game, "debug"),
+    new RespawnUI(this.game, "respawn"),
+    new MeterUI(this.game, "meter")
   ];
 }
 

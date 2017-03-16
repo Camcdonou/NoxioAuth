@@ -33,6 +33,9 @@ Sound.prototype.initWebAudio = function() {
 Sound.prototype.loadAudio = function() {
   var paths = [
     "prank/classy.wav",
+    "prank/uheh.wav",
+    "prank/oowaa.wav",
+    "prank/cumown.wav",
     "prank/blip.wav",
     "prank/ata.wav",
     "prank/toriya.wav",

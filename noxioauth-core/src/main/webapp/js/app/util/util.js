@@ -11,7 +11,8 @@ var util = {
   quat : {},
   matrix: {},
   intersection: {},
-  text : {}
+  text : {},
+  time: {}
 };
 
 /* === Vec2 =============================================================================== */
@@ -66,6 +67,11 @@ util.vec2.dot = function(a, b) {
 
 util.vec2.inverse = function(a) {
   return {x: -1.0*a.x, y: -1.0*a.y};
+};
+
+/* Linear interpolation from a@(i=0.0) to b@(i=1.0) */
+util.vec2.lerp = function(a, b, i) {
+  return util.vec2.add(util.vec2.scale(a, 1.0-i), util.vec2.scale(b, i));
 };
 
 util.vec2.average = function(ary) {
@@ -297,4 +303,12 @@ util.intersection.pointPoly = function(p, poly) {
 /* Used for measuring text before drawing in OpenGL. */
 util.text.lengthOnScreen = function(text, fontSize) {
   return (text.length * 0.9)*fontSize;
+};
+
+
+/* === Time =============================================================================== */
+/* ======================================================================================== */
+
+util.time.now = function() {
+  return new Date().getTime();
 };

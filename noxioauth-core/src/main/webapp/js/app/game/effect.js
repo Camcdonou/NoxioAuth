@@ -102,3 +102,10 @@ Effect.prototype.getDraw = function(geometry, lights, bounds) {
     this.particle[i].obj.getDraw(geometry, lights, bounds);
   }
 };
+
+/* Destroys this effect. Stops sound and unloads components. */
+Effect.prototype.destroy = function() {
+  for(var i=0;i<this.sound.length;i++) {
+    this.sound[i].obj.stop();
+  }
+};

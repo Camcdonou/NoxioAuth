@@ -13,7 +13,7 @@ Asset.prototype.material.prank = {};
 Asset.prototype.material.ui.grey = {
   name: "material.ui.grey",
   shader: "simpletrans",
-  shadow: true,
+  shadow: false,
   texture0: "ui/grey",
 };
 
@@ -21,7 +21,7 @@ Asset.prototype.material.ui.grey = {
 Asset.prototype.material.ui.white = {
   name: "material.ui.white",
   shader: "simpletrans",
-  shadow: true,
+  shadow: false,
   texture0: "ui/white",
 };
 
@@ -29,7 +29,7 @@ Asset.prototype.material.ui.white = {
 Asset.prototype.material.ui.white_solid = {
   name: "material.ui.white_solid",
   shader: "simpletrans",
-  shadow: true,
+  shadow: false,
   texture0: "ui/white_solid",
 };
 
@@ -109,6 +109,22 @@ Asset.prototype.material.effect.shockwave = {
   texture0: "effect/shockwave",
 };
 
+/* Source File: star.mat */
+Asset.prototype.material.effect.star = {
+  name: "material.effect.star",
+  shader: "particle",
+  shadow: false,
+  texture0: "effect/star",
+};
+
+/* Source File: speedline.mat */
+Asset.prototype.material.effect.speedline = {
+  name: "material.effect.speedline",
+  shader: "particle",
+  shadow: false,
+  texture0: "effect/speedline",
+};
+
 /* Source File: spark.mat */
 Asset.prototype.material.effect.spark = {
   name: "material.effect.spark",
@@ -125,11 +141,27 @@ Asset.prototype.material.prank.blipBright = {
   texture0: "prank/blip_bright",
 };
 
+/* Source File: blipIcon.mat */
+Asset.prototype.material.prank.blipIcon = {
+  name: "material.prank.blipIcon",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "prank/blip_icon",
+};
+
 /* Source File: blip.mat */
 Asset.prototype.material.prank.blip = {
   name: "material.prank.blip",
   shader: "particle",
   shadow: false,
   texture0: "prank/blip",
+};
+
+/* Source File: dashIcon.mat */
+Asset.prototype.material.prank.dashIcon = {
+  name: "material.prank.dashIcon",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "prank/dash_icon",
 };
 

@@ -164,10 +164,11 @@ Asset.prototype.shader.particle = {
     {type: "mat4", name: "Dmatrix"},
     {type: "vec3", name: "transform"},
     {type: "float", name: "scale"},
+    {type: "float", name: "rotation"},
     {type: "sampler2D", name: "texture0"},
     {type: "vec4", name: "color"},
   ],
-  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\nuniform mat4 Dmatrix;\n\nuniform vec3 transform;\nuniform float scale;\n\nvarying vec3 vPos;\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4((vec4(position*scale, 1.0)*Dmatrix).xyz+transform, 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\nuniform mat4 Dmatrix;\n\nuniform vec3 transform;\nuniform float scale;\nuniform float rotation;\n\nvarying vec3 vPos;\nvarying vec3 vUV;\n\nvec3 rotate(vec3 v, float r) {\n    float cDegrees = r;\n    float cosDegrees = cos(cDegrees);\n    float sinDegrees = sin(cDegrees);\n\n    float x = (v.x * cosDegrees) + (v.y * sinDegrees);\n    float y = (v.x * -sinDegrees) + (v.y * cosDegrees);\n\n    return vec3(x, y, v.z);\n}\n\nvoid main(void) {\n  vec4 cPos = vec4((vec4(rotate(position, rotation)*scale, 1.0)*Dmatrix).xyz+transform, 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
   fragment: "precision mediump float;\n\nuniform sampler2D texture0;\n\nuniform vec4 color;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  gl_FragColor = texture2D(texture0, vUV.st)*color;\n}\n",
 };
 

@@ -26,7 +26,7 @@ GameState.prototype.newGame = function(packet) {
 };
 
 GameState.prototype.gameData = function(packet) {
-  return main.game.update(packet); /* Returns false if failed to parse. */
+  return main.game.handlePacket(packet); /* Returns false if failed to parse. */
 };
 
 GameState.prototype.joinGameError = function(packet) {
