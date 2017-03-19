@@ -238,6 +238,7 @@ NoxioGame.prototype.draw = function() {
   this.step();                                                                          // Step objects by delta time
   var obj = this.getObject(this.control);                                               // Get object player controls
   if(obj) { this.display.camera.setPos({x: -obj.pos.x, y: -obj.pos.y, z: 0.0}); }       // Update camera to player object position
+  this.sound.update();                                                                  // Update 3d audio center
   this.display.draw();                                                                  // Draw game
 
   /* DEBUG FPS STUFF */

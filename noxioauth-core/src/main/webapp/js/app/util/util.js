@@ -140,6 +140,16 @@ util.vec3.lerp = function(a, b, i) {
   return util.vec3.add(util.vec3.scale(a, 1.0-i), util.vec3.scale(b, i));
 };
 
+util.vec3.rotateZ = function(a, r) {
+    var cosDegrees = Math.cos(r);
+    var sinDegrees = Math.sin(r);
+
+    var x = (a.x * cosDegrees) + (a.y * sinDegrees);
+    var y = (a.x * -sinDegrees) + (a.y * cosDegrees);
+
+    return {x: x, y: y, z: a.z};
+};
+
 util.vec3.toQuat = function(a) {
   // Assuming the angles are in radians.
   var c1 = Math.cos(a.x);

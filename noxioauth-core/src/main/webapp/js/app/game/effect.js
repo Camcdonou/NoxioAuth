@@ -45,7 +45,8 @@ Effect.prototype.spawn = function(comp, pos, dir) {
   var gen;
   if(comp.type === "sound") {
     gen = {obj: comp.func.apply(comp.class, paramgen), update: comp.update, attachment: comp.attachment, length: comp.length};
-    gen.obj.play();
+    if(gen.attachment) { gen.obj.position(pos); } /* @FIXME Let's talk about how this can cause exceptions... */
+    gen.obj.play(pos);
   }
   else {
     paramgen.unshift(null);
@@ -61,7 +62,7 @@ Effect.prototype.step = function(pos, dir) {
     var snd = this.sound[i];
     if(--snd.length <= 0) { this.sound.splice(i, 1); }
     else {
-      if(snd.attachment && snd.obj.pos) { snd.obj.pos = pos; }
+      if(snd.attachment) { snd.obj.position(pos); }
       snd.update(snd.obj);
     }
   }
