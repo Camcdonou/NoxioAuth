@@ -3,6 +3,7 @@
 /* global util */
 /* global Function */
 
+/* NOTE: This class might be best described as "magic". You were warned. */
 /* Define Effect Handler Class */
 function Effect(components) {   
   this.components = components;   // List of things to create when trigger() is called
@@ -45,7 +46,7 @@ Effect.prototype.spawn = function(comp, pos, dir) {
   var gen;
   if(comp.type === "sound") {
     gen = {obj: comp.func.apply(comp.class, paramgen), update: comp.update, attachment: comp.attachment, length: comp.length};
-    if(gen.attachment) { gen.obj.position(pos); } /* @FIXME Let's talk about how this can cause exceptions... */
+    if(gen.attachment) { gen.obj.position(pos); }
     gen.obj.play(pos);
   }
   else {

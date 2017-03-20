@@ -2,68 +2,62 @@
 /* global main */
 
 /* Define Sound Instance Classes */
-function SoundInstance(context, path, soundData, gain) { /* @FIXME clean up this garbage! */
+function SoundInstance(context, path, soundData, gain, volume) {
   this.context = context;
   this.path = path;
   this.data = soundData;
   this.ready = false;
+  this.played = false;
   
   if(!this.data.ready()) {
-    main.menu.warning.show("Attempted to instance partially loaded sound data.");
+    main.menu.warning.show("Attempted to instance partially loaded sound data: '" + path + "'");
     return;
   }
   
-  this.create(gain);
+  this.create(volume);
+  if(gain) { this.volume(gain); }
 }
 
-SoundInstance.prototype.create = function(gain) {
+SoundInstance.prototype.create = function(volume) {
   this.source = this.context.createBufferSource();      // Creates source
   this.source.buffer = this.data.buffer;                // Set source audio
   this.gain = this.context.createGain();
-  this.gain.gain.value = gain;
+  this.gain.gain.value = 1.0;
   this.source.connect(this.gain);                       // Source -> Gain
-  this.gain.connect(this.context.destination);          // Gain -> Speakers
+  this.gain.connect(volume);                            // Gain -> Global Volume
   this.ready = true;
 };
 
-SoundInstance.prototype.gain = function(gain) {
-  this.gain.gain.value = gain;
+SoundInstance.prototype.orientation = function() { /* UNSUPPORTED */ };
+SoundInstance.prototype.position = function() { /* UNSUPPORTED */ };
+
+SoundInstance.prototype.volume = function(gain) {
+  if(this.ready) { this.gain.gain.value = gain; }
 };
 
 SoundInstance.prototype.play = function() {
-  if(this.data.ready() && this.ready) { this.source.start(0); }
-  else if(this.data.ready() && !this.ready) { this.create(); }
+  if(this.ready && !this.played) { this.source.start(0); this.played = true; }
+  else if(this.played) { main.menu.warning.show("Attempted to replay sound instance: '" + this.path + "'"); }
 };
 
 SoundInstance.prototype.stop = function() {
-  if(this.data.ready() && this.ready) { this.source.stop(); }
-  else if(this.data.ready() && !this.ready) { this.create(); }
+  if(this.ready && this.played) { this.source.stop(); }
 };
 
 SoundInstance.prototype.loop = function(loop) {
-  this.source.loop = loop;
+  if(this.ready) { this.source.loop = loop; }
 };
 
-/* Define World Sound Instance Classes */
-function WorldSoundInstance(context, path, soundData, gain) {
-  this.context = context;
-  this.path = path;
-  this.data = soundData;
-  this.ready = false;
-  
-  if(!this.data.ready()) {
-    main.menu.warning.show("Attempted to instance partially loaded sound data.");
-    return;
-  }
-  
-  this.create(gain);
+/* Define Spatial Sound Instance Classes */
+function SpatialSoundInstance(context, path, soundData, gain, volume) {
+  SoundInstance.call(this, context, path, soundData, gain, volume);
 }
 
-WorldSoundInstance.prototype.create = function(gain) {
+SpatialSoundInstance.prototype.create = function(volume) {
   this.source = this.context.createBufferSource();      // Creates source
   this.source.buffer = this.data.buffer;                // Set sourcea audio
   this.gain = this.context.createGain();
-  this.gain.gain.value = gain;
+  this.gain.gain.value = 1.0;
   this.panner = this.context.createPanner();
   this.panner.panningModel = 'HRTF';
   this.panner.distanceModel = 'linear';
@@ -75,14 +69,14 @@ WorldSoundInstance.prototype.create = function(gain) {
   this.panner.coneOuterGain = 0;
   this.source.connect(this.gain);                      // Source -> Gain
   this.gain.connect(this.panner);                      // Gain -> Panner
-  this.panner.connect(this.context.destination);       // Panner -> Speakers
+  this.panner.connect(volume);                         // Panner -> Global Volume
   this.panner.setPosition(1.0, 0.0, 0.0);
   this.panner.setOrientation(1.0, 0.0, 0.0);
   
   this.ready = true;
 };
 
-WorldSoundInstance.prototype.orientation = function(orn) {
+SpatialSoundInstance.prototype.orientation = function(orn) {
   if(this.data.ready() && this.ready) {
     if(this.panner.orientationX) {
       this.panner.orientationX.value = orn.x;
@@ -92,7 +86,7 @@ WorldSoundInstance.prototype.orientation = function(orn) {
   }
 };
 
-WorldSoundInstance.prototype.position = function(pos) {
+SpatialSoundInstance.prototype.position = function(pos) {
   if(this.data.ready() && this.ready) {
     if(this.panner.positionX) {
       this.panner.positionX.value = pos.x;
@@ -103,20 +97,7 @@ WorldSoundInstance.prototype.position = function(pos) {
   }
 };
 
-SoundInstance.prototype.gain = function(gain) {
-  this.gain.gain.value = gain;
-};
-
-WorldSoundInstance.prototype.play = function() {
-  if(this.data.ready() && this.ready) { this.source.start(0); }
-  else if(this.data.ready() && !this.ready) { this.create(); }
-};
-
-WorldSoundInstance.prototype.stop = function() {
-  if(this.data.ready() && this.ready) { this.source.stop(); }
-  else if(this.data.ready() && !this.ready) { this.create(); }
-};
-
-WorldSoundInstance.prototype.loop = function(loop) {
-  this.source.loop = loop;
-};
+SpatialSoundInstance.prototype.volume = SoundInstance.prototype.volume;
+SpatialSoundInstance.prototype.play = SoundInstance.prototype.play;
+SpatialSoundInstance.prototype.stop = SoundInstance.prototype.stop;
+SpatialSoundInstance.prototype.loop = SoundInstance.prototype.loop;

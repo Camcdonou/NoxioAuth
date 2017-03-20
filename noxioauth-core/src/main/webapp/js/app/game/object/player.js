@@ -26,30 +26,30 @@ function PlayerObject(game, oid, pos, vel) {
   this.blipCooldown = 0;
   this.dashCooldown = 0;
   
-  this.blipEffect = new Effect([ /* @FIXME Sound breaking format... */
+  this.blipEffect = new Effect([
     {type: "light", class: PointLight, params: ["<vec3 pos>", {r: 0.45, g: 0.5, b: 1.0, a: 1.0}, 3.0], update: function(lit){}, attachment: true, delay: 0, length: 3},
     {type: "light", class: PointLight, params: ["<vec3 pos>", {r: 0.45, g: 0.5, b: 1.0, a: 1.0}, 3.0], update: function(lit){lit.color.a -= 1.0/12.0; lit.rad += 0.1; }, attachment: true, delay: 3, length: 12},
-    {type: "sound", class: this.game.sound, func: this.game.sound.getWorldSound, params: ["prank/blip.wav", 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33},
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/blip.wav", 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33},
     {type: "particle", class: ParticleBlip, params: [this.game, "<vec3 pos>", "<vec3 dir>"], update: function(prt){}, attachment: true, delay: 0, length: 33}
   ]);
   
-  this.dashEffect = new Effect([ /* @FIXME Sound breaking format... */
-    {type: "sound", class: this.game.sound, func: this.game.sound.getWorldSound, params: ["prank/ata.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
+  this.dashEffect = new Effect([
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/ata.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
     {type: "light", class: PointLight, params: ["<vec3 pos>", {r: 0.45, g: 0.5, b: 1.0, a: 0.75}, 2.5], update: function(lit){lit.color.a -= 1.0/45.0; lit.rad += 0.05; }, attachment: false, delay: 0, length: 30},
     {type: "particle", class: ParticleDash, params: [this.game, "<vec3 pos>", "<vec3 dir>"], update: function(prt){}, attachment: true, delay: 0, length: 60}
   ]);
   
-  this.tauntEffect = new Effect([ /* @FIXME Sound breaking format... */
-    {type: "sound", class: this.game.sound, func: this.game.sound.getWorldSound, params: ["prank/cumown.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33}
+  this.tauntEffect = new Effect([
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/cumown.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33}
   ]);
   
-  this.stunEffect = new Effect([ /* @FIXME Sound breaking format... */
-    {type: "sound", class: this.game.sound, func: this.game.sound.getWorldSound, params: ["prank/uheh.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
+  this.stunEffect = new Effect([
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/uheh.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
     {type: "particle", class: ParticleStun, params: [this.game, "<vec3 pos>", "<vec3 dir>"], update: function(prt){}, attachment: true, delay: 0, length: 45}
   ]);
   
-  this.deathEffect = new Effect([ /* @FIXME Sound breaking format... */
-    {type: "sound", class: this.game.sound, func: this.game.sound.getWorldSound, params: ["prank/oowaa.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 99}
+  this.deathEffect = new Effect([
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/oowaa.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 99}
   ]);
 };
 

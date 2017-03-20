@@ -5,6 +5,7 @@
 /* Define Game Sound Class */
 function Sound(game) {
   this.game = game;
+  this.volume; /* @FIXME Settings. */
   
   if(!this.initWebAudio()) { this.initFallback(); }
 }
@@ -19,6 +20,10 @@ Sound.prototype.initWebAudio = function() {
     main.menu.warning.show("WebAudio not supported. Sound disabled.");
     return false;
   }
+  
+  this.volume = this.context.createGain();
+  this.volume.gain.value = 1.0;
+  this.volume.connect(this.context.destination); // Global Volume -> Speakers
   
   this.sounds = [];
 
@@ -73,9 +78,10 @@ Sound.prototype.update = function() {
   }
 };
 
-Sound.prototype.stopMusic = function() {
-  if(this.music) { this.music.stop(); this.music = undefined; }
-};
+/* Set Master Volume */
+Sound.prototype.setVolume = function(v) { this.volume.gain.value = v; };
+/* Get Master Volume */
+Sound.prototype.getVolume = function() { return this.volume.gain.value; };
 
 Sound.prototype.setMusic = function(sound, loop) {
   if(this.music) { 
@@ -85,6 +91,10 @@ Sound.prototype.setMusic = function(sound, loop) {
   this.music = sound;
   this.music.loop(loop);
   this.music.play();
+};
+
+Sound.prototype.stopMusic = function() {
+  if(this.music) { this.music.stop(); this.music = undefined; }
 };
 
 /* Returns boolean. True if created succesfully and false if failed to create. */
@@ -98,7 +108,7 @@ Sound.prototype.createSound = function(path) {
 Sound.prototype.getSound = function(path, gain) {
   for(var i=0;i<this.sounds.length;i++) {
     if(this.sounds[i].path === path) {
-      return new SoundInstance(this.context, path, this.sounds[i], gain);
+      return new SoundInstance(this.context, path, this.sounds[i], gain, this.volume);
     }
   }
   
@@ -108,17 +118,18 @@ Sound.prototype.getSound = function(path, gain) {
   return this.getSound("multi/default.wav");
 };
 
-Sound.prototype.getWorldSound = function(path, gain) {
+/* Gets the sound at the path given. If it's not already loaded it loads it. If file not found returns default sound. */
+Sound.prototype.getSpatialSound = function(path, gain) {
   for(var i=0;i<this.sounds.length;i++) {
     if(this.sounds[i].path === path) {
-      return new WorldSoundInstance(this.context, path, this.sounds[i], gain);
+      return new SpatialSoundInstance(this.context, path, this.sounds[i], gain, this.volume);
     }
   }
   
-  if(this.createSound(path)) { return this.getWorldSound(path); }
+  if(this.createSound(path)) { return this.getSpatialSound(path); }
   
   main.menu.warning.show("Failed to load sound: '" + path + "'");
-  return this.getWorldSound("multi/default.wav");
+  return this.getSpatialSound("multi/default.wav");
 };
 
 /* Stop and unload all sounds */
