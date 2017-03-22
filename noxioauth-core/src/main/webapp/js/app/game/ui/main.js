@@ -67,9 +67,28 @@ MainUI.prototype.create = function(display) {
         material: display.getMaterial("material.ui.white"),
         text: [0.0, 0.0, 0.0]
       },
-      text: "Mute Sound",
+      text: "Reset Game",
       fontSize: 1.5,
       pos: {x: 0.0, y: -3.7},
+      size: {x: 20.0, y: 1.5},
+      contains: containsProto,
+      tog: true,
+      click: function() {
+        main.net.game.send({type: "i06"});
+      }
+    },
+    {
+      neutral: {
+        material: display.getMaterial("material.ui.grey"),
+        text: [1.0, 1.0, 1.0]
+      },
+      hover: {
+        material: display.getMaterial("material.ui.white"),
+        text: [0.0, 0.0, 0.0]
+      },
+      text: "Mute Sound",
+      fontSize: 1.5,
+      pos: {x: 0.0, y: -5.2},
       size: {x: 20.0, y: 1.5},
       contains: containsProto,
       tog: true,
@@ -90,7 +109,7 @@ MainUI.prototype.create = function(display) {
       },
       text: "Enable Debug",
       fontSize: 1.5,
-      pos: {x: 0.0, y: -5.2},
+      pos: {x: 0.0, y: -6.7},
       size: {x: 20.0, y: 1.5},
       contains: containsProto,
       click: function() {
@@ -110,7 +129,7 @@ MainUI.prototype.create = function(display) {
       },
       text: "Enable Cheats",
       fontSize: 1.5,
-      pos: {x: 0.0, y: -6.7},
+      pos: {x: 0.0, y: -8.2},
       size: {x: 20.0, y: 1.5},
       contains: containsProto,
       click: function() { tmp.game.sound.setMusic(tmp.game.sound.getSound("prank/classy.wav", 1.0), true); this.text = "Hahahahaha"; }
@@ -126,7 +145,7 @@ MainUI.prototype.create = function(display) {
       },
       text: "Leave Game",
       fontSize: 1.5,
-      pos: {x: 0.0, y: -8.2},
+      pos: {x: 0.0, y: -9.7},
       size: {x: 20.0, y: 1.5},
       contains: containsProto,
       click: function(button) { tmp.game.leave(); }

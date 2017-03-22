@@ -69,7 +69,6 @@ PackHand.prototype.message = function(packet) {
 /* PacketG16 */
 PackHand.prototype.gameOver = function(packet) {
   this.game.gameOver = true;
-  this.game.gameWinner = packet.player;
 };
 
 /* PacketG18 */

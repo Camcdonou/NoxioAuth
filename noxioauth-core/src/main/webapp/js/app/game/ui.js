@@ -10,7 +10,8 @@ function GameUI(game) {
     new LogUI(this.game, "log"),
     new DebugUI(this.game, "debug"),
     new RespawnUI(this.game, "respawn"),
-    new MeterUI(this.game, "meter")
+    new MeterUI(this.game, "meter"),
+    new EndUI(this.game, "end")
   ];
 }
 

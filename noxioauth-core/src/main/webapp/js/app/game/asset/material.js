@@ -6,6 +6,7 @@ Asset.prototype.material = {};
 Asset.prototype.material.ui = {};
 Asset.prototype.material.multi = {};
 Asset.prototype.material.test = {};
+Asset.prototype.material.final = {};
 Asset.prototype.material.effect = {};
 Asset.prototype.material.prank = {};
 
@@ -38,6 +39,7 @@ Asset.prototype.material.multi.post_msaa = {
   name: "material.multi.post_msaa",
   shader: "post_msaa",
   shadow: false,
+  texture0: "final/space",
 };
 
 /* Source File: gulm.mat */
@@ -99,6 +101,41 @@ Asset.prototype.material.test.test2 = {
   shader: "test",
   shadow: true,
   texture0: "test/fat",
+};
+
+/* Source File: grid.mat */
+Asset.prototype.material.final.grid = {
+  name: "material.final.grid",
+  shader: "final_grid",
+  shadow: false,
+  texture0: "final/grid",
+};
+
+/* Source File: ceiling.mat */
+Asset.prototype.material.final.ceiling = {
+  name: "material.final.ceiling",
+  shader: "final",
+  shadow: true,
+  texture0: "final/stage_dark",
+  texture1: "final/edge_color",
+};
+
+/* Source File: floor.mat */
+Asset.prototype.material.final.floor = {
+  name: "material.final.floor",
+  shader: "final",
+  shadow: true,
+  texture0: "final/stage",
+  texture1: "final/edge_color",
+};
+
+/* Source File: wall.mat */
+Asset.prototype.material.final.wall = {
+  name: "material.final.wall",
+  shader: "final",
+  shadow: true,
+  texture0: "final/stage",
+  texture1: "final/edge_color",
 };
 
 /* Source File: shockwave.mat */

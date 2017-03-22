@@ -114,8 +114,8 @@ NoxioGame.prototype.update = function(packet) {
   var obj = this.getObject(this.control);
   var respawnUI = this.ui.getElement("respawn"); 
   var meterUI = this.ui.getElement("meter");
-  if(!obj) { respawnUI.show(); meterUI.hide(); }
-  else {
+  if(!obj && !this.gameOver) { respawnUI.show(); meterUI.hide(); }
+  else if(!this.gameOver) {
     respawnUI.hide();
     if(obj.getType() === "obj.player") {
       var blipScalar = 1.0-Math.max(Math.min(obj.blipCooldown/obj.BLIP_COOLDOWN_MAX, 1.0), 0.0);
@@ -123,6 +123,12 @@ NoxioGame.prototype.update = function(packet) {
       meterUI.meters(blipScalar, dashScalar, 0.0);
       meterUI.show();
     }
+  }
+  else {
+    var endUI = this.ui.getElement("end");
+    respawnUI.hide();
+    meterUI.hide();
+    endUI.show();
   }
   
   /* === DEBUG BLOCK START ==================== */

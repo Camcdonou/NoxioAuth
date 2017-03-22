@@ -425,7 +425,7 @@ Display.prototype.draw = function() {
   /* ===================================================================================================================== */
   gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.world.fb);                                                      // Enable world framebuffer
   gl.viewport(0, 0, (this.window.width*this.fbo.world.upscale), (this.window.height*this.fbo.world.upscale)); // Resize viewport to window size
-  gl.clearColor(0.5, 0.5, 0.5, 1.0);                                                                          // Opaque grey background
+  gl.clearColor(0.0, 0.0, 0.0, 0.0);                                                                          // Clear black backdrop
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);                                                        // Clear Color and Depth from previous draw.
   gl.enable(gl.BLEND);                                                                                        // Enable Transparency 
   this.fbo.shadow.tex.enable(gl, 5);                                                                          // Enable shadow depth texture
