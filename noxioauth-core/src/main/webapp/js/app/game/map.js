@@ -10,6 +10,7 @@ function Map(display, data) {
   this.collision = data.collision;
 };
 
+/* index 0 is always treated as a blank space. in map files define it as undefined,undefined; */
 Map.prototype.loadPallete = function(display, tileList) {
   var pallete = [];
   for(var i=0;i<tileList.length;i++) {
@@ -23,6 +24,7 @@ Map.prototype.loadPallete = function(display, tileList) {
 Map.prototype.getDraw = function(geometry, bounds) {
   for(var j=0;j<this.size.y;j++) {
     for(var i=0;i<this.size.x;i++) {
+      if(this.data[j][i] === 0) { continue; }
       if(!util.intersection.pointPoly({x: i, y: j}, bounds)) { continue; }
       var tileUniformData = [
         {name: "transform", data: [i, j, 0.0]}

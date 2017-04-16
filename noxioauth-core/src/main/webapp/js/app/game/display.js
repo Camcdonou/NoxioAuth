@@ -18,7 +18,7 @@ function Display(game) {
 Display.prototype.initFallback = function() {
   /* Reset Canvas */
   this.gl = undefined;
-  this.container.innerHTML = "<!-- Fallback Mode --><canvas id='canvas' width='320' height='240'>Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.<canvas>";
+  this.container.innerHTML = "<!-- Fallback Mode --><canvas id='canvas' width='320' height='240'>Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.</canvas>";
   this.window = document.getElementById("canvas");
   this.game.window = this.window;
 };
