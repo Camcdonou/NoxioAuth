@@ -79,6 +79,13 @@ Asset.prototype.material.multi.post_fxaa = {
   shadow: false,
 };
 
+/* Source File: debug.mat */
+Asset.prototype.material.multi.debug = {
+  name: "material.multi.debug",
+  shader: "debug",
+  shadow: false,
+};
+
 /* Source File: test3.mat */
 Asset.prototype.material.test.test3 = {
   name: "material.test.test3",

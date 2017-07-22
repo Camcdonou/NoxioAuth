@@ -263,15 +263,15 @@ Asset.prototype.shader.debug = {
   name: "debug",
   attributes: [
     {type: "vec3", name: "position"},
-    {type: "vec3", name: "texcoord"},
   ],
   uniforms: [
     {type: "mat4", name: "Pmatrix"},
     {type: "mat4", name: "Vmatrix"},
+    {type: "mat4", name: "Mmatrix"},
     {type: "vec3", name: "transform"},
-    {type: "sampler2D", name: "texture0"},
+    {type: "vec3", name: "color"},
   ],
-  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\n\nuniform vec3 transform;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4(position+transform, 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*cPos;\n}\n",
-  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  gl_FragColor = texture2D(texture0, vUV.st);\n}\n",
+  vertex: "precision mediump float;\n\nattribute vec3 position;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\n\nvoid main(void) {\n  vec4 cPos = vec4(position+transform, 1.0);\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n\nuniform vec3 color;\n\nvoid main(void) {\n  gl_FragColor = vec4(color, 1.0);\n}\n",
 };
 

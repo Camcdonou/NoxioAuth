@@ -5,9 +5,13 @@
 function Map(display, data) {
   if(!display.gl) { return; } /* If no GL then no nothing */
   this.pallete = this.loadPallete(display, data.tileSet);
+  this.doodadPallete = this.loadPallete(display, data.doodadSet);
+    
   this.size = {x: data.bounds[0], y: data.bounds[1]};
   this.data = data.map;
-  this.collision = data.collision;
+  this.collision = {floor: data.floor, wall: data.wall};
+  this.doodads = data.doodads;
+  this.spawns = data.spawns;
 };
 
 /* index 0 is always treated as a blank space. in map files define it as undefined,undefined; */
