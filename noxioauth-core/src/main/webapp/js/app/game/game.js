@@ -67,6 +67,7 @@ NoxioGame.prototype.handlePacket = function(packet) {
   switch(packet.type) {
     /* Ingame Type Packets gxx */
     case "g10" : { this.packHand.gameDataUpdate(packet); return true; }
+    case "g14" : { this.packHand.score(packet); return true; }
     case "g15" : { this.packHand.message(packet); return true; }
     case "g16" : { this.packHand.gameOver(packet); return true; }
     case "g18" : { this.packHand.gameRules(packet); return true; }
@@ -171,7 +172,7 @@ NoxioGame.prototype.sendInput = function() { /* @FIXME step should do some of th
   
   for(var i=0;i<inputs.length;i++) {
     switch(inputs[i]) {
-      case 32 : { main.net.game.send({type: "i02"}); break; } //Space
+      //case 32 : { main.net.game.send({type: "i02"}); break; } //Space
       default : { break; }
     }
   }
@@ -181,9 +182,11 @@ NoxioGame.prototype.sendInput = function() { /* @FIXME step should do some of th
   if(this.input.keyboard.keys[39]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: -0.01}); } //Right
   if(this.input.keyboard.keys[38]) { this.display.camera.addRot({x: 0.01, y: 0.0, z: 0.0}); } //Up
   if(this.input.keyboard.keys[40]) { this.display.camera.addRot({x: -0.01, y: 0.0, z: 0.0}); } //Down
+  if(this.input.keyboard.keys[32]) { if(obj) { main.net.game.send({type: "i05", ability: "jump"}); } } // SPACE /* @FIXME DEBUG */
   if(this.input.keyboard.keys[70]) { if(obj) { main.net.game.send({type: "i05", ability: "blip"}); } } // F /* @FIXME DEBUG */
   if(this.input.keyboard.keys[16]) { if(obj) { main.net.game.send({type: "i05", ability: "dash"}); } } // Shift /* @FIXME DEBUG */
   if(this.input.keyboard.keys[84]) { if(obj) { main.net.game.send({type: "i05", ability: "taunt"}); } } // T /* @FIXME DEBUG */
+  if(this.input.keyboard.keys[17] || !obj) { this.ui.getElement("score").show(); } else { this.ui.getElement("score").hide(); } // CTRL /* @FIXME DEBUG */
   
   if(obj !== undefined) {
     var near = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 0.0);
@@ -202,6 +205,7 @@ NoxioGame.prototype.sendInput = function() { /* @FIXME step should do some of th
     else { main.net.game.send({type: "i01", pos: norm}); }
   }
   else {
+    if(this.input.mouse.lmb) { main.net.game.send({type: "i02"}); }
     main.net.game.send({type: "i01", pos: this.lastMouse});
   }
 };

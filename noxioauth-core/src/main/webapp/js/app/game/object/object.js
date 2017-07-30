@@ -19,6 +19,9 @@ function GameObject(game, oid, pos, vel) {
   
   this.pos = pos;
   this.vel = vel;
+  
+  this.height = 0.0;
+  this.vspeed = 0.0;
 };
 
 /* Updates object properties with server data */
@@ -43,6 +46,11 @@ GameObject.prototype.setPos = function(pos) {
 
 GameObject.prototype.setVel = function(vel) {
   this.vel = vel;
+};
+
+GameObject.prototype.setHeight = function(height, vspeed) {
+  this.height = height;
+  this.vspeed = vspeed;
 };
 
 GameObject.prototype.getDraw = function(geometry, lights, bounds) {

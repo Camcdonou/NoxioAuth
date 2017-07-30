@@ -61,6 +61,17 @@ PackHand.prototype.playerControl = function(packet) {
   this.game.control = packet.oid;
 };
 
+/* PacketG14 */
+PackHand.prototype.score = function(packet) {
+  var scoreUI = this.game.ui.getElement("score");
+  var title = {title: packet.gametype, description: packet.description};
+  var data = [];
+  for(var i=0;i<packet.scores.length;i++) {
+    data.push({name: packet.scores[i].user, obj: 0, kill: packet.scores[i].kills, death: packet.scores[i].deaths, sper: packet.scores[i].kills/packet.scoreToWin});
+  }
+  scoreUI.update(title, data);
+};
+
 /* PacketG15 */
 PackHand.prototype.message = function(packet) {
   this.game.ui.getElement("log").message(packet.message);
@@ -68,6 +79,8 @@ PackHand.prototype.message = function(packet) {
 
 /* PacketG16 */
 PackHand.prototype.gameOver = function(packet) {
+  var endUI = this.game.ui.getElement("end");
+  endUI.create(packet.message); // Regenerate end screen with server message.
   this.game.gameOver = true;
 };
 

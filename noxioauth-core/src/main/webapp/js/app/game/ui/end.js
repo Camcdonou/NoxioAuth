@@ -7,7 +7,7 @@ function EndUI(game, name) {
   this.game = game;
   this.name = name;
   
-  this.create(this.game.display);
+  this.create("Game Over!");
   
   this.hidden = true;
   this.interactable = false;
@@ -22,13 +22,13 @@ EndUI.prototype.hide = function() {
   this.hidden = true;
 };
 
-EndUI.prototype.create = function(display) {
-  var TEXT_MESSAGE = "Game Over!";
-  var FONT_SIZE = 5.0;
+EndUI.prototype.create = function(message) {
+  var TEXT_MESSAGE = message;
+  var FONT_SIZE = 3.0;
   var txtLength = util.text.lengthOnScreen(TEXT_MESSAGE, FONT_SIZE);
   this.blocks = [
     {
-      material: display.getMaterial("material.ui.grey"),
+      material: this.game.display.getMaterial("material.ui.grey"),
       pos: {x: 0.0, y: 45.0},
       size: {x: 100.0, y: FONT_SIZE}
     }

@@ -23,7 +23,7 @@ RespawnUI.prototype.hide = function() {
 };
 
 RespawnUI.prototype.create = function(display) {
-  var TEXT_MESSAGE = "Press [Space] to respawn!";
+  var TEXT_MESSAGE = "Press [Left Mouse] to respawn!";
   var FONT_SIZE = 3.0;
   var txtLength = util.text.lengthOnScreen(TEXT_MESSAGE, FONT_SIZE);
   this.blocks = [

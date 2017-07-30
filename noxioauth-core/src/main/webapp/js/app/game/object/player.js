@@ -14,8 +14,8 @@ function PlayerObject(game, oid, pos, vel) {
   this.model = this.game.display.getModel("model.multi.smallBox");
   this.material = this.game.display.getMaterial("material.multi.default");
   
-  this.MAX_SPEED = 0.025;        // Max movement speed
-  this.FRICTION = 0.88;          // Friction Scalar
+  this.MAX_SPEED = 0.0375;        // Max movement speed
+  this.FRICTION = 0.725;          // Friction Scalar
   
   this.look = {x: 0.0, y: 1.0};  // Normalized direction player is facing
   this.speed = 0.0;              // Current scalar of max movement speed <0.0 to 1.0>
@@ -43,6 +43,10 @@ function PlayerObject(game, oid, pos, vel) {
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/cumown.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33}
   ]);
   
+  this.jumpEffect = new Effect([
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/huf.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33}
+  ]);
+  
   this.stunEffect = new Effect([
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/uheh.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
     {type: "particle", class: ParticleStun, params: [this.game, "<vec3 pos>", "<vec3 dir>"], update: function(prt){}, attachment: true, delay: 0, length: 45}
@@ -56,16 +60,20 @@ function PlayerObject(game, oid, pos, vel) {
 PlayerObject.prototype.update = function(data) {
   var pos = util.vec2.parse(data.shift());
   var vel = util.vec2.parse(data.shift());
+  var height = parseFloat(data.shift());
+  var vspeed = parseFloat(data.shift());  
   var look = util.vec2.parse(data.shift());
   var speed = parseFloat(data.shift());
   var effects = data.shift().split(",");
   
   this.setPos(pos);
   this.setVel(vel);
+  this.setHeight(height, vspeed);
   this.setLook(look);
   this.setSpeed(speed);
   for(var i=0;i<effects.length-1;i++) {
     switch(effects[i]) {
+      case "jump" : { this.jump(); break; }
       case "blip" : { this.blip(); break; }
       case "dash" : { this.dash(); break; }
       case "taunt" : { this.taunt(); break; }
@@ -93,6 +101,11 @@ PlayerObject.prototype.step = function(delta) {
 };
 
 /* @FIXME DEBUG GAMEPLAY TEST */
+PlayerObject.prototype.jump = function() {
+  this.jumpEffect.trigger(util.vec2.toVec3(this.pos, 0.5), util.vec2.toVec3(this.vel, 0.0));
+};
+
+/* @FIXME DEBUG GAMEPLAY TEST */
 PlayerObject.prototype.blip = function() {
   this.blipEffect.trigger(util.vec2.toVec3(this.pos, 0.5), util.vec2.toVec3(this.vel, 0.0));
   this.blipCooldown = this.BLIP_COOLDOWN_MAX;
@@ -116,6 +129,7 @@ PlayerObject.prototype.stun = function() {
 
 PlayerObject.prototype.setPos = GameObject.prototype.setPos;
 PlayerObject.prototype.setVel = GameObject.prototype.setVel;
+PlayerObject.prototype.setHeight = GameObject.prototype.setHeight;
 
 PlayerObject.prototype.setLook = function(look) {
   this.look = look;
@@ -128,7 +142,7 @@ PlayerObject.prototype.setSpeed = function(speed) {
 PlayerObject.prototype.getDraw = function(geometry, lights, bounds) {
   if(util.intersection.pointPoly(this.pos, bounds)) {
     var playerUniformData = [
-      {name: "transform", data: [this.pos.x, this.pos.y, 0.0]}
+      {name: "transform", data: [this.pos.x, this.pos.y, this.height]}
     ];
     geometry.push({model: this.model, material: this.material, uniforms: playerUniformData});
     this.blipEffect.getDraw(geometry, lights, bounds);

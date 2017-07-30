@@ -11,6 +11,7 @@ function GameUI(game) {
     new DebugUI(this.game, "debug"),
     new RespawnUI(this.game, "respawn"),
     new MeterUI(this.game, "meter"),
+    new ScoreUI(this.game, "score"),
     new EndUI(this.game, "end")
   ];
 }
