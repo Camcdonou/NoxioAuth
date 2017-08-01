@@ -330,12 +330,16 @@ Display.prototype.draw = function() {
      Format: {model: <Model>, material: <Material>, uniforms: <UniformData[]>} */
   var bounds = this.camera.getBounds(this.window.height/this.window.width); // An array of 4 vec2s that defines the view area on the z=0 plane
   var geometry = [];                                                        // All game world geometry we need to draw
+  var decals = [];                                                          // All decals to apply to world
   var lights = [];                                                          // All lights in game world
   var preCalcBounds = util.matrix.expandPolygon(bounds, 5.0);               // Slightly innacurate way to precalc radius of tiles so we can just test a point
   this.game.map.getDraw(geometry, preCalcBounds); /* @FIXME optimize? */
   for(var i=0;i<this.game.objects.length;i++) {
     this.game.objects[i].getDraw(geometry, lights, bounds);
   }
+  
+  /* DEBUG @TODO: MEMES */
+  if(this.game.objects[0]) { decals.push(new Decal(this.game, this.getMaterial("material.effect.decal.test"), {x: this.game.objects[0].pos.x, y: this.game.objects[0].pos.y, z: this.game.objects[0].height}, 0.0)); }
   
   /* Sort geometry by shader -> material -> draws */
   var geomSorted = [];
@@ -442,7 +446,7 @@ Display.prototype.draw = function() {
     {name: "shadowMaxRadius", data: SHADOW_MAX_RADIUS},
     {name: "texture5", data: 5}
   ];
-  for(var i=0;i<geomSorted.length;i++) {
+  for(var i=0;i<geomSorted.length;i++) {                                          // Draws world/particles
     var shaderGroup = geomSorted[i];
     shaderGroup.shader.enable(gl);
     shaderGroup.shader.applyUniforms(gl, uniformData);
@@ -459,6 +463,23 @@ Display.prototype.draw = function() {
       materialGroup.material.disable(gl);
     }
     shaderGroup.shader.disable(gl);
+  }
+  for(var i=0;i<decals.length;i++) {                                              // Draws decals
+    var decal = decals[i];
+    var uniformDecal = [
+      {name: "dPos", data: [decal.pos.x, decal.pos.y, decal.pos.z]}
+    ];
+    decal.material.shader.enable(gl);
+    decal.material.enable(gl);
+    decal.material.shader.applyUniforms(gl, uniformData);
+    decal.material.shader.applyUniforms(gl, uniformLightData);
+    decal.material.shader.applyUniforms(gl, uniformDecal);
+    for(var j=0;j<geometry.length;j++) {
+      decal.material.shader.applyUniforms(gl, geometry[j].uniforms);
+      geometry[j].model.draw(gl, decal.material.shader);
+    }
+    decal.material.disable(gl);
+    decal.material.shader.disable(gl);
   }
   this.fbo.shadow.tex.disable(gl, 5);       // Disable shadow depth texture
   gl.depthMask(true);                       // Enable writing to depth buffer

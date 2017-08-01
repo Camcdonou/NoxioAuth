@@ -1,6 +1,7 @@
 "use strict";
 /* global main */
 /* global mat4 */
+/* global vec4 */
 /* global GLU */
 
 /* Various utility/math functions */
@@ -255,6 +256,25 @@ util.matrix.unprojection = function(window, camera, cursor, depth) {
     
   if(!success) { return {x: 0.0, y: 0.0, z: 0.0}; /* @FIXME error!*/ }
   return {x: modelPointArrayResults[0], y: modelPointArrayResults[1], z: modelPointArrayResults[2]};
+};
+
+util.matrix.projection = function(window, camera, coord) { 
+  var VIEWPORT = [0, 0, window.width, window.height];
+  var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, camera.fov, window.width/window.height, camera.near, camera.far); // Perspective
+  var MOVEMATRIX = mat4.create();
+    mat4.translate(MOVEMATRIX, MOVEMATRIX, [0.0, 0.0, -camera.zoom]);
+    mat4.rotate(MOVEMATRIX, MOVEMATRIX, camera.rot.x, [1.0, 0.0, 0.0]);
+    mat4.rotate(MOVEMATRIX, MOVEMATRIX, camera.rot.y, [0.0, 1.0, 0.0]);
+    mat4.rotate(MOVEMATRIX, MOVEMATRIX, camera.rot.z, [0.0, 0.0, 1.0]);
+    mat4.translate(MOVEMATRIX, MOVEMATRIX, [camera.pos.x, camera.pos.y, camera.pos.z]);
+  var VIEWMATRIX = mat4.create();
+  var MV = mat4.create(); mat4.multiply(MV, VIEWMATRIX, MOVEMATRIX);
+  var MVP = mat4.create(); mat4.multiply(MVP, PROJMATRIX, MV);
+  
+  var COORDINATE = vec4.create(); vec4.set(COORDINATE, coord.x, coord.y, coord.z, 1.0);
+  var PROJECTION = vec4.create(); mat4.multiply(PROJECTION, MVP, COORDINATE);
+  
+  return {x: PROJECTION[0]/PROJECTION[3], y: PROJECTION[1]/PROJECTION[3]};
 };
 
 /* Vec2[x] poly, float distance */

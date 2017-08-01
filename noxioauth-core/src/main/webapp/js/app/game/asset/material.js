@@ -8,6 +8,7 @@ Asset.prototype.material.multi = {};
 Asset.prototype.material.test = {};
 Asset.prototype.material.final = {};
 Asset.prototype.material.effect = {};
+Asset.prototype.material.effect.decal = {};
 Asset.prototype.material.prank = {};
 
 /* Source File: grey.mat */
@@ -159,6 +160,14 @@ Asset.prototype.material.effect.star = {
   shader: "particle",
   shadow: false,
   texture0: "effect/star",
+};
+
+/* Source File: test.mat */
+Asset.prototype.material.effect.decal.test = {
+  name: "material.effect.decal.test",
+  shader: "decal",
+  shadow: false,
+  texture0: "multi/default",
 };
 
 /* Source File: speedline.mat */

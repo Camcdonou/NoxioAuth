@@ -115,6 +115,7 @@ NoxioGame.prototype.update = function(packet) {
   var obj = this.getObject(this.control);
   var respawnUI = this.ui.getElement("respawn"); 
   var meterUI = this.ui.getElement("meter");
+  var nameUI = this.ui.getElement("name"); nameUI.show(); // Currently always shows!
   if(!obj && !this.gameOver) { respawnUI.show(); meterUI.hide(); }
   else if(!this.gameOver) {
     respawnUI.hide();

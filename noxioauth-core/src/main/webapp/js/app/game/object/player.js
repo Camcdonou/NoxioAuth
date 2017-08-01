@@ -64,6 +64,7 @@ PlayerObject.prototype.update = function(data) {
   var vspeed = parseFloat(data.shift());  
   var look = util.vec2.parse(data.shift());
   var speed = parseFloat(data.shift());
+  var name = data.shift();
   var effects = data.shift().split(",");
   
   this.setPos(pos);
@@ -71,6 +72,7 @@ PlayerObject.prototype.update = function(data) {
   this.setHeight(height, vspeed);
   this.setLook(look);
   this.setSpeed(speed);
+  this.name = !name ? undefined : name; 
   for(var i=0;i<effects.length-1;i++) {
     switch(effects[i]) {
       case "jump" : { this.jump(); break; }

@@ -151,6 +151,23 @@ Asset.prototype.shader.post = {
   fragment: "precision mediump float;\n\nuniform sampler2D texture6;\nuniform sampler2D texture7;\n\nvarying vec2 vUVworld;\nvarying vec2 vUVui;\n\nvoid main(void) {\n  vec4 world = texture2D(texture6, vUVworld);\n  vec4 ui = texture2D(texture7, vUVui);\n  vec4 color = ((1.0 - ui.a) * world) + (ui * ui.a);\n  gl_FragColor = vec4(color.rgb, 1.0);\n}\n",
 };
 
+/* Source File: decalg */
+Asset.prototype.shader.decal = {
+  name: "decal",
+  attributes: [
+    {type: "vec3", name: "position"},
+  ],
+  uniforms: [
+    {type: "mat4", name: "Pmatrix"},
+    {type: "mat4", name: "Vmatrix"},
+    {type: "mat4", name: "Mmatrix"},
+    {type: "vec3", name: "transform"},
+    {type: "vec3", name: "dPos"},
+  ],
+  vertex: "precision mediump float;\n\nattribute vec3 position;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\n\nvarying vec3 vPos;\n\nvoid main(void) {\n  vPos = position+transform;\n  vec4 cPos = vec4(vPos, 1.0);\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n\nuniform vec3 dPos;\n\nvarying vec3 vPos;\n\nvoid main(void) {\n  vec3 fmag = vPos - dPos;\n  float dist = sqrt((fmag.x*fmag.x)+(fmag.y*fmag.y)+(fmag.z*fmag.z));\n  if(dist < 2.0) { gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); }\n  else { gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0); }\n}\n",
+};
+
 /* Source File: defaultg */
 Asset.prototype.shader.default = {
   name: "default",

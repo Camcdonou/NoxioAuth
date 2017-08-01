@@ -6,13 +6,14 @@ function GameUI(game) {
   this.game = game;
   if(!this.game.display.gl) { return; } /* If no GL then no nothing */
   this.elements = [
-    new MainUI(this.game, "main"),
+    new NameUI(this.game, "name"),
+    new MeterUI(this.game, "meter"),
     new LogUI(this.game, "log"),
     new DebugUI(this.game, "debug"),
-    new RespawnUI(this.game, "respawn"),
-    new MeterUI(this.game, "meter"),
     new ScoreUI(this.game, "score"),
-    new EndUI(this.game, "end")
+    new RespawnUI(this.game, "respawn"),
+    new EndUI(this.game, "end"),
+    new MainUI(this.game, "main")
   ];
 }
 
