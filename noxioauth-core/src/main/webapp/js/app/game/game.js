@@ -30,6 +30,7 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   this.SERVER_TICK_RATE = 33;         // Number of milliseconds per server tick
   this.lastDelta = util.time.now();   // Number of milliseconds since last server update() or step()
   this.objects = [];                  // All active game objects
+  this.effects = [];                  // Active effects in the world space
   
   this.control = -1;                  // OID of object that the player controls. ( -1 is null )
   this.lastMouse = {x: 0.0, y: 1.0};  // Last valid mouse direction sent to server
@@ -154,6 +155,10 @@ NoxioGame.prototype.step = function() {
   if(delta > 1.0) { main.menu.warning.show("Delta Time exceeded 1.0"); } /* @FIXME DEBUG */
   delta = Math.min(delta, 1.0);
   this.lastDelta = util.time.now();           // Update last delta first to avoid small time offsets
+  for(var i=0;i<this.effects.length;i++) {
+    if(this.effects[i].effect.active()) { this.effects[i].effect.step(util.vec2.toVec3(this.effects[i].pos, 0.0), {x: 0.0, y: 0.0, z: 0.0}); }
+    else { this.effects.splice(i--, 1); }
+  }
   for(var i=0;i<this.objects.length;i++) {
     this.objects[i].step(delta);
   }
@@ -235,6 +240,9 @@ NoxioGame.prototype.deleteObject = function(oid) {
   for(var i=0;i<this.objects.length;i++) {
     if(this.objects[i].oid === oid) {
       this.objects[i].destroy();
+      for(var j=0;j<this.objects[i].effects.length;j++) {
+        if(this.objects[i].effects[j].active()) { this.effects.push({pos: this.objects[i].pos, effect: this.objects[i].effects[j]}); }
+      }
       this.objects.splice(i, 1);
       return true;
     }

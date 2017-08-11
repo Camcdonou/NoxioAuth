@@ -43,7 +43,7 @@ ParticleDash.prototype.pushPart = Particle.prototype.pushPart;
 
 ParticleDash.prototype.step = Particle.prototype.step;
 
-ParticleDash.prototype.getDraw = function(geometry, lights, bounds) {
+ParticleDash.prototype.getDraw = function(geometry, decals, lights, bounds) {
   var cameraZ = this.game.display.camera.rot.z;
   for(var i=0;i<this.particles.length;i++) {
     var part = this.particles[i];

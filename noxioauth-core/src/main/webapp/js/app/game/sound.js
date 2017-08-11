@@ -44,7 +44,9 @@ Sound.prototype.loadAudio = function() {
     "prank/blip.wav",
     "prank/ata.wav",
     "prank/toriya.wav",
-    "prank/ha.wav"
+    "prank/ha.wav",
+    "prank/huf.wav",
+    "prank/gwaa.wav" // @TODO: fixme
   ];
   for(var i=0;i<paths.length;i++) { this.createSound(paths[i]); }
 };

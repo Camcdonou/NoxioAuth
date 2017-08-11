@@ -41,7 +41,7 @@ Display.prototype.setupWebGL = function() {
   gl.enable(gl.DEPTH_TEST);                                 // Enable depth testing
   gl.depthFunc(gl.LEQUAL);                                  // Near things obscure far things
   gl.disable(gl.BLEND);                                     // Disable transparency blend by default
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);       // Transparency function
+  gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);       // Transparency function
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);                        // Set clear color to black, fully opaque
   gl.clearDepth(1.0);                                       // Clear depth
@@ -52,7 +52,7 @@ Display.prototype.setupWebGL = function() {
     gl.getExtension("WEBKIT_OES_element_index_uint")
   )) { return false; }
   
-  this.upscale = {world: 2.0, ui: 1.0}; /* @FIXME */
+  this.upscale = {world: 1.0, ui: 1.0}; /* @FIXME */
   
   this.textures = [];
   this.shaders = [];
@@ -329,44 +329,28 @@ Display.prototype.draw = function() {
   /* Collect & sort all geometry to draw.
      Format: {model: <Model>, material: <Material>, uniforms: <UniformData[]>} */
   var bounds = this.camera.getBounds(this.window.height/this.window.width); // An array of 4 vec2s that defines the view area on the z=0 plane
-  var geometry = [];                                                        // All game world geometry we need to draw
+  var geometry = [];                                                        // All geometry combined
+  var mapGeom = [];                                                         // All static game world geometry we need to draw
+  var objGeom = [];                                                         // All object geometry
   var decals = [];                                                          // All decals to apply to world
   var lights = [];                                                          // All lights in game world
   var preCalcBounds = util.matrix.expandPolygon(bounds, 5.0);               // Slightly innacurate way to precalc radius of tiles so we can just test a point
-  this.game.map.getDraw(geometry, preCalcBounds); /* @FIXME optimize? */
+  this.game.map.getDraw(mapGeom, preCalcBounds); /* @FIXME optimize? */
   for(var i=0;i<this.game.objects.length;i++) {
-    this.game.objects[i].getDraw(geometry, lights, bounds);
+    this.game.objects[i].getDraw(objGeom, decals, lights, bounds);
   }
+  for(var i=0;i<this.game.effects.length;i++) {
+    this.game.effects[i].effect.getDraw(objGeom, decals, lights, bounds);
+  }
+  geometry = mapGeom.concat(objGeom);
   
   /* DEBUG @TODO: MEMES */
-  if(this.game.objects[0]) { decals.push(new Decal(this.game, this.getMaterial("material.effect.decal.test"), {x: this.game.objects[0].pos.x, y: this.game.objects[0].pos.y, z: this.game.objects[0].height}, 0.0)); }
+  //if(this.game.objects[0]) { decals.push(new Decal(this.game, this.getMaterial("material.effect.decal.test"), {x: this.game.objects[0].pos.x, y: this.game.objects[0].pos.y, z: this.game.objects[0].height}, {x: 0.0, y: 0.0, z: 1.0}, 4.0, 0.0)); }
   
   /* Sort geometry by shader -> material -> draws */
-  var geomSorted = [];
-  for(var i=0;i<geometry.length;i++) {
-    var geom = geometry[i];
-    var shaderGroup = undefined;
-    for(var j=0;j<geomSorted.length;j++) {
-      if(geomSorted[j].shader.name === geom.material.shader.name) {
-        shaderGroup = geomSorted[j];
-      }
-    }
-    if(!shaderGroup) {
-      shaderGroup = {shader: geom.material.shader, materials: []};
-      geomSorted.push(shaderGroup);
-    }
-    var materialGroup = undefined;
-    for(var j=0;j<shaderGroup.materials.length;j++) {
-      if(shaderGroup.materials[j].material.name === geom.material.name) {
-        materialGroup = shaderGroup.materials[j];
-      }
-    }
-    if(!materialGroup) {
-      materialGroup = {material: geom.material, draws: []};
-      shaderGroup.materials.push(materialGroup);
-    }
-    materialGroup.draws.push({model: geom.model, uniforms: geom.uniforms});
-  }
+  var mapGeomSorted = this.sortGeometry(mapGeom);
+  var objGeomSorted = this.sortGeometry(objGeom);
+
   
   /* === Draw Geometry to Shadow FBO ===================================================================================== */
   /* ===================================================================================================================== */
@@ -446,8 +430,8 @@ Display.prototype.draw = function() {
     {name: "shadowMaxRadius", data: SHADOW_MAX_RADIUS},
     {name: "texture5", data: 5}
   ];
-  for(var i=0;i<geomSorted.length;i++) {                                          // Draws world/particles
-    var shaderGroup = geomSorted[i];
+  for(var i=0;i<mapGeomSorted.length;i++) {                                       // Draws world
+    var shaderGroup = mapGeomSorted[i];
     shaderGroup.shader.enable(gl);
     shaderGroup.shader.applyUniforms(gl, uniformData);
     shaderGroup.shader.applyUniforms(gl, uniformLightData);
@@ -467,19 +451,41 @@ Display.prototype.draw = function() {
   for(var i=0;i<decals.length;i++) {                                              // Draws decals
     var decal = decals[i];
     var uniformDecal = [
-      {name: "dPos", data: [decal.pos.x, decal.pos.y, decal.pos.z]}
+      {name: "dPos", data: [decal.pos.x, decal.pos.y, decal.pos.z]},
+      {name: "dNormal", data: [decal.normal.x, decal.normal.y, decal.normal.z]},
+      {name: "dSize", data: decal.size},
+      {name: "dAngle", data: decal.angle}
     ];
     decal.material.shader.enable(gl);
     decal.material.enable(gl);
     decal.material.shader.applyUniforms(gl, uniformData);
     decal.material.shader.applyUniforms(gl, uniformLightData);
     decal.material.shader.applyUniforms(gl, uniformDecal);
-    for(var j=0;j<geometry.length;j++) {
-      decal.material.shader.applyUniforms(gl, geometry[j].uniforms);
-      geometry[j].model.draw(gl, decal.material.shader);
+    gl.depthMask(decal.material.castShadow);
+    for(var j=0;j<decal.geometry.length;j++) {
+      decal.material.shader.applyUniforms(gl, decal.geometry[j].uniforms);
+      decal.geometry[j].model.draw(gl, decal.material.shader);
     }
     decal.material.disable(gl);
     decal.material.shader.disable(gl);
+  }
+  for(var i=0;i<objGeomSorted.length;i++) {                                       // Draws objects/effects
+    var shaderGroup = objGeomSorted[i];
+    shaderGroup.shader.enable(gl);
+    shaderGroup.shader.applyUniforms(gl, uniformData);
+    shaderGroup.shader.applyUniforms(gl, uniformLightData);
+    for(var j=0;j<shaderGroup.materials.length;j++) {
+      var materialGroup = shaderGroup.materials[j];
+      materialGroup.material.enable(gl);
+      gl.depthMask(materialGroup.material.castShadow);
+      for(var k=0;k<materialGroup.draws.length;k++) {
+        var draw = materialGroup.draws[k];
+        shaderGroup.shader.applyUniforms(gl, draw.uniforms);
+        draw.model.draw(gl, shaderGroup.shader);
+      }
+      materialGroup.material.disable(gl);
+    }
+    shaderGroup.shader.disable(gl);
   }
   this.fbo.shadow.tex.disable(gl, 5);       // Disable shadow depth texture
   gl.depthMask(true);                       // Enable writing to depth buffer
@@ -614,6 +620,35 @@ Display.prototype.draw = function() {
 //  debugShader.disable(gl);
 
   gl.flush();
+};
+
+Display.prototype.sortGeometry = function(geometry) {
+  var geomSorted = [];
+  for(var i=0;i<geometry.length;i++) {
+    var geom = geometry[i];
+    var shaderGroup = undefined;
+    for(var j=0;j<geomSorted.length;j++) {
+      if(geomSorted[j].shader.name === geom.material.shader.name) {
+        shaderGroup = geomSorted[j];
+      }
+    }
+    if(!shaderGroup) {
+      shaderGroup = {shader: geom.material.shader, materials: []};
+      geomSorted.push(shaderGroup);
+    }
+    var materialGroup = undefined;
+    for(var j=0;j<shaderGroup.materials.length;j++) {
+      if(shaderGroup.materials[j].material.name === geom.material.name) {
+        materialGroup = shaderGroup.materials[j];
+      }
+    }
+    if(!materialGroup) {
+      materialGroup = {material: geom.material, draws: []};
+      shaderGroup.materials.push(materialGroup);
+    }
+    materialGroup.draws.push({model: geom.model, uniforms: geom.uniforms});
+  }
+  return geomSorted;
 };
 
 /* Draws a 2D fallback render if WebGL fails to initialize */

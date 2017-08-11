@@ -86,6 +86,15 @@ Effect.prototype.step = function(pos, dir) {
       prt.update(prt.obj);
     }
   }
+  /* Update Decals */
+  for(var i=0;i<this.decal.length;i++) {
+    var dcl = this.decal[i];
+    if(--dcl.length <= 0) { this.decal.splice(i, 1); }
+    else {
+      if(dcl.attachment) { dcl.obj.step(pos, dir); }
+      dcl.update(dcl.obj);
+    }
+  }
   /* Spawn Delayed */
   for(var i=0;i<this.delayed.length;i++) {
     if(--this.delayed[i].delay <= 0) {
@@ -96,13 +105,21 @@ Effect.prototype.step = function(pos, dir) {
 };
 
 /* Returns all geometry and lights of this effects components. */
-Effect.prototype.getDraw = function(geometry, lights, bounds) {
+Effect.prototype.getDraw = function(geometry, decals, lights, bounds) {
   for(var i=0;i<this.light.length;i++) {
     lights.push(this.light[i].obj);
   }
   for(var i=0;i<this.particle.length;i++) {
-    this.particle[i].obj.getDraw(geometry, lights, bounds);
+    this.particle[i].obj.getDraw(geometry, decals, lights, bounds);
   }
+  for(var i=0;i<this.decal.length;i++) {
+    this.decal[i].obj.getDraw(decals, bounds);
+  }
+};
+
+/* Returns true if the effect is currently playing. */
+Effect.prototype.active = function() {
+  return this.particle.length > 0 || this.sound.length > 0 || this.light.length > 0 || this.decal.length > 0;
 };
 
 /* Destroys this effect. Stops sound and unloads components. */
@@ -110,4 +127,8 @@ Effect.prototype.destroy = function() {
   for(var i=0;i<this.sound.length;i++) {
     this.sound[i].obj.stop();
   }
+  this.particle = [];
+  this.sound = [];
+  this.light = [];
+  this.decal = [];
 };

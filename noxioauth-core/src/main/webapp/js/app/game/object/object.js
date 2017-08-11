@@ -19,6 +19,7 @@ function GameObject(game, oid, pos, vel) {
   
   this.pos = pos;
   this.vel = vel;
+  this.effects = [];
   
   this.height = 0.0;
   this.vspeed = 0.0;
@@ -53,7 +54,7 @@ GameObject.prototype.setHeight = function(height, vspeed) {
   this.vspeed = vspeed;
 };
 
-GameObject.prototype.getDraw = function(geometry, lights, bounds) {
+GameObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
   /* NO. */
 };
 

@@ -41,7 +41,7 @@ ParticleStun.prototype.pushPart = Particle.prototype.pushPart;
 
 ParticleStun.prototype.step = Particle.prototype.step;
 
-ParticleStun.prototype.getDraw = function(geometry, lights, bounds) {
+ParticleStun.prototype.getDraw = function(geometry, decals, lights, bounds) {
   var cameraZ = this.game.display.camera.rot.z;
   for(var i=0;i<this.particles.length;i++) {
     var part = this.particles[i];

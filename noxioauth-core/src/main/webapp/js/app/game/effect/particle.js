@@ -54,6 +54,6 @@ Particle.prototype.step = function(pos, dir) {
 };
 
 /* Override. Gets draw data for this particle system. */
-Particle.prototype.getDraw = function(geometry, lights, bounds) {
+Particle.prototype.getDraw = function(geometry, decals, lights, bounds) {
     /* NO. */
 };

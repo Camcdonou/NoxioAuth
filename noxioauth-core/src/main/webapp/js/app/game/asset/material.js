@@ -162,12 +162,28 @@ Asset.prototype.material.effect.star = {
   texture0: "effect/star",
 };
 
-/* Source File: test.mat */
-Asset.prototype.material.effect.decal.test = {
-  name: "material.effect.decal.test",
+/* Source File: bloodsplat.mat */
+Asset.prototype.material.effect.decal.bloodsplat = {
+  name: "material.effect.decal.bloodsplat",
   shader: "decal",
   shadow: false,
-  texture0: "multi/default",
+  texture0: "effect/bloodsplat",
+};
+
+/* Source File: bloodsplatsmall.mat */
+Asset.prototype.material.effect.decal.bloodsplatsmall = {
+  name: "material.effect.decal.bloodsplatsmall",
+  shader: "decal",
+  shadow: false,
+  texture0: "effect/bloodsplatsmall",
+};
+
+/* Source File: bloodsplash.mat */
+Asset.prototype.material.effect.bloodsplash = {
+  name: "material.effect.bloodsplash",
+  shader: "particle",
+  shadow: false,
+  texture0: "effect/bloodsplash",
 };
 
 /* Source File: speedline.mat */
@@ -184,6 +200,14 @@ Asset.prototype.material.effect.spark = {
   shader: "particle",
   shadow: false,
   texture0: "effect/spark",
+};
+
+/* Source File: blooddrop.mat */
+Asset.prototype.material.effect.blooddrop = {
+  name: "material.effect.blooddrop",
+  shader: "particle",
+  shadow: false,
+  texture0: "effect/blooddrop",
 };
 
 /* Source File: blipBright.mat */

@@ -47,7 +47,7 @@ ParticleBlip.prototype.pushPart = Particle.prototype.pushPart;
 
 ParticleBlip.prototype.step = Particle.prototype.step;
 
-ParticleBlip.prototype.getDraw = function(geometry, lights, bounds) {
+ParticleBlip.prototype.getDraw = function(geometry, decals, lights, bounds) {
   for(var i=0;i<this.particles.length;i++) {
     var part = this.particles[i];
     var partUniformData = [
