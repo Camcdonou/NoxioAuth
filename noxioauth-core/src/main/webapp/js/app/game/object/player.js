@@ -69,6 +69,8 @@ function PlayerObject(game, oid, pos, vel) {
   
   this.effects.push(this.blipEffect); this.effects.push(this.dashEffect); this.effects.push(this.tauntEffect); this.effects.push(this.jumpEffect);
   this.effects.push(this.stunEffect); this.effects.push(this.bloodEffect); this.effects.push(this.impactDeathEffect); this.effects.push(this.fallDeathEffect);
+  
+  this.targetCircle = new Decal(this.game, this.game.display.getMaterial("material.effect.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 1.1, 0.0);
 };
 
 PlayerObject.prototype.update = function(data) {
@@ -109,6 +111,8 @@ PlayerObject.prototype.step = function(delta) {
   
   this.pos = util.vec2.lerp(this.pos, nxtpos, delta);
   this.vel = util.vec2.lerp(this.vel, nxtvel, delta);
+  
+  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1);
   
   this.blipEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.dashEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
@@ -165,6 +169,7 @@ PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
     for(var i=0;i<this.effects.length;i++) {
       this.effects[i].getDraw(geometry, decals, lights, bounds);
     }
+    this.targetCircle.getDraw(decals, bounds);
   }
 };
 

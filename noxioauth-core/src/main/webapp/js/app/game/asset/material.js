@@ -162,6 +162,14 @@ Asset.prototype.material.effect.star = {
   texture0: "effect/star",
 };
 
+/* Source File: targetcircle.mat */
+Asset.prototype.material.effect.decal.targetcircle = {
+  name: "material.effect.decal.targetcircle",
+  shader: "decal_glow",
+  shadow: false,
+  texture0: "effect/targetcircle",
+};
+
 /* Source File: bloodsplat.mat */
 Asset.prototype.material.effect.decal.bloodsplat = {
   name: "material.effect.decal.bloodsplat",
