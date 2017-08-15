@@ -47,8 +47,8 @@ ParticleBloodSplat.prototype.create = function() {
   }
 };
 
-ParticleBloodSplat.prototype.createBloodSplat = function(pos, dir) {
-  var decal = new Decal(this.game, this.game.display.getMaterial("material.effect.decal.bloodsplatsmall"), pos, dir, (Math.random()*0.5)+0.35, Math.random()*6.28319);
+ParticleBloodSplat.prototype.createBloodSplat = function(pos, normal) {
+  var decal = new Decal(this.game, this.game.display.getMaterial("material.effect.decal.bloodsplatsmall"), pos, normal, (Math.random()*0.5)+0.35, Math.random()*6.28319);
   this.decals.push(decal);
 };
 

@@ -10,6 +10,7 @@ var util = {
   vec3 : {},
   vec4 : {},
   quat : {},
+  line2: {},
   matrix: {},
   intersection: {},
   text : {},
@@ -55,7 +56,7 @@ util.vec2.magnitude = function(a) {
 
 util.vec2.normalize = function(a) {
   var mag = util.vec2.magnitude(a);
-  return {x: a.x/mag, y: a.y/mag};
+  return mag !== 0.0 ? {x: a.x/mag, y: a.y/mag} : {x: 0.0, y: 1.0};
 };
 
 util.vec2.distance = function(a, b) {
@@ -81,6 +82,10 @@ util.vec2.average = function(ary) {
     c = util.vec2.add(c, ary[i]);
   }
   return util.vec2.scale(c, 1/ary.length);
+};
+
+util.vec2.equals = function(a, b) {
+  return a.x === b.x && a.y === b.y;
 };
 
 util.vec2.toVec3 = function(a, z) {
@@ -171,6 +176,10 @@ util.vec3.toVec4 = function(a, w) {
   return {x: a.x, y: a.y, z: a.z, w: w};
 };
 
+util.vec3.toVec2 = function(a) {
+  return {x: a.x, y: a.y};
+};
+
 util.vec3.toArray = function(a) {
   return [a.x, a.y, a.z];
 };
@@ -185,7 +194,6 @@ util.vec4.create = function() {
 util.vec4.toArray = function(a) {
   return [a.x, a.y, a.z, a.w];
 };
-
 
 /* === Quaternion ========================================================================= */
 /* ======================================================================================== */
@@ -231,6 +239,13 @@ util.quat.toEuler = function(q1) {
     	bank = Math.atan2((2.0*q1.x*q1.w)-(2.0*q1.y*q1.z) , -sqx + sqy - sqz + sqw);
     	
 		return {x: bank, y: heading, z: attitude};
+};
+
+/* === Line2 =============================================================================== */
+/* ======================================================================================== */
+
+util.line2.normal = function(A) {
+  return util.vec2.normalize({x: A.b.y-A.a.y, y: -1*(A.b.x-A.a.x)});
 };
 
 /* === Matrix ============================================================================= */
@@ -313,7 +328,7 @@ util.intersection.linePlane = function(l, pl) {
   return undefined;
 };
 
-/* Vec2 p, Vec2[x] poly */
+/* Vec2 p, Vec2[] poly */
 util.intersection.pointPoly = function(p, poly) {
   var i = 0;
   var j = 0;
@@ -325,6 +340,105 @@ util.intersection.pointPoly = function(p, poly) {
        c = !c;
   }
   return c;
+};
+
+/* Line2 A, Line2 B */
+util.intersection.lineLine = function(A, B) {
+  var s1_x, s1_y, s2_x, s2_y;
+  var i_x, i_y;
+  s1_x = A.b.x - A.a.x; s1_y = A.b.y - A.a.y;
+  s2_x = B.b.x - B.a.x; s2_y = B.b.y - B.a.y;
+
+  var s, t;
+  s = (-s1_y * (A.a.x - B.a.x) + s1_x * (A.a.y - B.a.y)) / (-s2_x * s1_y + s1_x * s2_y);
+  t = ( s2_x * (A.a.y - B.a.y) - s2_y * (A.a.x - B.a.x)) / (-s2_x * s1_y + s1_x * s2_y);
+
+  if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
+  {
+      // Collision detected
+      i_x = A.a.x + (t * s1_x);
+      i_y = A.a.y + (t * s1_y);
+      var intersection = {x: i_x, y: i_y};
+      //var normal = util.vec2.normalize(util.vec2.subtract(intersection, A.a));
+      var normal = util.line2.normal(B);
+      return {intersection: intersection, normal: normal, distance: util.vec2.distance(intersection, A.a)};
+  }
+
+  return undefined; // No collision
+};
+
+/* Vec2 P, Line2 L, float r */
+util.intersection.lineCircle = function(P, L, r) {
+  var nearest = util.intersection.lineNearestPoint(P, L);
+  if(util.vec2.equals(nearest, L.a)) {
+    var dir = util.vec2.subtract(P, L.a);
+    var dist = util.vec2.magnitude(dir);
+    if(dist >= r) { return undefined; }
+    var norm = util.vec2.normalize(dir);
+    return {intersection: L.a, normal: norm, dist};
+  }
+  else if(util.vec2.equals(nearest, L.b)) {
+    var dir = util.vec2.subtract(P, L.b);
+    var dist = util.vec2.magnitude(dir);
+    if(dist >= r) { return undefined; }
+    var norm = util.vec2.normalize(dir);
+    return {intersection: L.b, normal: norm, distance: dist};
+  }
+  else {
+    var dir = util.vec2.subtract(P, nearest);
+    var dist = util.vec2.magnitude(dir);
+    if(dist >= r) { return undefined; }
+    var norm = util.vec2.normalize(dir);
+    return {intersection: nearest, normal: norm, distance: dist};
+  }
+};
+
+/* Line2 L, Polygon G, float r */
+util.intersection.polygonLine = function(L, G) {
+  var hits = [];
+  for(var i=0;i<G.v.length;i++) {
+    var L2 = {a: G.v[i], b: G.v[i+1<G.v.length?i+1:0]};
+    var inst = util.intersection.lineLine(L, L2);
+    if(inst) { hits.push(inst); }
+  }
+  if(hits.length < 1) { return undefined; }
+  var nearest = hits[0];
+  for(var i=1;i<hits.length;i++) {
+    if(hits[i].distance < nearest.distance) {
+      nearest = hits[i];
+    }
+  }
+  return nearest;
+};
+
+/* Vec2 P, Polygon G, float r */
+util.intersection.polygonCircle = function(P, G, r) {
+  var hits = [];
+  for(var i=0;i<G.v.length;i++) {
+    var L = {a: G.v[i], b: G.v[i+1<G.v.length?i+1:0]};
+    var inst = util.intersection.lineCircle(P, L, r);
+    if(inst) { hits.push(inst); }
+  }
+  if(hits.length < 1) { return undefined; }
+  var nearest = hits[0];
+  for(var i=1;i<hits.length;i++) {
+    if(hits[i].distance < nearest.distance) {
+      nearest = hits[i];
+    }
+  }
+  return nearest;
+};
+
+/* Vec2 P, Line2 L */
+util.intersection.lineNearestPoint = function(P, L) {
+  var v = util.vec2.subtract(L.b, L.a);
+  var w = util.vec2.subtract(P, L.a);
+  var c1 = util.vec2.dot(w, v);
+  if ( c1 <= 0 ) { return L.a; }
+  var c2 = util.vec2.dot(v, v);
+  if ( c2 <= c1 ) { return L.b; }
+  var b = c1 / c2;
+  return util.vec2.add(L.a, util.vec2.scale(v, b));
 };
 
 /* === Text =============================================================================== */
