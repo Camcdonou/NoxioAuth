@@ -7,8 +7,8 @@ function ScoreUI(game, name) {
   this.game = game;
   this.name = name;
   
-  this.update({title: "", description: ""},
-  [{name: "", obj: 0, kill: 0, death: 0, sper: 1.0}]);
+  this.update({title: "Loading...", description: ""},
+  []);
   
   this.hidden = true;
   this.interactable = false;
@@ -22,10 +22,10 @@ ScoreUI.prototype.show = function() {
 ScoreUI.prototype.hide = function() {
   this.hidden = true;
 };
-
+//
 /* Takes score list as follows */
 /* title {}     {title: "big text", description: "little text"} 
- * data: [{}]   {name: "butt", obj: <int count>, kill: <int count>, death: <int count>, sper: <float scalar>}
+ * data: [{}]   {name: <String>, score: <String>, meter: <float>}
  */
 ScoreUI.prototype.update = function(title, data) {
   var display = this.game.display;
@@ -65,15 +65,15 @@ ScoreUI.prototype.update = function(title, data) {
     this.blocks.push({
       material: display.getMaterial("material.ui.white"),
       pos: {x: XOFF, y: YOFF-(LINE_HEIGHT*(i+1))},
-      size: {x: LINE_WIDTH*data[i].sper, y: LINE_HEIGHT}
+      size: {x: LINE_WIDTH*data[i].meter, y: LINE_HEIGHT}
     });
     this.texts.push({
       text: data[i].name,
-      color: [1.0, 1.0, 1.0],
+      color: [data[i].color.r, data[i].color.g, data[i].color.b],
       pos: {x: XOFF, y: YOFF-(LINE_HEIGHT*(i+1))},
       size: LINE_HEIGHT
     });
-    var SCORE_TEXT = data[i].kill + " / " + data[i].death;
+    var SCORE_TEXT = data[i].score;
     var SCORE_LENGTH = util.text.lengthOnScreen(SCORE_TEXT, LINE_HEIGHT*0.5);
     this.texts.push({
       text: SCORE_TEXT,

@@ -52,7 +52,8 @@
           <div id="lobby-server" class="main-menu-inverse lg">User@Server Name</div>
           <div id="lobby-create" class="main-menu btn lg" onclick="main.menu.lobby.items.create.show()">Create Lobby</div>
             <div id="lobby-create-name" class="main-menu inp sm"><input id="lobby-create-name-input" class="main-menu-input" type="text" placeholder="Lobby Name"/></div>
-            <div id="lobby-create-create" class="main-menu btn sm" onclick="main.menu.lobby.items.create.onEnter()">Create</div>
+            <div id="lobby-create-create" class="main-menu btn sm">DISABLED</div>
+            <!--<div id="lobby-create-create" class="main-menu btn sm" onclick="main.menu.lobby.items.create.onEnter()">Create</div>-->
           <div id="lobby-leave" class="main-menu btn lg" onclick="main.menu.lobby.items.leave.onEnter()">Leave Server</div>
         </div>
         <div class="right-menu-container">
@@ -152,6 +153,7 @@
       <!-- Game Objects -->
       <script src="js/app/game/object/object.js"></script>
       <script src="js/app/game/object/player.js"></script>
+      <script src="js/app/game/object/flag.js"></script>
       
       <!-- Game Assets -->
       <script src="js/app/game/asset/asset.js"></script>

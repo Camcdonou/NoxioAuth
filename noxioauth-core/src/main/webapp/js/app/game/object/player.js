@@ -14,8 +14,11 @@ function PlayerObject(game, oid, pos, vel) {
   GameObject.call(this, game, oid, pos, vel);
   
   this.model = this.game.display.getModel("model.multi.smallBox");
-  this.material = this.game.display.getMaterial("material.multi.default");
-  
+  this.material = [
+    this.game.display.getMaterial("material.multi.default"),
+    this.game.display.getMaterial("material.multi.default_red"),
+    this.game.display.getMaterial("material.multi.default_blue")
+  ];
   
   this.RADIUS = 0.5;               // Collision radius
   this.MAX_SPEED = 0.0375;         // Max movement speed
@@ -25,6 +28,7 @@ function PlayerObject(game, oid, pos, vel) {
   
   this.look = {x: 0.0, y: 1.0};  // Normalized direction player is facing
   this.speed = 0.0;              // Current scalar of max movement speed <0.0 to 1.0>
+  this.team = -1;
   
   this.BLIP_COOLDOWN_MAX = 30;
   this.DASH_COOLDOWN_ADD = 30;
@@ -78,6 +82,7 @@ function PlayerObject(game, oid, pos, vel) {
 };
 
 PlayerObject.prototype.update = function(data) {
+  var team = parseInt(data.shift());
   var pos = util.vec2.parse(data.shift());
   var vel = util.vec2.parse(data.shift());
   var height = parseFloat(data.shift());
@@ -87,6 +92,7 @@ PlayerObject.prototype.update = function(data) {
   var name = data.shift();
   var effects = data.shift().split(",");
   
+  this.team = team;
   this.setPos(pos);
   this.setVel(vel);
   this.setHeight(height, vspeed);
@@ -221,7 +227,7 @@ PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
     var playerUniformData = [
       {name: "transform", data: [this.pos.x, this.pos.y, this.height]}
     ];
-    geometry.push({model: this.model, material: this.material, uniforms: playerUniformData});
+    geometry.push({model: this.model, material: this.team===0?this.material[1]:this.team===1?this.material[2]:this.material[0], uniforms: playerUniformData});
     for(var i=0;i<this.effects.length;i++) {
       this.effects[i].getDraw(geometry, decals, lights, bounds);
     }

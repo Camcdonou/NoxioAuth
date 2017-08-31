@@ -16,6 +16,7 @@ PackHand.prototype.gameDataUpdate = function(packet) {
       case "crt" : { this.createObject(data); break; }
       case "del" : { this.deleteObject(data); break; }
       case "obj" : { this.updateObject(data); break; }
+      case "hid" : { this.hideObject(data);   break; }
       default : { main.menu.warning.show("Game data parsing interupted unexpectedly on '" + field + "' with " + data.length + " fields remaining."); break; }
     }
   }
@@ -36,6 +37,7 @@ PackHand.prototype.createObject = function(data) {
     case "obj" : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for abstract type '" + type + "'.", JSON.stringify(data)); main.close(); break; }
     case "obj.mobile" : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for abstract type '" + type + "'.", JSON.stringify(data)); main.close(); break; }
     case "obj.mobile.player" : { this.game.objects.push(new PlayerObject(this.game, oid, pos, vel)); break; }
+    case "obj.mobile.flag" : { this.game.objects.push(new FlagObject(this.game, oid, pos, vel)); break; }
     default : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for '" + type + "' which does not exist.", JSON.stringify(data)); main.close(); break; }
   }
 };
@@ -52,8 +54,17 @@ PackHand.prototype.updateObject = function(data) {
   var oid = parseInt(data.shift());
   
   var obj = this.game.getObject(oid);
-  if(obj !== undefined) { obj.update(data); }
+  if(obj !== undefined) { obj.hide = false; obj.update(data); }
   else { main.menu.warning.show("Desync: Tried to update OBJ that does not exist '" + oid + "'."); }
+};
+
+/* OBJ::HIDE | hid */
+PackHand.prototype.hideObject = function(data) {
+  var oid = parseInt(data.shift());
+  
+  var obj = this.game.getObject(oid);
+  if(obj !== undefined) { obj.hide = true; }
+  else { main.menu.warning.show("Desync: Tried to hide OBJ that does not exist '" + oid + "'."); }
 };
 
 /* PacketI03 */
@@ -65,11 +76,7 @@ PackHand.prototype.playerControl = function(packet) {
 PackHand.prototype.score = function(packet) {
   var scoreUI = this.game.ui.getElement("score");
   var title = {title: packet.gametype, description: packet.description};
-  var data = [];
-  for(var i=0;i<packet.scores.length;i++) {
-    data.push({name: packet.scores[i].user, obj: 0, kill: packet.scores[i].kills, death: packet.scores[i].deaths, sper: packet.scores[i].kills/packet.scoreToWin});
-  }
-  scoreUI.update(title, data);
+  scoreUI.update(title, packet.scores);
 };
 
 /* PacketG15 */

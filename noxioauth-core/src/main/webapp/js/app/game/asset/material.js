@@ -35,6 +35,14 @@ Asset.prototype.material.ui.white_solid = {
   texture0: "ui/white_solid",
 };
 
+/* Source File: default_red.mat */
+Asset.prototype.material.multi.default_red = {
+  name: "material.multi.default_red",
+  shader: "default",
+  shadow: true,
+  texture0: "multi/default_red",
+};
+
 /* Source File: post_msaa.mat */
 Asset.prototype.material.multi.post_msaa = {
   name: "material.multi.post_msaa",
@@ -85,6 +93,14 @@ Asset.prototype.material.multi.debug = {
   name: "material.multi.debug",
   shader: "debug",
   shadow: false,
+};
+
+/* Source File: default_blue.mat */
+Asset.prototype.material.multi.default_blue = {
+  name: "material.multi.default_blue",
+  shader: "default",
+  shadow: true,
+  texture0: "multi/default_blue",
 };
 
 /* Source File: test3.mat */

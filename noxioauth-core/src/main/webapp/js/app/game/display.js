@@ -337,7 +337,7 @@ Display.prototype.draw = function() {
   var preCalcBounds = util.matrix.expandPolygon(bounds, 5.0);               // Slightly innacurate way to precalc radius of tiles so we can just test a point
   this.game.map.getDraw(mapGeom, preCalcBounds); /* @FIXME optimize? */
   for(var i=0;i<this.game.objects.length;i++) {
-    this.game.objects[i].getDraw(objGeom, decals, lights, bounds);
+    if(!this.game.objects[i].hide) { this.game.objects[i].getDraw(objGeom, decals, lights, bounds); }
   }
   for(var i=0;i<this.game.effects.length;i++) {
     this.game.effects[i].effect.getDraw(objGeom, decals, lights, bounds);
