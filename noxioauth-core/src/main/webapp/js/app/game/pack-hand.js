@@ -17,6 +17,7 @@ PackHand.prototype.gameDataUpdate = function(packet) {
       case "del" : { this.deleteObject(data); break; }
       case "obj" : { this.updateObject(data); break; }
       case "hid" : { this.hideObject(data);   break; }
+      case "wsp" : { this.whisper(data); break; }
       default : { main.menu.warning.show("Game data parsing interupted unexpectedly on '" + field + "' with " + data.length + " fields remaining."); break; }
     }
   }
@@ -67,9 +68,19 @@ PackHand.prototype.hideObject = function(data) {
   else { main.menu.warning.show("Desync: Tried to hide OBJ that does not exist '" + oid + "'."); }
 };
 
+/* SYS::WHISPER | wsp */
+PackHand.prototype.whisper = function(data) {
+  this.game.ui.getElement("log").message(data.shift());
+};
+
 /* PacketI03 */
 PackHand.prototype.playerControl = function(packet) {
   this.game.control = packet.oid;
+};
+
+/* PacketI08 */
+PackHand.prototype.respawnTimer = function(packet) {
+  this.game.respawnTimer = packet.timer;
 };
 
 /* PacketG14 */

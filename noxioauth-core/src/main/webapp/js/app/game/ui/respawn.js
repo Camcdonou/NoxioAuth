@@ -15,6 +15,7 @@ function RespawnUI(game, name) {
 
 
 RespawnUI.prototype.show = function() {
+  this.create();
   this.hidden = false;
 };
 
@@ -22,13 +23,13 @@ RespawnUI.prototype.hide = function() {
   this.hidden = true;
 };
 
-RespawnUI.prototype.create = function(display) {
-  var TEXT_MESSAGE = "Press [Left Mouse] to respawn!";
+RespawnUI.prototype.create = function() {
+  var TEXT_MESSAGE = this.game.respawnTimer<=0?"Press [Left Mouse] to respawn!":"Respawn in " + (this.game.respawnTimer/30).toFixed(1) + " seconds!";
   var FONT_SIZE = 3.0;
   var txtLength = util.text.lengthOnScreen(TEXT_MESSAGE, FONT_SIZE);
   this.blocks = [
     {
-      material: display.getMaterial("material.ui.grey"),
+      material: this.game.display.getMaterial("material.ui.grey"),
       pos: {x: 0.0, y: 30.0},
       size: {x: 100.0, y: FONT_SIZE}
     }

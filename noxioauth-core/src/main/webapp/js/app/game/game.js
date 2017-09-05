@@ -22,6 +22,8 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   
   this.loadMap(map);
   
+  this.respawnTimer = 0;
+  
   this.gameOver = false;
   
   this.debug = {ss: 128, stime: [], ctime: [], dtime: [], ping: [], frames: [], sAvg: 0, cAvg: 0, pAvg: 0, fAvg: 0}; /* SS is Sample Size: The number of frames to sample for data. */
@@ -74,6 +76,7 @@ NoxioGame.prototype.handlePacket = function(packet) {
     case "g18" : { this.packHand.gameRules(packet); return true; }
     /* Input Type Packets ixx */
     case "i03" : { this.packHand.playerControl(packet); return true; } /* @FIXME bundle into g10 */
+    case "i08" : { this.packHand.respawnTimer(packet); return true; } /* @FIXME bundle into g10 */
     /* Game Step End g05 */
     case "g05" : { this.update(packet); return true; } /* @FIXME try and roll this into g10 if possible so we can move g10 to update() */
     default : { return false; }
@@ -108,6 +111,9 @@ NoxioGame.prototype.update = function(packet) {
   this.debug.dAvg = dAvg/this.debug.ss;
   this.debug.pAvg = pAvg/this.debug.ss;
   /* === DEBUG BLOCK END ==================== */
+  
+  /* Update timers */
+  if(this.respawnTimer>0) { this.respawnTimer--; }
   
   /* Send player input to server */
   this.sendInput();
