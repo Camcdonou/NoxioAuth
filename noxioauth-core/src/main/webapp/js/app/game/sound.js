@@ -54,6 +54,7 @@ Sound.prototype.loadAudio = function() {
 /* @FIXME do something */
 Sound.prototype.initFallback = function() {
   this.context = undefined;
+  this.sounds = [];
   // Lol ur fucked
 };
 
@@ -140,4 +141,6 @@ Sound.prototype.destroy = function() {
     this.sounds[i].destroy();
   }
   this.stopMusic();
+  this.sounds = [];
+  this.context.close();
 };

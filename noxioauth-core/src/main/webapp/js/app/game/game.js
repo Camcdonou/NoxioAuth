@@ -123,6 +123,7 @@ NoxioGame.prototype.update = function(packet) {
   var respawnUI = this.ui.getElement("respawn"); 
   var meterUI = this.ui.getElement("meter");
   var nameUI = this.ui.getElement("name"); nameUI.show(); // Currently always shows!
+  var objectiveUI = this.ui.getElement("objective"); objectiveUI.show(); // Currently always shows!
   if(!obj && !this.gameOver) { respawnUI.show(); meterUI.hide(); }
   else if(!this.gameOver) {
     respawnUI.hide();
@@ -198,8 +199,8 @@ NoxioGame.prototype.sendInput = function() { /* @FIXME step should do some of th
   if(this.input.keyboard.keys[70]) { if(obj) { main.net.game.send({type: "i05", ability: "blip"}); } } // F /* @FIXME DEBUG */
   if(this.input.keyboard.keys[16]) { if(obj) { main.net.game.send({type: "i05", ability: "dash"}); } } // Shift /* @FIXME DEBUG */
   if(this.input.keyboard.keys[84]) { if(obj) { main.net.game.send({type: "i05", ability: "taunt"}); } } // T /* @FIXME DEBUG */
-  if(this.input.keyboard.keys[66]) { if(obj) { obj.bloodEffect.trigger(util.vec2.toVec3(obj.pos, obj.height), {x: 0, y: 0, z: 1}); } } // B /* @FIXME DEBUG */
-  if(this.input.keyboard.keys[17] || !obj) { this.ui.getElement("score").show(); } else { this.ui.getElement("score").hide(); } // CTRL /* @FIXME DEBUG */
+  //if(this.input.keyboard.keys[66]) { if(obj) { obj.bloodEffect.trigger(util.vec2.toVec3(obj.pos, obj.height), {x: 0, y: 0, z: 1}); } } // B /* @FIXME DEBUG */
+  if(this.input.keyboard.keys[192] || !obj) { this.ui.getElement("score").show(); } else { this.ui.getElement("score").hide(); } // ~ /* @FIXME DEBUG */
   
   if(obj !== undefined) {
     var near = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 0.0);

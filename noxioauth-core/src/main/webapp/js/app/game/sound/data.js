@@ -31,5 +31,5 @@ SoundData.prototype.ready = function() {
 };
 
 SoundData.prototype.destroy = function() {
-  /* @FIXME no idea... */
+  
 };

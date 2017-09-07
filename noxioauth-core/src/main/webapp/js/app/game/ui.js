@@ -7,6 +7,7 @@ function GameUI(game) {
   if(!this.game.display.gl) { return; } /* If no GL then no nothing */
   this.elements = [
     new NameUI(this.game, "name"),
+    new ObjectiveUI(this.game, "objective"),
     new MeterUI(this.game, "meter"),
     new LogUI(this.game, "log"),
     new DebugUI(this.game, "debug"),

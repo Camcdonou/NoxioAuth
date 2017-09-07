@@ -234,12 +234,28 @@ Asset.prototype.material.effect.blooddrop = {
   texture0: "effect/blooddrop",
 };
 
+/* Source File: flagIconBlue.mat */
+Asset.prototype.material.prank.flagIconBlue = {
+  name: "material.prank.flagIconBlue",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "prank/flagBlue",
+};
+
 /* Source File: blipBright.mat */
 Asset.prototype.material.prank.blipBright = {
   name: "material.prank.blipBright",
   shader: "particle",
   shadow: false,
   texture0: "prank/blip_bright",
+};
+
+/* Source File: flagIconRed.mat */
+Asset.prototype.material.prank.flagIconRed = {
+  name: "material.prank.flagIconRed",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "prank/flagRed",
 };
 
 /* Source File: blipIcon.mat */

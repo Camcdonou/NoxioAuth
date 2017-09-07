@@ -19,6 +19,7 @@ function FlagObject(game, oid, pos, vel) {
   this.AIR_DRAG = 0.98;            // Friction Scalar
   this.FATAL_IMPACT_SPEED = 0.175; // Savaged by a wall
 
+  this.onBase = 1;
   this.team = -1;
 
   this.targetCircle = new Decal(this.game, this.game.display.getMaterial("material.effect.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.3, 0.0);
@@ -30,12 +31,14 @@ FlagObject.prototype.update = function(data) {
   var vel = util.vec2.parse(data.shift());
   var height = parseFloat(data.shift());
   var vspeed = parseFloat(data.shift()); 
+  var onBase = parseInt(data.shift());
   var effects = data.shift().split(",");
   
   this.team = team;
   this.setPos(pos);
   this.setVel(vel);
   this.setHeight(height, vspeed);
+  this.onBase = onBase;
 };
 
 FlagObject.prototype.step = function(delta) {
