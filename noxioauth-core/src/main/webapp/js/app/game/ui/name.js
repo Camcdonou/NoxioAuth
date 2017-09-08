@@ -50,7 +50,7 @@ NameUI.prototype.getDraw = function(blocks, text, mouse, window) {
   
   var names = [];
   for(var i=0;i<this.game.objects.length;i++) {
-    if(this.game.objects[i].name) { names.push({name: this.game.objects[i].name, pos: {x: this.game.objects[i].pos.x, y: this.game.objects[i].pos.y, z: this.game.objects[i].height+1.0}}); }
+    if(this.game.objects[i].name && this.game.objects[i].hide) { names.push({name: this.game.objects[i].name, pos: {x: this.game.objects[i].pos.x, y: this.game.objects[i].pos.y, z: this.game.objects[i].height+1.0}}); }
   }
   this.update(names, window.y/window.x);
   
