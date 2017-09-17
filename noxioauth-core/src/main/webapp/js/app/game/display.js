@@ -281,7 +281,6 @@ Display.prototype.draw = function() {
   if(this.container.clientWidth < 1 || this.container.clientHeight < 1) { return; } // Draw window not visible. Don't draw.
   this.window.width = this.container.clientWidth;
   this.window.height = this.container.clientHeight; // Does not enforce resonable aspect ratio. @FIXME...
-  this.camera.update();
   
   /* Check WebGL is OKAY */
   if(!this.gl) { this.drawFallback(); return; }

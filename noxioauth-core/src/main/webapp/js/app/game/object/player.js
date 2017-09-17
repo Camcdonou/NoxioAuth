@@ -82,6 +82,7 @@ function PlayerObject(game, oid, pos, vel) {
 };
 
 PlayerObject.prototype.update = function(data) {
+  /* Apply update data to game */
   var team = parseInt(data.shift());
   var pos = util.vec2.parse(data.shift());
   var vel = util.vec2.parse(data.shift());
@@ -110,77 +111,17 @@ PlayerObject.prototype.update = function(data) {
     }
   }
   
+  /* Update Timers */
   if(this.blipCooldown > 0) { this.blipCooldown--; }
   if(this.dashCooldown > 0) { this.dashCooldown--; }
-};
-
-PlayerObject.prototype.step = function(delta) {
-  var curmove = util.vec2.add(this.vel, util.vec2.scale(this.look, this.MAX_SPEED*this.speed));
-  //var nxtpos = util.vec2.add(this.pos, curmove);
-  //var nxtvel = util.vec2.scale(curmove, this.FRICTION);
-  var predict = this.predictPhys();
   
-  
-  this.pos = util.vec2.lerp(this.pos, predict.pos, delta);
-  this.vel = util.vec2.lerp(this.vel, predict.vel, delta);
-  
+  /* Step Effects */
   this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1);
-  
   this.blipEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.dashEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.tauntEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.stunEffect.step(util.vec2.toVec3(this.pos, 0.75+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.bloodEffect.step(util.vec2.toVec3(this.pos, 0.0+this.height), util.vec2.toVec3(this.vel, 0.0));
-};
-
-/* Predicts and returns position and velocity of next game step. This is more or less accurate but far from perfect. */
-PlayerObject.prototype.predictPhys = function() {
-  var collideWalls = function(mov, walls, radius) {
-    var hits = [];
-    for(var i=0;i<walls.length;i++) {
-      var w = walls[i];
-      var inst = util.intersection.polygonCircle(mov[0], w, radius);
-      if(inst) { hits.push(inst); }
-    }
-    if(hits.length > 0) {
-      var nearest = hits[0];
-      for(var i=1;i<hits.length;i++) {
-        if(hits[i].dist < nearest.dist) {
-          nearest = hits.get(i);
-        }
-      }
-      /* Move to point of impact */
-      var corrected = util.vec2.add(nearest.intersection, util.vec2.scale(nearest.normal, radius));
-      /* Slide off nearest collision */
-      var aoi = 1.0-Math.abs(util.vec2.dot(mov[1], nearest.normal)); // 0.0 is straight into the wall 1.0 is parallel to it
-      mov[1]=util.vec2.scale(mov[1], (aoi*0.5)+0.5);
-      mov[0]=corrected;
-      return 1.0-aoi;
-    }
-    return 0.0;
-  };
-  
-  /* -- Movement  -- */
-  var speed = util.vec2.add(this.vel, util.vec2.scale(this.look, this.MAX_SPEED*this.speed));
-  var to = util.vec2.add(this.pos, speed);
-  var walls = this.game.map.getNearWalls(to, this.RADIUS);
-  var floors = this.game.map.getNearFloors(to, this.RADIUS);
-  var fatalImpact = false;
-  var mov = [to, speed];
-  if(util.vec2.magnitude(this.vel) > 0.00001) {
-    var aoi;
-    for(var i=0;i<5&&aoi!==0.0&&!fatalImpact;i++) {                             // Bound max collision tests to 5 incase of an object being stuck in an area to small for it to fit!
-      aoi = Math.max(collideWalls(mov, walls, this.RADIUS), 0.0);
-      fatalImpact = Math.min(Math.pow(aoi,2), 0.9)*util.vec2.magnitude(this.vel)>this.FATAL_IMPACT_SPEED;
-      for(var j=0;j<walls.length&!fatalImpact;j++) {
-        var w = walls[j];
-        if(util.intersection.pointPoly(mov[0], w)) {
-          fatalImpact=true; break; /* @TODO: Move out of clipped wall for post death effects */
-        }
-      }
-    }
-  }
-  return {pos: mov[0], vel: util.vec2.scale(mov[1], this.height !== 0.0 ? this.AIR_DRAG : this.FRICTION)};
 };
 
 /* @FIXME DEBUG GAMEPLAY TEST */

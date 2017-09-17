@@ -73,7 +73,7 @@ MainUI.prototype.create = function(display) {
       size: {x: 20.0, y: 1.5},
       contains: containsProto,
       click: function() {
-        main.net.game.send({type: "i07"});
+        main.net.game.send({type: "i00", data: "07;"});
       }
     },
     {
@@ -91,7 +91,7 @@ MainUI.prototype.create = function(display) {
       size: {x: 20.0, y: 1.5},
       contains: containsProto,
       click: function() {
-        main.net.game.send({type: "i06"});
+        main.net.game.send({type: "i00", data: "06;"});
       }
     },
     {

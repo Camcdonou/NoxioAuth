@@ -35,13 +35,6 @@ GameObject.prototype.update = function(data) {
   this.setVel(vel);
 };
 
-/* Steps object by <float delta> of one frame forward. */
-/* Uses prediction to determine how properties update. */
-GameObject.prototype.step = function(delta) {
-  var nxtpos = util.vec2.add(this.pos, this.vel);
-  this.pos = util.vec2.lerp(pos, nxtpos, delta);
-};
-
 GameObject.prototype.setPos = function(pos) {
   this.pos = pos;
 };
