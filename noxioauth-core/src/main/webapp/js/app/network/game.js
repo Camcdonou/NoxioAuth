@@ -52,12 +52,12 @@ Game.prototype.connect = function(address, port){
   };
 };
 
+var TIME_TEST_COUNT = 0;
 Game.prototype.handlePacket = function(packet) {
   /* Allow state to handle packet. If state returns false then packet was not handled and forward it to general handling. */
+  TIME_TEST_COUNT++;
   if(this.state !== undefined) {
-    if(this.state.handlePacket(packet)) {
-      return;
-    }
+    if(this.state.handlePacket(packet)) { return; }
   }
   switch(packet.type) {
     case "s00" : { this.setState(packet.state); break; }

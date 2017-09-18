@@ -269,18 +269,20 @@ NoxioGame.prototype.deleteObject = function(oid) {
 };
 
 var FDLC_TARGET = 1;
+var FLIP_SWITCH = true;
 NoxioGame.prototype.draw = function() {
   /* @FIXME Something seems a little off with the FPS counter. Seems like it's taking too small a sample of the avalible times... Most notable when tabbing out */
   var start = util.time.now();
   var now = start;
   
-  if(this.delta + this.SERVER_TICK_RATE <= now) {
+  //if(this.delta + this.SERVER_TICK_RATE <= now) {
+  if(FLIP_SWITCH = !FLIP_SWITCH) {
     this.delta = now;
     var packet;
-    if(this.packetFDLC.length === FDLC_TARGET) { console.log("NAILED frame: " + this.delta); }
-    else if(this.packetFDLC.length < FDLC_TARGET) { console.log("MISSED frame: " + this.delta); }
+    if(this.packetFDLC.length === FDLC_TARGET) { /*console.log("NAILED frame: " + this.delta);*/ }
+    else if(this.packetFDLC.length < FDLC_TARGET) { /*console.log("MISSED frame: " + this.delta);*/ }
     else {
-      if(this.packetFDLC.length > FDLC_TARGET+2) { console.log("BEHIND by ["+this.packetFDLC.length+"]: " + this.delta); }
+      if(this.packetFDLC.length > FDLC_TARGET+2) { /*console.log("BEHIND by ["+this.packetFDLC.length+"]: " + this.delta);*/ }
       while(this.packetFDLC.length > FDLC_TARGET) {
         packet = this.packetFDLC.shift();
         this.doUpdate(packet);

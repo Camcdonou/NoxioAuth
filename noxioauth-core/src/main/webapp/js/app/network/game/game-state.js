@@ -4,8 +4,14 @@
 function GameState() {
   this.info = {};
 };
-
+var DELTA_TIME_TEST = new Date().getTime();
 GameState.prototype.handlePacket = function(packet) {
+  if(packet.type === "g10") {
+    var now = new Date().getTime();
+    console.log(now-DELTA_TIME_TEST + " :: " + TIME_TEST_COUNT + " :: " + packet.data.length*2 + " bytes");
+    TIME_TEST_COUNT = 0;
+    DELTA_TIME_TEST = now;
+  }
   switch(packet.type) {
     /* Session Type Packets g0x */
     case "g01" : { this.gameInfo(packet); return true; }
