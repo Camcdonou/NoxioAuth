@@ -21,7 +21,7 @@ Game.prototype.isConnected = function () {
   return this.webSocket !== undefined && this.webSocket.readyState !== WebSocket.CLOSED;
 };
 
-Game.prototype.connect = function(address, port){
+Game.prototype.connect = function(address, port) {
   if(this.isConnected()) {
     main.menu.error.showError("Connection Error", "Attempting to open multiple connections.");
     main.close();
@@ -52,10 +52,8 @@ Game.prototype.connect = function(address, port){
   };
 };
 
-var TIME_TEST_COUNT = 0;
 Game.prototype.handlePacket = function(packet) {
   /* Allow state to handle packet. If state returns false then packet was not handled and forward it to general handling. */
-  TIME_TEST_COUNT++;
   if(this.state !== undefined) {
     if(this.state.handlePacket(packet)) { return; }
   }

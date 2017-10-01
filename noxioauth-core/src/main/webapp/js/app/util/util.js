@@ -453,5 +453,5 @@ util.text.lengthOnScreen = function(text, fontSize) {
 /* ======================================================================================== */
 
 util.time.now = function() {
-  return new Date().getTime();
+  return Date.now();
 };

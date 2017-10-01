@@ -45,6 +45,7 @@ public class Online extends SessionState {
     predef.add(new ServerInfo("EXT-TEST-1", "68.34.229.231", 7001));
     predef.add(new ServerInfo("INT-TEST-1", "10.0.0.253", 7001));
     predef.add(new ServerInfo("LOC-TEST-1", "localhost", 7001));
+    predef.add(new ServerInfo("PUB-TEST-1", "infernoplus.com", 80));
     sendPacket(new PacketO01(predef));
   }
   

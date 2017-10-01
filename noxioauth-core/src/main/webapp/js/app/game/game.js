@@ -71,13 +71,20 @@ NoxioGame.prototype.handlePacket = function(packet) {
   /* Parse packet and apply */
   switch(packet.type) {
     /* Ingame Type Packets gxx */
-    case "g10" : { this.packetFDLC.push(packet); return true; }
+    case "g10" : {
+      this.packetFDLC.push(packet);
+      while(this.packetFDLC.length > FDLC_MAX) {
+        packet = this.packetFDLC.shift();
+        this.doUpdate(packet);
+      }
+      return true;
+    }
     /* Input Type Packets ixx */
     default : { return false; }
   }
 };
 
-NoxioGame.prototype.doUpdate = function(packet) {  
+NoxioGame.prototype.doUpdate = function(packet) {
   this.packHand.gameDataUpdate(packet);
   
   /* Update Camera */
@@ -268,28 +275,30 @@ NoxioGame.prototype.deleteObject = function(oid) {
   return false;
 };
 
-var FDLC_TARGET = 1;
-var FLIP_SWITCH = true;
+var FDLC_TARGET = 1; var FDLC_MAX = 3;
+var LAST_FRAME_DELTA = util.time.now();  //@TODO: should not be global
 NoxioGame.prototype.draw = function() {
   /* @FIXME Something seems a little off with the FPS counter. Seems like it's taking too small a sample of the avalible times... Most notable when tabbing out */
   var start = util.time.now();
   var now = start;
   
-  //if(this.delta + this.SERVER_TICK_RATE <= now) {
-  if(FLIP_SWITCH = !FLIP_SWITCH) {
+  if((now - LAST_FRAME_DELTA) / this.SERVER_TICK_RATE > 0.75) {
     this.delta = now;
-    var packet;
-    if(this.packetFDLC.length === FDLC_TARGET) { /*console.log("NAILED frame: " + this.delta);*/ }
-    else if(this.packetFDLC.length < FDLC_TARGET) { /*console.log("MISSED frame: " + this.delta);*/ }
-    else {
-      if(this.packetFDLC.length > FDLC_TARGET+2) { /*console.log("BEHIND by ["+this.packetFDLC.length+"]: " + this.delta);*/ }
-      while(this.packetFDLC.length > FDLC_TARGET) {
-        packet = this.packetFDLC.shift();
+    
+    /*if(this.packetFDLC.length === FDLC_TARGET) { console.log("NAILED frame: " + this.delta); }
+    else if(this.packetFDLC.length < FDLC_TARGET) { console.log("MISSED frame: " + this.delta); }
+    else if(this.packetFDLC.length > FDLC_MAX) { console.log("BEHIND by ["+this.packetFDLC.length+"]: " + this.delta); }*/
+    
+    /* Attempt to stay at the FDLC_TARGET but always use a frame if we have one no matter what. */
+    var initial = true;
+    while(this.packetFDLC.length > FDLC_TARGET || (initial && this.packetFDLC.length > 0)) {
+        var packet = this.packetFDLC.shift();
         this.doUpdate(packet);
         this.sound.update();                                                                  // Update 3d audio center
         this.display.draw();                                                                  // Draw game
-      }
+        initial = false;
     }
+    LAST_FRAME_DELTA = util.time.now();
   }
 
   /* DEBUG FPS STUFF */

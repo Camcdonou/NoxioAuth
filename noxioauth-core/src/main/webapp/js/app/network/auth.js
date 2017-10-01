@@ -14,9 +14,10 @@ Auth.prototype.establish = function() {
      @FIXME
   */
   var addresses = [
-    "68.34.229.231",
-    "localhost",
-    "10.0.0.253"
+    "infernoplus.com",
+    "localhost:7001",
+    "68.34.229.231:7001",
+    "10.0.0.253:7001"
   ];
   
   var getStatus = function(r) {
@@ -26,7 +27,7 @@ Auth.prototype.establish = function() {
     }
     main.menu.connect.show("Checking server status @" + addresses[r] + "...");
     $.ajax({
-      url: "http://" + addresses[r] + ":7001/noxioauth/status",
+      url: "http://" + addresses[r] + "/noxioauth/status",
       type: 'GET',
       timeout: 3000,
       success: function() { main.net.auth.connect(addresses[r]); },
@@ -48,7 +49,7 @@ Auth.prototype.connect = function(address){
     return;
   }
 
-  this.webSocket = new WebSocket("ws://" + address + ":7001/noxioauth/auth");
+  this.webSocket = new WebSocket("ws://" + address + "/noxioauth/auth");
   main.menu.connect.show("Connecting @" + address + "...");
 
   this.webSocket.onopen = function(event){
