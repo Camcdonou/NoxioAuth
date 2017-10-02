@@ -10,6 +10,7 @@ function Display(game) {
   this.container = this.game.container;   // DOM element containing the canvas
   this.window = this.game.window;         // The canvas we are going to render to
   
+  this.frame = 0;                         // Used by some shaders as a uniform to animate things
   this.camera = new Camera();
   
   if(!this.initWebGL()) { this.initFallback(); }
@@ -52,7 +53,7 @@ Display.prototype.setupWebGL = function() {
     gl.getExtension("WEBKIT_OES_element_index_uint")
   )) { return false; }
   
-  this.upscale = {world: 1.0, ui: 1.0}; /* @FIXME */
+  this.upscale = {sky: 1.0, world: 1.0, ui: 1.0}; /* @FIXME */
   
   this.textures = [];
   this.shaders = [];
@@ -76,6 +77,7 @@ Display.prototype.setupWebGL = function() {
   if(!this.createModel(this.game.asset.model.multi.sheet)) { return false; }
   
   if(!this.createShadowFramebuffer("shadow", 512)) { return false; }
+  if(!this.createFramebuffer("sky", this.upscale.sky)) { return false; }
   if(!this.createFramebuffer("world", this.upscale.world)) { return false; }
   if(!this.createFramebuffer("ui", this.upscale.ui)) { return false; }
   
@@ -140,10 +142,12 @@ Display.prototype.createShader = function(source) {
   var attributes = {};
   var uniforms = {};
   for(var i=0;i<source.attributes.length;i++) {
-    attributes[source.attributes[i].name] = {type: source.attributes[i].type, location: gl.getAttribLocation(shaderProgram, source.attributes[i].name)};
+    var loc = gl.getAttribLocation(shaderProgram, source.attributes[i].name);                                      // Ditches attributes that are optimized out of shader by GLSL
+    if(loc !== -1) { attributes[source.attributes[i].name] = {type: source.attributes[i].type, location: loc}; }
   }
   for(var i=0;i<source.uniforms.length;i++) {
-    uniforms[source.uniforms[i].name] = {type: source.uniforms[i].type, location: gl.getUniformLocation(shaderProgram, source.uniforms[i].name)};
+    var loc = gl.getUniformLocation(shaderProgram, source.uniforms[i].name);                                       // Same thing for uniforms
+    if(loc !== -1) { uniforms[source.uniforms[i].name] = {type: source.uniforms[i].type, location: loc}; }
   }
   
   this.shaders.push(new Shader(source.name, shaderProgram, attributes, uniforms));
@@ -285,10 +289,12 @@ Display.prototype.draw = function() {
   /* Check WebGL is OKAY */
   if(!this.gl) { this.drawFallback(); return; }
   var gl = this.gl; // Sanity Save
+  this.frame++;
   
   /* Update Framebuffers */
   this.updateFramebuffer("world");
   this.updateFramebuffer("ui");
+  this.updateFramebuffer("sky");
   
   /* Generate all matrices for the render */
   var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, this.camera.fov, this.window.width/this.window.height, this.camera.near, this.camera.far); // Perspective
@@ -490,6 +496,49 @@ Display.prototype.draw = function() {
   gl.depthMask(true);                       // Enable writing to depth buffer
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable world framebuffer
   gl.disable(gl.BLEND);                     // Disable Transparency 
+  
+  /* === Draw Sky ======================================================================================================== */
+  /* ===================================================================================================================== */
+  var blocks = [];
+  var texts = [];
+  this.game.ui.getDraw(blocks, texts, this.game.input.mouse.pos, {x: this.window.width, y: this.window.height}); //Get all UI elements to draw
+  
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.sky.fb);                                                    // Enable menu framebuffer
+  gl.viewport(0, 0, (this.window.width*this.fbo.sky.upscale), (this.window.height*this.fbo.sky.upscale)); // Resize to canvas
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);                                                                      // Transparent Black Background
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);                                                    // Clear Color and Depth from previous draw.
+  gl.depthMask(false);                                                                                    // Disable depth write for UI Draw
+  gl.disable(gl.DEPTH_TEST);                                                                              // Disable depth testing for UI Draw
+  gl.enable(gl.BLEND);                                                                                    // Enable Transparency 
+  
+  // @TODO: this isnt exactly right, doesnt scale correctly with aspect ratio and isnt centered right.
+  // Also I want to move sky definitions to the map file along with the ability to define 3d skys and use perspective and massive scale and stuff.
+  
+  var ASPECT = this.window.height/this.window.width;
+  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, 0.0, 1.0, 0.0, 1.0*ASPECT, 0.0, 1.0);
+  var VIEWMATRIX_DEBUG= mat4.create();
+  var uniformDataSky = [
+    {name: "Pmatrix", data: PROJMATRIX_DEBUG},
+    {name: "Vmatrix", data: VIEWMATRIX_DEBUG},
+    {name: "time", data: this.frame},
+    {name: "transform", data: [0.0, 0.0, -0.5]},
+    {name: "size", data: [1.0, 1.0]}
+  ];
+  
+  var skyMaterial = this.getMaterial("material.sky.final.sky");
+  var sheetModel = this.getModel("model.multi.sheet");
+  
+  skyMaterial.shader.enable(gl);
+  skyMaterial.enable(gl);
+  skyMaterial.shader.applyUniforms(gl, uniformDataSky);
+  sheetModel.draw(gl, skyMaterial.shader);
+  skyMaterial.shader.disable(gl);
+  skyMaterial.disable(gl);
+
+  gl.depthMask(true);                       // Reenable depth write after UI draw
+  gl.enable(gl.DEPTH_TEST);                 // Reenable after UI Draw
+  gl.disable(gl.BLEND);                     // Disable transparency
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable menu framebuffer
     
   /* === Draw UI ========================================================================================================= */
   /* ===================================================================================================================== */
@@ -567,6 +616,7 @@ Display.prototype.draw = function() {
   gl.disable(gl.DEPTH_TEST);                                // Disable depth testing for post Draw
   this.fbo.world.tex.enable(gl, 6);                         // Enable world FBO render texture
   this.fbo.ui.tex.enable(gl, 7);                            // Enable ui FBO render texture
+  this.fbo.sky.tex.enable(gl, 8);                            // Enable sky FBO render texture
   var renderMaterial = this.getMaterial("material.multi.post_msaa");
   var renderShader = renderMaterial.shader;
   var sheetModel = this.getModel("model.multi.sheet");
@@ -575,15 +625,17 @@ Display.prototype.draw = function() {
   var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0);
   var VIEWMATRIX_DEBUG= mat4.create();
   var TEXTURE_PROP = [this.window.width/this.fbo.world.fb.width, this.window.height/this.fbo.world.fb.height, (this.fbo.world.fb.height-(this.window.height*this.fbo.world.upscale))/this.fbo.world.fb.height,
-                      this.window.width/this.fbo.ui.fb.width, this.window.height/this.fbo.ui.fb.height, (this.fbo.ui.fb.height-(this.window.height*this.fbo.ui.upscale))/this.fbo.ui.fb.height];
+                      this.window.width/this.fbo.ui.fb.width, this.window.height/this.fbo.ui.fb.height, (this.fbo.ui.fb.height-(this.window.height*this.fbo.ui.upscale))/this.fbo.ui.fb.height,
+                      this.window.width/this.fbo.sky.fb.width, this.window.height/this.fbo.sky.fb.height, (this.fbo.sky.fb.height-(this.window.height*this.fbo.sky.upscale))/this.fbo.sky.fb.height];
   var uniformDataPost = [
     {name: "Pmatrix", data: PROJMATRIX_DEBUG},
     {name: "Vmatrix", data: VIEWMATRIX_DEBUG},
     {name: "textureProp", data: TEXTURE_PROP},
     {name: "resolution", data: [(this.window.width*this.fbo.world.upscale), (this.window.width*this.fbo.world.upscale)]},
-    {name: "upscale", data: [this.fbo.world.upscale, this.fbo.ui.upscale]},
+    {name: "upscale", data: [this.fbo.world.upscale, this.fbo.ui.upscale, this.fbo.sky.upscale]},
     {name: "texture6", data: 6},
-    {name: "texture7", data: 7}
+    {name: "texture7", data: 7},
+    {name: "texture8", data: 8}
   ];
   
   renderShader.enable(gl);

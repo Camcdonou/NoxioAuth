@@ -1,6 +1,7 @@
 "use strict";
 /* global main */
 /* global util */
+/* global URL */
 
 /* Define NoxioGame Class */
 function NoxioGame(name, description, gametype, maxPlayers, map) {
@@ -24,6 +25,8 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   this.sound = new Sound(this);     // Game audio handler
   this.ui = new GameUI(this);       // Ingame UI
   
+  this.ready = false;
+  this.loadCache(map.cache);
   this.loadMap(map);
   
   this.respawnTimer = 0;
@@ -42,24 +45,92 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   this.packHand = new PackHand(this);
   
   this.requestAnimFrameFunc = (function() {
-    return window.requestAnimationFrame || 
-           window.webkitRequestAnimationFrame ||
-           window.mozRequestAnimationFrame ||
-           window.oRequestAnimationFrame ||
-           window.msRequestAnimationFrame ||
+    return window.requestAnimationFrame         || 
+           window.webkitRequestAnimationFrame   ||
+           window.mozRequestAnimationFrame      ||
+           window.oRequestAnimationFrame        ||
+           window.msRequestAnimationFrame       ||
            function(callback) { window.setTimeout(callback, 16); }; /* @FIXME warn for this? */
   })();
   
   this.cancelAnimFrameFunc = (function() {
-    return window.cancelAnimationFrame          ||
+    return window.cancelAnimationFrame                 ||
            window.webkitCancelRequestAnimationFrame    ||
            window.mozCancelRequestAnimationFrame       ||
-           window.oCancelRequestAnimationFrame     ||
+           window.oCancelRequestAnimationFrame         ||
            window.msCancelRequestAnimationFrame        ||
            clearTimeout;
   })();
   
   this.nextFrame = this.requestAnimFrameFunc.call(window, function() { if(main.inGame()) { main.game.draw(); }}); // Javascript 🙄
+};
+
+// @FIXME: remove from production code, this is for building and debugging
+NoxioGame.prototype.generateCache = function() {
+    var type = "TEXT";
+    var filename = "generated-cache";
+    var data = "";
+    for(var i=0;i<this.display.models.length;i++) {
+      data += this.display.models[i].name + ",";
+    }
+    data += ";";
+    for(var i=0;i<this.display.materials.length;i++) {
+      data += this.display.materials[i].name + ",";
+    }
+    data += ";";
+    for(var i=0;i<this.sound.sounds.length;i++) {
+      data += this.sound.sounds[i].path + ",";
+    }
+  
+    var file = new Blob([data], {type: type});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    else { // Others
+        var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
+    }
+};
+
+/* Returns true if any assets are still being downloaded from the server and loaded into OpenGL/WebAudio */
+/* Also updates the loading screen */
+NoxioGame.prototype.loading = function() {
+  var r = true;
+  var loadScreen = "<div style='size: 18px;'>Loading...</div>";
+  for(var i=0;i<this.display.textures.length;i++) {
+    if(!this.display.textures[i].ready) { r = false; }
+    else { loadScreen += "<div style='size: 12px;'>" + this.display.textures[i].path + "</div>"; }
+  }
+  for(var i=0;i<this.sound.sounds.length;i++) {
+    if(!this.sound.sounds[i].ready()) { r = false; }
+    else { loadScreen += "<div style='size: 12px;'>" + this.sound.sounds[i].path + "</div>"; }
+  }
+  
+  if(r) { main.menu.game.loading("Loading complete..."); this.ready = true; }
+  else { main.menu.game.loading(loadScreen); }
+};
+
+NoxioGame.prototype.loadCache = function(cache) {
+  var spl = cache.split(";");
+  var mod = spl[0].split(",");
+  for(var i=0;i<mod.length;i++) {
+    this.display.getModel(mod[i]);
+  }
+  var mat = spl[1].split(",");
+  for(var i=0;i<mat.length;i++) {
+    this.display.getMaterial(mat[i]);
+  }
+  var snd = spl[2].split(",");
+  for(var i=0;i<snd.length;i++) {
+    this.sound.createSound(snd[i]);
+  }
 };
 
 NoxioGame.prototype.loadMap = function(map) {
@@ -294,8 +365,13 @@ NoxioGame.prototype.draw = function() {
     while(this.packetFDLC.length > FDLC_TARGET || (initial && this.packetFDLC.length > 0)) {
         var packet = this.packetFDLC.shift();
         this.doUpdate(packet);
-        this.sound.update();                                                                  // Update 3d audio center
-        this.display.draw();                                                                  // Draw game
+        if(this.ready) {
+          this.sound.update();             // Update 3d audio center
+          this.display.draw();             // Draw game                               
+        }
+        else {
+          this.loading();
+        }
         initial = false;
     }
     LAST_FRAME_DELTA = util.time.now();

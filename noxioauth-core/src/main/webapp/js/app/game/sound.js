@@ -29,26 +29,7 @@ Sound.prototype.initWebAudio = function() {
 
   if(!this.createSound("multi/default.wav")) { return false; }
   
-  this.loadAudio();
-  
   return true;
-};
-
-/* Preloads all required audio assets for the game. */
-Sound.prototype.loadAudio = function() {
-  var paths = [
-    "prank/classy.wav",
-    "prank/uheh.wav",
-    "prank/oowaa.wav",
-    "prank/cumown.wav",
-    "prank/blip.wav",
-    "prank/ata.wav",
-    "prank/toriya.wav",
-    "prank/ha.wav",
-    "prank/huf.wav",
-    "prank/gwaa.wav" // @TODO: fixme
-  ];
-  for(var i=0;i<paths.length;i++) { this.createSound(paths[i]); }
 };
 
 /* @FIXME do something */

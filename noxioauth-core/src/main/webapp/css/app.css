@@ -169,6 +169,19 @@ body {
   width: 45%;
 }
 
+.game-load {
+  position: absolute;
+  margin: 8px 0px 0px 8px;
+  top: 8px;
+  left: 8px;
+  
+  font-family: "Calibri", monospace;
+  color: rgba(255, 255, 255, 1.0);
+  font-size: 16px;
+  font-weight: bold;
+  z-index: -1;
+}
+
 .unselectable {
    -moz-user-select: -moz-none;
    -khtml-user-select: none;

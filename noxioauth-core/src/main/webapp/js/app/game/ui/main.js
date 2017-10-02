@@ -160,9 +160,25 @@ MainUI.prototype.create = function(display) {
         material: display.getMaterial("material.ui.white"),
         text: [0.0, 0.0, 0.0]
       },
-      text: "Leave Game",
+      text: "Generate Cache",
       fontSize: 1.5,
       pos: {x: 0.0, y: -11.2},
+      size: {x: 20.0, y: 1.5},
+      contains: containsProto,
+      click: function() { tmp.game.generateCache(); }
+    },
+    {
+      neutral: {
+        material: display.getMaterial("material.ui.grey"),
+        text: [1.0, 1.0, 1.0]
+      },
+      hover: {
+        material: display.getMaterial("material.ui.white"),
+        text: [0.0, 0.0, 0.0]
+      },
+      text: "Leave Game",
+      fontSize: 1.5,
+      pos: {x: 0.0, y: -12.7},
       size: {x: 20.0, y: 1.5},
       contains: containsProto,
       click: function(button) { tmp.game.leave(); }

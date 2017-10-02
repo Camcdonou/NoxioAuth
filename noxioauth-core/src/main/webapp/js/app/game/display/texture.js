@@ -6,8 +6,10 @@ function Texture(gl, glTexture, path) {
   var tmp = this; /* I FUCKING HATE JAVASCRIPT SCOPES */
   this.glTexture = glTexture;
   this.path = path;
+  this.ready = false;
+  
   this.img = new Image();
-  this.img.onload = function() { tmp.handleTextureLoaded(gl); };
+  this.img.onload = function() { tmp.handleTextureLoaded(gl); tmp.ready = true; };
   this.img.src = "img/game/" + this.path + ".png";
 }
 
@@ -64,6 +66,7 @@ Texture.prototype.handleTextureLoaded = function(gl) {
 
 function RenderTexture(glTexture) {
   this.glTexture = glTexture;
+  this.ready = true;
 }
 
 RenderTexture.prototype.enable = Texture.prototype.enable;

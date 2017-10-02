@@ -3,7 +3,7 @@
 
 /* Define Sound Data Class */
 function SoundData(context, path) {
-  this.path = path;
+  this.path = path; //@TODO: consistency issue: model and material use "name" where as sound and texture uses "path" (might be okay considering file system structure)
   
   var tmp = this; /* Oh look. Javascript. */
   var request = new XMLHttpRequest();
