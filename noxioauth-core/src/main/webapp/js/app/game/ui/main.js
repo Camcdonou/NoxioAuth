@@ -111,7 +111,7 @@ MainUI.prototype.create = function(display) {
       tog: true,
       click: function() {
         if(this.tog) { tmp.game.sound.setVolume(0.0); this.text = "Unmute Sound"; }
-        else { tmp.game.sound.setVolume(1.0); this.text = "Mute Sound"; }
+        else { tmp.game.sound.setVolume(0.5); this.text = "Mute Sound"; }
         this.tog = !this.tog;
       }
     },

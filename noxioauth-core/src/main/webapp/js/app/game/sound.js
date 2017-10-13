@@ -25,6 +25,8 @@ Sound.prototype.initWebAudio = function() {
   this.volume.gain.value = 1.0;
   this.volume.connect(this.context.destination); // Global Volume -> Speakers
   
+  this.setVolume(0.5);
+  
   this.sounds = [];
 
   if(!this.createSound("multi/default.wav")) { return false; }

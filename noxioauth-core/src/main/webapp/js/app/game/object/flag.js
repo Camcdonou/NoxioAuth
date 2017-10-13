@@ -22,7 +22,7 @@ function FlagObject(game, oid, pos, vel) {
   this.onBase = 1;
   this.team = -1;
 
-  this.targetCircle = new Decal(this.game, this.game.display.getMaterial("material.effect.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.3, 0.0);
+  this.targetCircle = new Decal(this.game, this.game.display.getMaterial("material.effect.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.4, 0.0);
 };
 
 FlagObject.prototype.update = function(data) {
@@ -39,6 +39,9 @@ FlagObject.prototype.update = function(data) {
   this.setVel(vel);
   this.setHeight(height, vspeed);
   this.onBase = onBase;
+  
+  /* Step Effects */
+  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 0.4);
 };
 
 FlagObject.prototype.setPos = GameObject.prototype.setPos;

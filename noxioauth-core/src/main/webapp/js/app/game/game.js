@@ -103,17 +103,17 @@ NoxioGame.prototype.generateCache = function() {
 /* Also updates the loading screen */
 NoxioGame.prototype.loading = function() {
   var r = true;
-  var loadScreen = "<div style='size: 18px;'>Loading...</div>";
+  var loadScreen = "<div class='unselectable load-head'>Loading...</div> <div style='width: 100%;'>";
   for(var i=0;i<this.display.textures.length;i++) {
-    if(!this.display.textures[i].ready) { r = false; }
-    else { loadScreen += "<div style='size: 12px;'>" + this.display.textures[i].path + "</div>"; }
+    if(!this.display.textures[i].ready) { loadScreen += "<span class='unselectable load-item'>" + this.display.textures[i].path + "</span>"; r = false; }
+    else { loadScreen += "<span class='load-item-inverse'>" + this.display.textures[i].path + "</span>"; }
   }
   for(var i=0;i<this.sound.sounds.length;i++) {
-    if(!this.sound.sounds[i].ready()) { r = false; }
-    else { loadScreen += "<div style='size: 12px;'>" + this.sound.sounds[i].path + "</div>"; }
+    if(!this.sound.sounds[i].ready()) { loadScreen += "<span class='unselectable load-item'>" + this.sound.sounds[i].path + "</span>"; r = false; }
+    else { loadScreen += "<span class='unselectable load-item-inverse'>" + this.sound.sounds[i].path + "</span>"; }
   }
-  
-  if(r) { main.menu.game.loading("Loading complete..."); this.ready = true; }
+  loadScreen += "</div>";
+  if(r) { main.menu.game.loading("<div class='unselectable'></div>"); this.ready = true; }
   else { main.menu.game.loading(loadScreen); }
 };
 
