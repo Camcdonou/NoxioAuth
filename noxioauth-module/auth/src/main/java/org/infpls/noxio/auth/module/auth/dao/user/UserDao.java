@@ -24,6 +24,7 @@ public class UserDao {
     /* @FIXME DEBUG */
     users.add(new User("test",Hash.generate("test")));
     users.add(new User("test2",Hash.generate("test")));
+    users.add(new User("test3",Hash.generate("test")));
     users.add(new User("inferno",Hash.generate("test")));
     users.add(new User("infernoplus",Hash.generate("test")));
   }

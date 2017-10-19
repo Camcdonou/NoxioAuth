@@ -54,7 +54,10 @@ PackHand.prototype.createObject = function(data) {
 /* OBJ::DELETE | del */
 PackHand.prototype.deleteObject = function(data) {
   var oid = parseInt(data.shift());
+  var pos = util.vec2.parse(data.shift());
   
+  var obj = this.game.getObject(oid);
+  if(obj) { obj.setPos(pos); }
   if(!this.game.deleteObject(oid)) { main.menu.warning.show("Desync: Tried to delete OBJ that does not exist '" + oid + "'."); }
 };
 
@@ -71,7 +74,7 @@ PackHand.prototype.scores = function(data) {
   
   var scs = [];
   for(var i=0;i<name.length;i++) {
-    scs.push({name: name[i], score: score[i], meter: parseFloat(meter[i]), color: {r: parseFloat(r[i]), g: parseFloat(g[i]), b: parseFloat(b[i])}});
+    scs.push({name: name[i], score: score[i], meter: parseFloat(meter[i]), color: {x: parseFloat(r[i]), y: parseFloat(g[i]), z: parseFloat(b[i])}});
   }
   
   var scoreUI = this.game.ui.getElement("score");

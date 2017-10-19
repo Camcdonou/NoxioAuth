@@ -15,6 +15,7 @@ function FlagObject(game, oid, pos, vel) {
   ];
   
   this.RADIUS = 0.1;               // Collision radius
+  this.CULL_RADIUS = 2.0;          // Radius at which to cull this object and all of it's effects.
   this.FRICTION = 0.725;           // Friction Scalar
   this.AIR_DRAG = 0.98;            // Friction Scalar
   this.FATAL_IMPACT_SPEED = 0.175; // Savaged by a wall
@@ -49,7 +50,8 @@ FlagObject.prototype.setVel = GameObject.prototype.setVel;
 FlagObject.prototype.setHeight = GameObject.prototype.setHeight;
 
 FlagObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
-  if(util.intersection.pointPoly(this.pos, bounds)) {
+  var exbounds = util.matrix.expandPolygon(bounds, this.CULL_RADIUS);
+  if(util.intersection.pointPoly(this.pos, exbounds)) {
     var playerUniformData = [
       {name: "transform", data: [this.pos.x, this.pos.y, this.height]}
     ];
@@ -58,7 +60,7 @@ FlagObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
       this.effects[i].getDraw(geometry, decals, lights, bounds);
     }
     this.targetCircle.getDraw(decals, bounds);
-  }
+  } else { console.log("Culled: flag"); }
 };
 
 FlagObject.prototype.destroy = function() {

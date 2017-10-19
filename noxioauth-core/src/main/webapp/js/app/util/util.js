@@ -24,6 +24,14 @@ util.vec2.create = function() {
   return {x: 0.0, y: 0.0};
 };
 
+util.vec2.make = function(x, y) {
+  return {x: x, y: y};
+};
+
+util.vec2.copy = function(a) {
+  return {x: a.x, y: a.y};
+};
+
 /* Takes a string of <float x>,<float y> and makes an object out of it */
 util.vec2.parse = function(data) {
   var spl = data.split(",");
@@ -102,6 +110,14 @@ util.vec2.toArray = function(a) {
 
 util.vec3.create = function() {
   return {x: 0.0, y: 0.0, z: 0.0};
+};
+
+util.vec3.make = function(x, y, z) {
+  return {x: x, y: y, z: z};
+};
+
+util.vec3.copy = function(a) {
+  return {x: a.x, y: a.y, z: a.z};
 };
 
 util.vec3.random = function() {
@@ -191,6 +207,14 @@ util.vec4.create = function() {
   return {x: 0.0, y: 0.0, z: 0.0, w: 1.0};
 };
 
+util.vec4.make = function(x, y, z, w) {
+  return {x: x, y: y, z: z, w: w};
+};
+
+util.vec4.copy = function(a) {
+  return {x: a.x, y: a.y, z: a.z, w: a.w};
+};
+
 util.vec4.toArray = function(a) {
   return [a.x, a.y, a.z, a.w];
 };
@@ -269,7 +293,7 @@ util.matrix.unprojection = function(window, camera, cursor, depth) {
     MV, PROJMATRIX,
     VIEWPORT, modelPointArrayResults);
     
-  if(!success) { return {x: 0.0, y: 0.0, z: 0.0}; /* @FIXME error!*/ }
+  if(!success) { return {x: 0.0, y: 0.0, z: 0.0}; }
   return {x: modelPointArrayResults[0], y: modelPointArrayResults[1], z: modelPointArrayResults[2]};
 };
 
@@ -293,15 +317,22 @@ util.matrix.projection = function(window, camera, coord) {
 };
 
 /* Vec2[x] poly, float distance */
+/* Expands a polygon by it's vertex normals. */
 util.matrix.expandPolygon = function(poly, d) {
-  /* @FIXME doing this ghetto style for now. Redo it correctly with normals later. */
   var c = util.vec2.average(poly);
   var expoly = [];
   for(var i=0;i<poly.length;i++) {
-    var pc = util.vec2.subtract(poly[i], c);           // Point moved so center is 0,0
-    var n = util.vec2.normalize(pc);                   // Normal to expand on
-    var ex = util.vec2.add(pc, util.vec2.scale(n, d)); // Expand point by d
-    expoly.push(util.vec2.add(ex, c));                // Move it back to orignal position
+    var a = i<1 ? poly[poly.length-1] : poly[i-1];
+    var b = poly[i];
+    var c = i<poly.length-1 ? poly[i+1] : poly[0];
+    
+    var na = util.vec2.normalize(util.vec2.subtract(b, a));
+    var nb = util.vec2.normalize(util.vec2.subtract(b, c));
+    
+    var n = util.vec2.normalize(util.vec2.add(na, nb));         // Normal to expand on
+    
+    var ex = util.vec2.add(b, util.vec2.scale(n, d));           // Expand point by d
+    expoly.push(ex);
   }
   return expoly;
 };
@@ -319,11 +350,27 @@ util.intersection.linePlane = function(l, pl) {
   var p = {x: l.a.x + (dp*v.x), y: l.a.y + (dp*v.y), z: l.a.z + (dp*v.z)};
   // Make sure we are not getting a collision in the inverse direction
   if(util.vec3.distance(v, pl.n) >= util.vec3.distance(v, util.vec3.inverse(pl.n))) {
+      var iv = util.vec3.inverse(v);
+      dp = util.vec3.dot(pl.n, iv);
+      return {intersection: p};
+  }
+  return undefined;
+};
+
+/* Generates some extra data about the collision */
+util.intersection.linePlaneVerbose = function(l, pl) {
+  // Does the line intersect the plane?
+  var b = util.vec3.subtract(l.b, l.a);
+  var v = util.vec3.normalize(b);
+  var dp = util.vec3.dot(pl.n, util.vec3.subtract(pl.c, l.a)) / util.vec3.dot(pl.n, v);
+  var p = {x: l.a.x + (dp*v.x), y: l.a.y + (dp*v.y), z: l.a.z + (dp*v.z)};
+  // Make sure we are not getting a collision in the inverse direction
+  if(util.vec3.distance(v, pl.n) >= util.vec3.distance(v, util.vec3.inverse(pl.n))) {
       var ad = util.vec3.distance(l.a, p);
       var iv = util.vec3.inverse(v);
       dp = util.vec3.dot(pl.n, iv);
       var r = util.vec3.scale(util.vec3.normalize(util.vec3.subtract(util.vec3.scale(pl.n, 2*dp), iv)), util.vec3.distance(p, l.b));
-      return {intersection: p, reflection: r, plane: pl, distance: ad}; /* @FIXME might be generating more data than needed for some stuff. optmize. */
+      return {intersection: p, reflection: r, plane: pl, distance: ad};
   }
   return undefined;
 };

@@ -9,8 +9,9 @@ GameState.prototype.handlePacket = function(packet) {
   switch(packet.type) {
     /* Session Type Packets g0x */
     case "g01" : { this.gameInfo(packet); return true; }
-    case "g06" : { this.joinGameError(packet); return true; }
+    case "g06" : { this.transveralError(packet); return true; }
     case "g08" : { this.leftGame(packet); return true; }
+    case "g11" : { this.joinGameSuccess(packet); return true; }
     case "g17" : { this.newGame(packet); return true; }
     default : { return main.inGame() ? this.gameData(packet) : false; }
   }
@@ -28,9 +29,12 @@ GameState.prototype.gameData = function(packet) {
   return main.game.handlePacket(packet); /* Returns false if failed to parse. */
 };
 
-GameState.prototype.joinGameError = function(packet) {
+GameState.prototype.transveralError = function(packet) {                // Error message when failing to join/leave a game or whatever!
   main.menu.warning.show(packet.message);
-  main.endGame();
+};
+
+GameState.prototype.joinGameSuccess = function(packet) {
+  main.game.serverReady = true;
 };
 
 GameState.prototype.gameInfo = function(packet) {
@@ -51,7 +55,7 @@ GameState.prototype.leaveGame = function() {
   this.send({type: "g03"});
 };
 
-GameState.prototype.leftGame = function() {
+GameState.prototype.leftGame = function(packet) {
   main.endGame();
   this.send({type: "g09"});
 };

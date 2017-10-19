@@ -33,7 +33,7 @@ Texture.prototype.enable = function(gl, location) {
     case 7 : { gl.activeTexture(gl.TEXTURE7); break; }
     case 8 : { gl.activeTexture(gl.TEXTURE8); break; }
     case 9 : { gl.activeTexture(gl.TEXTURE9); break; }
-    default : { /* @FIXME major error! */ return; }
+    default : { main.menu.warning.show("Texture.enable() invalid texture location: " + location); return; }
   }
   gl.bindTexture(gl.TEXTURE_2D, this.glTexture);
 };
@@ -50,7 +50,7 @@ Texture.prototype.disable = function(gl, location) {
     case 7 : { gl.activeTexture(gl.TEXTURE7); break; }
     case 8 : { gl.activeTexture(gl.TEXTURE8); break; }
     case 9 : { gl.activeTexture(gl.TEXTURE9); break; }
-    default : { /* @FIXME major error! */ return; }
+    default : { main.menu.warning.show("Texture.disable() invalid texture location: " + location); return; }
   }
   gl.bindTexture(gl.TEXTURE_2D, null);
 };

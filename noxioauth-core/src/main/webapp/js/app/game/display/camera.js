@@ -27,7 +27,7 @@ Camera.prototype.immediate = function() {
 };
 
 /* Do interpolation of camera values */
-Camera.prototype.update = function() { /* @FIXME delta time */
+Camera.prototype.update = function() {
   var INTERP_RATE = 0.33;
   var CAMERA_MIN_ZOOM = 5.0;
   var CAMERA_MAX_ZOOM = 50.0;
@@ -56,7 +56,7 @@ Camera.prototype.addRot = function(rot) {
 };
 
 Camera.prototype.getBounds = function(aspect) {
-  /* @FIXME massively inefficent. so many ways this could be improved. such as gettings 2 points then finding tangent for other 2 */
+  /* @FIXME inefficent. It should be possible to get 2 opposite corners and calcualte the rest of the polygon. That would be better. */
   var a1 = util.matrix.unprojection({width: 1.0, height: aspect}, this, {x: 0.0, y: 0.0}, 0.0);
   var a2 = util.matrix.unprojection({width: 1.0, height: aspect}, this, {x: 0.0, y: 0.0}, 1.0);
   

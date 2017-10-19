@@ -4,8 +4,8 @@
 /* global Particle */
 
 /* Define Blip Particle System Class */
-function ParticleBloodSplat(game, pos, dir) {
-  Particle.call(this, game, pos, dir);
+function ParticleBloodSplat(game, pos, vel) {
+  Particle.call(this, game, pos, vel);
   
   this.decals = [];
 }

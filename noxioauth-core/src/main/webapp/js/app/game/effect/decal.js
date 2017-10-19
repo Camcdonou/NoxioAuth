@@ -19,6 +19,6 @@ Decal.prototype.move = function(pos, size) {
   this.geometry = this.game.map.getGeometryNear(this.pos, this.size);
 };
 
-Decal.prototype.getDraw = function(decals, bounds) { // @TODO: bounds culling
+Decal.prototype.getDraw = function(decals, bounds) {
   decals.push({geometry: this.geometry, material: this.material, pos: this.pos, normal: this.normal, size: this.size, angle: this.angle});
 };

@@ -4,8 +4,8 @@
 /* global Particle */
 
 /* Define Stunned Particle System Class */
-function ParticleStun(game, pos, dir) {
-  Particle.call(this, game, pos, dir);
+function ParticleStun(game, pos, vel) {
+  Particle.call(this, game, pos, vel);
 }
 
 ParticleStun.prototype.create = function() {

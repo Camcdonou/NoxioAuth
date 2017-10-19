@@ -5,7 +5,7 @@
 /* Define Game Sound Class */
 function Sound(game) {
   this.game = game;
-  this.volume; /* @FIXME Settings. */
+  this.volume;
   
   if(!this.initWebAudio()) { this.initFallback(); }
 }
@@ -17,9 +17,11 @@ Sound.prototype.initWebAudio = function() {
     this.context = new AudioContext();
   }
   catch(ex) {
-    main.menu.warning.show("WebAudio not supported. Sound disabled.");
+    main.menu.warning.show("WebAudio not supported. Intializing fallback mode...");
     return false;
   }
+  
+  /* @FIXME Settings integration for volume/individual sound settings etc */
   
   this.volume = this.context.createGain();
   this.volume.gain.value = 1.0;
@@ -34,11 +36,9 @@ Sound.prototype.initWebAudio = function() {
   return true;
 };
 
-/* @FIXME do something */
 Sound.prototype.initFallback = function() {
   this.context = undefined;
   this.sounds = [];
-  // Lol ur fucked
 };
 
 /* Updates position of audio context for 3d sound */

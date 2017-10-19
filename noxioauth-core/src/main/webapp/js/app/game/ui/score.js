@@ -69,7 +69,7 @@ ScoreUI.prototype.update = function(title, data) {
     });
     this.texts.push({
       text: data[i].name,
-      color: [data[i].color.r, data[i].color.g, data[i].color.b],
+      color: [data[i].color.x, data[i].color.y, data[i].color.z],
       pos: {x: XOFF, y: YOFF-(LINE_HEIGHT*(i+1))},
       size: LINE_HEIGHT
     });

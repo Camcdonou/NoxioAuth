@@ -4,8 +4,8 @@
 /* global Particle */
 
 /* Define Dash Particle System Class */
-function ParticleDash(game, pos, dir) {
-  Particle.call(this, game, pos, dir);
+function ParticleDash(game, pos, vel) {
+  Particle.call(this, game, pos, vel);
 }
 
 ParticleDash.prototype.create = function() {
@@ -20,7 +20,7 @@ ParticleDash.prototype.create = function() {
   var shockwave  = {model: square, material: shockwaveMat, delay: 0, length: 7, update: function(){ this.properties.scale *= 1.15; this.properties.color.w -= 1.0/6.0;}, properties: {pos: this.pos, scale: 1.00, color: white()}};
   this.pushPart(shockwave);
   
-  var norm = util.vec3.normalize(this.dir);
+  var norm = util.vec3.normalize(this.vel);
   var reverse = util.vec3.inverse(norm);
   for(var i=0;i<12;i++) {
     var rand = util.vec3.random();
@@ -31,10 +31,10 @@ ParticleDash.prototype.create = function() {
       length: 18,
       update: function() {
         this.properties.speed *= 0.91;
-        this.properties.pos = util.vec3.add(this.properties.pos, util.vec3.scale(this.properties.dir, this.properties.speed));
+        this.properties.pos = util.vec3.add(this.properties.pos, util.vec3.scale(this.properties.vel, this.properties.speed));
         this.properties.color.w -= 1.0/18.0;
       },
-      properties: {pos: util.vec3.add(util.vec3.add(this.pos, util.vec3.scale(norm, i/6)),util.vec3.scale(rand, 0.75)), dir: reverse, scale: 0.55, speed: 0.15, color: blue(), angle: -Math.atan(norm.y/norm.x)}
+      properties: {pos: util.vec3.add(util.vec3.add(this.pos, util.vec3.scale(norm, i/6)),util.vec3.scale(rand, 0.75)), vel: reverse, scale: 0.55, speed: 0.15, color: blue(), angle: -Math.atan(norm.y/norm.x)}
     });
   }
 };

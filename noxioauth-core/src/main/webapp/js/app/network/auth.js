@@ -9,14 +9,13 @@ function Auth () {
 
 Auth.prototype.establish = function() {
   /* List of addresses to attempt to connect on. 
-     This is due to an oddity with Comcast where I cannot use an external IP from a local system.
-     This code should be removed in production!
-     @FIXME
+     Try current domain first then a list of backup addresses for testing & etc...
   */
   var addresses = [
+    window.location.host,
     "infernoplus.com",
     "localhost:7001",
-    "68.34.229.231:7001",
+    "68.32.114.183:7001",
     "10.0.0.253:7001"
   ];
   

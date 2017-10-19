@@ -21,6 +21,7 @@ function PlayerObject(game, oid, pos, vel) {
   ];
   
   this.RADIUS = 0.5;               // Collision radius
+  this.CULL_RADIUS = 3.0;          // Radius at which to cull this object and all of it's effects.
   this.MAX_SPEED = 0.0375;         // Max movement speed
   this.FRICTION = 0.725;           // Friction Scalar
   this.AIR_DRAG = 0.98;            // Friction Scalar
@@ -37,16 +38,16 @@ function PlayerObject(game, oid, pos, vel) {
   this.dashCooldown = 0;
   
   this.blipEffect = new Effect([
-    {type: "light", class: PointLight, params: ["<vec3 pos>", {r: 0.45, g: 0.5, b: 1.0, a: 1.0}, 3.0], update: function(lit){}, attachment: true, delay: 0, length: 3},
-    {type: "light", class: PointLight, params: ["<vec3 pos>", {r: 0.45, g: 0.5, b: 1.0, a: 1.0}, 3.0], update: function(lit){lit.color.a -= 1.0/12.0; lit.rad += 0.1; }, attachment: true, delay: 3, length: 12},
+    {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 1.0), 3.0], update: function(lit){}, attachment: true, delay: 0, length: 3},
+    {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 1.0), 3.0], update: function(lit){lit.color.w -= 1.0/12.0; lit.rad += 0.1; }, attachment: true, delay: 3, length: 12},
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/blip.wav", 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33},
-    {type: "particle", class: ParticleBlip, params: [this.game, "<vec3 pos>", "<vec3 dir>"], update: function(prt){}, attachment: true, delay: 0, length: 33}
+    {type: "particle", class: ParticleBlip, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 33}
   ]);
   
   this.dashEffect = new Effect([
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/ata.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
-    {type: "light", class: PointLight, params: ["<vec3 pos>", {r: 0.45, g: 0.5, b: 1.0, a: 0.75}, 2.5], update: function(lit){lit.color.a -= 1.0/45.0; lit.rad += 0.05; }, attachment: false, delay: 0, length: 30},
-    {type: "particle", class: ParticleDash, params: [this.game, "<vec3 pos>", "<vec3 dir>"], update: function(prt){}, attachment: true, delay: 0, length: 60}
+    {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 0.75), 2.5], update: function(lit){lit.color.w -= 1.0/45.0; lit.rad += 0.05; }, attachment: false, delay: 0, length: 30},
+    {type: "particle", class: ParticleDash, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 60}
   ]);
   
   this.tauntEffect = new Effect([
@@ -59,12 +60,12 @@ function PlayerObject(game, oid, pos, vel) {
   
   this.stunEffect = new Effect([
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/uheh.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
-    {type: "particle", class: ParticleStun, params: [this.game, "<vec3 pos>", "<vec3 dir>"], update: function(prt){}, attachment: true, delay: 0, length: 45}
+    {type: "particle", class: ParticleStun, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 45}
   ]);
   
   this.bloodEffect = new Effect([
-    {type: "particle", class: ParticleBloodSplat, params: [this.game, "<vec3 pos>", "<vec3 dir>"], update: function(prt){}, attachment: true, delay: 0, length: 300},
-    {type: "decal", class: Decal, params: [this.game, this.game.display.getMaterial("material.effect.decal.bloodsplat"), "<vec3 pos>", {x: 0.0, y: 0.0, z: 1.0}, 1.5, Math.random()*6.28319], update: function(dcl){}, attachment: false, delay: 0, length: 300}
+    {type: "particle", class: ParticleBloodSplat, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 300},
+    {type: "decal", class: Decal, params: [this.game, this.game.display.getMaterial("material.effect.decal.bloodsplat"), "<vec3 pos>", util.vec3.make(0.0, 0.0, 1.0), 1.5, Math.random()*6.28319], update: function(dcl){}, attachment: false, delay: 0, length: 300}
   ]);
   
   this.impactDeathEffect = new Effect([
@@ -78,7 +79,7 @@ function PlayerObject(game, oid, pos, vel) {
   this.effects.push(this.blipEffect); this.effects.push(this.dashEffect); this.effects.push(this.tauntEffect); this.effects.push(this.jumpEffect);
   this.effects.push(this.stunEffect); this.effects.push(this.bloodEffect); this.effects.push(this.impactDeathEffect); this.effects.push(this.fallDeathEffect);
   
-  this.targetCircle = new Decal(this.game, this.game.display.getMaterial("material.effect.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 1.1, 0.0);
+  this.targetCircle = new Decal(this.game, this.game.display.getMaterial("material.effect.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), util.vec3.make(0.0, 0.0, 1.0), 1.1, 0.0);
 };
 
 PlayerObject.prototype.update = function(data) {
@@ -164,7 +165,8 @@ PlayerObject.prototype.setSpeed = function(speed) {
 };
 
 PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
-  if(util.intersection.pointPoly(this.pos, bounds)) {
+  var exbounds = util.matrix.expandPolygon(bounds, this.CULL_RADIUS);
+  if(util.intersection.pointPoly(this.pos, exbounds)) {
     var playerUniformData = [
       {name: "transform", data: [this.pos.x, this.pos.y, this.height]}
     ];

@@ -15,9 +15,12 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   this.window = document.getElementById("canvas");
   this.container = document.getElementById("canvas-container");
   
-  this.SERVER_TICK_RATE = 33;       // Number of milliseconds per server tick
-  this.delta = util.time.now();     // Number of milliseconds since last server update() or step()
-  this.packetFDLC = [{data:""},{data:""}];             // ~~~MAGIC~~~
+  this.SERVER_TICK_RATE = 33;               // Number of milliseconds per server tick
+  this.FDLC_TARGET = 1; this.FDLC_MAX = 3;  // FDLC range constants
+  this.packetFDLC = [{data:""},{data:""}];  // ~~~MAGIC~~~
+  this.deltaFDLC = util.time.now();
+  
+  this.delta = util.time.now();             // Number of milliseconds since ????
   
   this.input = new Input(this);     // Mouse, keyboard, and controller handler
   this.asset = new Asset();         // Raw data for models, animations, textures, shaders, sounds, etc, etc, etc...
@@ -25,7 +28,7 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   this.sound = new Sound(this);     // Game audio handler
   this.ui = new GameUI(this);       // Ingame UI
   
-  this.ready = false;
+  this.ready = false, this.serverReady = false;
   this.loadCache(map.cache);
   this.loadMap(map);
   
@@ -50,7 +53,7 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
            window.mozRequestAnimationFrame      ||
            window.oRequestAnimationFrame        ||
            window.msRequestAnimationFrame       ||
-           function(callback) { window.setTimeout(callback, 16); }; /* @FIXME warn for this? */
+           function(callback) { window.setTimeout(callback, 16); };
   })();
   
   this.cancelAnimFrameFunc = (function() {
@@ -99,8 +102,7 @@ NoxioGame.prototype.generateCache = function() {
     }
 };
 
-/* Returns true if any assets are still being downloaded from the server and loaded into OpenGL/WebAudio */
-/* Also updates the loading screen */
+/* Updates loading screen and flags the client as ready when everything is done downloading. */
 NoxioGame.prototype.loading = function() {
   var r = true;
   var loadScreen = "<div class='unselectable load-head'>Loading...</div> <div style='width: 100%;'>";
@@ -117,6 +119,7 @@ NoxioGame.prototype.loading = function() {
   else { main.menu.game.loading(loadScreen); }
 };
 
+/* Starts loading all textures/sounds in the map file cache. */
 NoxioGame.prototype.loadCache = function(cache) {
   var spl = cache.split(";");
   var mod = spl[0].split(",");
@@ -137,21 +140,23 @@ NoxioGame.prototype.loadMap = function(map) {
   this.map = new Map(this.display, map);
 };
 
-/* Returns false if failed handled packet */
+/* Returns false if the packet is not of a type that we know how to handle */
 NoxioGame.prototype.handlePacket = function(packet) {
   /* Parse packet and apply */
   switch(packet.type) {
     /* Ingame Type Packets gxx */
-    case "g10" : {
-      this.packetFDLC.push(packet);
-      while(this.packetFDLC.length > FDLC_MAX) {
-        packet = this.packetFDLC.shift();
-        this.doUpdate(packet);
-      }
-      return true;
-    }
+    case "g10" : { this.updatePacket(packet); return true; }
     /* Input Type Packets ixx */
     default : { return false; }
+  }
+};
+
+/* Handles PacketG10, this packet updates the gamestate and is essentially a "frame". */
+NoxioGame.prototype.updatePacket = function(packet) {
+  this.packetFDLC.push(packet);
+  while(this.packetFDLC.length > this.FDLC_MAX) {
+    packet = this.packetFDLC.shift();
+    this.doUpdate(packet);
   }
 };
 
@@ -243,8 +248,11 @@ NoxioGame.prototype.update = function(tick) {
   /* === DEBUG BLOCK END ==================== */
 };
 
-NoxioGame.prototype.sendInput = function() { /* @FIXME step should do some of the stuff this does, its just that step is overrun with debug shit. Cleanup. */
-  var cursor = this.input.getMouseActual(); /* mousActual deprecated? @FIXME */
+/* This is all insanely messy and input just needs to be entirely redone. */
+/* @FIXME step should do some of the stuff this does, its just that step is overrun with debug shit. Cleanup. */
+NoxioGame.prototype.sendInput = function() {
+  if(!(this.ready && this.serverReady)) { return; }
+  
   var obj = this.getObject(this.control);
   var inputs = this.input.keyboard.popInputs();
   var mouse = this.input.mouse.popMovement();
@@ -255,12 +263,12 @@ NoxioGame.prototype.sendInput = function() { /* @FIXME step should do some of th
   /* Apply popped inputs */
   this.display.camera.setZoom(mouse.s);
   
-  /* Apply state inputs */    // @FIXME this is all messy and debug...
+  /* Apply state inputs */
   var inputs = [];
   var actions = [];
-  if(this.input.keyboard.keys[37]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: 0.01}); } //Left /* Debug camera controls @FIXME */
+  if(this.input.keyboard.keys[37]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: 0.01}); }  //Left
   if(this.input.keyboard.keys[39]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: -0.01}); } //Right
-  if(this.input.keyboard.keys[38]) { this.display.camera.addRot({x: 0.01, y: 0.0, z: 0.0}); } //Up
+  if(this.input.keyboard.keys[38]) { this.display.camera.addRot({x: 0.01, y: 0.0, z: 0.0}); }  //Up
   if(this.input.keyboard.keys[40]) { this.display.camera.addRot({x: -0.01, y: 0.0, z: 0.0}); } //Down
   if(this.input.keyboard.keys[32]) { actions.push("jump"); }
   if(this.input.keyboard.keys[70]) { actions.push("blip"); }
@@ -337,7 +345,7 @@ NoxioGame.prototype.deleteObject = function(oid) {
     if(this.objects[i].oid === oid) {
       this.objects[i].destroy();
       for(var j=0;j<this.objects[i].effects.length;j++) {
-        if(this.objects[i].effects[j].active()) { this.effects.push({pos: this.objects[i].pos, effect: this.objects[i].effects[j]}); }
+        if(this.objects[i].effects[j].active()) { this.effects.push({pos: this.objects[i].pos, radius: this.objects[i].CULL_RADIUS, effect: this.objects[i].effects[j]}); }
       }
       this.objects.splice(i, 1);
       return true;
@@ -346,35 +354,28 @@ NoxioGame.prototype.deleteObject = function(oid) {
   return false;
 };
 
-var FDLC_TARGET = 1; var FDLC_MAX = 3;
-var LAST_FRAME_DELTA = util.time.now();  //@TODO: should not be global
 NoxioGame.prototype.draw = function() {
-  /* @FIXME Something seems a little off with the FPS counter. Seems like it's taking too small a sample of the avalible times... Most notable when tabbing out */
   var start = util.time.now();
   var now = start;
   
-  if((now - LAST_FRAME_DELTA) / this.SERVER_TICK_RATE > 0.75) {
+  if((now - this.deltaFDLC) / this.SERVER_TICK_RATE > 0.75) {
     this.delta = now;
-    
-    /*if(this.packetFDLC.length === FDLC_TARGET) { console.log("NAILED frame: " + this.delta); }
-    else if(this.packetFDLC.length < FDLC_TARGET) { console.log("MISSED frame: " + this.delta); }
-    else if(this.packetFDLC.length > FDLC_MAX) { console.log("BEHIND by ["+this.packetFDLC.length+"]: " + this.delta); }*/
     
     /* Attempt to stay at the FDLC_TARGET but always use a frame if we have one no matter what. */
     var initial = true;
-    while(this.packetFDLC.length > FDLC_TARGET || (initial && this.packetFDLC.length > 0)) {
+    while(this.packetFDLC.length > this.FDLC_TARGET || (initial && this.packetFDLC.length > 0)) {
         var packet = this.packetFDLC.shift();
         this.doUpdate(packet);
-        if(this.ready) {
-          this.sound.update();             // Update 3d audio center
-          this.display.draw();             // Draw game                               
+        if(this.ready && this.serverReady) {  // Don't draw or play sound until game is fully loaded
+          this.display.draw();                // Draw game
+          this.sound.update();                // Update 3d audio center                               
         }
         else {
-          this.loading();
+          this.loading();                     // Update loading screen
         }
         initial = false;
     }
-    LAST_FRAME_DELTA = util.time.now();
+    this.deltaFDLC = util.time.now();
   }
 
   /* DEBUG FPS STUFF */
