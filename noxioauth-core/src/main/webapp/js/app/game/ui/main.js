@@ -39,7 +39,7 @@ MainUI.prototype.create = function(display) {
   this.blocks = [
     {
       neutral: {
-        material: display.getMaterial("material.ui.grey"),
+        material: display.getMaterial("ui.grey"),
         text: [1.0, 1.0, 1.0]
       },
       text: "[Server Info]",
@@ -51,7 +51,7 @@ MainUI.prototype.create = function(display) {
     },
     {
       neutral: {
-        material: display.getMaterial("material.ui.white_solid"),
+        material: display.getMaterial("ui.white_solid"),
       },
       pos: {x: 0.0, y: -2.2},
       size: {x: 18.0, y: 0.2},
@@ -60,11 +60,11 @@ MainUI.prototype.create = function(display) {
     },
     {
       neutral: {
-        material: display.getMaterial("material.ui.grey"),
+        material: display.getMaterial("ui.grey"),
         text: [1.0, 1.0, 1.0]
       },
       hover: {
-        material: display.getMaterial("material.ui.white"),
+        material: display.getMaterial("ui.white"),
         text: [0.0, 0.0, 0.0]
       },
       text: "Change Team",
@@ -78,11 +78,11 @@ MainUI.prototype.create = function(display) {
     },
     {
       neutral: {
-        material: display.getMaterial("material.ui.grey"),
+        material: display.getMaterial("ui.grey"),
         text: [1.0, 1.0, 1.0]
       },
       hover: {
-        material: display.getMaterial("material.ui.white"),
+        material: display.getMaterial("ui.white"),
         text: [0.0, 0.0, 0.0]
       },
       text: "Reset Game",
@@ -96,11 +96,11 @@ MainUI.prototype.create = function(display) {
     },
     {
       neutral: {
-        material: display.getMaterial("material.ui.grey"),
+        material: display.getMaterial("ui.grey"),
         text: [1.0, 1.0, 1.0]
       },
       hover: {
-        material: display.getMaterial("material.ui.white"),
+        material: display.getMaterial("ui.white"),
         text: [0.0, 0.0, 0.0]
       },
       text: "Mute Sound",
@@ -117,11 +117,11 @@ MainUI.prototype.create = function(display) {
     },
     {
       neutral: {
-        material: display.getMaterial("material.ui.grey"),
+        material: display.getMaterial("ui.grey"),
         text: [1.0, 1.0, 1.0]
       },
       hover: {
-        material: display.getMaterial("material.ui.white"),
+        material: display.getMaterial("ui.white"),
         text: [0.0, 0.0, 0.0]
       },
       text: "Enable Debug",
@@ -137,11 +137,11 @@ MainUI.prototype.create = function(display) {
     },
     {
       neutral: {
-        material: display.getMaterial("material.ui.grey"),
+        material: display.getMaterial("ui.grey"),
         text: [1.0, 1.0, 1.0]
       },
       hover: {
-        material: display.getMaterial("material.ui.white"),
+        material: display.getMaterial("ui.white"),
         text: [0.0, 0.0, 0.0]
       },
       text: "Enable Cheats",
@@ -149,15 +149,15 @@ MainUI.prototype.create = function(display) {
       pos: {x: 0.0, y: -9.7},
       size: {x: 20.0, y: 1.5},
       contains: containsProto,
-      click: function() { tmp.game.sound.setMusic(tmp.game.sound.getSound("prank/classy.wav", 1.0), true); this.text = "Hahahahaha"; }
+      click: function() { tmp.game.sound.setMusic(tmp.game.sound.getSound("music/roll.wav", 1.0), true); this.text = "Hahahahaha"; }
     },
     {
       neutral: {
-        material: display.getMaterial("material.ui.grey"),
+        material: display.getMaterial("ui.grey"),
         text: [1.0, 1.0, 1.0]
       },
       hover: {
-        material: display.getMaterial("material.ui.white"),
+        material: display.getMaterial("ui.white"),
         text: [0.0, 0.0, 0.0]
       },
       text: "Generate Cache",
@@ -169,11 +169,11 @@ MainUI.prototype.create = function(display) {
     },
     {
       neutral: {
-        material: display.getMaterial("material.ui.grey"),
+        material: display.getMaterial("ui.grey"),
         text: [1.0, 1.0, 1.0]
       },
       hover: {
-        material: display.getMaterial("material.ui.white"),
+        material: display.getMaterial("ui.white"),
         text: [0.0, 0.0, 0.0]
       },
       text: "Leave Game",

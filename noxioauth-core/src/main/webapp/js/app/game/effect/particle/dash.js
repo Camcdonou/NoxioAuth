@@ -9,10 +9,10 @@ function ParticleDash(game, pos, vel) {
 }
 
 ParticleDash.prototype.create = function() {
-  var square = this.game.display.getModel("model.multi.square");
+  var square = this.game.display.getModel("multi.square");
   
-  var shockwaveMat = this.game.display.getMaterial("material.effect.shockwave");
-  var speedLineMat = this.game.display.getMaterial("material.effect.speedline");
+  var shockwaveMat = this.game.display.getMaterial("character.fox.effect.shockwave");
+  var speedLineMat = this.game.display.getMaterial("character.fox.effect.speedline");
   
   var white = function(){ return {x: 1.0, y: 1.0, z: 1.0, w: 1.0}; };
   var blue = function() { return {x: 0.42, y: 0.57, z: 1.0, w: 1.0}; };

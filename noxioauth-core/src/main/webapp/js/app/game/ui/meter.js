@@ -36,32 +36,32 @@ MeterUI.prototype.meters = function(blip, dash, speed) {
 MeterUI.prototype.update = function(display) {
   this.blocks = [
     {
-      material: display.getMaterial("material.ui.grey"),
+      material: display.getMaterial("ui.grey"),
       pos: {x: 0.0, y: 0.0},
       size: {x: 30.0, y: 2.0}
     },
     {
-      material: display.getMaterial("material.ui.white"),
+      material: display.getMaterial("ui.white"),
       pos: {x: 0.0, y: 0.0},
       size: {x: 2.0+(28.0*this.blip), y: 2.0}
     },
     {
-      material: display.getMaterial("material.prank.blipIcon"),
+      material: display.getMaterial("character.fox.ui.blipIcon"),
       pos: {x: 0.0, y: 0.0},
       size: {x: 2.0, y: 2.0}
     },
     {
-      material: display.getMaterial("material.ui.grey"),
+      material: display.getMaterial("ui.grey"),
       pos: {x: 0.0, y: 2.0},
       size: {x: 25.0, y: 2.0}
     },
     {
-      material: display.getMaterial("material.ui.white"),
+      material: display.getMaterial("ui.white"),
       pos: {x: 0.0, y: 2.0},
       size: {x: 2.0+(23.0*this.dash), y: 2.0}
     },
     {
-      material: display.getMaterial("material.prank.dashIcon"),
+      material: display.getMaterial("character.fox.ui.dashIcon"),
       pos: {x: 0.0, y: 2.0},
       size: {x: 2.0, y: 2.0}
     }

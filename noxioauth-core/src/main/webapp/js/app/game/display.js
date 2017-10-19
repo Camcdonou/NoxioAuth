@@ -71,7 +71,7 @@ Display.prototype.setupWebGL = function() {
   if(!this.createMaterial(this.game.asset.material.multi.default)) { return false; }
   if(!this.createMaterial(this.game.asset.material.multi.shadow)) { return false; }
   if(!this.createMaterial(this.game.asset.material.multi.post_msaa)) { return false; }
-  if(!this.createMaterial(this.game.asset.material.multi.gulm)) { return false; }
+  if(!this.createMaterial(this.game.asset.material.ui.gulm)) { return false; }
   
   if(!this.createModel(this.game.asset.model.multi.box)) { return false; }
   if(!this.createModel(this.game.asset.model.multi.sheet)) { return false; }
@@ -365,7 +365,7 @@ Display.prototype.draw = function() {
   gl.clearColor(1.0, 0.0, 0.0, 1.0);                                          // red -> Z=Zfar on the shadow map
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   
-  var shadowMaterial = this.getMaterial("material.multi.shadow");
+  var shadowMaterial = this.getMaterial("multi.shadow");
   var shadowUniformData = [
     {name: "Pmatrix", data: PROJMATRIX_SHADOW},
     {name: "Lmatrix", data: LIGHTMATRIX},
@@ -526,8 +526,8 @@ Display.prototype.draw = function() {
     {name: "size", data: [1.0, 1.0]}
   ];
   
-  var skyMaterial = this.getMaterial("material.sky.final.sky");
-  var sheetModel = this.getModel("model.multi.sheet");
+  var skyMaterial = this.getMaterial("sky.final.sky");
+  var sheetModel = this.getModel("multi.sheet");
   
   skyMaterial.shader.enable(gl);
   skyMaterial.enable(gl);
@@ -554,9 +554,9 @@ Display.prototype.draw = function() {
   gl.depthMask(false);                                                                                  // Disable depth write for UI Draw
   gl.disable(gl.DEPTH_TEST);                                                                            // Disable depth testing for UI Draw
   gl.enable(gl.BLEND);                                                                                  // Enable Transparency 
-  var fontMaterial = this.getMaterial("material.multi.gulm");
+  var fontMaterial = this.getMaterial("ui.gulm");
   var fontShader = fontMaterial.shader;
-  var sheetModel = this.getModel("model.multi.sheet");
+  var sheetModel = this.getModel("multi.sheet");
   
   var ASPECT = this.window.height/this.window.width;
   var PROJMATRIX_UI = mat4.create(); mat4.ortho(PROJMATRIX_UI, 0.0, 100.0,0.0*ASPECT, 100.0*ASPECT, 0.0, 1.0);
@@ -618,9 +618,9 @@ Display.prototype.draw = function() {
   this.fbo.world.tex.enable(gl, 6);                         // Enable world FBO render texture
   this.fbo.ui.tex.enable(gl, 7);                            // Enable ui FBO render texture
   this.fbo.sky.tex.enable(gl, 8);                            // Enable sky FBO render texture
-  var renderMaterial = this.getMaterial("material.multi.post_msaa");
+  var renderMaterial = this.getMaterial("multi.post_msaa");
   var renderShader = renderMaterial.shader;
-  var sheetModel = this.getModel("model.multi.sheet");
+  var sheetModel = this.getModel("multi.sheet");
   
   var ASPECT = this.window.height/this.window.width;
   var PROJMATRIX_POST = mat4.create(); mat4.ortho(PROJMATRIX_POST, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0);
@@ -732,14 +732,14 @@ Display.prototype.getMaterial = function(name) {
   }
   
   var spl = name.split(".");
-  var src = this.game.asset;
+  var src = this.game.asset.material;
   for(var i=0;i<spl.length&&src!==undefined;i++) {
     src = src[spl[i]];
   }
   if(src !== undefined) { if(this.createMaterial(src)) { return this.getMaterial(name); } }
   
   main.menu.warning.show("Failed to load material: '" + name + "'");
-  return this.getMaterial("material.multi.default");
+  return this.getMaterial("multi.default");
 };
 
 /* Returns a model by name. If it is not loaded then it attempts to load it. If model is not found then returns default. */
@@ -751,14 +751,14 @@ Display.prototype.getModel = function(name) {
   }
   
   var spl = name.split(".");
-  var src = this.game.asset;
+  var src = this.game.asset.model;
   for(var i=0;i<spl.length&&src!==undefined;i++) {
     src = src[spl[i]];
   }
   if(src !== undefined) { if(this.createModel(src)) { return this.getModel(name); } }
   
   main.menu.warning.show("Failed to load model: '" + name + "'");
-  return this.getModel("model.multi.box");
+  return this.getModel("multi.box");
 };
 
 Display.prototype.destroy = function() {

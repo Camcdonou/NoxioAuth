@@ -33,12 +33,12 @@ ObjectiveUI.prototype.update = function(jects, aspect) {
       var screenCoord = util.matrix.projection(this.game.window, this.game.display.camera, adjust); // @TODO: CULL OFFSCREEN NAMES!
 
       this.blocks.push({
-        material: this.game.display.getMaterial("material.ui.grey"),
+        material: this.game.display.getMaterial("ui.grey"),
         pos: {x: 50.0-(SIZE/2)+(screenCoord.x*50.0), y: YASPECT+(screenCoord.y*YASPECT)}, // @TODO: Not centered on y axis?
         size: {x: SIZE, y: SIZE}
       });
       this.blocks.push({
-        material: jects[i].color==="red"?this.game.display.getMaterial("material.prank.flagIconRed"):this.game.display.getMaterial("material.prank.flagIconBlue"),
+        material: jects[i].color==="red"?this.game.display.getMaterial("ui.flagIcon"):this.game.display.getMaterial("ui.flagIcon"),
         pos: {x: 50.0-(SIZE/2)+(screenCoord.x*50.0), y: YASPECT+(screenCoord.y*YASPECT)}, // @TODO: Not centered on y axis?
         size: {x: SIZE, y: SIZE}
       });

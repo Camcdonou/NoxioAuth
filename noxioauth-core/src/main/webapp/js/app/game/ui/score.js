@@ -38,7 +38,7 @@ ScoreUI.prototype.update = function(title, data) {
   var YOFF = 20.0;
   
   this.blocks.push({
-    material: display.getMaterial("material.ui.grey"),
+    material: display.getMaterial("ui.grey"),
     pos: {x: XOFF, y: YOFF},
     size: {x: LINE_WIDTH, y: LINE_HEIGHT}
   });
@@ -58,12 +58,12 @@ ScoreUI.prototype.update = function(title, data) {
   
   for(var i=0;i<data.length;i++) {
     this.blocks.push({
-      material: display.getMaterial("material.ui.grey"),
+      material: display.getMaterial("ui.grey"),
       pos: {x: XOFF, y: YOFF-(LINE_HEIGHT*(i+1))},
       size: {x: LINE_WIDTH, y: LINE_HEIGHT}
     });
     this.blocks.push({
-      material: display.getMaterial("material.ui.white"),
+      material: display.getMaterial("ui.white"),
       pos: {x: XOFF, y: YOFF-(LINE_HEIGHT*(i+1))},
       size: {x: LINE_WIDTH*data[i].meter, y: LINE_HEIGHT}
     });

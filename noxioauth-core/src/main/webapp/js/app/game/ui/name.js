@@ -31,7 +31,7 @@ NameUI.prototype.update = function(names, aspect) {
     var screenCoord = util.matrix.projection(this.game.window, this.game.display.camera, names[i].pos); // @TODO: CULL OFFSCREEN NAMES!
   
     this.blocks.push({
-      material: this.game.display.getMaterial("material.ui.grey"),
+      material: this.game.display.getMaterial("ui.grey"),
       pos: {x: 50.0-(txtLength/2)+(screenCoord.x*50.0), y: YASPECT+(screenCoord.y*YASPECT)},
       size: {x: txtLength, y: FONT_SIZE}
     });

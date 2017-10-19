@@ -45,7 +45,7 @@ DebugUI.prototype.update = function(display) {
   var msize = this.texts.length*FONT_SIZE;
   this.blocks = [
     {
-      material: display.getMaterial("material.ui.grey"),
+      material: display.getMaterial("ui.grey"),
       pos: {x: -length, y: -msize},
       size: {x: length, y: msize}
     }

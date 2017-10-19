@@ -5,17 +5,38 @@
 Asset.prototype.material = {};
 Asset.prototype.material.ui = {};
 Asset.prototype.material.multi = {};
-Asset.prototype.material.test = {};
-Asset.prototype.material.final = {};
+Asset.prototype.material.character = {};
+Asset.prototype.material.character.player = {};
+Asset.prototype.material.character.player.decal = {};
+Asset.prototype.material.character.player.effect = {};
+Asset.prototype.material.character.fox = {};
+Asset.prototype.material.character.fox.ui = {};
+Asset.prototype.material.character.fox.decal = {};
+Asset.prototype.material.character.fox.effect = {};
 Asset.prototype.material.sky = {};
 Asset.prototype.material.sky.final = {};
-Asset.prototype.material.effect = {};
-Asset.prototype.material.effect.decal = {};
-Asset.prototype.material.prank = {};
+Asset.prototype.material.map = {};
+Asset.prototype.material.map.final = {};
+
+/* Source File: gulm.mat */
+Asset.prototype.material.ui.gulm = {
+  name: "ui.gulm",
+  shader: "font",
+  shadow: false,
+  texture0: "ui/gulm_sdf",
+};
+
+/* Source File: flagIcon.mat */
+Asset.prototype.material.ui.flagIcon = {
+  name: "ui.flagIcon",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "ui/flag",
+};
 
 /* Source File: grey.mat */
 Asset.prototype.material.ui.grey = {
-  name: "material.ui.grey",
+  name: "ui.grey",
   shader: "simpletrans",
   shadow: false,
   texture0: "ui/grey",
@@ -23,7 +44,7 @@ Asset.prototype.material.ui.grey = {
 
 /* Source File: white.mat */
 Asset.prototype.material.ui.white = {
-  name: "material.ui.white",
+  name: "ui.white",
   shader: "simpletrans",
   shadow: false,
   texture0: "ui/white",
@@ -31,39 +52,22 @@ Asset.prototype.material.ui.white = {
 
 /* Source File: white_solid.mat */
 Asset.prototype.material.ui.white_solid = {
-  name: "material.ui.white_solid",
+  name: "ui.white_solid",
   shader: "simpletrans",
   shadow: false,
   texture0: "ui/white_solid",
 };
 
-/* Source File: default_red.mat */
-Asset.prototype.material.multi.default_red = {
-  name: "material.multi.default_red",
-  shader: "default",
-  shadow: true,
-  texture0: "multi/default_red",
-};
-
 /* Source File: post_msaa.mat */
 Asset.prototype.material.multi.post_msaa = {
-  name: "material.multi.post_msaa",
+  name: "multi.post_msaa",
   shader: "post_msaa",
   shadow: false,
-  texture0: "final/space",
-};
-
-/* Source File: gulm.mat */
-Asset.prototype.material.multi.gulm = {
-  name: "material.multi.gulm",
-  shader: "font",
-  shadow: false,
-  texture0: "multi/gulm_sdf",
 };
 
 /* Source File: default.mat */
 Asset.prototype.material.multi.default = {
-  name: "material.multi.default",
+  name: "multi.default",
   shader: "default",
   shadow: true,
   texture0: "multi/default",
@@ -71,102 +75,132 @@ Asset.prototype.material.multi.default = {
 
 /* Source File: post.mat */
 Asset.prototype.material.multi.post = {
-  name: "material.multi.post",
+  name: "multi.post",
   shader: "post",
   shadow: false,
 };
 
 /* Source File: shadow.mat */
 Asset.prototype.material.multi.shadow = {
-  name: "material.multi.shadow",
+  name: "multi.shadow",
   shader: "shadow",
   shadow: true,
 };
 
 /* Source File: post_fxaa.mat */
 Asset.prototype.material.multi.post_fxaa = {
-  name: "material.multi.post_fxaa",
+  name: "multi.post_fxaa",
   shader: "post_fxaa",
   shadow: false,
 };
 
-/* Source File: debug.mat */
-Asset.prototype.material.multi.debug = {
-  name: "material.multi.debug",
-  shader: "debug",
+/* Source File: targetcircle.mat */
+Asset.prototype.material.character.player.decal.targetcircle = {
+  name: "character.player.decal.targetcircle",
+  shader: "decal_glow",
   shadow: false,
+  texture0: "character/player/decal/targetcircle",
 };
 
-/* Source File: default_blue.mat */
-Asset.prototype.material.multi.default_blue = {
-  name: "material.multi.default_blue",
-  shader: "default",
-  shadow: true,
-  texture0: "multi/default_blue",
-};
-
-/* Source File: test3.mat */
-Asset.prototype.material.test.test3 = {
-  name: "material.test.test3",
-  shader: "test",
-  shadow: true,
-  texture0: "test/banned",
-};
-
-/* Source File: test1.mat */
-Asset.prototype.material.test.test1 = {
-  name: "material.test.test1",
-  shader: "test",
-  shadow: true,
-  texture0: "test/pointdown",
-};
-
-/* Source File: test2.mat */
-Asset.prototype.material.test.test2 = {
-  name: "material.test.test2",
-  shader: "test",
-  shadow: true,
-  texture0: "test/fat",
-};
-
-/* Source File: grid.mat */
-Asset.prototype.material.final.grid = {
-  name: "material.final.grid",
-  shader: "final_grid",
+/* Source File: bloodsplat.mat */
+Asset.prototype.material.character.player.decal.bloodsplat = {
+  name: "character.player.decal.bloodsplat",
+  shader: "decal",
   shadow: false,
-  texture0: "final/grid",
+  texture0: "character/player/decal/bloodsplat",
 };
 
-/* Source File: ceiling.mat */
-Asset.prototype.material.final.ceiling = {
-  name: "material.final.ceiling",
-  shader: "final",
-  shadow: true,
-  texture0: "final/stage_dark",
-  texture1: "final/edge_color",
+/* Source File: bloodsplatsmall.mat */
+Asset.prototype.material.character.player.decal.bloodsplatsmall = {
+  name: "character.player.decal.bloodsplatsmall",
+  shader: "decal",
+  shadow: false,
+  texture0: "character/player/decal/bloodsplatsmall",
 };
 
-/* Source File: floor.mat */
-Asset.prototype.material.final.floor = {
-  name: "material.final.floor",
-  shader: "final",
-  shadow: true,
-  texture0: "final/stage",
-  texture1: "final/edge_color",
+/* Source File: star.mat */
+Asset.prototype.material.character.player.effect.star = {
+  name: "character.player.effect.star",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/player/effect/star",
 };
 
-/* Source File: wall.mat */
-Asset.prototype.material.final.wall = {
-  name: "material.final.wall",
-  shader: "final",
-  shadow: true,
-  texture0: "final/stage",
-  texture1: "final/edge_color",
+/* Source File: bloodsplash.mat */
+Asset.prototype.material.character.player.effect.bloodsplash = {
+  name: "character.player.effect.bloodsplash",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/player/effect/bloodsplash",
+};
+
+/* Source File: blooddrop.mat */
+Asset.prototype.material.character.player.effect.blooddrop = {
+  name: "character.player.effect.blooddrop",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/player/effect/blooddrop",
+};
+
+/* Source File: blipIcon.mat */
+Asset.prototype.material.character.fox.ui.blipIcon = {
+  name: "character.fox.ui.blipIcon",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "character/fox/ui/blip_icon",
+};
+
+/* Source File: dashIcon.mat */
+Asset.prototype.material.character.fox.ui.dashIcon = {
+  name: "character.fox.ui.dashIcon",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "character/fox/ui/dash_icon",
+};
+
+/* Source File: shockwave.mat */
+Asset.prototype.material.character.fox.effect.shockwave = {
+  name: "character.fox.effect.shockwave",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/fox/effect/shockwave",
+};
+
+/* Source File: speedline.mat */
+Asset.prototype.material.character.fox.effect.speedline = {
+  name: "character.fox.effect.speedline",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/fox/effect/speedline",
+};
+
+/* Source File: blipBright.mat */
+Asset.prototype.material.character.fox.effect.blipBright = {
+  name: "character.fox.effect.blipBright",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/fox/effect/blip_bright",
+};
+
+/* Source File: spark.mat */
+Asset.prototype.material.character.fox.effect.spark = {
+  name: "character.fox.effect.spark",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/fox/effect/spark",
+};
+
+/* Source File: blip.mat */
+Asset.prototype.material.character.fox.effect.blip = {
+  name: "character.fox.effect.blip",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/fox/effect/blip",
 };
 
 /* Source File: sky.mat */
 Asset.prototype.material.sky.final.sky = {
-  name: "material.sky.final.sky",
+  name: "sky.final.sky",
   shader: "final_space",
   shadow: false,
   texture0: "sky/final/space_color",
@@ -176,123 +210,38 @@ Asset.prototype.material.sky.final.sky = {
   texture4: "sky/final/multi_difference",
 };
 
-/* Source File: shockwave.mat */
-Asset.prototype.material.effect.shockwave = {
-  name: "material.effect.shockwave",
-  shader: "particle",
+/* Source File: grid.mat */
+Asset.prototype.material.map.final.grid = {
+  name: "map.final.grid",
+  shader: "final_grid",
   shadow: false,
-  texture0: "effect/shockwave",
+  texture0: "map/final/grid",
 };
 
-/* Source File: star.mat */
-Asset.prototype.material.effect.star = {
-  name: "material.effect.star",
-  shader: "particle",
-  shadow: false,
-  texture0: "effect/star",
+/* Source File: ceiling.mat */
+Asset.prototype.material.map.final.ceiling = {
+  name: "map.final.ceiling",
+  shader: "final",
+  shadow: true,
+  texture0: "map/final/stage_dark",
+  texture1: "map/final/edge_color",
 };
 
-/* Source File: targetcircle.mat */
-Asset.prototype.material.effect.decal.targetcircle = {
-  name: "material.effect.decal.targetcircle",
-  shader: "decal_glow",
-  shadow: false,
-  texture0: "effect/targetcircle",
+/* Source File: floor.mat */
+Asset.prototype.material.map.final.floor = {
+  name: "map.final.floor",
+  shader: "final",
+  shadow: true,
+  texture0: "map/final/stage",
+  texture1: "map/final/edge_color",
 };
 
-/* Source File: bloodsplat.mat */
-Asset.prototype.material.effect.decal.bloodsplat = {
-  name: "material.effect.decal.bloodsplat",
-  shader: "decal",
-  shadow: false,
-  texture0: "effect/bloodsplat",
-};
-
-/* Source File: bloodsplatsmall.mat */
-Asset.prototype.material.effect.decal.bloodsplatsmall = {
-  name: "material.effect.decal.bloodsplatsmall",
-  shader: "decal",
-  shadow: false,
-  texture0: "effect/bloodsplatsmall",
-};
-
-/* Source File: bloodsplash.mat */
-Asset.prototype.material.effect.bloodsplash = {
-  name: "material.effect.bloodsplash",
-  shader: "particle",
-  shadow: false,
-  texture0: "effect/bloodsplash",
-};
-
-/* Source File: speedline.mat */
-Asset.prototype.material.effect.speedline = {
-  name: "material.effect.speedline",
-  shader: "particle",
-  shadow: false,
-  texture0: "effect/speedline",
-};
-
-/* Source File: spark.mat */
-Asset.prototype.material.effect.spark = {
-  name: "material.effect.spark",
-  shader: "particle",
-  shadow: false,
-  texture0: "effect/spark",
-};
-
-/* Source File: blooddrop.mat */
-Asset.prototype.material.effect.blooddrop = {
-  name: "material.effect.blooddrop",
-  shader: "particle",
-  shadow: false,
-  texture0: "effect/blooddrop",
-};
-
-/* Source File: flagIconBlue.mat */
-Asset.prototype.material.prank.flagIconBlue = {
-  name: "material.prank.flagIconBlue",
-  shader: "simpletrans",
-  shadow: false,
-  texture0: "prank/flagBlue",
-};
-
-/* Source File: blipBright.mat */
-Asset.prototype.material.prank.blipBright = {
-  name: "material.prank.blipBright",
-  shader: "particle",
-  shadow: false,
-  texture0: "prank/blip_bright",
-};
-
-/* Source File: flagIconRed.mat */
-Asset.prototype.material.prank.flagIconRed = {
-  name: "material.prank.flagIconRed",
-  shader: "simpletrans",
-  shadow: false,
-  texture0: "prank/flagRed",
-};
-
-/* Source File: blipIcon.mat */
-Asset.prototype.material.prank.blipIcon = {
-  name: "material.prank.blipIcon",
-  shader: "simpletrans",
-  shadow: false,
-  texture0: "prank/blip_icon",
-};
-
-/* Source File: blip.mat */
-Asset.prototype.material.prank.blip = {
-  name: "material.prank.blip",
-  shader: "particle",
-  shadow: false,
-  texture0: "prank/blip",
-};
-
-/* Source File: dashIcon.mat */
-Asset.prototype.material.prank.dashIcon = {
-  name: "material.prank.dashIcon",
-  shader: "simpletrans",
-  shadow: false,
-  texture0: "prank/dash_icon",
+/* Source File: wall.mat */
+Asset.prototype.material.map.final.wall = {
+  name: "map.final.wall",
+  shader: "final",
+  shadow: true,
+  texture0: "map/final/stage",
+  texture1: "map/final/edge_color",
 };
 

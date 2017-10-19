@@ -11,10 +11,10 @@ function ParticleBloodSplat(game, pos, vel) {
 }
 
 ParticleBloodSplat.prototype.create = function() {
-  var square = this.game.display.getModel("model.multi.square");
+  var square = this.game.display.getModel("multi.square");
   
-  var splashMat = this.game.display.getMaterial("material.effect.bloodsplash");
-  var dropMat = this.game.display.getMaterial("material.effect.blooddrop");
+  var splashMat = this.game.display.getMaterial("character.player.effect.bloodsplash");
+  var dropMat = this.game.display.getMaterial("character.player.effect.blooddrop");
   
   var center = util.vec3.add(this.pos, {x: 0.0, y: 0.0, z: 0.5});
   
@@ -48,7 +48,7 @@ ParticleBloodSplat.prototype.create = function() {
 };
 
 ParticleBloodSplat.prototype.createBloodSplat = function(pos, normal) {
-  var decal = new Decal(this.game, this.game.display.getMaterial("material.effect.decal.bloodsplatsmall"), pos, normal, (Math.random()*0.5)+0.35, Math.random()*6.28319);
+  var decal = new Decal(this.game, this.game.display.getMaterial("character.player.decal.bloodsplatsmall"), pos, normal, (Math.random()*0.5)+0.35, Math.random()*6.28319);
   this.decals.push(decal);
 };
 

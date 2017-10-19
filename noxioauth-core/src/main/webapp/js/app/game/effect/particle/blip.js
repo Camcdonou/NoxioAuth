@@ -9,18 +9,18 @@ function ParticleBlip(game, pos, vel) {
 }
 
 ParticleBlip.prototype.create = function() {
-  var square = this.game.display.getModel("model.multi.square");
+  var square = this.game.display.getModel("multi.square");
   
-  var shockwaveMat = this.game.display.getMaterial("material.effect.shockwave");
-  var blipBrightMat = this.game.display.getMaterial("material.prank.blipBright");
-  var blipMat = this.game.display.getMaterial("material.prank.blip");
-  var sparkMat = this.game.display.getMaterial("material.effect.spark");
+  var shockwaveMat = this.game.display.getMaterial("character.fox.effect.shockwave");
+  var blipBrightMat = this.game.display.getMaterial("character.fox.effect.blipBright");
+  var blipMat = this.game.display.getMaterial("character.fox.effect.blip");
+  var sparkMat = this.game.display.getMaterial("character.fox.effect.spark");
   
   var white = function(){ return {x: 1.0, y: 1.0, z: 1.0, w: 1.0}; };
   var blue = function() { return {x: 0.81, y: 0.94, z: 1.0, w: 1.0}; };
   
   var shockwave  = {model: square, material: shockwaveMat, delay: 0, length: 5, update: function(pos){ this.properties.pos = pos; this.properties.scale *= 1.25; this.properties.color.w -= 1.0/5.0;}, properties: {pos: this.pos, scale: 1.25, color: blue()}};
-  var blipBright = {model: square, material: blipBrightMat, delay: 0, length: 2, update: function(pos){ this.properties.pos = pos; }, properties: {pos: this.pos, scale: 1.25, color: white()}};
+  var blipBright = {model: square, material: blipBrightMat, delay: 0, length: 3, update: function(pos){ this.properties.pos = pos; }, properties: {pos: this.pos, scale: 1.25, color: white()}};
   var blip       = {model: square, material: blipMat, delay: 2, length: 4, update: function(pos){ this.properties.pos = pos; this.properties.scale += 0.2;}, properties: {pos: this.pos, scale: 1.25, color: white()}};
   this.pushPart(shockwave);
   this.pushPart(blipBright);

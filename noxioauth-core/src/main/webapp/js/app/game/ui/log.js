@@ -43,7 +43,7 @@ LogUI.prototype.update = function(display) {
   var msize = this.texts.length*FONT_SIZE;
   this.blocks = [
     {
-      material: display.getMaterial("material.ui.grey"),
+      material: display.getMaterial("ui.grey"),
       pos: {x: -33.0, y: 0.0},
       size: {x: 33.0, y: msize}
     }

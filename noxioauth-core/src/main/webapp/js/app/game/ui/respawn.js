@@ -29,7 +29,7 @@ RespawnUI.prototype.create = function() {
   var txtLength = util.text.lengthOnScreen(TEXT_MESSAGE, FONT_SIZE);
   this.blocks = [
     {
-      material: this.game.display.getMaterial("material.ui.grey"),
+      material: this.game.display.getMaterial("ui.grey"),
       pos: {x: 0.0, y: 30.0},
       size: {x: 100.0, y: FONT_SIZE}
     }

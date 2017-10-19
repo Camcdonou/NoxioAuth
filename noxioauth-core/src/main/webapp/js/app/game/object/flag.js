@@ -7,11 +7,11 @@
 function FlagObject(game, oid, pos, vel) {
   GameObject.call(this, game, oid, pos, vel);
   
-  this.model = this.game.display.getModel("model.multi.flag");
+  this.model = this.game.display.getModel("object.flag.flag");
   this.material = [
-    this.game.display.getMaterial("material.multi.default"),
-    this.game.display.getMaterial("material.multi.default_red"),
-    this.game.display.getMaterial("material.multi.default_blue")
+    this.game.display.getMaterial("multi.default"),
+    this.game.display.getMaterial("multi.default"),
+    this.game.display.getMaterial("multi.default")
   ];
   
   this.RADIUS = 0.1;               // Collision radius
@@ -23,7 +23,7 @@ function FlagObject(game, oid, pos, vel) {
   this.onBase = 1;
   this.team = -1;
 
-  this.targetCircle = new Decal(this.game, this.game.display.getMaterial("material.effect.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.4, 0.0);
+  this.targetCircle = new Decal(this.game, this.game.display.getMaterial("character.player.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.4, 0.0);
 };
 
 FlagObject.prototype.update = function(data) {
@@ -60,7 +60,7 @@ FlagObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
       this.effects[i].getDraw(geometry, decals, lights, bounds);
     }
     this.targetCircle.getDraw(decals, bounds);
-  } else { console.log("Culled: flag"); }
+  }
 };
 
 FlagObject.prototype.destroy = function() {

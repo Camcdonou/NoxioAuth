@@ -13,11 +13,11 @@
 function PlayerObject(game, oid, pos, vel) {
   GameObject.call(this, game, oid, pos, vel);
   
-  this.model = this.game.display.getModel("model.multi.smallBox");
+  this.model = this.game.display.getModel("multi.smallBox");
   this.material = [
-    this.game.display.getMaterial("material.multi.default"),
-    this.game.display.getMaterial("material.multi.default_red"),
-    this.game.display.getMaterial("material.multi.default_blue")
+    this.game.display.getMaterial("multi.default"),
+    this.game.display.getMaterial("multi.default"),
+    this.game.display.getMaterial("multi.default")
   ];
   
   this.RADIUS = 0.5;               // Collision radius
@@ -40,46 +40,46 @@ function PlayerObject(game, oid, pos, vel) {
   this.blipEffect = new Effect([
     {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 1.0), 3.0], update: function(lit){}, attachment: true, delay: 0, length: 3},
     {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 1.0), 3.0], update: function(lit){lit.color.w -= 1.0/12.0; lit.rad += 0.1; }, attachment: true, delay: 3, length: 12},
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/blip.wav", 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33},
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/attack0.wav", 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33},
     {type: "particle", class: ParticleBlip, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 33}
   ]);
   
   this.dashEffect = new Effect([
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/ata.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/dash0.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
     {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 0.75), 2.5], update: function(lit){lit.color.w -= 1.0/45.0; lit.rad += 0.05; }, attachment: false, delay: 0, length: 30},
     {type: "particle", class: ParticleDash, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 60}
   ]);
   
   this.tauntEffect = new Effect([
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/cumown.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33}
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/taunt0.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33}
   ]);
   
   this.jumpEffect = new Effect([
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/huf.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33}
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/jump0.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33}
   ]);
   
   this.stunEffect = new Effect([
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/uheh.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/hit0.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
     {type: "particle", class: ParticleStun, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 45}
   ]);
   
   this.bloodEffect = new Effect([
     {type: "particle", class: ParticleBloodSplat, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 300},
-    {type: "decal", class: Decal, params: [this.game, this.game.display.getMaterial("material.effect.decal.bloodsplat"), "<vec3 pos>", util.vec3.make(0.0, 0.0, 1.0), 1.5, Math.random()*6.28319], update: function(dcl){}, attachment: false, delay: 0, length: 300}
+    {type: "decal", class: Decal, params: [this.game, this.game.display.getMaterial("character.player.decal.bloodsplat"), "<vec3 pos>", util.vec3.make(0.0, 0.0, 1.0), 1.5, Math.random()*6.28319], update: function(dcl){}, attachment: false, delay: 0, length: 300}
   ]);
   
   this.impactDeathEffect = new Effect([
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/gwaa.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 60}
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/death0.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 60}
   ]);
   
   this.fallDeathEffect = new Effect([
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["prank/oowaa.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 99}
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/death1.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 99}
   ]);
   
   this.effects.push(this.blipEffect); this.effects.push(this.dashEffect); this.effects.push(this.tauntEffect); this.effects.push(this.jumpEffect);
   this.effects.push(this.stunEffect); this.effects.push(this.bloodEffect); this.effects.push(this.impactDeathEffect); this.effects.push(this.fallDeathEffect);
   
-  this.targetCircle = new Decal(this.game, this.game.display.getMaterial("material.effect.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), util.vec3.make(0.0, 0.0, 1.0), 1.1, 0.0);
+  this.targetCircle = new Decal(this.game, this.game.display.getMaterial("character.player.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), util.vec3.make(0.0, 0.0, 1.0), 1.1, 0.0);
 };
 
 PlayerObject.prototype.update = function(data) {
