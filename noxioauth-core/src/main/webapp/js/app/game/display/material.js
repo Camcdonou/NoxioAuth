@@ -5,7 +5,7 @@
 function Material(name, shader, texture, castShadow) {
   this.name = name;
   this.shader = shader;
-  this.texture = texture; /* @FIXME The way this is compiled and stored is kind of weird, maybe change it to some kind of array with name ids or w/e */
+  this.texture = texture;      // While this *could* be an array I prefer to use an object for index safety. EX: texture0 and texture3 are used but 1 and 2 are not.
   this.castShadow = castShadow;
 }
 

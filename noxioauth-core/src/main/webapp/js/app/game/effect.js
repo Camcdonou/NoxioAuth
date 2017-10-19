@@ -4,8 +4,9 @@
 /* global Function */
 
 /* NOTE: This class might be best described as "magic". You were warned. */
+
 /* Define Effect Handler Class */
-function Effect(components) {   
+function Effect(components, radius) {
   this.components = components;   // List of things to create when trigger() is called
   
   this.delayed = [];  /* Spec: {component: <obj>, delay: <int frames>} */
@@ -22,24 +23,24 @@ function Effect(components) {
    SOUND:     {type: <string TYPE>, class: <object parent>, func: <function call>, params: <var[]>, update: <function>, attachment: <boolean>, delay: <int frames>, length: <int frames>}
    TYPE must be of one these values: ["particle", "sound", "light", "decal"]
 */
-Effect.prototype.trigger = function(pos, dir) {
+Effect.prototype.trigger = function(pos, vel) {
   for(var i=0;i<this.components.length;i++) {
     if(this.components[i].delay > 0) {
       this.delayed.push({component: this.components[i], delay: this.components[i].delay});
     }
     else {
-      this.spawn(this.components[i], pos, dir);
+      this.spawn(this.components[i], pos, vel);
     }
   }
 };
 
 /* Internal function! Call Trigger to trigger the effect. */
-Effect.prototype.spawn = function(comp, pos, dir) {
+Effect.prototype.spawn = function(comp, pos, vel) {
   var paramgen = [];
   for(var j=0;j<comp.params.length;j++) {
     switch(comp.params[j]) {
       case "<vec3 pos>" : { paramgen.push(pos); break; }
-      case "<vec3 dir>" : { paramgen.push(dir); break; }
+      case "<vec3 vel>" : { paramgen.push(vel); break; }
       default : { paramgen.push(comp.params[j]); break; }
     }
   }
@@ -57,7 +58,7 @@ Effect.prototype.spawn = function(comp, pos, dir) {
 };
 
 /* Updates components of the effect. */
-Effect.prototype.step = function(pos, dir) {
+Effect.prototype.step = function(pos, vel) {
   /* Update Sounds */
   for(var i=0;i<this.sound.length;i++) {
     var snd = this.sound[i];
@@ -81,7 +82,7 @@ Effect.prototype.step = function(pos, dir) {
     var prt = this.particle[i];
     if(--prt.length <= 0) { this.particle.splice(i, 1); }
     else {
-      if(prt.attachment) { prt.obj.step(pos, dir); }
+      if(prt.attachment) { prt.obj.step(pos, vel); }
       else { prt.obj.step(); }
       prt.update(prt.obj);
     }
@@ -91,14 +92,14 @@ Effect.prototype.step = function(pos, dir) {
     var dcl = this.decal[i];
     if(--dcl.length <= 0) { this.decal.splice(i, 1); }
     else {
-      if(dcl.attachment) { dcl.obj.step(pos, dir); }
+      if(dcl.attachment) { dcl.obj.step(pos, vel); }
       dcl.update(dcl.obj);
     }
   }
   /* Spawn Delayed */
   for(var i=0;i<this.delayed.length;i++) {
     if(--this.delayed[i].delay <= 0) {
-      this.spawn(this.delayed[i].component, pos, dir);
+      this.spawn(this.delayed[i].component, pos, vel);
       this.delayed.splice(i, 1);
     }
   }

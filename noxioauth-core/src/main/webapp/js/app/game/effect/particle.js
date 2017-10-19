@@ -9,10 +9,10 @@
  * just going to remind you that if you instaniate this class I will
  * come find you irl.
  */
-function Particle(game, pos, dir) {  /* @FIXME maybe change DIRection to VELocity? */
+function Particle(game, pos, vel) {
   this.game = game;
   this.pos = pos;
-  this.dir = dir;
+  this.vel = vel;
   
   this.delayed = [];    // Particles waiting to be active
   this.particles = [];  // Active particles
@@ -32,16 +32,16 @@ Particle.prototype.pushPart = function(part) {
 };
 
 /* Final. Inherit this. */
-/* if <vec3 pos> and <vec3 dir> are passed then they update the particle systems values. */
-Particle.prototype.step = function(pos, dir) {
+/* if <vec3 pos> and <vec3 vel> are passed then they update the particle systems values. */
+Particle.prototype.step = function(pos, vel) {
   /* Update position if passed */
   if(pos) { this.pos = pos; }
-  if(dir) { this.dir = dir; }
+  if(vel) { this.vel = vel; }
   /* Update Particles */
   for(var i=0;i<this.particles.length;i++) {
     if(--this.particles[i].length <= 0) { this.particles.splice(i,1); }
     else {
-      this.particles[i].update(pos, dir);
+      this.particles[i].update(pos, vel);
     }
   }
   /* Spawn Delayed */

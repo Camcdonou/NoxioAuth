@@ -7,6 +7,8 @@ Asset.prototype.material.ui = {};
 Asset.prototype.material.multi = {};
 Asset.prototype.material.test = {};
 Asset.prototype.material.final = {};
+Asset.prototype.material.sky = {};
+Asset.prototype.material.sky.final = {};
 Asset.prototype.material.effect = {};
 Asset.prototype.material.effect.decal = {};
 Asset.prototype.material.prank = {};
@@ -160,6 +162,18 @@ Asset.prototype.material.final.wall = {
   shadow: true,
   texture0: "final/stage",
   texture1: "final/edge_color",
+};
+
+/* Source File: sky.mat */
+Asset.prototype.material.sky.final.sky = {
+  name: "material.sky.final.sky",
+  shader: "final_space",
+  shadow: false,
+  texture0: "sky/final/space_color",
+  texture1: "sky/final/lines",
+  texture2: "sky/final/multi_space",
+  texture3: "sky/final/twink",
+  texture4: "sky/final/multi_difference",
 };
 
 /* Source File: shockwave.mat */

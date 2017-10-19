@@ -4,8 +4,8 @@
 /* global Particle */
 
 /* Define Blip Particle System Class */
-function ParticleBlip(game, pos, dir) {
-  Particle.call(this, game, pos, dir);
+function ParticleBlip(game, pos, vel) {
+  Particle.call(this, game, pos, vel);
 }
 
 ParticleBlip.prototype.create = function() {
@@ -35,10 +35,10 @@ ParticleBlip.prototype.create = function() {
       update: function() {
         this.properties.scale += 0.005;
         this.properties.speed *= 0.95;
-        this.properties.pos = util.vec3.add(this.properties.pos, util.vec3.scale(this.properties.dir, this.properties.speed));
+        this.properties.pos = util.vec3.add(this.properties.pos, util.vec3.scale(this.properties.vel, this.properties.speed));
         this.properties.color.w -= 1.0/22.0;
       },
-      properties: {pos: util.vec3.add(this.pos, util.vec3.scale(rand, 0.3)), dir: rand, scale: 0.175, speed: 0.1, color: blue()}
+      properties: {pos: util.vec3.add(this.pos, util.vec3.scale(rand, 0.3)), vel: rand, scale: 0.175, speed: 0.1, color: blue()}
     });
   }
 };

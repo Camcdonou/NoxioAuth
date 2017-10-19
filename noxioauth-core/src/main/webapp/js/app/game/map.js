@@ -16,8 +16,8 @@ function Map(display, data) {
 
 /* index 0 is always treated as a blank space. in map files define it as undefined,undefined; */
 Map.prototype.loadPallete = function(display, tileList) {
-  var pallete = [];
-  for(var i=0;i<tileList.length;i++) {
+  var pallete = [{model: undefined, material: undefined}];
+  for(var i=1;i<tileList.length;i++) {
     var model = display.getModel(tileList[i].model);
     var material = display.getMaterial(tileList[i].material);
     pallete.push({model: model, material: material});

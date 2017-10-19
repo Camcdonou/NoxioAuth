@@ -22,7 +22,7 @@ GameUI.prototype.getElement = function(name) {
   for(var i=0;i<this.elements.length;i++) {
     if(this.elements[i].name === name) { return this.elements[i]; }
   }
-  return undefined; /* @FIXME error */
+  return undefined;
 };
 
 /* Returns true if a interactable menu object is visible */

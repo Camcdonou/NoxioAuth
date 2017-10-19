@@ -75,11 +75,6 @@ Input.prototype.keyboard.event = function(evt, state) {
   }
 };
 
-/* Returns the mouse coordinates in game space */
-Input.prototype.getMouseActual = function() {
-  return {x: this.mouse.pos.x, y: this.mouse.pos.y};
-};
-
 Input.prototype.destroy = function() {
   this.window.onmousemove=function() {};
   this.window.onmousedown=function() {};

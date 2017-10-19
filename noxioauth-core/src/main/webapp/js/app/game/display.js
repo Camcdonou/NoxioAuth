@@ -10,6 +10,7 @@ function Display(game) {
   this.container = this.game.container;   // DOM element containing the canvas
   this.window = this.game.window;         // The canvas we are going to render to
   
+  this.frame = 0;                         // Used by some shaders as a uniform to animate things
   this.camera = new Camera();
   
   if(!this.initWebGL()) { this.initFallback(); }
@@ -52,7 +53,8 @@ Display.prototype.setupWebGL = function() {
     gl.getExtension("WEBKIT_OES_element_index_uint")
   )) { return false; }
   
-  this.upscale = {world: 1.0, ui: 1.0}; /* @FIXME */
+  /* @TODO: user settings for upscale/post/shadow/etc */
+  this.upscale = {sky: 1.0, world: 1.0, ui: 1.0};
   
   this.textures = [];
   this.shaders = [];
@@ -65,17 +67,17 @@ Display.prototype.setupWebGL = function() {
   this.PL_UNIFORM_MAX = maxUniform * 0.33; this.LL_UNIFORM_MAX = maxUniform * 0.33;
   
   if(!this.createTexture("multi/default")) { return false; }
-    
-  //if(!this.createShader(this.game.asset.shader.debug)) { return false; } /* @FIXME DEBUG */
+  
   if(!this.createMaterial(this.game.asset.material.multi.default)) { return false; }
   if(!this.createMaterial(this.game.asset.material.multi.shadow)) { return false; }
-  if(!this.createMaterial(this.game.asset.material.multi.post_msaa)) { return false; } /* @FIXME default post_msaa for testing */
+  if(!this.createMaterial(this.game.asset.material.multi.post_msaa)) { return false; }
   if(!this.createMaterial(this.game.asset.material.multi.gulm)) { return false; }
   
   if(!this.createModel(this.game.asset.model.multi.box)) { return false; }
   if(!this.createModel(this.game.asset.model.multi.sheet)) { return false; }
   
   if(!this.createShadowFramebuffer("shadow", 512)) { return false; }
+  if(!this.createFramebuffer("sky", this.upscale.sky)) { return false; }
   if(!this.createFramebuffer("world", this.upscale.world)) { return false; }
   if(!this.createFramebuffer("ui", this.upscale.ui)) { return false; }
   
@@ -140,15 +142,19 @@ Display.prototype.createShader = function(source) {
   var attributes = {};
   var uniforms = {};
   for(var i=0;i<source.attributes.length;i++) {
-    attributes[source.attributes[i].name] = {type: source.attributes[i].type, location: gl.getAttribLocation(shaderProgram, source.attributes[i].name)};
+    var loc = gl.getAttribLocation(shaderProgram, source.attributes[i].name);                                      // Ditches attributes that are optimized out of shader by GLSL
+    if(loc !== -1) { attributes[source.attributes[i].name] = {type: source.attributes[i].type, location: loc}; }
   }
   for(var i=0;i<source.uniforms.length;i++) {
-    uniforms[source.uniforms[i].name] = {type: source.uniforms[i].type, location: gl.getUniformLocation(shaderProgram, source.uniforms[i].name)};
+    var loc = gl.getUniformLocation(shaderProgram, source.uniforms[i].name);                                       // Same thing for uniforms
+    if(loc !== -1) { uniforms[source.uniforms[i].name] = {type: source.uniforms[i].type, location: loc}; }
   }
   
   this.shaders.push(new Shader(source.name, shaderProgram, attributes, uniforms));
   
-  /* @FIXME Delete frag and vert objects as they dont do anything once the program is linked. */
+  // Delete vert and frag as they are no longer needed after shader program is linked.
+  gl.deleteShader(vertexShader);
+  gl.deleteShader(fragmentShader);
   
   return true;
 };
@@ -234,8 +240,7 @@ Display.prototype.createFramebuffer = function(name, upscale) {
   gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  //gl.generateMipmap(gl.TEXTURE_2D); /* @FIXME why? Error? gl.LINEAR_MIPMAP_NEAREST */
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, fb.width, fb.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, fb.width, fb.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);  // No mipmaps generated on FBOs
   
   var rb = gl.createRenderbuffer();
   gl.bindRenderbuffer(gl.RENDERBUFFER, rb);
@@ -279,17 +284,18 @@ Display.prototype.updateFramebuffer = function(name) {
 Display.prototype.draw = function() {
   /* Update Canvas Size & Camera */
   if(this.container.clientWidth < 1 || this.container.clientHeight < 1) { return; } // Draw window not visible. Don't draw.
-  this.window.width = this.container.clientWidth;
-  this.window.height = this.container.clientHeight; // Does not enforce resonable aspect ratio. @FIXME...
-  this.camera.update();
+  this.window.width = this.container.clientWidth;                                   // Does not enforce aspect ratio so it can be made ultra widescreen if desired.
+  this.window.height = this.container.clientHeight;
   
   /* Check WebGL is OKAY */
   if(!this.gl) { this.drawFallback(); return; }
   var gl = this.gl; // Sanity Save
+  this.frame++;
   
   /* Update Framebuffers */
   this.updateFramebuffer("world");
   this.updateFramebuffer("ui");
+  this.updateFramebuffer("sky");
   
   /* Generate all matrices for the render */
   var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, this.camera.fov, this.window.width/this.window.height, this.camera.near, this.camera.far); // Perspective
@@ -326,31 +332,31 @@ Display.prototype.draw = function() {
     mat4.translate(LIGHTMATRIX, LIGHTMATRIX, [this.camera.pos.x, this.camera.pos.y, 0.0]);
   var LIGHTDIR = vec3.create(); vec3.set(LIGHTDIR, LIGHTMATRIX[8], LIGHTMATRIX[9], -LIGHTMATRIX[10]);
   
-  /* Collect & sort all geometry to draw.
-     Format: {model: <Model>, material: <Material>, uniforms: <UniformData[]>} */
+  /* Collect & sort all geometry/decals/lights to draw.
+     Geometry Format: {model: <Model>, material: <Material>, uniforms: <UniformData[]>} */
   var bounds = this.camera.getBounds(this.window.height/this.window.width); // An array of 4 vec2s that defines the view area on the z=0 plane
   var geometry = [];                                                        // All geometry combined
   var mapGeom = [];                                                         // All static game world geometry we need to draw
   var objGeom = [];                                                         // All object geometry
   var decals = [];                                                          // All decals to apply to world
   var lights = [];                                                          // All lights in game world
-  var preCalcBounds = util.matrix.expandPolygon(bounds, 5.0);               // Slightly innacurate way to precalc radius of tiles so we can just test a point
-  this.game.map.getDraw(mapGeom, preCalcBounds); /* @FIXME optimize? */
+  
+  var preCalcBounds = util.matrix.expandPolygon(bounds, 4.0);               // Slightly innacurate way to precalc radius of tiles so we can just test a point
+  this.game.map.getDraw(mapGeom, preCalcBounds);
   for(var i=0;i<this.game.objects.length;i++) {
     if(!this.game.objects[i].hide) { this.game.objects[i].getDraw(objGeom, decals, lights, bounds); }
   }
   for(var i=0;i<this.game.effects.length;i++) {
-    this.game.effects[i].effect.getDraw(objGeom, decals, lights, bounds);
+    var exbounds = util.matrix.expandPolygon(bounds, this.game.effects[i].radius);
+    if(util.intersection.pointPoly(this.game.effects[i].pos, exbounds)) {
+      this.game.effects[i].effect.getDraw(objGeom, decals, lights, bounds);
+    }
   }
   geometry = mapGeom.concat(objGeom);
-  
-  /* DEBUG @TODO: MEMES */
-  //if(this.game.objects[0]) { decals.push(new Decal(this.game, this.getMaterial("material.effect.decal.test"), {x: this.game.objects[0].pos.x, y: this.game.objects[0].pos.y, z: this.game.objects[0].height}, {x: 0.0, y: 0.0, z: 1.0}, 4.0, 0.0)); }
   
   /* Sort geometry by shader -> material -> draws */
   var mapGeomSorted = this.sortGeometry(mapGeom);
   var objGeomSorted = this.sortGeometry(objGeom);
-
   
   /* === Draw Geometry to Shadow FBO ===================================================================================== */
   /* ===================================================================================================================== */
@@ -381,17 +387,17 @@ Display.prototype.draw = function() {
 
   /* === Compile Dynamic Lighting Information ============================================================================ */
   /* ===================================================================================================================== */
+  /* @TODO: Line Lights are not implemented! */
   var pLightLength = 0;
   var pLightPos = [];
   var pLightColor = [];
   var pLightRadius = [];
   for(var i=0;i<lights.length;i++) {
-    /* @FIXME CULL? Probably do it in the owners function... */
-    if(i*8 >= this.PL_UNIFORM_MAX) { break; } /* At max capacity for light rendering! @FIXME WARNING */
+    if(i*8 >= this.PL_UNIFORM_MAX) { main.menu.warning.show("@LIGHT -> GL_UNIFORM capacity maxed: " + this.PL_UNIFORM_MAX); break; }
     else {
       var pl = lights[i];
       pLightPos.push(pl.pos.x); pLightPos.push(pl.pos.y); pLightPos.push(pl.pos.z);
-      pLightColor.push(pl.color.r*pl.color.a); pLightColor.push(pl.color.g*pl.color.a); pLightColor.push(pl.color.b*pl.color.a);
+      pLightColor.push(pl.color.x*pl.color.w); pLightColor.push(pl.color.y*pl.color.w); pLightColor.push(pl.color.z*pl.color.w);
       pLightRadius.push(pl.rad);
       pLightLength++;
     }
@@ -491,6 +497,49 @@ Display.prototype.draw = function() {
   gl.depthMask(true);                       // Enable writing to depth buffer
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable world framebuffer
   gl.disable(gl.BLEND);                     // Disable Transparency 
+  
+  /* === Draw Sky ======================================================================================================== */
+  /* ===================================================================================================================== */
+  var blocks = [];
+  var texts = [];
+  this.game.ui.getDraw(blocks, texts, this.game.input.mouse.pos, {x: this.window.width, y: this.window.height}); //Get all UI elements to draw
+  
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.sky.fb);                                                    // Enable menu framebuffer
+  gl.viewport(0, 0, (this.window.width*this.fbo.sky.upscale), (this.window.height*this.fbo.sky.upscale)); // Resize to canvas
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);                                                                      // Transparent Black Background
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);                                                    // Clear Color and Depth from previous draw.
+  gl.depthMask(false);                                                                                    // Disable depth write for UI Draw
+  gl.disable(gl.DEPTH_TEST);                                                                              // Disable depth testing for UI Draw
+  gl.enable(gl.BLEND);                                                                                    // Enable Transparency 
+  
+  // @TODO: this isnt exactly right, doesnt scale correctly with aspect ratio and isnt centered right.
+  // Also I want to move sky definitions to the map file along with the ability to define 3d skys and use perspective and massive scale and stuff.
+  
+  var ASPECT = this.window.height/this.window.width;
+  var PROJMATRIX_SKY = mat4.create(); mat4.ortho(PROJMATRIX_SKY, 0.0, 1.0, 0.0, 1.0*ASPECT, 0.0, 1.0);
+  var VIEWMATRIX_SKY= mat4.create();
+  var uniformDataSky = [
+    {name: "Pmatrix", data: PROJMATRIX_SKY},
+    {name: "Vmatrix", data: VIEWMATRIX_SKY},
+    {name: "time", data: this.frame},
+    {name: "transform", data: [0.0, 0.0, -0.5]},
+    {name: "size", data: [1.0, 1.0]}
+  ];
+  
+  var skyMaterial = this.getMaterial("material.sky.final.sky");
+  var sheetModel = this.getModel("model.multi.sheet");
+  
+  skyMaterial.shader.enable(gl);
+  skyMaterial.enable(gl);
+  skyMaterial.shader.applyUniforms(gl, uniformDataSky);
+  sheetModel.draw(gl, skyMaterial.shader);
+  skyMaterial.shader.disable(gl);
+  skyMaterial.disable(gl);
+
+  gl.depthMask(true);                       // Reenable depth write after UI draw
+  gl.enable(gl.DEPTH_TEST);                 // Reenable after UI Draw
+  gl.disable(gl.BLEND);                     // Disable transparency
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable menu framebuffer
     
   /* === Draw UI ========================================================================================================= */
   /* ===================================================================================================================== */
@@ -510,17 +559,17 @@ Display.prototype.draw = function() {
   var sheetModel = this.getModel("model.multi.sheet");
   
   var ASPECT = this.window.height/this.window.width;
-  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, 0.0, 100.0,0.0*ASPECT, 100.0*ASPECT, 0.0, 1.0);
-  var VIEWMATRIX_DEBUG= mat4.create();
-  var uniformDataDebug = [
-    {name: "Pmatrix", data: PROJMATRIX_DEBUG},
-    {name: "Vmatrix", data: VIEWMATRIX_DEBUG}
+  var PROJMATRIX_UI = mat4.create(); mat4.ortho(PROJMATRIX_UI, 0.0, 100.0,0.0*ASPECT, 100.0*ASPECT, 0.0, 1.0);
+  var VIEWMATRIX_UI= mat4.create();
+  var uniformDataUi = [
+    {name: "Pmatrix", data: PROJMATRIX_UI},
+    {name: "Vmatrix", data: VIEWMATRIX_UI}
   ];
   
   for(var i=0;i<blocks.length;i++) {
     var block = blocks[i];
     block.material.shader.enable(gl);
-    block.material.shader.applyUniforms(gl, uniformDataDebug);
+    block.material.shader.applyUniforms(gl, uniformDataUi);
     block.material.enable(gl);
     var uniformBlockSize = [
       {name: "transform", data: [block.pos.x, block.pos.y, -0.5]},
@@ -533,7 +582,7 @@ Display.prototype.draw = function() {
   }
   
   fontShader.enable(gl);
-  fontShader.applyUniforms(gl, uniformDataDebug);
+  fontShader.applyUniforms(gl, uniformDataUi);
   fontMaterial.enable(gl);
   for(var j=0;j<texts.length;j++) {
     var text = texts[j];
@@ -568,23 +617,26 @@ Display.prototype.draw = function() {
   gl.disable(gl.DEPTH_TEST);                                // Disable depth testing for post Draw
   this.fbo.world.tex.enable(gl, 6);                         // Enable world FBO render texture
   this.fbo.ui.tex.enable(gl, 7);                            // Enable ui FBO render texture
+  this.fbo.sky.tex.enable(gl, 8);                            // Enable sky FBO render texture
   var renderMaterial = this.getMaterial("material.multi.post_msaa");
   var renderShader = renderMaterial.shader;
   var sheetModel = this.getModel("model.multi.sheet");
   
   var ASPECT = this.window.height/this.window.width;
-  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0);
-  var VIEWMATRIX_DEBUG= mat4.create();
+  var PROJMATRIX_POST = mat4.create(); mat4.ortho(PROJMATRIX_POST, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0);
+  var VIEWMATRIX_POST = mat4.create();
   var TEXTURE_PROP = [this.window.width/this.fbo.world.fb.width, this.window.height/this.fbo.world.fb.height, (this.fbo.world.fb.height-(this.window.height*this.fbo.world.upscale))/this.fbo.world.fb.height,
-                      this.window.width/this.fbo.ui.fb.width, this.window.height/this.fbo.ui.fb.height, (this.fbo.ui.fb.height-(this.window.height*this.fbo.ui.upscale))/this.fbo.ui.fb.height];
+                      this.window.width/this.fbo.ui.fb.width, this.window.height/this.fbo.ui.fb.height, (this.fbo.ui.fb.height-(this.window.height*this.fbo.ui.upscale))/this.fbo.ui.fb.height,
+                      this.window.width/this.fbo.sky.fb.width, this.window.height/this.fbo.sky.fb.height, (this.fbo.sky.fb.height-(this.window.height*this.fbo.sky.upscale))/this.fbo.sky.fb.height];
   var uniformDataPost = [
-    {name: "Pmatrix", data: PROJMATRIX_DEBUG},
-    {name: "Vmatrix", data: VIEWMATRIX_DEBUG},
+    {name: "Pmatrix", data: PROJMATRIX_POST},
+    {name: "Vmatrix", data: VIEWMATRIX_POST},
     {name: "textureProp", data: TEXTURE_PROP},
     {name: "resolution", data: [(this.window.width*this.fbo.world.upscale), (this.window.width*this.fbo.world.upscale)]},
-    {name: "upscale", data: [this.fbo.world.upscale, this.fbo.ui.upscale]},
+    {name: "upscale", data: [this.fbo.world.upscale, this.fbo.ui.upscale, this.fbo.sky.upscale]},
     {name: "texture6", data: 6},
-    {name: "texture7", data: 7}
+    {name: "texture7", data: 7},
+    {name: "texture8", data: 8}
   ];
   
   renderShader.enable(gl);
@@ -597,27 +649,6 @@ Display.prototype.draw = function() {
   gl.enable(gl.DEPTH_TEST);           // Reenable depth testing after post draw
   this.fbo.world.tex.disable(gl, 6);  // Disable world FBO render texture
   this.fbo.ui.tex.disable(gl, 7);     // Disable ui FBO render texture
-  
-  /* DEBUG DRAW */ //I DOUBT ANY OF THIS STILL WORKS !!! <-----------------------
-//  var debugTexture = {glTexture: this.fbo.shadow.tex, enable: Texture.prototype.enable, disable: Texture.prototype.disable}; /* Hackyyyy */
-//  var debugShader = this.getShader("debug");
-//  var debugMaterial = new Material("!DEBUG", debugShader, {texture0: debugTexture}); /* Even hackier */
-//  var debugModel = this.getModel("model.multi.sheet");
-//  
-//  var ASPECT = this.window.height/this.window.width;
-//  var PROJMATRIX_DEBUG = mat4.create(); mat4.ortho(PROJMATRIX_DEBUG, -1.0, 1.0,-1.0*ASPECT, 1.0*ASPECT, 0.0, 1.0);
-//  var VIEWMATRIX_DEBUG= mat4.create();
-//  var uniformDataDebug = [
-//    {name: "Pmatrix", data: PROJMATRIX_DEBUG},
-//    {name: "Vmatrix", data: VIEWMATRIX_DEBUG}
-//  ];
-//  
-//  debugShader.enable(gl);
-//  debugShader.applyUniforms(gl, uniformDataDebug);
-//  debugMaterial.enable(gl);
-//  debugModel.draw(gl, debugShader, {x: 0.5, y: 0, z: -0.5}, {x: 0, y: 0, z: 0, w: 0}, {pos: {x: 0, y: 0, z: 0}});
-//  debugMaterial.disable(gl);
-//  debugShader.disable(gl);
 
   gl.flush();
 };
@@ -731,7 +762,6 @@ Display.prototype.getModel = function(name) {
 };
 
 Display.prototype.destroy = function() {
-  /* @FIXME Make sure we unload and delete all resources loaded! */ 
   if(!this.gl) { return; }
   var gl = this.gl; // Sanity Save
   for(var i=0;i<this.models.length;i++) { gl.deleteBuffer(this.models[i].vertexBuffer); gl.deleteBuffer(this.models[i].indexBuffer); }
@@ -749,6 +779,7 @@ Display.prototype.destroy = function() {
   deleteFBO(this.fbo.shadow);
   deleteFBO(this.fbo.world);
   deleteFBO(this.fbo.ui);
+  deleteFBO(this.fbo.sky);
   this.fbo = {};
   this.window.width = 1; this.window.height = 1;
   this.gl = null;

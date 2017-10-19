@@ -13,10 +13,18 @@ PackHand.prototype.gameDataUpdate = function(packet) {
   while(data.length>1) {
     var field = data.shift();
     switch(field) {
+      /* NoxioGame::GenerateUpdatePackets() */
       case "crt" : { this.createObject(data); break; }
       case "del" : { this.deleteObject(data); break; }
+      case "scr" : { this.scores(data); break; }
+      case "msg" : { this.message(data); break; }
+      case "end" : { this.gameOver(data); break; }
+      case "tck" : { this.tick(data); break; }
+      /* Controller::GenerateUpdateData() */
       case "obj" : { this.updateObject(data); break; }
       case "hid" : { this.hideObject(data);   break; }
+      case "ctl" : { this.control(data); break; }
+      case "rst" : { this.respawnTimer(data); break; }
       case "wsp" : { this.whisper(data); break; }
       default : { main.menu.warning.show("Game data parsing interupted unexpectedly on '" + field + "' with " + data.length + " fields remaining."); break; }
     }
@@ -46,8 +54,55 @@ PackHand.prototype.createObject = function(data) {
 /* OBJ::DELETE | del */
 PackHand.prototype.deleteObject = function(data) {
   var oid = parseInt(data.shift());
+  var pos = util.vec2.parse(data.shift());
   
+  var obj = this.game.getObject(oid);
+  if(obj) { obj.setPos(pos); }
   if(!this.game.deleteObject(oid)) { main.menu.warning.show("Desync: Tried to delete OBJ that does not exist '" + oid + "'."); }
+};
+
+/* SYS::SCORE | scr */
+PackHand.prototype.scores = function(data) {
+  var gametype = data.shift();
+  var description = data.shift();
+  var name = data.shift().split(",");
+  var score = data.shift().split(",");
+  var meter = data.shift().split(",");
+  var r = data.shift().split(",");
+  var g = data.shift().split(",");
+  var b = data.shift().split(",");
+  
+  var scs = [];
+  for(var i=0;i<name.length;i++) {
+    scs.push({name: name[i], score: score[i], meter: parseFloat(meter[i]), color: {x: parseFloat(r[i]), y: parseFloat(g[i]), z: parseFloat(b[i])}});
+  }
+  
+  var scoreUI = this.game.ui.getElement("score");
+  var title = {title: gametype, description: description};
+  scoreUI.update(title, scs);
+};
+
+/* SYS::MESSAGE | msg */
+PackHand.prototype.message = function(data) {
+  var msg = data.shift();
+  
+  this.game.ui.getElement("log").message(msg);
+};
+
+/* SYS::GAMEOVER | end */
+PackHand.prototype.gameOver = function(data) {
+  var msg = data.shift();
+  
+  var endUI = this.game.ui.getElement("end");
+  endUI.create(msg); // Regenerate end screen with server message.
+  this.game.gameOver = true;
+};
+
+/* DBG::TICK | tck */
+PackHand.prototype.tick = function(data) {
+  var tick = new Number(data.shift());
+  
+  this.game.update(tick);
 };
 
 /* OBJ::UPDATE | obj */
@@ -68,41 +123,21 @@ PackHand.prototype.hideObject = function(data) {
   else { main.menu.warning.show("Desync: Tried to hide OBJ that does not exist '" + oid + "'."); }
 };
 
+/* PLY::CONTROL | ctl */
+PackHand.prototype.control = function(data) {
+  var oid = parseInt(data.shift());
+  
+  this.game.control = oid;
+};
+
+/* PLY::RSPWNTMR | rst */
+PackHand.prototype.respawnTimer = function(data) {
+  var timer = parseInt(data.shift());
+  
+  this.game.respawnTimer = timer;
+};
+
 /* SYS::WHISPER | wsp */
 PackHand.prototype.whisper = function(data) {
   this.game.ui.getElement("log").message(data.shift());
-};
-
-/* PacketI03 */
-PackHand.prototype.playerControl = function(packet) {
-  this.game.control = packet.oid;
-};
-
-/* PacketI08 */
-PackHand.prototype.respawnTimer = function(packet) {
-  this.game.respawnTimer = packet.timer;
-};
-
-/* PacketG14 */
-PackHand.prototype.score = function(packet) {
-  var scoreUI = this.game.ui.getElement("score");
-  var title = {title: packet.gametype, description: packet.description};
-  scoreUI.update(title, packet.scores);
-};
-
-/* PacketG15 */
-PackHand.prototype.message = function(packet) {
-  this.game.ui.getElement("log").message(packet.message);
-};
-
-/* PacketG16 */
-PackHand.prototype.gameOver = function(packet) {
-  var endUI = this.game.ui.getElement("end");
-  endUI.create(packet.message); // Regenerate end screen with server message.
-  this.game.gameOver = true;
-};
-
-/* PacketG18 */
-PackHand.prototype.gameRules = function(packet) {
-  this.game.settings = {scoreToWin: packet.score};
 };

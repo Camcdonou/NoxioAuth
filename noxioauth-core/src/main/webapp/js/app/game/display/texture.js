@@ -6,8 +6,10 @@ function Texture(gl, glTexture, path) {
   var tmp = this; /* I FUCKING HATE JAVASCRIPT SCOPES */
   this.glTexture = glTexture;
   this.path = path;
+  this.ready = false;
+  
   this.img = new Image();
-  this.img.onload = function() { tmp.handleTextureLoaded(gl); };
+  this.img.onload = function() { tmp.handleTextureLoaded(gl); tmp.ready = true; };
   this.img.src = "img/game/" + this.path + ".png";
 }
 
@@ -31,7 +33,7 @@ Texture.prototype.enable = function(gl, location) {
     case 7 : { gl.activeTexture(gl.TEXTURE7); break; }
     case 8 : { gl.activeTexture(gl.TEXTURE8); break; }
     case 9 : { gl.activeTexture(gl.TEXTURE9); break; }
-    default : { /* @FIXME major error! */ return; }
+    default : { main.menu.warning.show("Texture.enable() invalid texture location: " + location); return; }
   }
   gl.bindTexture(gl.TEXTURE_2D, this.glTexture);
 };
@@ -48,7 +50,7 @@ Texture.prototype.disable = function(gl, location) {
     case 7 : { gl.activeTexture(gl.TEXTURE7); break; }
     case 8 : { gl.activeTexture(gl.TEXTURE8); break; }
     case 9 : { gl.activeTexture(gl.TEXTURE9); break; }
-    default : { /* @FIXME major error! */ return; }
+    default : { main.menu.warning.show("Texture.disable() invalid texture location: " + location); return; }
   }
   gl.bindTexture(gl.TEXTURE_2D, null);
 };
@@ -64,6 +66,7 @@ Texture.prototype.handleTextureLoaded = function(gl) {
 
 function RenderTexture(glTexture) {
   this.glTexture = glTexture;
+  this.ready = true;
 }
 
 RenderTexture.prototype.enable = Texture.prototype.enable;

@@ -3,6 +3,11 @@
 
 function GameMenu() {
   this.element = document.getElementById("game");
+  this.loadElement = document.getElementById("game-load");
+};
+
+GameMenu.prototype.loading = function(html) {
+  this.loadElement.innerHTML = html;
 };
 
 GameMenu.prototype.show = function() {

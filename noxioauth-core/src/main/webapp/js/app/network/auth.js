@@ -9,14 +9,14 @@ function Auth () {
 
 Auth.prototype.establish = function() {
   /* List of addresses to attempt to connect on. 
-     This is due to an oddity with Comcast where I cannot use an external IP from a local system.
-     This code should be removed in production!
-     @FIXME
+     Try current domain first then a list of backup addresses for testing & etc...
   */
   var addresses = [
-    "68.34.229.231",
-    "localhost",
-    "10.0.0.253"
+    window.location.host,
+    "infernoplus.com",
+    "localhost:7001",
+    "68.32.114.183:7001",
+    "10.0.0.253:7001"
   ];
   
   var getStatus = function(r) {
@@ -26,7 +26,7 @@ Auth.prototype.establish = function() {
     }
     main.menu.connect.show("Checking server status @" + addresses[r] + "...");
     $.ajax({
-      url: "http://" + addresses[r] + ":7001/noxioauth/status",
+      url: "http://" + addresses[r] + "/noxioauth/status",
       type: 'GET',
       timeout: 3000,
       success: function() { main.net.auth.connect(addresses[r]); },
@@ -48,7 +48,7 @@ Auth.prototype.connect = function(address){
     return;
   }
 
-  this.webSocket = new WebSocket("ws://" + address + ":7001/noxioauth/auth");
+  this.webSocket = new WebSocket("ws://" + address + "/noxioauth/auth");
   main.menu.connect.show("Connecting @" + address + "...");
 
   this.webSocket.onopen = function(event){

@@ -1,6 +1,6 @@
 body {
-  background-color: #e2e2e2;
-  background-image: url("../img/aes/bkg3.png");
+  background-color: #000000;
+  background-image: url("../img/aes/bkg_gaus.png");
   background-repeat: no-repeat;
   background-size: 100%;
   
@@ -38,7 +38,7 @@ body {
   
   font-weight: bold;
   text-align: right;
-  color: #e17fb0;
+  color: #000000;
 }
 
 .main-menu-input {
@@ -130,7 +130,7 @@ body {
   padding: 8px 8px 8px 16px;
   
   font-size: 20px;
-  color: #e17fb0;
+  color: #000000;
 }
 
 .right-menu-item {
@@ -167,6 +167,53 @@ body {
   float: right;
   display: inline;
   width: 45%;
+}
+
+.game-load {
+  position: absolute;
+  margin: 8px 0px 0px 8px;
+  top: 8px;
+  left: 8px;
+  
+  font-family: "Calibri", monospace;
+  color: rgba(255, 255, 255, 1.0);
+  font-size: 16px;
+  font-weight: bold;
+  z-index: -1;
+}
+
+.load-head {
+    font-weight: bold;
+    font-family: "Calibri", monospace;
+    background-color: rgba(255, 255, 255, 0.0);
+    border: 2px solid rgba(255, 255, 255, 1.0);
+    font-size: 22px;
+    color: #FFFFFF;
+    margin: 0px 4px 4px 0px;
+    padding: 4px 4px 0px 4px;
+    display: inline-block;
+}
+
+.load-item {
+  font-family: "Calibri", monospace;
+  background-color: rgba(255, 255, 255, 0.0);
+  border: 2px solid rgba(255, 255, 255, 1.0);
+  size: 12px;
+  color: #FFFFFF;
+  margin: 0px 4px 4px 0px;
+  padding: 0px 4px 0px 4px;
+  display: inline-block;
+}
+
+.load-item-inverse {
+  font-family: "Calibri", monospace;
+  background-color: rgba(255, 255, 255, 1.0);
+  border: 2px solid rgba(255, 255, 255, 1.0);
+  size: 12px;
+  color: #000000;
+  margin: 0px 4px 4px 0px;
+  padding: 0px 4px 0px 4px;
+  display: inline-block;
 }
 
 .unselectable {

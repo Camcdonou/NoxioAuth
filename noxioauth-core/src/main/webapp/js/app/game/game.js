@@ -1,6 +1,7 @@
 "use strict";
 /* global main */
 /* global util */
+/* global URL */
 
 /* Define NoxioGame Class */
 function NoxioGame(name, description, gametype, maxPlayers, map) {
@@ -14,12 +15,21 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   this.window = document.getElementById("canvas");
   this.container = document.getElementById("canvas-container");
   
+  this.SERVER_TICK_RATE = 33;               // Number of milliseconds per server tick
+  this.FDLC_TARGET = 1; this.FDLC_MAX = 3;  // FDLC range constants
+  this.packetFDLC = [{data:""},{data:""}];  // ~~~MAGIC~~~
+  this.deltaFDLC = util.time.now();
+  
+  this.delta = util.time.now();             // Number of milliseconds since ????
+  
   this.input = new Input(this);     // Mouse, keyboard, and controller handler
   this.asset = new Asset();         // Raw data for models, animations, textures, shaders, sounds, etc, etc, etc...
   this.display = new Display(this); // Game rendering and general WebGL stuff
   this.sound = new Sound(this);     // Game audio handler
   this.ui = new GameUI(this);       // Ingame UI
   
+  this.ready = false, this.serverReady = false;
+  this.loadCache(map.cache);
   this.loadMap(map);
   
   this.respawnTimer = 0;
@@ -29,8 +39,6 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   this.debug = {ss: 128, stime: [], ctime: [], dtime: [], ping: [], frames: [], sAvg: 0, cAvg: 0, pAvg: 0, fAvg: 0}; /* SS is Sample Size: The number of frames to sample for data. */
   for(var i=0;i<this.debug.ss;i++) { this.debug.stime[i] = 0; this.debug.ctime[i] = 0; this.debug.dtime[i] = 0; this.debug.ping[i] = 0; this.debug.frames[i] = 0; }
   
-  this.SERVER_TICK_RATE = 33;         // Number of milliseconds per server tick
-  this.lastDelta = util.time.now();   // Number of milliseconds since last server update() or step()
   this.objects = [];                  // All active game objects
   this.effects = [];                  // Active effects in the world space
   
@@ -40,19 +48,19 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   this.packHand = new PackHand(this);
   
   this.requestAnimFrameFunc = (function() {
-    return window.requestAnimationFrame || 
-           window.webkitRequestAnimationFrame ||
-           window.mozRequestAnimationFrame ||
-           window.oRequestAnimationFrame ||
-           window.msRequestAnimationFrame ||
-           function(callback) { window.setTimeout(callback, 33); }; /* @FIXME warn for this? */
+    return window.requestAnimationFrame         || 
+           window.webkitRequestAnimationFrame   ||
+           window.mozRequestAnimationFrame      ||
+           window.oRequestAnimationFrame        ||
+           window.msRequestAnimationFrame       ||
+           function(callback) { window.setTimeout(callback, 16); };
   })();
   
   this.cancelAnimFrameFunc = (function() {
-    return window.cancelAnimationFrame          ||
+    return window.cancelAnimationFrame                 ||
            window.webkitCancelRequestAnimationFrame    ||
            window.mozCancelRequestAnimationFrame       ||
-           window.oCancelRequestAnimationFrame     ||
+           window.oCancelRequestAnimationFrame         ||
            window.msCancelRequestAnimationFrame        ||
            clearTimeout;
   })();
@@ -60,57 +68,111 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   this.nextFrame = this.requestAnimFrameFunc.call(window, function() { if(main.inGame()) { main.game.draw(); }}); // Javascript 🙄
 };
 
+// @FIXME: remove from production code, this is for building and debugging
+NoxioGame.prototype.generateCache = function() {
+    var type = "TEXT";
+    var filename = "generated-cache";
+    var data = "";
+    for(var i=0;i<this.display.models.length;i++) {
+      data += this.display.models[i].name + ",";
+    }
+    data += ";";
+    for(var i=0;i<this.display.materials.length;i++) {
+      data += this.display.materials[i].name + ",";
+    }
+    data += ";";
+    for(var i=0;i<this.sound.sounds.length;i++) {
+      data += this.sound.sounds[i].path + ",";
+    }
+  
+    var file = new Blob([data], {type: type});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    else { // Others
+        var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
+    }
+};
+
+/* Updates loading screen and flags the client as ready when everything is done downloading. */
+NoxioGame.prototype.loading = function() {
+  var r = true;
+  var loadScreen = "<div class='unselectable load-head'>Loading...</div> <div style='width: 100%;'>";
+  for(var i=0;i<this.display.textures.length;i++) {
+    if(!this.display.textures[i].ready) { loadScreen += "<span class='unselectable load-item'>" + this.display.textures[i].path + "</span>"; r = false; }
+    else { loadScreen += "<span class='load-item-inverse'>" + this.display.textures[i].path + "</span>"; }
+  }
+  for(var i=0;i<this.sound.sounds.length;i++) {
+    if(!this.sound.sounds[i].ready()) { loadScreen += "<span class='unselectable load-item'>" + this.sound.sounds[i].path + "</span>"; r = false; }
+    else { loadScreen += "<span class='unselectable load-item-inverse'>" + this.sound.sounds[i].path + "</span>"; }
+  }
+  loadScreen += "</div>";
+  if(r) { main.menu.game.loading("<div class='unselectable'></div>"); this.ready = true; }
+  else { main.menu.game.loading(loadScreen); }
+};
+
+/* Starts loading all textures/sounds in the map file cache. */
+NoxioGame.prototype.loadCache = function(cache) {
+  var spl = cache.split(";");
+  var mod = spl[0].split(",");
+  for(var i=0;i<mod.length;i++) {
+    this.display.getModel(mod[i]);
+  }
+  var mat = spl[1].split(",");
+  for(var i=0;i<mat.length;i++) {
+    this.display.getMaterial(mat[i]);
+  }
+  var snd = spl[2].split(",");
+  for(var i=0;i<snd.length;i++) {
+    this.sound.createSound(snd[i]);
+  }
+};
+
 NoxioGame.prototype.loadMap = function(map) {
   this.map = new Map(this.display, map);
 };
 
-/* Returns false if failed handled packet */
+/* Returns false if the packet is not of a type that we know how to handle */
 NoxioGame.prototype.handlePacket = function(packet) {
   /* Parse packet and apply */
   switch(packet.type) {
     /* Ingame Type Packets gxx */
-    case "g10" : { this.packHand.gameDataUpdate(packet); return true; }
-    case "g14" : { this.packHand.score(packet); return true; }
-    case "g15" : { this.packHand.message(packet); return true; }
-    case "g16" : { this.packHand.gameOver(packet); return true; }
-    case "g18" : { this.packHand.gameRules(packet); return true; }
+    case "g10" : { this.updatePacket(packet); return true; }
     /* Input Type Packets ixx */
-    case "i03" : { this.packHand.playerControl(packet); return true; } /* @FIXME bundle into g10 */
-    case "i08" : { this.packHand.respawnTimer(packet); return true; } /* @FIXME bundle into g10 */
-    /* Game Step End g05 */
-    case "g05" : { this.update(packet); return true; } /* @FIXME try and roll this into g10 if possible so we can move g10 to update() */
     default : { return false; }
   }
 };
 
-NoxioGame.prototype.update = function(packet) {
-  this.lastDelta = util.time.now();           // Update last delta first to avoid small time offsets
-  
-  /* === DEBUG BLOCK START ==================== */
-  var now = util.time.now();
-  var ping = (now - packet.sent) < 0 ? 0 : (now - packet.sent);
-  
-  this.debug.ping.pop();
-  this.debug.stime.pop();
-  this.debug.ping.unshift(ping);
-  this.debug.stime.unshift(packet.tick);
-  
-  var sAvg = 0, dAvg = 0, cAvg = 0, pAvg = 0, fAvg = 0;
-  for(var i=0;i<this.debug.ss;i++) {
-    sAvg += this.debug.stime[i];
-    cAvg += this.debug.ctime[i];
-    dAvg += this.debug.dtime[i];
-    pAvg += this.debug.ping[i];
+/* Handles PacketG10, this packet updates the gamestate and is essentially a "frame". */
+NoxioGame.prototype.updatePacket = function(packet) {
+  this.packetFDLC.push(packet);
+  while(this.packetFDLC.length > this.FDLC_MAX) {
+    packet = this.packetFDLC.shift();
+    this.doUpdate(packet);
   }
-  for(var i=0;i<this.debug.ss-1&&this.debug.frames[i+1]!==0;i++) {
-    fAvg += this.debug.frames[i] - this.debug.frames[i+1];
+};
+
+NoxioGame.prototype.doUpdate = function(packet) {
+  this.packHand.gameDataUpdate(packet);
+  
+  /* Update Camera */
+  var obj = this.getObject(this.control);                                               // Get the object that the player controls
+  if(obj) { this.display.camera.setPos({x: -obj.pos.x, y: -obj.pos.y, z: 0.0}); }       // Update camera to player's object position
+  this.display.camera.update();                                                         // Update camera interpolation
+  
+  /* Step world effects */
+  for(var i=0;i<this.effects.length;i++) {
+    if(this.effects[i].effect.active()) { this.effects[i].effect.step(util.vec2.toVec3(this.effects[i].pos, 0.0), {x: 0.0, y: 0.0, z: 0.0}); }
+    else { this.effects.splice(i--, 1); }
   }
-  this.debug.fAvg = (1000*(i/(this.debug.ss-1)))/(fAvg/(this.debug.ss-1));
-  this.debug.sAvg = sAvg/this.debug.ss;
-  this.debug.cAvg = cAvg/this.debug.ss;
-  this.debug.dAvg = dAvg/this.debug.ss;
-  this.debug.pAvg = pAvg/this.debug.ss;
-  /* === DEBUG BLOCK END ==================== */
   
   /* Update timers */
   if(this.respawnTimer>0) { this.respawnTimer--; }
@@ -140,6 +202,36 @@ NoxioGame.prototype.update = function(packet) {
     meterUI.hide();
     endUI.show();
   }
+};
+
+NoxioGame.prototype.update = function(tick) {
+  this.lastDelta = util.time.now();           // Update last delta first to avoid small time offsets
+  
+  /* === DEBUG BLOCK START ==================== */
+  var now = util.time.now();
+  var ping = 1337;
+  
+  this.debug.ping.pop();
+  this.debug.stime.pop();
+  this.debug.ping.unshift(ping);
+  this.debug.stime.unshift(tick);
+  
+  var sAvg = 0, dAvg = 0, cAvg = 0, pAvg = 0, fAvg = 0;
+  for(var i=0;i<this.debug.ss;i++) {
+    sAvg += this.debug.stime[i];
+    cAvg += this.debug.ctime[i];
+    dAvg += this.debug.dtime[i];
+    pAvg += this.debug.ping[i];
+  }
+  for(var i=0;i<this.debug.ss-1&&this.debug.frames[i+1]!==0;i++) {
+    fAvg += this.debug.frames[i] - this.debug.frames[i+1];
+  }
+  this.debug.fAvg = (1000*(i/(this.debug.ss-1)))/(fAvg/(this.debug.ss-1));
+  this.debug.sAvg = sAvg/this.debug.ss;
+  this.debug.cAvg = cAvg/this.debug.ss;
+  this.debug.dAvg = dAvg/this.debug.ss;
+  this.debug.pAvg = pAvg/this.debug.ss;
+  /* === DEBUG BLOCK END ==================== */
   
   /* === DEBUG BLOCK START ==================== */
   this.debug.ctime.pop();
@@ -156,71 +248,75 @@ NoxioGame.prototype.update = function(packet) {
   /* === DEBUG BLOCK END ==================== */
 };
 
-NoxioGame.prototype.step = function() {
-  var now = util.time.now();
-  var delta = (now - this.lastDelta)/this.SERVER_TICK_RATE;
-  if(delta > 1.0) { main.menu.warning.show("Delta Time exceeded 1.0"); } /* @FIXME DEBUG */
-  delta = Math.min(delta, 1.0);
-  this.lastDelta = util.time.now();           // Update last delta first to avoid small time offsets
-  for(var i=0;i<this.effects.length;i++) {
-    if(this.effects[i].effect.active()) { this.effects[i].effect.step(util.vec2.toVec3(this.effects[i].pos, 0.0), {x: 0.0, y: 0.0, z: 0.0}); }
-    else { this.effects.splice(i--, 1); }
-  }
-  for(var i=0;i<this.objects.length;i++) {
-    this.objects[i].step(delta);
-  }
-};
-
-NoxioGame.prototype.sendInput = function() { /* @FIXME step should do some of the stuff this does, its just that step is overrun with debug shit. Cleanup. */
-  var cursor = this.input.getMouseActual(); /* mousActual deprecated? @FIXME */
+/* This is all insanely messy and input just needs to be entirely redone. */
+/* @FIXME step should do some of the stuff this does, its just that step is overrun with debug shit. Cleanup. */
+NoxioGame.prototype.sendInput = function() {
+  if(!(this.ready && this.serverReady)) { return; }
+  
   var obj = this.getObject(this.control);
   var inputs = this.input.keyboard.popInputs();
   var mouse = this.input.mouse.popMovement();
   
   /* Send current user input to server */
-  if(this.ui.menuOpen()) { main.net.game.send({type: "i01", pos: this.lastMouse}); return; } // Menu is open so send mouse neutral and return
+  if(this.ui.menuOpen()) { main.net.game.send({type: "i00", data: "01;"+this.lastMouse.x+","+this.lastMouse.y}); return; } // Menu is open so send mouse neutral and return
   
   /* Apply popped inputs */
   this.display.camera.setZoom(mouse.s);
   
-  for(var i=0;i<inputs.length;i++) {
-    switch(inputs[i]) {
-      //case 32 : { main.net.game.send({type: "i02"}); break; } //Space
-      default : { break; }
-    }
-  }
-  
   /* Apply state inputs */
-  if(this.input.keyboard.keys[37]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: 0.01}); } //Left /* Debug camera controls @FIXME */
+  var inputs = [];
+  var actions = [];
+  if(this.input.keyboard.keys[37]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: 0.01}); }  //Left
   if(this.input.keyboard.keys[39]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: -0.01}); } //Right
-  if(this.input.keyboard.keys[38]) { this.display.camera.addRot({x: 0.01, y: 0.0, z: 0.0}); } //Up
+  if(this.input.keyboard.keys[38]) { this.display.camera.addRot({x: 0.01, y: 0.0, z: 0.0}); }  //Up
   if(this.input.keyboard.keys[40]) { this.display.camera.addRot({x: -0.01, y: 0.0, z: 0.0}); } //Down
-  if(this.input.keyboard.keys[32]) { if(obj) { main.net.game.send({type: "i05", ability: "jump"}); } } // SPACE /* @FIXME DEBUG */
-  if(this.input.keyboard.keys[70]) { if(obj) { main.net.game.send({type: "i05", ability: "blip"}); } } // F /* @FIXME DEBUG */
-  if(this.input.keyboard.keys[16]) { if(obj) { main.net.game.send({type: "i05", ability: "dash"}); } } // Shift /* @FIXME DEBUG */
-  if(this.input.keyboard.keys[84]) { if(obj) { main.net.game.send({type: "i05", ability: "taunt"}); } } // T /* @FIXME DEBUG */
-  //if(this.input.keyboard.keys[66]) { if(obj) { obj.bloodEffect.trigger(util.vec2.toVec3(obj.pos, obj.height), {x: 0, y: 0, z: 1}); } } // B /* @FIXME DEBUG */
-  if(this.input.keyboard.keys[192] || !obj) { this.ui.getElement("score").show(); } else { this.ui.getElement("score").hide(); } // ~ /* @FIXME DEBUG */
+  if(this.input.keyboard.keys[32]) { actions.push("jump"); }
+  if(this.input.keyboard.keys[70]) { actions.push("blip"); }
+  if(this.input.keyboard.keys[16]) { actions.push("dash"); }
+  if(this.input.keyboard.keys[84]) { actions.push("taunt"); }
+  //if(this.input.keyboard.keys[66]) { if(obj) { obj.bloodEffect.trigger(util.vec2.toVec3(obj.pos, obj.height), {x: 0, y: 0, z: 1}); } } // B
+  if(this.input.keyboard.keys[192] || !obj) { this.ui.getElement("score").show(); } else { this.ui.getElement("score").hide(); } // ~
   
-  if(obj !== undefined) {
+  if(obj) {
     var near = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 0.0);
     var far = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 1.0); /* @FIXME doing 2 unprojects is inefficent. Maybe calc camera center? */
     var floorPlane = {a: {x: 0.0, y: 0.0, z: 0.0}, b: {x: 1.0, y: 0.0, z: 0.0}, c: {x: 0.0, y: 1.0, z: 0.0}, n: {x: 0.0, y: 0.0, z: 1.0}};
     var result = util.intersection.linePlane({a: near, b: far}, floorPlane);
     
-    if(!result) { main.net.game.send({type: "i01", pos: {x: 0.0, y: 1.0}}); return; } // Missed the floor plane.
-   
-    var dir = util.vec2.subtract(result.intersection, obj.pos);
-    var mag = util.vec2.magnitude(dir);
-    var norm = util.vec2.normalize(dir);
+    if(result) { // Missed the floor plane.
+      var dir = util.vec2.subtract(result.intersection, obj.pos);
+      var mag = util.vec2.magnitude(dir);
+      var norm = util.vec2.normalize(dir);
+
+      this.lastMouse = norm;
+      if(this.input.mouse.rmb) { inputs.push("04;"+norm.x+","+norm.y+";"+Math.min(Math.max(mag/1.75, 0.33), 1.0)); }
+      else { inputs.push("01;"+norm.x+","+norm.y); }
+    }
+    else { inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y); }
     
-    this.lastMouse = norm;
-    if(this.input.mouse.rmb) { main.net.game.send({type: "i04", pos: norm, speed: Math.min(Math.max(mag/1.75, 0.33), 1.0)}); }
-    else { main.net.game.send({type: "i01", pos: norm}); }
+    if(actions.length>0) {
+      var act = "05;";
+      for(var i=0;i<actions.length;i++) {
+        act += actions[i] + (i<actions.length-1?",":"");
+      }
+      inputs.push(act);
+    }
+    
+    var inp = "";
+    for(var i=0;i<inputs.length;i++) {
+      inp += inputs[i] + (i<inputs.length-1?";":"");
+    }
+    main.net.game.send({type: "i00", data: inp});
   }
   else {
-    if(this.input.mouse.lmb) { main.net.game.send({type: "i02"}); }
-    main.net.game.send({type: "i01", pos: this.lastMouse});
+    if(this.input.mouse.lmb) { inputs.push("02"); }
+    inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y);
+    
+    var inp = "";
+    for(var i=0;i<inputs.length;i++) {
+      inp += inputs[i] + (i<inputs.length-1?";":"");
+    }
+    main.net.game.send({type: "i00", data: inp});
   }
 };
 
@@ -249,7 +345,7 @@ NoxioGame.prototype.deleteObject = function(oid) {
     if(this.objects[i].oid === oid) {
       this.objects[i].destroy();
       for(var j=0;j<this.objects[i].effects.length;j++) {
-        if(this.objects[i].effects[j].active()) { this.effects.push({pos: this.objects[i].pos, effect: this.objects[i].effects[j]}); }
+        if(this.objects[i].effects[j].active()) { this.effects.push({pos: this.objects[i].pos, radius: this.objects[i].CULL_RADIUS, effect: this.objects[i].effects[j]}); }
       }
       this.objects.splice(i, 1);
       return true;
@@ -259,14 +355,28 @@ NoxioGame.prototype.deleteObject = function(oid) {
 };
 
 NoxioGame.prototype.draw = function() {
-  /* @FIXME Something seems a little off with the FPS counter. Seems like it's taking too small a sample of the avalible times... Most notable when tabbing out */
   var start = util.time.now();
-
-  this.step();                                                                          // Step objects by delta time
-  var obj = this.getObject(this.control);                                               // Get object player controls
-  if(obj) { this.display.camera.setPos({x: -obj.pos.x, y: -obj.pos.y, z: 0.0}); }       // Update camera to player object position
-  this.sound.update();                                                                  // Update 3d audio center
-  this.display.draw();                                                                  // Draw game
+  var now = start;
+  
+  if((now - this.deltaFDLC) / this.SERVER_TICK_RATE > 0.75) {
+    this.delta = now;
+    
+    /* Attempt to stay at the FDLC_TARGET but always use a frame if we have one no matter what. */
+    var initial = true;
+    while(this.packetFDLC.length > this.FDLC_TARGET || (initial && this.packetFDLC.length > 0)) {
+        var packet = this.packetFDLC.shift();
+        this.doUpdate(packet);
+        if(this.ready && this.serverReady) {  // Don't draw or play sound until game is fully loaded
+          this.display.draw();                // Draw game
+          this.sound.update();                // Update 3d audio center                               
+        }
+        else {
+          this.loading();                     // Update loading screen
+        }
+        initial = false;
+    }
+    this.deltaFDLC = util.time.now();
+  }
 
   /* DEBUG FPS STUFF */
   var finish = util.time.now();

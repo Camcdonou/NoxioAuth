@@ -19,7 +19,7 @@ OnlineState.prototype.getServerInfo = function() {
 /* Checks the status of game servers via AJAX */
 OnlineState.prototype.checkServerStatus = function(id, address, port, info) {
   $.ajax({
-    url: "http://" + info.address + ":7001/noxiogame/info",
+    url: "http://" + info.address + ":" + info.port + "/noxiogame/info",
     type: 'GET',
     timeout: 5000,
     success: function(data) { main.menu.online.items.server.updateServerInfo(id, address, port, data); },

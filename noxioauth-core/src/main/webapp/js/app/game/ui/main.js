@@ -73,7 +73,7 @@ MainUI.prototype.create = function(display) {
       size: {x: 20.0, y: 1.5},
       contains: containsProto,
       click: function() {
-        main.net.game.send({type: "i07"});
+        main.net.game.send({type: "i00", data: "07;"});
       }
     },
     {
@@ -91,7 +91,7 @@ MainUI.prototype.create = function(display) {
       size: {x: 20.0, y: 1.5},
       contains: containsProto,
       click: function() {
-        main.net.game.send({type: "i06"});
+        main.net.game.send({type: "i00", data: "06;"});
       }
     },
     {
@@ -111,7 +111,7 @@ MainUI.prototype.create = function(display) {
       tog: true,
       click: function() {
         if(this.tog) { tmp.game.sound.setVolume(0.0); this.text = "Unmute Sound"; }
-        else { tmp.game.sound.setVolume(1.0); this.text = "Mute Sound"; }
+        else { tmp.game.sound.setVolume(0.5); this.text = "Mute Sound"; }
         this.tog = !this.tog;
       }
     },
@@ -160,9 +160,25 @@ MainUI.prototype.create = function(display) {
         material: display.getMaterial("material.ui.white"),
         text: [0.0, 0.0, 0.0]
       },
-      text: "Leave Game",
+      text: "Generate Cache",
       fontSize: 1.5,
       pos: {x: 0.0, y: -11.2},
+      size: {x: 20.0, y: 1.5},
+      contains: containsProto,
+      click: function() { tmp.game.generateCache(); }
+    },
+    {
+      neutral: {
+        material: display.getMaterial("material.ui.grey"),
+        text: [1.0, 1.0, 1.0]
+      },
+      hover: {
+        material: display.getMaterial("material.ui.white"),
+        text: [0.0, 0.0, 0.0]
+      },
+      text: "Leave Game",
+      fontSize: 1.5,
+      pos: {x: 0.0, y: -12.7},
       size: {x: 20.0, y: 1.5},
       contains: containsProto,
       click: function(button) { tmp.game.leave(); }
