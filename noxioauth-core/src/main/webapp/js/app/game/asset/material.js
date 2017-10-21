@@ -9,6 +9,7 @@ Asset.prototype.material.character = {};
 Asset.prototype.material.character.player = {};
 Asset.prototype.material.character.player.decal = {};
 Asset.prototype.material.character.player.effect = {};
+Asset.prototype.material.character.inferno = {};
 Asset.prototype.material.character.fox = {};
 Asset.prototype.material.character.fox.ui = {};
 Asset.prototype.material.character.fox.decal = {};
@@ -140,6 +141,14 @@ Asset.prototype.material.character.player.effect.blooddrop = {
   shader: "particle",
   shadow: false,
   texture0: "character/player/effect/blooddrop",
+};
+
+/* Source File: inferno.mat */
+Asset.prototype.material.character.inferno.inferno = {
+  name: "character.inferno.inferno",
+  shader: "default",
+  shadow: true,
+  texture0: "character/inferno/inferno",
 };
 
 /* Source File: blipIcon.mat */

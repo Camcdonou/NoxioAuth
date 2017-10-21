@@ -21,7 +21,8 @@ function Effect(components, radius) {
 /* Component structure spec:
    NON-SOUND: {type: <string TYPE>, class: <function constructor>, params: <var[]>, update: <function>, attachment: <boolean>, delay: <int frames>, length: <int frames>}
    SOUND:     {type: <string TYPE>, class: <object parent>, func: <function call>, params: <var[]>, update: <function>, attachment: <boolean>, delay: <int frames>, length: <int frames>}
-   TYPE must be of one these values: ["particle", "sound", "light", "decal"]
+   !!TYPE must be of one these values: ["particle", "sound", "light", "decal"]!!
+   NOTE: If an item of 'params' is an array the paramgen will randomly select an item from that array and use it as that param. This was added for easy sound perms.
 */
 Effect.prototype.trigger = function(pos, vel) {
   for(var i=0;i<this.components.length;i++) {
@@ -38,10 +39,13 @@ Effect.prototype.trigger = function(pos, vel) {
 Effect.prototype.spawn = function(comp, pos, vel) {
   var paramgen = [];
   for(var j=0;j<comp.params.length;j++) {
-    switch(comp.params[j]) {
+    var param;
+    if(Array.isArray(comp.params[j])) { param = comp.params[j][Math.floor(Math.random()*comp.params[j].length)]; }
+    else { param = comp.params[j]; }
+    switch(param) {
       case "<vec3 pos>" : { paramgen.push(pos); break; }
       case "<vec3 vel>" : { paramgen.push(vel); break; }
-      default : { paramgen.push(comp.params[j]); break; }
+      default : { paramgen.push(param); break; }
     }
   }
   var gen;

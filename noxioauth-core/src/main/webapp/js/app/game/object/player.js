@@ -2,83 +2,37 @@
 /* global main */
 /* global util */
 /* global GameObject */
-/* global PointLight */
-/* global ParticleBlip */
-/* global ParticleDash */
-/* global ParticleStun */
-/* global ParticleBloodSplat */
 /* global Decal */
 
-/* Define Player Object Class */
+/* Define PlayerObject class */
+/* PlayerObject is an abstract class and should never actually be created. 
+ * Javascript doesn't really have any equivalent to 'abstract' so I'm 
+ * just going to remind you that if you instaniate this class I will
+ * come find you irl.
+ * 
+ * This class contains all required base settings and prototype functions
+ * that a player object needs. These can (and should) be overidden in most cases.
+ * The only thing that the PlayerObject constructor does not default is the 
+ * model & material. Be sure you set them in the subclass.
+ */
 function PlayerObject(game, oid, pos, vel) {
   GameObject.call(this, game, oid, pos, vel);
   
-  this.model = this.game.display.getModel("multi.smallBox");
-  this.material = [
-    this.game.display.getMaterial("multi.default"),
-    this.game.display.getMaterial("multi.default"),
-    this.game.display.getMaterial("multi.default")
-  ];
-  
-  this.RADIUS = 0.5;               // Collision radius
-  this.CULL_RADIUS = 3.0;          // Radius at which to cull this object and all of it's effects.
-  this.MAX_SPEED = 0.0375;         // Max movement speed
-  this.FRICTION = 0.725;           // Friction Scalar
-  this.AIR_DRAG = 0.98;            // Friction Scalar
-  this.FATAL_IMPACT_SPEED = 0.175; // Savaged by a wall
-  
   this.look = {x: 0.0, y: 1.0};  // Normalized direction player is facing
   this.speed = 0.0;              // Current scalar of max movement speed <0.0 to 1.0>
+  this.effects = [];
+  
+  /* Settings */
+  this.radius = 0.5; this.weight = 1.0; this.friction = 0.725;
+  this.moveSpeed = 0.0375; this.jumpHeight = 0.175; this.cullRadius = 1.0;
+  this.fatalImpactSpeed = 0.175;
+  
+  /* State */
   this.team = -1;
-  
-  this.BLIP_COOLDOWN_MAX = 30;
-  this.DASH_COOLDOWN_ADD = 30;
-  this.DASH_COOLDOWN_MAX = 60;
-  this.blipCooldown = 0;
-  this.dashCooldown = 0;
-  
-  this.blipEffect = new Effect([
-    {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 1.0), 3.0], update: function(lit){}, attachment: true, delay: 0, length: 3},
-    {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 1.0), 3.0], update: function(lit){lit.color.w -= 1.0/12.0; lit.rad += 0.1; }, attachment: true, delay: 3, length: 12},
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/attack0.wav", 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33},
-    {type: "particle", class: ParticleBlip, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 33}
-  ]);
-  
-  this.dashEffect = new Effect([
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/dash0.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
-    {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 0.75), 2.5], update: function(lit){lit.color.w -= 1.0/45.0; lit.rad += 0.05; }, attachment: false, delay: 0, length: 30},
-    {type: "particle", class: ParticleDash, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 60}
-  ]);
-  
-  this.tauntEffect = new Effect([
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/taunt0.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33}
-  ]);
-  
-  this.jumpEffect = new Effect([
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/jump0.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33}
-  ]);
-  
-  this.stunEffect = new Effect([
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/hit0.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
-    {type: "particle", class: ParticleStun, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 45}
-  ]);
-  
-  this.bloodEffect = new Effect([
-    {type: "particle", class: ParticleBloodSplat, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 300},
-    {type: "decal", class: Decal, params: [this.game, this.game.display.getMaterial("character.player.decal.bloodsplat"), "<vec3 pos>", util.vec3.make(0.0, 0.0, 1.0), 1.5, Math.random()*6.28319], update: function(dcl){}, attachment: false, delay: 0, length: 300}
-  ]);
-  
-  this.impactDeathEffect = new Effect([
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/death0.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 60}
-  ]);
-  
-  this.fallDeathEffect = new Effect([
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/death1.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 99}
-  ]);
-  
-  this.effects.push(this.blipEffect); this.effects.push(this.dashEffect); this.effects.push(this.tauntEffect); this.effects.push(this.jumpEffect);
-  this.effects.push(this.stunEffect); this.effects.push(this.bloodEffect); this.effects.push(this.impactDeathEffect); this.effects.push(this.fallDeathEffect);
-  
+
+  /* Timers */
+
+  /* Effects */
   this.targetCircle = new Decal(this.game, this.game.display.getMaterial("character.player.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), util.vec3.make(0.0, 0.0, 1.0), 1.1, 0.0);
 };
 
@@ -103,51 +57,20 @@ PlayerObject.prototype.update = function(data) {
   this.name = !name ? undefined : name; 
   for(var i=0;i<effects.length-1;i++) {
     switch(effects[i]) {
-      case "jump" : { this.jump(); break; }
-      case "blip" : { this.blip(); break; }
-      case "dash" : { this.dash(); break; }
-      case "taunt" : { this.taunt(); break; }
-      case "stun" : { this.stun(); break; }
+      case "jmp" : { this.jump(); break; }
+      case "stn" : { this.stun(); break; }
       default : { break; }
     }
   }
   
-  /* Update Timers */
-  if(this.blipCooldown > 0) { this.blipCooldown--; }
-  if(this.dashCooldown > 0) { this.dashCooldown--; }
-  
   /* Step Effects */
   this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1);
-  this.blipEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
-  this.dashEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
-  this.tauntEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
-  this.stunEffect.step(util.vec2.toVec3(this.pos, 0.75+this.height), util.vec2.toVec3(this.vel, 0.0));
-  this.bloodEffect.step(util.vec2.toVec3(this.pos, 0.0+this.height), util.vec2.toVec3(this.vel, 0.0));
 };
 
-/* @FIXME DEBUG GAMEPLAY TEST */
 PlayerObject.prototype.jump = function() {
   this.jumpEffect.trigger(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
 };
 
-/* @FIXME DEBUG GAMEPLAY TEST */
-PlayerObject.prototype.blip = function() {
-  this.blipEffect.trigger(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
-  this.blipCooldown = this.BLIP_COOLDOWN_MAX;
-};
-
-/* @FIXME DEBUG GAMEPLAY TEST */
-PlayerObject.prototype.dash = function() {
-  this.dashEffect.trigger(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
-  this.dashCooldown += this.DASH_COOLDOWN_ADD;
-};
-
-/* @FIXME DEBUG GAMEPLAY TEST */
-PlayerObject.prototype.taunt = function() {
-  this.tauntEffect.trigger(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
-};
-
-/* @FIXME DEBUG GAMEPLAY TEST */
 PlayerObject.prototype.stun = function() {
   this.stunEffect.trigger(util.vec2.toVec3(this.pos, 0.75+this.height), util.vec2.toVec3(this.vel, 0.0));
 };
@@ -165,7 +88,7 @@ PlayerObject.prototype.setSpeed = function(speed) {
 };
 
 PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
-  var exbounds = util.matrix.expandPolygon(bounds, this.CULL_RADIUS);
+  var exbounds = util.matrix.expandPolygon(bounds, this.cullRadius);
   if(util.intersection.pointPoly(this.pos, exbounds)) {
     var playerUniformData = [
       {name: "transform", data: [this.pos.x, this.pos.y, this.height]}
@@ -182,11 +105,6 @@ PlayerObject.prototype.destroy = function() {
   for(var i=0;i<this.effects.length;i++) {
     this.effects[i].destroy();
   }
-  if(this.height > -1.0) {
-    this.bloodEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, 0.0));
-    this.impactDeathEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, 0.0));
-  }
-  else { this.fallDeathEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, 0.0)); }
 };
 
 PlayerObject.prototype.getType = function() {

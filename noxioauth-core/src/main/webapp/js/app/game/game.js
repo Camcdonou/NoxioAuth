@@ -270,10 +270,10 @@ NoxioGame.prototype.sendInput = function() {
   if(this.input.keyboard.keys[39]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: -0.01}); } //Right
   if(this.input.keyboard.keys[38]) { this.display.camera.addRot({x: 0.01, y: 0.0, z: 0.0}); }  //Up
   if(this.input.keyboard.keys[40]) { this.display.camera.addRot({x: -0.01, y: 0.0, z: 0.0}); } //Down
-  if(this.input.keyboard.keys[32]) { actions.push("jump"); }
-  if(this.input.keyboard.keys[70]) { actions.push("blip"); }
-  if(this.input.keyboard.keys[16]) { actions.push("dash"); }
-  if(this.input.keyboard.keys[84]) { actions.push("taunt"); }
+  if(this.input.keyboard.keys[32]) { actions.push("jmp"); }
+  if(this.input.keyboard.keys[70]) { actions.push("atk"); }
+  if(this.input.keyboard.keys[16]) { actions.push("mov"); }
+  if(this.input.keyboard.keys[84]) { actions.push("tnt"); }
   //if(this.input.keyboard.keys[66]) { if(obj) { obj.bloodEffect.trigger(util.vec2.toVec3(obj.pos, obj.height), {x: 0, y: 0, z: 1}); } } // B
   if(this.input.keyboard.keys[192] || !obj) { this.ui.getElement("score").show(); } else { this.ui.getElement("score").hide(); } // ~
   
@@ -344,8 +344,8 @@ NoxioGame.prototype.deleteObject = function(oid) {
   for(var i=0;i<this.objects.length;i++) {
     if(this.objects[i].oid === oid) {
       this.objects[i].destroy();
-      for(var j=0;j<this.objects[i].effects.length;j++) {
-        if(this.objects[i].effects[j].active()) { this.effects.push({pos: this.objects[i].pos, radius: this.objects[i].CULL_RADIUS, effect: this.objects[i].effects[j]}); }
+      for(var j=0;this.objects[i].effects&&j<this.objects[i].effects.length;j++) {
+        if(this.objects[i].effects[j].active()) { this.effects.push({pos: this.objects[i].pos, radius: this.objects[i].cullRadius, effect: this.objects[i].effects[j]}); }
       }
       this.objects.splice(i, 1);
       return true;
