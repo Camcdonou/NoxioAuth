@@ -1,233 +1,163 @@
 "use strict";
 /* global main */
 /* global util */
+/* global GenericUI */
+/* global GenericUIBlock */
+/* global GenericUIText */
 
 /* Define Game UI Main Menu Class */
 function MainUI(game, name) {
-  this.game = game;
-  this.name = name;
-  this.create(this.game.display);
-  
-  this.hidden = true;
-  this.interactable = true;
+  GenericUI.call(this, game, name);
 }
 
-MainUI.prototype.show = function() {
-  this.hidden = false;
-  this.blocks[0].text = main.net.user + "@" + main.net.game.state.info.name + "@" + main.net.game.info.name;
-  this.blocks[0].size.x = util.text.lengthOnScreen(this.blocks[0].text, this.blocks[0].fontSize);
-};
+MainUI.prototype.show = GenericUI.prototype.show;
+MainUI.prototype.hide = GenericUI.prototype.hide;
+MainUI.prototype.refresh = GenericUI.prototype.refresh;
 
-MainUI.prototype.hide = function() {
-  this.hidden = true;
-};
-
-MainUI.prototype.create = function(display) {
-  var containsProto = function(point, window) {
-    var ss = util.vec2.multiply(util.vec2.divide(point, window), {x: 100.0, y: 100.0*(window.y/window.x)});
-    var align = {x: 0, y: 100.0*(window.y/window.x)};
-    var pos = util.vec2.add(this.pos, align);
-    ss.y = align.y - ss.y;
-    return ss.x >= pos.x &&
-           ss.x < pos.x+this.size.x &&
-           ss.y >= pos.y &&
-           ss.y < pos.y+this.size.y;
-  };
+MainUI.prototype.generate = function() {
+  var colorMat = this.game.display.getMaterial("ui.color");           // Basic color material
+  var fontMat  = this.game.display.getMaterial("ui.gulm");            // Font material
   
-  var tmp = this; // Fucking javascript get out reeeeeeeeeeeeeeeeeeeee
+  var red    = util.vec4.make(1.0, 0.0, 0.0, 0.5);
+  var blue   = util.vec4.make(0.0, 0.0, 1.0, 0.5);
+  var black  = util.vec4.make(0.0, 0.0, 0.0, 0.5);
   
-  this.blocks = [
-    {
-      neutral: {
-        material: display.getMaterial("ui.grey"),
-        text: [1.0, 1.0, 1.0]
-      },
-      text: "[Server Info]",
-      fontSize: 2.0,
-      pos: {x: 0.0, y: -2.0},
-      size: {x: 26.0, y: 2.0},
-      contains: function() { return false; },
-      click: function() { }
+  var syellow = util.vec4.make(1.0, 1.0, 0.0, 1.0);
+  var sred    = util.vec4.make(1.0, 0.0, 0.0, 1.0);
+  var sblue   = util.vec4.make(0.0, 0.0, 1.0, 1.0);
+  var swhite  = util.vec4.make(1.0, 1.0, 1.0, 1.0);
+  
+  var h = 0.0;
+  
+  var parent = this;
+  
+  this.elements.push({
+    align: {x: '=', y: '='},
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Do not shift click me.")]
     },
-    {
-      neutral: {
-        material: display.getMaterial("ui.white_solid"),
-      },
-      pos: {x: 0.0, y: -2.2},
-      size: {x: 18.0, y: 0.2},
-      contains: function() { return false; },
-      click: function() { }
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), red, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Do not shift click me.")]
     },
-    {
-      neutral: {
-        material: display.getMaterial("ui.grey"),
-        text: [1.0, 1.0, 1.0]
-      },
-      hover: {
-        material: display.getMaterial("ui.white"),
-        text: [0.0, 0.0, 0.0]
-      },
-      text: "Change Team",
-      fontSize: 1.5,
-      pos: {x: 0.0, y: -3.7},
-      size: {x: 20.0, y: 1.5},
-      contains: containsProto,
-      click: function() {
-        main.net.game.send({type: "i00", data: "07;"});
+    step: function(imp, state, window) {
+      for(var i=0;i<imp.mouse.length;i++) {
+        if(imp.mouse[i].btn === 0 && state.keyboard.keys[16] && parent.pointInElement(imp.mouse[i].pos, this, window)) { this.onClick(); }
       }
-    },
-    {
-      neutral: {
-        material: display.getMaterial("ui.grey"),
-        text: [1.0, 1.0, 1.0]
-      },
-      hover: {
-        material: display.getMaterial("ui.white"),
-        text: [0.0, 0.0, 0.0]
-      },
-      text: "Reset Game",
-      fontSize: 1.5,
-      pos: {x: 0.0, y: -5.2},
-      size: {x: 20.0, y: 1.5},
-      contains: containsProto,
-      click: function() {
-        main.net.game.send({type: "i00", data: "06;"});
+      if(this.clicked) {
+        if(this.tog = !this.tog) { this.neutral.text[0].pos.x += 0.1; this.hover.text[0].pos.x += 0.1; }
+        else                     { this.neutral.text[0].pos.x -= 0.1; this.hover.text[0].pos.x -= 0.1; }
       }
+      return false;
     },
-    {
-      neutral: {
-        material: display.getMaterial("ui.grey"),
-        text: [1.0, 1.0, 1.0]
-      },
-      hover: {
-        material: display.getMaterial("ui.white"),
-        text: [0.0, 0.0, 0.0]
-      },
-      text: "Mute Sound",
-      fontSize: 1.5,
-      pos: {x: 0.0, y: -6.7},
-      size: {x: 20.0, y: 1.5},
-      contains: containsProto,
-      tog: true,
-      click: function() {
-        if(this.tog) { tmp.game.sound.setVolume(0.0); this.text = "Unmute Sound"; }
-        else { tmp.game.sound.setVolume(0.5); this.text = "Mute Sound"; }
-        this.tog = !this.tog;
+    onClick: function() {
+      this.clicked = true; this.neutral.text[0].text = "ANGERY NOISES"; this.hover.text[0].text = "ANGERY NOISES";
+      this.neutral.text[0].color = sred; this.hover.text[0].color = sred;
+      this.neutral.block[0].color = red; this.hover.block[0].color = red;
+    },
+    isHovered: false
+  });
+  
+  h+=3;
+  
+  this.elements.push({
+    align: {x: '=', y: '='},
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Hover me.")]
+    },
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), red, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Thanks fam!")]
+    },
+    step: function(imp, state, window) { return false; },
+    isHovered: false
+  });
+  
+  h+=3;
+  
+  this.elements.push({
+    align: {x: '=', y: '='},
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Click me.")]
+    },
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), blue, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Click me.")]
+    },
+    step: function(imp, state, window) {
+      for(var i=0;i<imp.mouse.length;i++) {
+        if(imp.mouse[i].btn === 0 && parent.pointInElement(imp.mouse[i].pos, this, window)) { this.onClick(); }
       }
-    },
-    {
-      neutral: {
-        material: display.getMaterial("ui.grey"),
-        text: [1.0, 1.0, 1.0]
-      },
-      hover: {
-        material: display.getMaterial("ui.white"),
-        text: [0.0, 0.0, 0.0]
-      },
-      text: "Enable Debug",
-      fontSize: 1.5,
-      pos: {x: 0.0, y: -8.2},
-      size: {x: 20.0, y: 1.5},
-      contains: containsProto,
-      click: function() {
-        var debugMenu = tmp.game.ui.getElement("debug"); 
-        if(!debugMenu.hidden) { debugMenu.hide(); this.text = "Enable Debug"; }
-        else { debugMenu.show(); this.text = "Disable Debug"; }
+      if(this.clicked) {
+        if(this.tog = !this.tog) { this.neutral.text[0].color = syellow; this.hover.text[0].color = syellow; }
+        else                     { this.neutral.text[0].color = sred; this.hover.text[0].color = sred; }
       }
+      return false;
     },
-    {
-      neutral: {
-        material: display.getMaterial("ui.grey"),
-        text: [1.0, 1.0, 1.0]
-      },
-      hover: {
-        material: display.getMaterial("ui.white"),
-        text: [0.0, 0.0, 0.0]
-      },
-      text: "Enable Cheats",
-      fontSize: 1.5,
-      pos: {x: 0.0, y: -9.7},
-      size: {x: 20.0, y: 1.5},
-      contains: containsProto,
-      click: function() { tmp.game.sound.setMusic(tmp.game.sound.getSound("music/roll.wav", 1.0), true); this.text = "Hahahahaha"; }
+    onClick: function() { this.clicked = true; this.neutral.text[0].text = "Aww yee~"; this.hover.text[0].text = "Aww yee~"; },
+    isHovered: false
+  });
+  
+  h+=3;
+  
+  this.elements.push({
+    align: {x: '=', y: '='},
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Focus me.")]
     },
-    {
-      neutral: {
-        material: display.getMaterial("ui.grey"),
-        text: [1.0, 1.0, 1.0]
-      },
-      hover: {
-        material: display.getMaterial("ui.white"),
-        text: [0.0, 0.0, 0.0]
-      },
-      text: "Generate Cache",
-      fontSize: 1.5,
-      pos: {x: 0.0, y: -11.2},
-      size: {x: 20.0, y: 1.5},
-      contains: containsProto,
-      click: function() { tmp.game.generateCache(); }
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), blue, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Focus me.")]
     },
-    {
-      neutral: {
-        material: display.getMaterial("ui.grey"),
-        text: [1.0, 1.0, 1.0]
-      },
-      hover: {
-        material: display.getMaterial("ui.white"),
-        text: [0.0, 0.0, 0.0]
-      },
-      text: "Leave Game",
-      fontSize: 1.5,
-      pos: {x: 0.0, y: -12.7},
-      size: {x: 20.0, y: 1.5},
-      contains: containsProto,
-      click: function(button) { tmp.game.leave(); }
-    }
-  ];
-};
-
-MainUI.prototype.handleInput = function(key) {
-  // Escape key toggles this menu
-  if(key === 27) {
-    if(this.hidden) { this.show(); }
-    else { this.hide(); }
-    return true;
-  } 
-  if(this.hidden) { return false; }
-  return false;
-};
-
-/* Window size is needed since UI is scaled to window size. */
-MainUI.prototype.handleClick = function(button, mouse, window) {
-  if(this.hidden) { return false; }
+    step: function(imp, state, window) {
+      for(var i=0;i<imp.mouse.length;i++) {
+        if(imp.mouse[i].btn === 0) { 
+          if(parent.pointInElement(imp.mouse[i].pos, this, window)) { this.onClick(); }
+          else                                                      { this.onFocusLost(); }
+        }
+      }
+      return false;
+    },
+    onClick: function() { this.neutral.block[0].color = sblue; this.hover.block[0].color = sblue; },
+    onFocusLost: function() { this.neutral.block[0].color = black; this.hover.block[0].color = blue; },
+    isHovered: false
+  });
   
-  for(var i=0;i<this.blocks.length;i++) {
-    var block = this.blocks[i];
-    if(block.contains(mouse, window)) {
-      block.click(button);
-      return true;
-    }
-  }
-  return false;
+  h+=3;
+  
+  this.elements.push({
+    align: {x: '=', y: '='},
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Press T or F")]
+    },
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), red, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Press T or F")]
+    },
+    step: function(imp, state, window) {
+      if(state.keyboard.keys[84]) {
+        this.neutral.block[0].color = sblue; this.hover.block[0].color = sblue;
+      }
+      else if(state.keyboard.keys[70]) {
+        this.neutral.block[0].color = syellow; this.hover.block[0].color = syellow;
+      }
+      else {
+        this.neutral.block[0].color = black; this.hover.block[0].color = red;
+      }
+      return false;
+    },
+    isHovered: false
+  });
 };
 
-MainUI.prototype.getDraw = function(blocks, text, mouse, window) {
-  if(this.hidden) { return false; }
-  
-  var align = {x: 0, y: 100.0*(window.y/window.x)};
-  for(var i=0;i<this.blocks.length;i++) {
-    var block = this.blocks[i];
-    if(block.contains(mouse, window)) {
-      blocks.push({material: block.hover.material, pos: util.vec2.add(block.pos, align), size: block.size});
-      if(block.text) { text.push({text: block.text, size: block.fontSize, color: block.hover.text, pos: util.vec2.add(block.pos, align)}); }
-    }
-    else {
-      blocks.push({material: block.neutral.material, pos: util.vec2.add(block.pos, align), size: block.size});
-      if(block.text) { text.push({text: block.text, size: block.fontSize, color: block.neutral.text, pos: util.vec2.add(block.pos, align)}); }
-    }
-  }
-};
+MainUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 
-MainUI.prototype.destroy = function() {
-  
-};
+MainUI.prototype.step = GenericUI.prototype.step;
+MainUI.prototype.getDraw = GenericUI.prototype.getDraw;
+
+MainUI.prototype.destroy = function() { };

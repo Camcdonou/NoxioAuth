@@ -545,7 +545,7 @@ Display.prototype.draw = function() {
   /* ===================================================================================================================== */
   var blocks = [];
   var texts = [];
-  this.game.ui.getDraw(blocks, texts, this.game.input.mouse.pos, {x: this.window.width, y: this.window.height}); //Get all UI elements to draw
+  this.game.ui.getDraw(blocks, texts, util.vec2.make(this.window.width, this.window.height));           // Collect all UI elements to draw
   
   gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.ui.fb);                                                   // Enable menu framebuffer
   gl.viewport(0, 0, (this.window.width*this.fbo.ui.upscale), (this.window.height*this.fbo.ui.upscale)); // Resize to canvas
@@ -554,8 +554,6 @@ Display.prototype.draw = function() {
   gl.depthMask(false);                                                                                  // Disable depth write for UI Draw
   gl.disable(gl.DEPTH_TEST);                                                                            // Disable depth testing for UI Draw
   gl.enable(gl.BLEND);                                                                                  // Enable Transparency 
-  var fontMaterial = this.getMaterial("ui.gulm");
-  var fontShader = fontMaterial.shader;
   var sheetModel = this.getModel("multi.sheet");
   
   var ASPECT = this.window.height/this.window.width;
@@ -571,38 +569,32 @@ Display.prototype.draw = function() {
     block.material.shader.enable(gl);
     block.material.shader.applyUniforms(gl, uniformDataUi);
     block.material.enable(gl);
-    var uniformBlockSize = [
-      {name: "transform", data: [block.pos.x, block.pos.y, -0.5]},
-      {name: "size", data: [block.size.x, block.size.y]}
-    ];
-    block.material.shader.applyUniforms(gl, uniformBlockSize);
+    
+    block.material.shader.applyUniforms(gl, block.uniforms);
     sheetModel.draw(gl, block.material.shader);
     block.material.disable(gl);
     block.material.shader.disable(gl);
   }
   
-  fontShader.enable(gl);
-  fontShader.applyUniforms(gl, uniformDataUi);
-  fontMaterial.enable(gl);
   for(var j=0;j<texts.length;j++) {
     var text = texts[j];
+    text.material.shader.enable(gl);
+    text.material.shader.applyUniforms(gl, uniformDataUi);
+    text.material.enable(gl);
     var characters = this.stringToIndices(text.text);
-    var uniformFontSize = [
-      {name: "fontSize", data: text.size},
-      {name: "color", data: text.color}
-    ];
-    fontShader.applyUniforms(gl, uniformFontSize);
+    text.material.shader.applyUniforms(gl, text.uniforms);
     for(var i=0;i<characters.length;i++) {
       var uniformDataTextIndex = [
-        {name: "transform", data: [(text.size*(i*0.9))+text.pos.x, text.pos.y, -0.5]},
+        {name: "transform", data: [(text.size*(i*0.9))+text.pos.x, text.pos.y]},
         {name: "index", data: characters[i]}
       ];
-      fontShader.applyUniforms(gl, uniformDataTextIndex);
-      sheetModel.draw(gl, fontShader);
+      text.material.shader.applyUniforms(gl, uniformDataTextIndex);
+      sheetModel.draw(gl, text.material.shader);
     }
+    text.material.shader.disable(gl);
+    text.material.disable(gl);
   }
-  fontShader.disable(gl);
-  fontMaterial.disable(gl);
+  
   gl.depthMask(true);                       // Reenable depth write after UI draw
   gl.enable(gl.DEPTH_TEST);                 // Reenable after UI Draw
   gl.disable(gl.BLEND);                     // Disable transparency

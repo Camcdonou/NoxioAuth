@@ -79,24 +79,24 @@ PackHand.prototype.scores = function(data) {
     scs.push({name: name[i], score: score[i], meter: parseFloat(meter[i]), color: {x: parseFloat(r[i]), y: parseFloat(g[i]), z: parseFloat(b[i])}});
   }
   
-  var scoreUI = this.game.ui.getElement("score");
-  var title = {title: gametype, description: description};
-  scoreUI.update(title, scs);
+//  var scoreUI = this.game.ui.getElement("score");
+//  var title = {title: gametype, description: description};
+//  scoreUI.update(title, scs);
 };
 
 /* SYS::MESSAGE | msg */
 PackHand.prototype.message = function(data) {
   var msg = data.shift();
-  
-  this.game.ui.getElement("log").message(msg);
+//  
+//  this.game.ui.getElement("log").message(msg);
 };
 
 /* SYS::GAMEOVER | end */
 PackHand.prototype.gameOver = function(data) {
   var msg = data.shift();
   
-  var endUI = this.game.ui.getElement("end");
-  endUI.create(msg); // Regenerate end screen with server message.
+//  var endUI = this.game.ui.getElement("end");
+//  endUI.create(msg); // Regenerate end screen with server message.
   this.game.gameOver = true;
 };
 
@@ -141,5 +141,5 @@ PackHand.prototype.respawnTimer = function(data) {
 
 /* SYS::WHISPER | wsp */
 PackHand.prototype.whisper = function(data) {
-  this.game.ui.getElement("log").message(data.shift());
+//  this.game.ui.getElement("log").message(data.shift());
 };

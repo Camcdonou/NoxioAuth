@@ -4,55 +4,35 @@
 /* Define Game UI Class */
 function GameUI(game) {
   this.game = game;
-  if(!this.game.display.gl) { return; } /* If no GL then no nothing */
   this.elements = [
-    new NameUI(this.game, "name"),
-    new ObjectiveUI(this.game, "objective"),
-    new MeterUI(this.game, "meter"),
-    new LogUI(this.game, "log"),
-    new DebugUI(this.game, "debug"),
-    new ScoreUI(this.game, "score"),
-    new RespawnUI(this.game, "respawn"),
-    new EndUI(this.game, "end"),
     new MainUI(this.game, "main")
   ];
+  for(var i=0;i<this.elements.length;i++) {
+    this[this.elements[i].name] = this.elements[i];
+  }
 }
 
-GameUI.prototype.getElement = function(name) {
+/* Hide all */
+GameUI.prototype.hide = function() {
   for(var i=0;i<this.elements.length;i++) {
-    if(this.elements[i].name === name) { return this.elements[i]; }
-  }
-  return undefined;
-};
-
-/* Returns true if a interactable menu object is visible */
-GameUI.prototype.menuOpen = function() {
-  for(var i=0;i<this.elements.length;i++) {
-    if(this.elements[i].interactable && !this.elements[i].hidden) { return true; }
-  }
-  return false;
-};
-
-GameUI.prototype.handleInput = function(key) {
-  for(var i=0;i<this.elements.length;i++) {
-    if(this.elements[i].interactable) {
-      if(this.elements[i].handleInput(key)) { return; }
-    }
+    this.elements[i].hide();
   }
 };
 
-/* Window size is needed since UI is scaled to window size. */
-GameUI.prototype.handleClick = function(button, mouse, window) {
+/* Steps UI and returns true if imp input is absorbed by a UI element */
+/* Window is a Vec2 of the size, in pixels, of the game window for this draw */
+GameUI.prototype.step = function(imp, state, window) {
+  var hit = false;
   for(var i=0;i<this.elements.length;i++) {
-    if(this.elements[i].interactable) {
-      if(this.elements[i].handleClick(button, mouse, window)) { return; }
-    }
+    if(this.elements[i].step(imp, state, window)) { hit = true; }
   }
+  return hit;
 };
 
-GameUI.prototype.getDraw = function(block, text, mouse, window) {
+/* Window is a Vec2 of the size, in pixels, of the game window for this draw */
+GameUI.prototype.getDraw = function(block, texts, window) {
   for(var i=0;i<this.elements.length;i++) {
-    this.elements[i].getDraw(block, text, mouse, window);
+    this.elements[i].getDraw(block, texts, window);
   }
 };
 

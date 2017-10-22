@@ -340,6 +340,15 @@ util.matrix.expandPolygon = function(poly, d) {
 /* === Intersection ======================================================================= */
 /* ======================================================================================== */
 
+/* Vec2 p, Vec2 a, Vec2 b */
+/* a is the starting corner, b is the size of the rectangle */
+util.intersection.pointRectangle = function(p, a, b) {
+  return a.x <= p.x &&
+         a.x+b.x > p.x &&
+         a.y <= p.y &&
+         a.y+b.y > p.y;
+};
+
 /* Line l {a: <startpoint vec3>, b: <endpoint vec3>} */
 /* Plane pl {a: <p1 vec3>, b: <p2 vec3>, c: <p3 vec3>, n: <normal vec3>} */
 util.intersection.linePlane = function(l, pl) {

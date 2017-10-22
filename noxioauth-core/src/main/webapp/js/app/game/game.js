@@ -182,26 +182,20 @@ NoxioGame.prototype.doUpdate = function(packet) {
   
   /* Update UI State */
   var obj = this.getObject(this.control);
-  var respawnUI = this.ui.getElement("respawn"); 
-  var meterUI = this.ui.getElement("meter");
-  var nameUI = this.ui.getElement("name"); nameUI.show(); // Currently always shows!
-  var objectiveUI = this.ui.getElement("objective"); objectiveUI.show(); // Currently always shows!
-  if(!obj && !this.gameOver) { respawnUI.show(); meterUI.hide(); }
-  else if(!this.gameOver) {
-    respawnUI.hide();
-    if(obj.getType() === "obj.player") {
-      var blipScalar = 1.0-Math.max(Math.min(obj.blipCooldown/obj.BLIP_COOLDOWN_MAX, 1.0), 0.0);
-      var dashScalar = 1.0-Math.max(Math.min(obj.dashCooldown/obj.DASH_COOLDOWN_MAX, 1.0), 0.0);
-      meterUI.meters(blipScalar, dashScalar, 0.0);
-      meterUI.show();
-    }
-  }
-  else {
-    var endUI = this.ui.getElement("end");
-    respawnUI.hide();
-    meterUI.hide();
-    endUI.show();
-  }
+  this.ui.hide();
+  this.ui.main.show();
+  this.ui.step(
+    {
+      mouse: this.DEBUG_MOUSE_INPUT !== this.input.mouse.lmb ? [{btn: 0, pos: util.vec2.copy(this.input.mouse.pos)}] : [],
+      keyboard: []
+    },
+    {
+      mouse: {pos: util.vec2.copy(this.input.mouse.pos), btn: [false,false,false]},
+      keyboard: {keys: this.input.keyboard.keys}
+    },
+    util.vec2.make(this.display.window.width, this.display.window.height)
+  );
+  this.DEBUG_MOUSE_INPUT = this.input.mouse.lmb;
 };
 
 NoxioGame.prototype.update = function(tick) {
@@ -237,14 +231,14 @@ NoxioGame.prototype.update = function(tick) {
   this.debug.ctime.pop();
   this.debug.ctime.unshift(util.time.now() - now);
   
-  this.ui.getElement("debug").debug([
+  /*this.ui.getElement("debug").debug([
     "S[" + (this.debug.sAvg).toFixed(2) + "ms] C[" + (this.debug.cAvg).toFixed(2) + "ms] D[" + (this.debug.dAvg).toFixed(2) + "ms]",
     "FPS[" + (this.debug.fAvg).toFixed(2) + "] MEME[" + (this.debug.pAvg).toFixed(2) + "ms]",
     "ASSET[" + this.display.models.length + "," + this.display.materials.length + "," + this.display.shaders.length + "," + this.display.textures.length +"] FBO[3]",
     "SHADOW [" + this.display.fbo.shadow.fb.width + "," + this.display.fbo.shadow.fb.height + "]",
     "WORLD  [" + this.display.fbo.world.fb.width + "," + this.display.fbo.world.fb.height + "]",
     "UI     [" + this.display.fbo.ui.fb.width + "," + this.display.fbo.ui.fb.height + "]"
-  ]);
+  ]);*/
   /* === DEBUG BLOCK END ==================== */
 };
 
@@ -258,7 +252,7 @@ NoxioGame.prototype.sendInput = function() {
   var mouse = this.input.mouse.popMovement();
   
   /* Send current user input to server */
-  if(this.ui.menuOpen()) { main.net.game.send({type: "i00", data: "01;"+this.lastMouse.x+","+this.lastMouse.y}); return; } // Menu is open so send mouse neutral and return
+  //if(this.ui.menuOpen()) { main.net.game.send({type: "i00", data: "01;"+this.lastMouse.x+","+this.lastMouse.y}); return; } // Menu is open so send mouse neutral and return
   
   /* Apply popped inputs */
   this.display.camera.setZoom(mouse.s);
@@ -275,7 +269,7 @@ NoxioGame.prototype.sendInput = function() {
   if(this.input.keyboard.keys[16]) { actions.push("mov"); }
   if(this.input.keyboard.keys[84]) { actions.push("tnt"); }
   //if(this.input.keyboard.keys[66]) { if(obj) { obj.bloodEffect.trigger(util.vec2.toVec3(obj.pos, obj.height), {x: 0, y: 0, z: 1}); } } // B
-  if(this.input.keyboard.keys[192] || !obj) { this.ui.getElement("score").show(); } else { this.ui.getElement("score").hide(); } // ~
+  //if(this.input.keyboard.keys[192] || !obj) { this.ui.getElement("score").show(); } else { this.ui.getElement("score").hide(); } // ~
   
   if(obj) {
     var near = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 0.0);
@@ -322,11 +316,11 @@ NoxioGame.prototype.sendInput = function() {
 
 /* Input overhaul? @FIXME maybe handle inputs in real time but if they are not client inputs then queue them? */
 NoxioGame.prototype.handleInput = function(key) {
-  this.ui.handleInput(key);
+  //this.ui.handleInput(key);
 };
 
 NoxioGame.prototype.handleClick = function(button, mouse) {
-  this.ui.handleClick(button, mouse, {x: this.window.width, y: this.window.height});
+  //this.ui.handleClick(button, mouse, {x: this.window.width, y: this.window.height});
 };
 
 /* Gets an object by it's OID */

@@ -35,28 +35,12 @@ Asset.prototype.material.ui.flagIcon = {
   texture0: "ui/flag",
 };
 
-/* Source File: grey.mat */
-Asset.prototype.material.ui.grey = {
-  name: "ui.grey",
-  shader: "simpletrans",
-  shadow: false,
-  texture0: "ui/grey",
-};
-
-/* Source File: white.mat */
-Asset.prototype.material.ui.white = {
-  name: "ui.white",
+/* Source File: color.mat */
+Asset.prototype.material.ui.color = {
+  name: "ui.color",
   shader: "simpletrans",
   shadow: false,
   texture0: "ui/white",
-};
-
-/* Source File: white_solid.mat */
-Asset.prototype.material.ui.white_solid = {
-  name: "ui.white_solid",
-  shader: "simpletrans",
-  shadow: false,
-  texture0: "ui/white_solid",
 };
 
 /* Source File: post_msaa.mat */
