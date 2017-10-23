@@ -7,7 +7,7 @@ function GenericUI(game, name) {
   this.game = game;
   this.name = name;
   
-  this.elements = [];               // Stuff to draw!
+  this.containers = [];
   
   this.generate();
   
@@ -15,10 +15,18 @@ function GenericUI(game, name) {
   this.interactable = false;        // Can this be clicked or typed on?
 }
 
-/* Elements spec:
- * Elements should conform to this data structure :
+/* Container spec:
+ * var container = new UIContainer(<ALIGN>);
+ * container.add(<ELEMENT>);
+ */
+
+/* Align spec:
+ * {x: <CHARACTER +-=>, y: <CHARACTER +-=>},     // +,+ would be TOP LEFT -,- would be BOTTOM RIGHT and =,= would be CENTER CENTER
+ */
+
+/* Element spec:
+ * Element should conform to this data structure :
  * {
- *    align: {x: <CHARACTER +-=>, y: <CHARACTER +-=>},     // +,+ would be TOP LEFT -,- would be BOTTOM RIGHT and =,= would be CENTER CENTER
  *    neutral: {
  *      block: [<GENERICUIBLOCK>],
  *      text:  [<GENERICUITEXT>],
@@ -47,25 +55,27 @@ GenericUI.prototype.step = function(imp, state, window) {
   if(this.hidden) { return false; }
   
   this.refresh();
-  for(var i=0;i<this.elements.length;i++) {
-    var hov = this.pointInElement(state.mouse.pos, this.elements[i], window);
-    if(this.elements[i].hover) { this.elements[i].isHovered = hov; }            // Hover is an optional field so we check if it exists
-  }
   var hit = false;
-  for(var i=0;i<this.elements.length;i++) {
-    if(this.elements[i].step(imp, state, window)) { hit = true; }
+  for(var i=0;i<this.containers.length;i++) {
+    var elements = this.containers[i].elements;
+    var align = this.containers[i].makeAlign(window);
+    for(var j=0;j<elements.length;j++) {
+      var hov = this.pointInElement(state.mouse.pos, elements[j], window, align);
+      if(elements[j].hover) { elements[j].isHovered = hov; }                    // Hover is an optional field so we check if it exists
+    }
+    for(var j=0;j<elements.length;j++) {
+      if(elements[j].step(imp, state, window)) { hit = true; }
+    }
   }
   return hit;
 };
 
 /* Tests if a point is inside of an element or not and returns true/false */
-GenericUI.prototype.pointInElement = function(pos, element, window) {
+GenericUI.prototype.pointInElement = function(pos, element, window, align) {
   for(var j=0;j<element.neutral.block.length;j++) {
     var blok = element.neutral.block[j];
-    var align = util.vec2.create();
     var coordAdjust = util.vec2.make(pos.x, window.y-pos.y);                    // GL draws from bottom-left because.... downs?
-    var ss = util.vec2.multiply(util.vec2.divide(coordAdjust, window), {x: 100.0, y: 100.0*(window.y/window.x)});
-    if(util.intersection.pointRectangle(ss, blok.pos, blok.size)) { return true; }
+    if(util.intersection.pointRectangle(coordAdjust, util.vec2.add(blok.pos, align), blok.size)) { return true; }
   }
   return false;
 };
@@ -74,39 +84,82 @@ GenericUI.prototype.pointInElement = function(pos, element, window) {
 GenericUI.prototype.getDraw = function(blocks, texts, window) {
   if(this.hidden) { return false; }
   
-  for(var i=0;i<this.elements.length;i++) {
-    var align = util.vec2.create();
-    
-    var fld = this.elements[i].isHovered ? "hover" : "neutral";                 // Oh yeah Mr. Krabs
-    var blc = this.elements[i][fld].block;
-    var txt = this.elements[i][fld].text;
-    for(var j=0;j<blc.length;j++) {
-      blocks.push({
-        material: blc[j].material,
-        uniforms: [
-          {name: "transform", data: util.vec2.toArray(util.vec2.add(blc[j].pos, align))},
-          {name: "size", data: util.vec2.toArray(blc[j].size)},
-          {name: "color", data: util.vec4.toArray(blc[j].color)}
-        ]
-      });
-    }
-    for(var j=0;j<txt.length;j++) {
-      texts.push({
-        material: txt[j].material,
-        text: txt[j].text,
-        pos: util.vec2.add(txt[j].pos, align),
-        size: txt[j].size,
-        uniforms: [
-          {name: "fontSize", data: txt[j].size},
-          {name: "color", data: util.vec4.toArray(txt[j].color)}
-        ]
-      });
+  for(var i=0;i<this.containers.length;i++) {
+    var elements = this.containers[i].elements;
+    var align = this.containers[i].makeAlign(window);
+    for(var j=0;j<elements.length;j++) {
+      var fld = elements[j].isHovered ? "hover" : "neutral";                 // Oh yeah Mr. Krabs
+      var blc = elements[j][fld].block;
+      var txt = elements[j][fld].text;
+      for(var k=0;k<blc.length;k++) {
+        blocks.push({
+          material: blc[k].material,
+          uniforms: [
+            {name: "transform", data: util.vec2.toArray(util.vec2.add(blc[k].pos, align))},
+            {name: "size", data: util.vec2.toArray(blc[k].size)},
+            {name: "color", data: util.vec4.toArray(blc[k].color)}
+          ]
+        });
+      }
+      for(var k=0;k<txt.length;k++) {
+        texts.push({
+          font: txt[k].font,
+          material: txt[k].material,
+          text: txt[k].text,
+          pos: util.vec2.add(txt[k].pos, align),
+          size: txt[k].size,
+          uniforms: [
+            {name: "color", data: util.vec4.toArray(txt[k].color)}
+          ]
+        });
+      }
     }
   }
 };
 
 /* -- ABSTRACT cleanup when closing game */
 GenericUI.prototype.destroy = function() { };
+
+/* Define UIContainer */
+/* The point of this class is to have an object to place elements in so I can align them as
+ * a group, instead of individually.
+ */
+function UIContainer(align) {
+  this.align = align;
+  this.elements = [];
+};
+
+UIContainer.prototype.add = function(element) {
+  this.elements.push(element);
+};
+
+/* Returns a vec2 with the offset needed to align this container correctly on the screen */
+UIContainer.prototype.makeAlign = function(window) {
+  var x,y;
+  var w,h;
+  for(var i=0;i<this.elements.length;i++) {
+    for(var j=0;j<this.elements[i].neutral.block.length;j++) {
+      var block = this.elements[i].neutral.block[j];
+      if(!x || block.pos.x < x) { x = block.pos.x; }
+      if(!y || block.pos.y < y) { y = block.pos.y; }
+      if(!w || block.pos.x+block.size.x > w) { w = block.pos.x+block.size.x; }
+      if(!h || block.pos.y+block.size.y > h) { h = block.pos.y+block.size.y; }
+    }
+  }
+  
+  var a,b;
+  switch(this.align.x) {
+    case "-" : { a = window.x-w; break; }
+    case "=" : { a = (window.x-w)*0.5; break; }
+    default  : { a = 0; break; }
+  }
+  switch(this.align.y) {
+    case "-" : { b = window.y-h; break; }
+    case "=" : { b = (window.y-h)*0.5; break; }
+    default  : { b = 0; break; }
+  }
+  return util.vec2.make(a,b);
+};
 
 /* Define Abstract Generic UI Block Super Class */
 function GenericUIBlock(pos, size, color, material) {
@@ -117,10 +170,11 @@ function GenericUIBlock(pos, size, color, material) {
 }
 
 /* Define Abstract Generic UI Text Super Class */
-function GenericUIText(pos, size, color, material, text) {
+function GenericUIText(pos, size, color, font, material, text) {
   this.pos = pos;           // <Vec2>
   this.size = size;         // <Float>
   this.color = color;       // <Vec4>
+  this.font = font;         // <String>
   this.material = material; // <Material>
   this.text = text;         // <String>
 }

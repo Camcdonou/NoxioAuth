@@ -19,14 +19,6 @@ Asset.prototype.material.sky.final = {};
 Asset.prototype.material.map = {};
 Asset.prototype.material.map.final = {};
 
-/* Source File: gulm.mat */
-Asset.prototype.material.ui.gulm = {
-  name: "ui.gulm",
-  shader: "font",
-  shadow: false,
-  texture0: "ui/gulm_sdf",
-};
-
 /* Source File: flagIcon.mat */
 Asset.prototype.material.ui.flagIcon = {
   name: "ui.flagIcon",
@@ -41,6 +33,14 @@ Asset.prototype.material.ui.color = {
   shader: "simpletrans",
   shadow: false,
   texture0: "ui/white",
+};
+
+/* Source File: calibri.mat */
+Asset.prototype.material.ui.calibri = {
+  name: "ui.calibri",
+  shader: "font",
+  shadow: false,
+  texture0: "ui/calibri",
 };
 
 /* Source File: post_msaa.mat */

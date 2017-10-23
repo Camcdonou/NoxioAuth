@@ -15,144 +15,283 @@ MainUI.prototype.hide = GenericUI.prototype.hide;
 MainUI.prototype.refresh = GenericUI.prototype.refresh;
 
 MainUI.prototype.generate = function() {
-  var colorMat = this.game.display.getMaterial("ui.color");           // Basic color material
-  var fontMat  = this.game.display.getMaterial("ui.gulm");            // Font material
-  
-  var red    = util.vec4.make(1.0, 0.0, 0.0, 0.5);
-  var blue   = util.vec4.make(0.0, 0.0, 1.0, 0.5);
-  var black  = util.vec4.make(0.0, 0.0, 0.0, 0.5);
-  
-  var syellow = util.vec4.make(1.0, 1.0, 0.0, 1.0);
-  var sred    = util.vec4.make(1.0, 0.0, 0.0, 1.0);
-  var sblue   = util.vec4.make(0.0, 0.0, 1.0, 1.0);
-  var swhite  = util.vec4.make(1.0, 1.0, 1.0, 1.0);
-  
-  var h = 0.0;
-  
   var parent = this;
+  var container = new UIContainer({x: '=', y: '='});
+  var colorMat = this.game.display.getMaterial("ui.color");           // Basic color material
+  var fontMat  = this.game.display.getMaterial("ui.calibri");         // Font material
+  var fontName = "Calibri";                                           // Name of this font for text rendering
   
-  this.elements.push({
-    align: {x: '=', y: '='},
+  var black  = util.vec4.make(0.0, 0.0, 0.0, 0.5);
+  var white  = util.vec4.make(1.0, 1.0, 1.0, 1.0);
+  
+  var swhite  = util.vec4.make(1.0, 1.0, 1.0, 1.0);
+  var sblack  = util.vec4.make(0.0, 0.0, 0.0, 0.0);
+  
+  var w = 512;
+  var h = 0;
+  var s = 64;
+  
+  container.add({
     neutral: {
-      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), black, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Do not shift click me.")]
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, swhite, fontName, fontMat, "Font size " + s)]
     },
     hover: {
-      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), red, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Do not shift click me.")]
-    },
-    step: function(imp, state, window) {
-      for(var i=0;i<imp.mouse.length;i++) {
-        if(imp.mouse[i].btn === 0 && state.keyboard.keys[16] && parent.pointInElement(imp.mouse[i].pos, this, window)) { this.onClick(); }
-      }
-      if(this.clicked) {
-        if(this.tog = !this.tog) { this.neutral.text[0].pos.x += 0.1; this.hover.text[0].pos.x += 0.1; }
-        else                     { this.neutral.text[0].pos.x -= 0.1; this.hover.text[0].pos.x -= 0.1; }
-      }
-      return false;
-    },
-    onClick: function() {
-      this.clicked = true; this.neutral.text[0].text = "ANGERY NOISES"; this.hover.text[0].text = "ANGERY NOISES";
-      this.neutral.text[0].color = sred; this.hover.text[0].color = sred;
-      this.neutral.block[0].color = red; this.hover.block[0].color = red;
-    },
-    isHovered: false
-  });
-  
-  h+=3;
-  
-  this.elements.push({
-    align: {x: '=', y: '='},
-    neutral: {
-      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), black, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Hover me.")]
-    },
-    hover: {
-      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), red, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Thanks fam!")]
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), white, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, sblack, fontName, fontMat, "Font size " + s)]
     },
     step: function(imp, state, window) { return false; },
     isHovered: false
   });
   
-  h+=3;
+  h += s;
+  s = 48;
   
-  this.elements.push({
-    align: {x: '=', y: '='},
+  container.add({
     neutral: {
-      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), black, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Click me.")]
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, swhite, fontName, fontMat, "Font size " + s)]
     },
     hover: {
-      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), blue, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Click me.")]
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), white, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, sblack, fontName, fontMat, "Font size " + s)]
     },
-    step: function(imp, state, window) {
-      for(var i=0;i<imp.mouse.length;i++) {
-        if(imp.mouse[i].btn === 0 && parent.pointInElement(imp.mouse[i].pos, this, window)) { this.onClick(); }
-      }
-      if(this.clicked) {
-        if(this.tog = !this.tog) { this.neutral.text[0].color = syellow; this.hover.text[0].color = syellow; }
-        else                     { this.neutral.text[0].color = sred; this.hover.text[0].color = sred; }
-      }
-      return false;
-    },
-    onClick: function() { this.clicked = true; this.neutral.text[0].text = "Aww yee~"; this.hover.text[0].text = "Aww yee~"; },
+    step: function(imp, state, window) { return false; },
     isHovered: false
   });
   
-  h+=3;
+  h += s;
+  s = 32;
   
-  this.elements.push({
-    align: {x: '=', y: '='},
+  container.add({
     neutral: {
-      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), black, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Focus me.")]
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, swhite, fontName, fontMat, "Font size " + s)]
     },
     hover: {
-      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), blue, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Focus me.")]
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), white, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, sblack, fontName, fontMat, "Font size " + s)]
     },
-    step: function(imp, state, window) {
-      for(var i=0;i<imp.mouse.length;i++) {
-        if(imp.mouse[i].btn === 0) { 
-          if(parent.pointInElement(imp.mouse[i].pos, this, window)) { this.onClick(); }
-          else                                                      { this.onFocusLost(); }
-        }
-      }
-      return false;
-    },
-    onClick: function() { this.neutral.block[0].color = sblue; this.hover.block[0].color = sblue; },
-    onFocusLost: function() { this.neutral.block[0].color = black; this.hover.block[0].color = blue; },
+    step: function(imp, state, window) { return false; },
     isHovered: false
   });
   
-  h+=3;
+  h += s;
+  s = 24;
   
-  this.elements.push({
-    align: {x: '=', y: '='},
+  container.add({
     neutral: {
-      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), black, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Press T or F")]
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, swhite, fontName, fontMat, "Font size " + s)]
     },
     hover: {
-      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(66,3), red, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(0,h), 3, swhite, fontMat, "Press T or F")]
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), white, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, sblack, fontName, fontMat, "Font size " + s)]
     },
-    step: function(imp, state, window) {
-      if(state.keyboard.keys[84]) {
-        this.neutral.block[0].color = sblue; this.hover.block[0].color = sblue;
-      }
-      else if(state.keyboard.keys[70]) {
-        this.neutral.block[0].color = syellow; this.hover.block[0].color = syellow;
-      }
-      else {
-        this.neutral.block[0].color = black; this.hover.block[0].color = red;
-      }
-      return false;
-    },
+    step: function(imp, state, window) { return false; },
     isHovered: false
   });
+  
+  h += s;
+  s = 18;
+  
+  container.add({
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, swhite, fontName, fontMat, "Font size " + s)]
+    },
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), white, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, sblack, fontName, fontMat, "Font size " + s)]
+    },
+    step: function(imp, state, window) { return false; },
+    isHovered: false
+  });
+  
+  h += s;
+  s = 16;
+  
+  container.add({
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, swhite, fontName, fontMat, "Font size " + s)]
+    },
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), white, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, sblack, fontName, fontMat, "Font size " + s)]
+    },
+    step: function(imp, state, window) { return false; },
+    isHovered: false
+  });
+  
+  h += s;
+  s = 12;
+  
+  container.add({
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, swhite, fontName, fontMat, "Font size " + s)]
+    },
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), white, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, sblack, fontName, fontMat, "Font size " + s)]
+    },
+    step: function(imp, state, window) { return false; },
+    isHovered: false
+  });
+  
+  h += s;
+  s = 10;
+  
+  container.add({
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, swhite, fontName, fontMat, "Font size " + s)]
+    },
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), white, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, sblack, fontName, fontMat, "Font size " + s)]
+    },
+    step: function(imp, state, window) { return false; },
+    isHovered: false
+  });
+  
+  h += s;
+  s = 8;
+  
+  container.add({
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, swhite, fontName, fontMat, "Font size " + s)]
+    },
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), white, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(0,h), s, sblack, fontName, fontMat, "Font size " + s)]
+    },
+    step: function(imp, state, window) { return false; },
+    isHovered: false
+  });
+  
+  h += s;
+  s = 16;
+  
+  var x = 0;
+  w = 85;
+  
+  container.add({
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(x,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(x,h), s, swhite, fontName, fontMat, "Align +X")]
+    },
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(x,h), util.vec2.make(w,s), white, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(x,h), s, sblack, fontName, fontMat, "Align +X")]
+    },
+    step: function(imp, state, window) {
+      for(var i=0;i<imp.mouse.length;i++) { if(imp.mouse[i].btn === 0 && this.isHovered) { this.onClick(); return true; } }
+      return false;
+    },
+    onClick: function() { container.align.x = '+'; },
+    isHovered: false
+  });
+  
+  x += w;
+  
+  container.add({
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(x,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(x,h), s, swhite, fontName, fontMat, "Align -X")]
+    },
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(x,h), util.vec2.make(w,s), white, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(x,h), s, sblack, fontName, fontMat, "Align -X")]
+    },
+    step: function(imp, state, window) {
+      for(var i=0;i<imp.mouse.length;i++) { if(imp.mouse[i].btn === 0 && this.isHovered) { this.onClick(); return true; } }
+      return false;
+    },
+    onClick: function() { container.align.x = '-'; },
+    isHovered: false
+  });
+  
+  x += w;
+  
+  container.add({
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(x,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(x,h), s, swhite, fontName, fontMat, "Align =X")]
+    },
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(x,h), util.vec2.make(w,s), white, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(x,h), s, sblack, fontName, fontMat, "Align =X")]
+    },
+    step: function(imp, state, window) {
+      for(var i=0;i<imp.mouse.length;i++) { if(imp.mouse[i].btn === 0 && this.isHovered) { this.onClick(); return true; } }
+      return false;
+    },
+    onClick: function() { container.align.x = '='; },
+    isHovered: false
+  });
+  
+  x += w;
+  
+  container.add({
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(x,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(x,h), s, swhite, fontName, fontMat, "Align +Y")]
+    },
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(x,h), util.vec2.make(w,s), white, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(x,h), s, sblack, fontName, fontMat, "Align +Y")]
+    },
+    step: function(imp, state, window) {
+      for(var i=0;i<imp.mouse.length;i++) { if(imp.mouse[i].btn === 0 && this.isHovered) { this.onClick(); return true; } }
+      return false;
+    },
+    onClick: function() { container.align.y = '+'; },
+    isHovered: false
+  });
+  
+  x += w;
+  
+  container.add({
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(x,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(x,h), s, swhite, fontName, fontMat, "Align -Y")]
+    },
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(x,h), util.vec2.make(w,s), white, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(x,h), s, sblack, fontName, fontMat, "Align -Y")]
+    },
+    step: function(imp, state, window) {
+      for(var i=0;i<imp.mouse.length;i++) { if(imp.mouse[i].btn === 0 && this.isHovered) { this.onClick(); return true; } }
+      return false;
+    },
+    onClick: function() { container.align.y = '-'; },
+    isHovered: false
+  });
+  
+  x += w;
+  w = 87;
+  
+  container.add({
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(x,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(x,h), s, swhite, fontName, fontMat, "Align =Y")]
+    },
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(x,h), util.vec2.make(w,s), white, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(x,h), s, sblack, fontName, fontMat, "Align =Y")]
+    },
+    step: function(imp, state, window) {
+      for(var i=0;i<imp.mouse.length;i++) { if(imp.mouse[i].btn === 0 && this.isHovered) { this.onClick(); return true; } }
+      return false;
+    },
+    onClick: function() { container.align.y = '='; },
+    isHovered: false
+  });  
+  
+  this.containers.push(container);
 };
 
 MainUI.prototype.pointInElement = GenericUI.prototype.pointInElement;

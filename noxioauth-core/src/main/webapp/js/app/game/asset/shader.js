@@ -79,13 +79,14 @@ Asset.prototype.shader.font = {
     {type: "mat4", name: "Pmatrix"},
     {type: "mat4", name: "Vmatrix"},
     {type: "vec2", name: "transform"},
-    {type: "float", name: "fontSize"},
+    {type: "vec2", name: "size"},
+    {type: "vec2", name: "fUV"},
+    {type: "vec2", name: "fST"},
     {type: "sampler2D", name: "texture0"},
     {type: "vec4", name: "color"},
-    {type: "int", name: "index"},
   ],
-  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\n\nuniform vec2 transform;\nuniform float fontSize;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4((position*fontSize)+vec3(transform, -0.5), 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*cPos;\n}\n",
-  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\nuniform vec4 color;\nuniform int index;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  int x=0, y=0, i=index;\n  for(int j=0;j<8;j++) { if(i<16) { break; } i-=16; y++; }\n  x=i;\n  float d = texture2D(texture0, (vUV.st*vec2(0.0625, 0.125))+vec2(0.0625*float(x),0.125*float(y))).r;\n  vec4 ss = vec4(smoothstep(0.35, 0.5, d));\n  gl_FragColor = ss*color;\n}\n",
+  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\n\nuniform vec2 transform;\nuniform vec2 size;\n\nuniform vec2 fUV;\nuniform vec2 fST;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4((position*vec3(size, 1.0))+vec3(transform, -0.5), 1.0);\n  vUV=vec3(fUV+(texcoord.st*fST), texcoord.z);\n  gl_Position = Pmatrix*Vmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\nuniform vec4 color;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  float a = texture2D(texture0, vUV.st).r;\n  gl_FragColor = vec4(color.rgb, a);\n}\n",
 };
 
 /* Source File: final_gridg */

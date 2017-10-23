@@ -53,6 +53,8 @@ Display.prototype.setupWebGL = function() {
     gl.getExtension("WEBKIT_OES_element_index_uint")
   )) { return false; }
   
+  if(!gl.getExtension('OES_standard_derivatives')) { return false; }
+  
   /* @TODO: user settings for upscale/post/shadow/etc */
   this.upscale = {sky: 1.0, world: 1.0, ui: 1.0};
   
@@ -71,7 +73,7 @@ Display.prototype.setupWebGL = function() {
   if(!this.createMaterial(this.game.asset.material.multi.default)) { return false; }
   if(!this.createMaterial(this.game.asset.material.multi.shadow)) { return false; }
   if(!this.createMaterial(this.game.asset.material.multi.post_msaa)) { return false; }
-  if(!this.createMaterial(this.game.asset.material.ui.gulm)) { return false; }
+  if(!this.createMaterial(this.game.asset.material.ui.calibri)) { return false; }
   
   if(!this.createModel(this.game.asset.model.multi.box)) { return false; }
   if(!this.createModel(this.game.asset.model.multi.sheet)) { return false; }
@@ -556,8 +558,7 @@ Display.prototype.draw = function() {
   gl.enable(gl.BLEND);                                                                                  // Enable Transparency 
   var sheetModel = this.getModel("multi.sheet");
   
-  var ASPECT = this.window.height/this.window.width;
-  var PROJMATRIX_UI = mat4.create(); mat4.ortho(PROJMATRIX_UI, 0.0, 100.0,0.0*ASPECT, 100.0*ASPECT, 0.0, 1.0);
+  var PROJMATRIX_UI = mat4.create(); mat4.ortho(PROJMATRIX_UI, 0.0, this.window.width, 0.0, this.window.height, 0.0, 1.0);
   var VIEWMATRIX_UI= mat4.create();
   var uniformDataUi = [
     {name: "Pmatrix", data: PROJMATRIX_UI},
@@ -581,15 +582,25 @@ Display.prototype.draw = function() {
     text.material.shader.enable(gl);
     text.material.shader.applyUniforms(gl, uniformDataUi);
     text.material.enable(gl);
-    var characters = this.stringToIndices(text.text);
     text.material.shader.applyUniforms(gl, text.uniforms);
-    for(var i=0;i<characters.length;i++) {
+    var fontDat = this.font.getFontData(text.font);
+    var adv = 0;
+    for(var i=0;i<text.text.length;i++) {
+      var charDat = this.font.getCharacterData(text.font, text.text[i]);
+      var offset = util.vec2.make((-charDat.originX/fontDat.size)*text.size, (-(charDat.height-charDat.originY)/fontDat.size)*text.size);
+      var transform = util.vec2.add(text.pos, util.vec2.add(offset, util.vec2.make(adv, 0.0)));
+      var size = util.vec2.scale(util.vec2.make(charDat.width/fontDat.size, charDat.height/fontDat.size), text.size);
+      var uv = util.vec2.make(charDat.x/fontDat.width, charDat.y/fontDat.height);
+      var st = util.vec2.make(charDat.width/fontDat.width, charDat.height/fontDat.height);
       var uniformDataTextIndex = [
-        {name: "transform", data: [(text.size*(i*0.9))+text.pos.x, text.pos.y]},
-        {name: "index", data: characters[i]}
+        {name: "transform", data: util.vec2.toArray(transform)},
+        {name: "size", data: util.vec2.toArray(size)},
+        {name: "fUV", data: util.vec2.toArray(uv)},
+        {name: "fST", data: util.vec2.toArray(st)}
       ];
       text.material.shader.applyUniforms(gl, uniformDataTextIndex);
       sheetModel.draw(gl, text.material.shader);
+      adv += (charDat.advance/fontDat.size)*text.size;
     }
     text.material.shader.disable(gl);
     text.material.disable(gl);
