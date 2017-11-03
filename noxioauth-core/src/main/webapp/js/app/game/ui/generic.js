@@ -3,8 +3,9 @@
 /* global util */
 
 /* Define Abstract Generic UI Superclass Class */
-function GenericUI(game, name) {
+function GenericUI(game, ui, name) {
   this.game = game;
+  this.ui = ui;
   this.name = name;
   
   this.containers = [];

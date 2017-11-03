@@ -583,10 +583,10 @@ Display.prototype.draw = function() {
     text.material.shader.applyUniforms(gl, uniformDataUi);
     text.material.enable(gl);
     text.material.shader.applyUniforms(gl, text.uniforms);
-    var fontDat = this.font.getFontData(text.font);
+    var fontDat = util.font.getFontData(text.font);
     var adv = 0;
     for(var i=0;i<text.text.length;i++) {
-      var charDat = this.font.getCharacterData(text.font, text.text[i]);
+      var charDat = util.font.getCharacterData(text.font, text.text[i]);
       var offset = util.vec2.make((-charDat.originX/fontDat.size)*text.size, (-(charDat.height-charDat.originY)/fontDat.size)*text.size);
       var transform = util.vec2.add(text.pos, util.vec2.add(offset, util.vec2.make(adv, 0.0)));
       var size = util.vec2.scale(util.vec2.make(charDat.width/fontDat.size, charDat.height/fontDat.size), text.size);

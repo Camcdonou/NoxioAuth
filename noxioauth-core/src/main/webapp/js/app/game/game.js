@@ -182,8 +182,6 @@ NoxioGame.prototype.doUpdate = function(packet) {
   
   /* Update UI State */
   var obj = this.getObject(this.control);
-  this.ui.hide();
-  this.ui.main.show();
   this.ui.step(
     {
       mouse: this.DEBUG_MOUSE_INPUT !== this.input.mouse.lmb ? [{btn: 0, pos: util.vec2.copy(this.input.mouse.pos)}] : [],

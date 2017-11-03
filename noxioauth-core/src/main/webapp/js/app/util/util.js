@@ -13,7 +13,7 @@ var util = {
   line2: {},
   matrix: {},
   intersection: {},
-  text : {},
+  font : {},
   time: {}
 };
 
@@ -132,6 +132,10 @@ util.vec3.subtract = function(a, b) {
   return {x: a.x - b.x, y: a.y - b.y, z: a.z - b.z};
 };
 
+util.vec3.multiply = function(a, b) {
+  return {x: a.x*b.x, y: a.y*b.y, z: a.z*b.z};
+};
+
 util.vec3.scale = function(a, b) {
   return {x: a.x*b, y: a.y*b, z: a.z*b};
 };
@@ -213,6 +217,10 @@ util.vec4.make = function(x, y, z, w) {
 
 util.vec4.copy = function(a) {
   return {x: a.x, y: a.y, z: a.z, w: a.w};
+};
+
+util.vec4.multiply = function(a, b) {
+  return {x: a.x*b.x, y: a.y*b.y, z: a.z*b.z, w: a.w*b.w};
 };
 
 util.vec4.toArray = function(a) {
@@ -495,14 +503,6 @@ util.intersection.lineNearestPoint = function(P, L) {
   if ( c2 <= c1 ) { return L.b; }
   var b = c1 / c2;
   return util.vec2.add(L.a, util.vec2.scale(v, b));
-};
-
-/* === Text =============================================================================== */
-/* ======================================================================================== */
-
-/* Used for measuring text before drawing in OpenGL. */
-util.text.lengthOnScreen = function(text, fontSize) {
-  return (text.length * 0.9)*fontSize;
 };
 
 /* === Time =============================================================================== */

@@ -1,10 +1,22 @@
 "use strict";
 /* global main */
-/* global Display */
+/* global util */
 
-/* Converts string to an array of indices pointing to charcters in a font bitmap */
-Display.prototype.font = {};
-Display.prototype.font.getFontData = function(font) {
+/* === Text =============================================================================== */
+/* ======================================================================================== */
+
+/* Returns the number of pixels width for the given text, font, and size. */
+util.font.textLength = function(text, font, size) {
+  var length = 0;
+  var fdat = util.font.getFontData(font);
+  for(var i=0;i<text.length;i++) {
+    var cdat = util.font.getCharacterData(font, text[i]);
+    length += (cdat.advance/fdat.size)*size;
+  }
+  return length;
+};
+
+util.font.getFontData = function(font) {
   for(var i=0;i<this.fonts.length;i++) {
     if(this.fonts[i].name === font) {
       return this.fonts[i];
@@ -14,7 +26,7 @@ Display.prototype.font.getFontData = function(font) {
   return undefined;
 };
 
-Display.prototype.font.getCharacterData = function(font, character) {
+util.font.getCharacterData = function(font, character) {
   for(var i=0;i<this.fonts.length;i++) {
     if(this.fonts[i].name === font) {
       var c = this.fonts[i].characters[character];
@@ -26,8 +38,8 @@ Display.prototype.font.getCharacterData = function(font, character) {
   return undefined; 
 };
 
-Display.prototype.font.fonts = [];
-Display.prototype.font.fonts.push({
+util.font.fonts = [];
+util.font.fonts.push({
   "name": "Calibri",
   "size": 40,
   "bold": false,

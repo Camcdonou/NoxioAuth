@@ -5,11 +5,12 @@
 function GameUI(game) {
   this.game = game;
   this.elements = [
-    new MainUI(this.game, "main")
+    new MainUI(this.game, this, "main")
   ];
   for(var i=0;i<this.elements.length;i++) {
     this[this.elements[i].name] = this.elements[i];
   }
+  this.main.show();
 }
 
 /* Hide all */
@@ -27,6 +28,13 @@ GameUI.prototype.step = function(imp, state, window) {
     if(this.elements[i].step(imp, state, window)) { hit = true; }
   }
   return hit;
+};
+
+GameUI.prototype.openMainMenu = function() { if(this.main.hidden) { this.main.show(); } };
+GameUI.prototype.closeMainMenu = function() { if(!this.main.hidden) { this.main.hide(); } };
+GameUI.prototype.toggleMainMenu = function() {
+  if(!this.main.visible) { this.main.show(); }
+  else { this.main.hide(); }
 };
 
 /* Window is a Vec2 of the size, in pixels, of the game window for this draw */
