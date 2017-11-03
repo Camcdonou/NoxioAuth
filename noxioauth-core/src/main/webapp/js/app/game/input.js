@@ -20,16 +20,19 @@ function Input(game) {
 };
 
 Input.prototype.mouse = {
+  inputs: [],
   pos: {x: 0, y: 0},
   mov: {x: 0, y: 0},
   spin: 0.0,
+  nxtMov: {x: 0, y: 0},
+  nxtSpin: 0.0,
   lmb: false,
   rmb: false,
   mmb: false
 };
 
 Input.prototype.mouse.event = function(event, state) {
-  this.mov = {x: this.mov.x+(this.pos.x-event.offsetX), y: this.mov.y+((this.pos.y-event.offsetY)*-1)};
+  this.nxtMov = {x: this.nxtMov.x+(this.pos.x-event.offsetX), y: this.nxtMov.y+((this.pos.y-event.offsetY)*-1)};
   this.pos = {x: event.offsetX, y: event.offsetY};
   if(state === undefined) { return; }
   switch(event.button) {
@@ -38,41 +41,37 @@ Input.prototype.mouse.event = function(event, state) {
 		case 1 : { this.mmb = state; break; }
 		default : { /* Ignore */ break; }
   }
-  if(state === true) { this.input.game.handleClick(event.button, this.pos); } // Why the FUCK do I have to write === true for a bool check. Fuck off Javascript.
+  if(state) { this.inputs.push({btn: event.button, pos: this.pos}); }
 };
 
 Input.prototype.mouse.wheel = function(event) {
     var e = window.event || event;
     var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-    this.spin += delta;
+    this.nxtSpin += delta;
     return false;
 };
 
-Input.prototype.mouse.popMovement = function() {
-  var mov = this.mov;
-  mov.s = this.spin;
-  this.mov = {x: 0, y: 0};
-  this.spin = 0.0;
-  return mov;
-};
-
 Input.prototype.keyboard = {
-  keys: [],
-  inputs: []
+  inputs: [],
+  keys: []
 };
 
-Input.prototype.keyboard.popInputs = function() {
-  var inputs = this.inputs;
-  this.inputs = [];
+Input.prototype.popInputs = function() {
+  this.mouse.mov = this.mouse.nxtMov;
+  this.mouse.spin = this.mouse.nxtSpin;
+  this.mouse.nxtMov = {x: 0, y: 0};
+  this.mouse.nxtSpin = 0.0;
+  
+  var inputs = {mouse: this.mouse.inputs, keyboard: this.keyboard.inputs};
+  this.keyboard.inputs = [];
+  this.mouse.inputs = [];
+  
   return inputs;
 };
 
 Input.prototype.keyboard.event = function(evt, state) {
   this.keys[evt.keyCode] = state;  
-  if(state) {
-    this.inputs.push(evt.keyCode);
-    this.input.game.handleInput(evt.keyCode);
-  }
+  if(state) { this.inputs.push(evt.keyCode); }
 };
 
 Input.prototype.destroy = function() {

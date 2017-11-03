@@ -20,6 +20,7 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   this.packetFDLC = [{data:""},{data:""}];  // ~~~MAGIC~~~
   this.deltaFDLC = util.time.now();
   
+  this.frame = 0;
   this.delta = util.time.now();             // Number of milliseconds since ????
   
   this.input = new Input(this);     // Mouse, keyboard, and controller handler
@@ -161,6 +162,7 @@ NoxioGame.prototype.updatePacket = function(packet) {
 };
 
 NoxioGame.prototype.doUpdate = function(packet) {
+  /* Handle server gamestate packet */
   this.packHand.gameDataUpdate(packet);
   
   /* Update Camera */
@@ -177,23 +179,10 @@ NoxioGame.prototype.doUpdate = function(packet) {
   /* Update timers */
   if(this.respawnTimer>0) { this.respawnTimer--; }
   
-  /* Send player input to server */
-  this.sendInput();
+  /* Process player input and send along to server */
+  this.doInput();
   
-  /* Update UI State */
-  var obj = this.getObject(this.control);
-  this.ui.step(
-    {
-      mouse: this.DEBUG_MOUSE_INPUT !== this.input.mouse.lmb ? [{btn: 0, pos: util.vec2.copy(this.input.mouse.pos)}] : [],
-      keyboard: []
-    },
-    {
-      mouse: {pos: util.vec2.copy(this.input.mouse.pos), btn: [false,false,false]},
-      keyboard: {keys: this.input.keyboard.keys}
-    },
-    util.vec2.make(this.display.window.width, this.display.window.height)
-  );
-  this.DEBUG_MOUSE_INPUT = this.input.mouse.lmb;
+  this.frame++;
 };
 
 NoxioGame.prototype.update = function(tick) {
@@ -229,96 +218,103 @@ NoxioGame.prototype.update = function(tick) {
   this.debug.ctime.pop();
   this.debug.ctime.unshift(util.time.now() - now);
   
-  /*this.ui.getElement("debug").debug([
-    "S[" + (this.debug.sAvg).toFixed(2) + "ms] C[" + (this.debug.cAvg).toFixed(2) + "ms] D[" + (this.debug.dAvg).toFixed(2) + "ms]",
-    "FPS[" + (this.debug.fAvg).toFixed(2) + "] MEME[" + (this.debug.pAvg).toFixed(2) + "ms]",
-    "ASSET[" + this.display.models.length + "," + this.display.materials.length + "," + this.display.shaders.length + "," + this.display.textures.length +"] FBO[3]",
-    "SHADOW [" + this.display.fbo.shadow.fb.width + "," + this.display.fbo.shadow.fb.height + "]",
-    "WORLD  [" + this.display.fbo.world.fb.width + "," + this.display.fbo.world.fb.height + "]",
-    "UI     [" + this.display.fbo.ui.fb.width + "," + this.display.fbo.ui.fb.height + "]"
-  ]);*/
+  this.ui.debug.setText(
+    "WHO[ " + main.net.user + "@" + main.net.game.state.info.name + "@" + main.net.game.info.name + " ]\n-\n" +
+    "S[ " + (this.debug.sAvg).toFixed(2) + "ms ] C[ " + (this.debug.cAvg).toFixed(2) + "ms ] D[ " + (this.debug.dAvg).toFixed(2) + "ms ]\n-\n" +
+    "FPS[ " + (this.debug.fAvg).toFixed(2) + " ] MEME[ " + (this.debug.pAvg).toFixed(2) + "ms ]\n" +
+    "ASSET[ " + this.display.models.length + "," + this.display.materials.length + "," + this.display.shaders.length + "," + this.display.textures.length +" ] FBO[ 4 ]\n" +
+    "SHADOW [ " + this.display.fbo.shadow.fb.width + "," + this.display.fbo.shadow.fb.height + " ]\n" +
+    "WORLD  [ " + this.display.fbo.world.fb.width + "," + this.display.fbo.world.fb.height + " ]\n" +
+    "SKY    [ " + this.display.fbo.sky.fb.width + "," + this.display.fbo.sky.fb.height + " ]\n" +
+    "UI     [ " + this.display.fbo.ui.fb.width + "," + this.display.fbo.ui.fb.height + " ]\n-\n" +
+    "FRAME  [ " + this.frame + " ] DELTA [ " + this.delta + " ]"
+  );
   /* === DEBUG BLOCK END ==================== */
 };
 
-/* This is all insanely messy and input just needs to be entirely redone. */
-/* @FIXME step should do some of the stuff this does, its just that step is overrun with debug shit. Cleanup. */
-NoxioGame.prototype.sendInput = function() {
+/* @FIXME user defineable controls and stuff */
+/* Process player input and send them along to the server */
+NoxioGame.prototype.doInput = function() {
   if(!(this.ready && this.serverReady)) { return; }
   
   var obj = this.getObject(this.control);
-  var inputs = this.input.keyboard.popInputs();
-  var mouse = this.input.mouse.popMovement();
+  var imp = this.input.popInputs();
   
-  /* Send current user input to server */
-  //if(this.ui.menuOpen()) { main.net.game.send({type: "i00", data: "01;"+this.lastMouse.x+","+this.lastMouse.y}); return; } // Menu is open so send mouse neutral and return
+  /* Pass input to UI, if UI uses the input it will return true, in that case the input will not go through to the game */
+  var pass = this.ui.step(
+    imp,
+    {
+      mouse: this.input.mouse,
+      keyboard: this.input.keyboard
+    },
+    util.vec2.make(this.display.window.width, this.display.window.height)
+  );
   
-  /* Apply popped inputs */
-  this.display.camera.setZoom(mouse.s);
-  
-  /* Apply state inputs */
   var inputs = [];
-  var actions = [];
-  if(this.input.keyboard.keys[37]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: 0.01}); }  //Left
-  if(this.input.keyboard.keys[39]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: -0.01}); } //Right
-  if(this.input.keyboard.keys[38]) { this.display.camera.addRot({x: 0.01, y: 0.0, z: 0.0}); }  //Up
-  if(this.input.keyboard.keys[40]) { this.display.camera.addRot({x: -0.01, y: 0.0, z: 0.0}); } //Down
-  if(this.input.keyboard.keys[32]) { actions.push("jmp"); }
-  if(this.input.keyboard.keys[70]) { actions.push("atk"); }
-  if(this.input.keyboard.keys[16]) { actions.push("mov"); }
-  if(this.input.keyboard.keys[84]) { actions.push("tnt"); }
-  //if(this.input.keyboard.keys[66]) { if(obj) { obj.bloodEffect.trigger(util.vec2.toVec3(obj.pos, obj.height), {x: 0, y: 0, z: 1}); } } // B
-  //if(this.input.keyboard.keys[192] || !obj) { this.ui.getElement("score").show(); } else { this.ui.getElement("score").hide(); } // ~
   
-  if(obj) {
-    var near = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 0.0);
-    var far = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 1.0); /* @FIXME doing 2 unprojects is inefficent. Maybe calc camera center? */
-    var floorPlane = {a: {x: 0.0, y: 0.0, z: 0.0}, b: {x: 1.0, y: 0.0, z: 0.0}, c: {x: 0.0, y: 1.0, z: 0.0}, n: {x: 0.0, y: 0.0, z: 1.0}};
-    var result = util.intersection.linePlane({a: near, b: far}, floorPlane);
+  /* Global-Client Impulse Input */
+  if(!this.inx27 && this.input.keyboard.keys[27]) { this.ui.toggleMainMenu(); } this.inx27 = this.input.keyboard.keys[27];
+  
+  if(!pass) {
+    /* Client Impulse Input */
+    this.display.camera.setZoom(this.input.mouse.spin);
     
-    if(result) { // Missed the floor plane.
-      var dir = util.vec2.subtract(result.intersection, obj.pos);
-      var mag = util.vec2.magnitude(dir);
-      var norm = util.vec2.normalize(dir);
+    /* Client State Input */
+    if(this.input.keyboard.keys[37]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: 0.01}); }   //Left
+    if(this.input.keyboard.keys[39]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: -0.01}); }  //Right
+    if(this.input.keyboard.keys[38]) { this.display.camera.addRot({x: 0.01, y: 0.0, z: 0.0}); }   //Up
+    if(this.input.keyboard.keys[40]) { this.display.camera.addRot({x: -0.01, y: 0.0, z: 0.0}); }  //Down
+    
+    /* Control Check */
+    if(obj) {
+      var actions = [];
+      /* Control State Input */
+      var near = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 0.0);
+      var far = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 1.0); /* @FIXME doing 2 unprojects is inefficent. Maybe calc camera center? */
+      var floorPlane = {a: {x: 0.0, y: 0.0, z: 0.0}, b: {x: 1.0, y: 0.0, z: 0.0}, c: {x: 0.0, y: 1.0, z: 0.0}, n: {x: 0.0, y: 0.0, z: 1.0}};
+      var result = util.intersection.linePlane({a: near, b: far}, floorPlane);
 
-      this.lastMouse = norm;
-      if(this.input.mouse.rmb) { inputs.push("04;"+norm.x+","+norm.y+";"+Math.min(Math.max(mag/1.75, 0.33), 1.0)); }
-      else { inputs.push("01;"+norm.x+","+norm.y); }
-    }
-    else { inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y); }
-    
-    if(actions.length>0) {
-      var act = "05;";
-      for(var i=0;i<actions.length;i++) {
-        act += actions[i] + (i<actions.length-1?",":"");
+      if(result) { // Missed the floor plane.
+        var dir = util.vec2.subtract(result.intersection, obj.pos);
+        var mag = util.vec2.magnitude(dir);
+        var norm = util.vec2.normalize(dir);
+
+        this.lastMouse = norm;
+        if(this.input.mouse.rmb) { inputs.push("04;"+norm.x+","+norm.y+";"+Math.min(Math.max(mag/1.75, 0.33), 1.0)); }
+        else { inputs.push("01;"+norm.x+","+norm.y); }
       }
-      inputs.push(act);
+      else { inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y); }
+      
+      if(this.input.keyboard.keys[32]) { actions.push("jmp"); }                                     //Space
+      if(this.input.keyboard.keys[70]) { actions.push("atk"); }                                     //F
+      if(this.input.keyboard.keys[16]) { actions.push("mov"); }                                     //Shift
+      if(this.input.keyboard.keys[84]) { actions.push("tnt"); }                                     //T
+      
+      if(actions.length>0) {
+        var act = "05;";
+        for(var i=0;i<actions.length;i++) {
+          act += actions[i] + (i<actions.length-1?",":"");
+        }
+        inputs.push(act);
+      }
     }
-    
-    var inp = "";
-    for(var i=0;i<inputs.length;i++) {
-      inp += inputs[i] + (i<inputs.length-1?";":"");
+    else {
+      /* Spectate State Input */
+      if(this.input.mouse.lmb) { inputs.push("02"); }
+      inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y);
     }
-    main.net.game.send({type: "i00", data: inp});
   }
   else {
-    if(this.input.mouse.lmb) { inputs.push("02"); }
+    /* Menu-Focus State Input */
     inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y);
-    
-    var inp = "";
-    for(var i=0;i<inputs.length;i++) {
-      inp += inputs[i] + (i<inputs.length-1?";":"");
-    }
-    main.net.game.send({type: "i00", data: inp});
   }
-};
-
-/* Input overhaul? @FIXME maybe handle inputs in real time but if they are not client inputs then queue them? */
-NoxioGame.prototype.handleInput = function(key) {
-  //this.ui.handleInput(key);
-};
-
-NoxioGame.prototype.handleClick = function(button, mouse) {
-  //this.ui.handleClick(button, mouse, {x: this.window.width, y: this.window.height});
+  
+  /* Send Input */
+  var inp = "";
+  for(var i=0;i<inputs.length;i++) {
+    inp += inputs[i] + (i<inputs.length-1?";":"");
+  }
+  main.net.game.send({type: "i00", data: inp});
 };
 
 /* Gets an object by it's OID */

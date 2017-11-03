@@ -13,9 +13,9 @@ function MainUI(game, ui, name) {
 }
 
 MainUI.prototype.show = function() {
-  if(this.hidden) { this.fadeTimer = this.FADE_MAX_TIME; }
+  if(this.hidden) { this.fadeTimer = this.FADE_MAX_TIME; this.refresh(); }
   this.hidden = false;
-}; //main.net.user + "@" + main.net.game.state.info.name + "@" + main.net.game.info.name;
+};
 MainUI.prototype.hide = GenericUI.prototype.hide;
 MainUI.prototype.refresh = function() {
   var fmult = util.vec4.make(1.0, 1.0, 1.0, 1.0-(this.fadeTimer/this.FADE_MAX_TIME));
@@ -102,6 +102,25 @@ MainUI.prototype.generate = function() {
     },
     step: protoOnClick,
     onClick: function() { },
+    isHovered: false
+  });
+  
+  h += s;
+  var DEBUG        = "Debug";
+  var DEBUG_LENGTH = util.font.textLength(DEBUG, fontName, s);
+  o = (w*0.5)-(DEBUG_LENGTH*0.5);
+  
+  menuContainer.add({
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), clear, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, swhite, fontName, fontMat, DEBUG)]
+    },
+    hover: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, DEBUG)]
+    },
+    step: protoOnClick,
+    onClick: function() { parent.ui.toggleDebugMenu(); },
     isHovered: false
   });
   

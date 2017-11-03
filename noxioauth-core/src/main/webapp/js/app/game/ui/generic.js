@@ -42,7 +42,14 @@ function GenericUI(game, ui, name) {
  */
 
 GenericUI.prototype.show = function() { this.hidden = false; };
-GenericUI.prototype.hide = function() { this.hidden = true;  };
+GenericUI.prototype.hide = function() {
+  this.hidden = true;
+  for(var i=0;i<this.containers.length;i++) {                        // When a UI is hidden we disable the hover of each element so it wont show hovered when shown later.
+    for(var j=0;j<this.containers[i].elements.length;j++) {
+      this.containers[i].elements[j].isHovered = false;
+    }
+  }
+};
 
 /* ABSTRACT -- Called at the start of each step, if you want to rebuild the ui elements every frame then override this */
 GenericUI.prototype.refresh = function() { };

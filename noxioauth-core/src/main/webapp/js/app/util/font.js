@@ -16,6 +16,31 @@ util.font.textLength = function(text, font, size) {
   return length;
 };
 
+/* Returns an array of strings where each strings width is less than <width> pixels
+   using the given font and size. This is used to make long pieces of text
+   fit in text boxes by breaking them into multiple lines. */
+util.font.serrateText = function(text, font, size, width) {
+  var length = 0;
+  var line = "";
+  var lines = [];
+  var fdat = util.font.getFontData(font);
+  for(var i=0;i<text.length;i++) {
+    var cdat = util.font.getCharacterData(font, text[i]);
+    var l = (cdat.advance/fdat.size)*size;
+    if(l+length > width || text[i] === '\n') {
+      lines.push(line);
+      line = "";
+      length = 0;
+    }
+    else {
+      length += l;
+      line += text[i];
+    }
+  }
+  if(line.length > 0) { lines.push(line); }
+  return lines;
+};
+
 util.font.getFontData = function(font) {
   for(var i=0;i<this.fonts.length;i++) {
     if(this.fonts[i].name === font) {

@@ -5,12 +5,17 @@
 function GameUI(game) {
   this.game = game;
   this.elements = [
+    new NameUI(this.game, this, "name"),
+    new LogUI(this.game, this, "log"),
+    new RespawnUI(this.game, this, "respawn"),
+    new DebugUI(this.game, this, "debug"),
     new MainUI(this.game, this, "main")
   ];
   for(var i=0;i<this.elements.length;i++) {
     this[this.elements[i].name] = this.elements[i];
   }
-  this.main.show();
+  this.name.show();
+  this.log.show();
 }
 
 /* Hide all */
@@ -33,8 +38,13 @@ GameUI.prototype.step = function(imp, state, window) {
 GameUI.prototype.openMainMenu = function() { if(this.main.hidden) { this.main.show(); } };
 GameUI.prototype.closeMainMenu = function() { if(!this.main.hidden) { this.main.hide(); } };
 GameUI.prototype.toggleMainMenu = function() {
-  if(!this.main.visible) { this.main.show(); }
+  if(this.main.hidden) { this.main.show(); }
   else { this.main.hide(); }
+};
+
+GameUI.prototype.toggleDebugMenu = function() {
+  if(this.debug.hidden) { this.debug.show(); }
+  else { this.debug.hide(); }
 };
 
 /* Window is a Vec2 of the size, in pixels, of the game window for this draw */

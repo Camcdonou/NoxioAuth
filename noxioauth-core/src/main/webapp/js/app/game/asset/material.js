@@ -19,6 +19,22 @@ Asset.prototype.material.sky.final = {};
 Asset.prototype.material.map = {};
 Asset.prototype.material.map.final = {};
 
+/* Source File: cs_box.mat */
+Asset.prototype.material.ui.cs_box = {
+  name: "ui.cs_box",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "ui/cs_box",
+};
+
+/* Source File: cs_inferno.mat */
+Asset.prototype.material.ui.cs_inferno = {
+  name: "ui.cs_inferno",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "ui/cs_inferno",
+};
+
 /* Source File: flagIcon.mat */
 Asset.prototype.material.ui.flagIcon = {
   name: "ui.flagIcon",
@@ -41,6 +57,14 @@ Asset.prototype.material.ui.calibri = {
   shader: "font",
   shadow: false,
   texture0: "ui/calibri",
+};
+
+/* Source File: cs_stub.mat */
+Asset.prototype.material.ui.cs_stub = {
+  name: "ui.cs_stub",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "ui/cs_stub",
 };
 
 /* Source File: post_msaa.mat */
