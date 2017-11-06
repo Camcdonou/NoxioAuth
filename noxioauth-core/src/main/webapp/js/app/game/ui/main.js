@@ -170,4 +170,5 @@ MainUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 MainUI.prototype.step = GenericUI.prototype.step;
 MainUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
-MainUI.prototype.destroy = function() { };
+MainUI.prototype.clear = GenericUI.prototype.clear;
+MainUI.prototype.destroy = GenericUI.prototype.destroy;

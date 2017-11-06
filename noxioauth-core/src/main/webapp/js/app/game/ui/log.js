@@ -147,4 +147,5 @@ LogUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 LogUI.prototype.step = GenericUI.prototype.step;
 LogUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
-LogUI.prototype.destroy = function() { };
+LogUI.prototype.clear = GenericUI.prototype.clear;
+LogUI.prototype.destroy = GenericUI.prototype.destroy;

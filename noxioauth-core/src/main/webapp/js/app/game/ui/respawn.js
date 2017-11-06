@@ -121,4 +121,5 @@ RespawnUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 RespawnUI.prototype.step = GenericUI.prototype.step;
 RespawnUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
-RespawnUI.prototype.destroy = function() { };
+RespawnUI.prototype.clear = GenericUI.prototype.clear;
+RespawnUI.prototype.destroy = GenericUI.prototype.destroy;

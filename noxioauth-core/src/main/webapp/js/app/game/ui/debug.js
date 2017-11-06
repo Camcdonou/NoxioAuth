@@ -164,4 +164,5 @@ DebugUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 DebugUI.prototype.step = GenericUI.prototype.step;
 DebugUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
-DebugUI.prototype.destroy = function() { };
+DebugUI.prototype.clear = GenericUI.prototype.clear;
+DebugUI.prototype.destroy = GenericUI.prototype.destroy;

@@ -7,7 +7,9 @@ function GameUI(game) {
   this.elements = [
     new NameUI(this.game, this, "name"),
     new LogUI(this.game, this, "log"),
+    new ScoreUI(this.game, this, "score"),
     new RespawnUI(this.game, this, "respawn"),
+    new EndUI(this.game, this, "end"),
     new DebugUI(this.game, this, "debug"),
     new MainUI(this.game, this, "main")
   ];
@@ -15,7 +17,10 @@ function GameUI(game) {
     this[this.elements[i].name] = this.elements[i];
   }
   this.name.show();
-  this.log.show();
+  //this.log.show();
+  //this.respawn.show();
+  this.end.show();
+  this.score.show();
 }
 
 /* Hide all */

@@ -125,6 +125,11 @@ GenericUI.prototype.getDraw = function(blocks, texts, window) {
   }
 };
 
+/* Clears UI, generally called if a UI is going to repeat it's generate() function to update itself. */
+GenericUI.prototype.clear = function() {
+  this.containers.splice(0, this.containers.length);
+};
+
 /* -- ABSTRACT cleanup when closing game */
 GenericUI.prototype.destroy = function() { };
 
