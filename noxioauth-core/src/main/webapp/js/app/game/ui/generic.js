@@ -12,6 +12,9 @@ function GenericUI(game, ui, name) {
   
   this.generate();
   
+  this.FADE_TIME = 10;
+  this.fade = 0;
+  
   this.hidden = true;               // Don't draw if hidden!
   this.interactable = false;        // Can this be clicked or typed on?
 }
@@ -41,14 +44,15 @@ function GenericUI(game, ui, name) {
  * }
  */
 
+GenericUI.prototype.setVisible = function(bool) { if(bool) { this.show(); } else { this.hide(); } };
 GenericUI.prototype.show = function() { this.hidden = false; };
 GenericUI.prototype.hide = function() {
-  this.hidden = true;
-  for(var i=0;i<this.containers.length;i++) {                        // When a UI is hidden we disable the hover of each element so it wont show hovered when shown later.
+  for(var i=0;i<this.containers.length&&!this.hidden;i++) {                        // When a UI is hidden we disable the hover of each element so it wont show hovered when shown later.
     for(var j=0;j<this.containers[i].elements.length;j++) {
       this.containers[i].elements[j].isHovered = false;
     }
   }
+  this.hidden = true;
 };
 
 /* ABSTRACT -- Called at the start of each step, if you want to rebuild the ui elements every frame then override this */
@@ -60,7 +64,8 @@ GenericUI.prototype.generate = function() { };
 /* Steps UI and returns true if imp input is absorbed by a UI element */
 /* Window is a Vec2 of the size, in pixels, of the game window for this draw */
 GenericUI.prototype.step = function(imp, state, window) {
-  if(this.hidden) { return false; }
+  if(this.hidden) { this.fade = Math.max(0, Math.min(this.FADE_TIME, this.fade-1)); return false; }
+  this.fade = Math.max(0, Math.min(this.FADE_TIME, this.fade+1));
   
   this.refresh();
   var hit = false;
@@ -90,7 +95,8 @@ GenericUI.prototype.pointInElement = function(pos, element, window, align) {
 
 /* Window is a Vec2 of the size, in pixels, of the game window for this draw */
 GenericUI.prototype.getDraw = function(blocks, texts, window) {
-  if(this.hidden) { return false; }
+  if(this.hidden && this.fade < 1) { return false; }
+  var fademult = this.fade/this.FADE_TIME;
   
   for(var i=0;i<this.containers.length;i++) {
     var elements = this.containers[i].elements;
@@ -105,7 +111,7 @@ GenericUI.prototype.getDraw = function(blocks, texts, window) {
           uniforms: [
             {name: "transform", data: util.vec2.toArray(util.vec2.add(blc[k].pos, align))},
             {name: "size", data: util.vec2.toArray(blc[k].size)},
-            {name: "color", data: util.vec4.toArray(blc[k].color)}
+            {name: "color", data: util.vec4.toArray(util.vec4.multiply(blc[k].color, util.vec4.make(1,1,1,fademult)))}
           ]
         });
       }
@@ -117,7 +123,7 @@ GenericUI.prototype.getDraw = function(blocks, texts, window) {
           pos: util.vec2.add(txt[k].pos, align),
           size: txt[k].size,
           uniforms: [
-            {name: "color", data: util.vec4.toArray(txt[k].color)}
+            {name: "color", data: util.vec4.toArray(util.vec4.multiply(txt[k].color, util.vec4.make(1,1,1,fademult)))}
           ]
         });
       }

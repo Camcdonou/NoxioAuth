@@ -16,11 +16,17 @@ function GameUI(game) {
   for(var i=0;i<this.elements.length;i++) {
     this[this.elements[i].name] = this.elements[i];
   }
-  this.name.show();
-  //this.log.show();
-  //this.respawn.show();
-  this.end.show();
-  this.score.show();
+  
+  /* Boolean flags that determine which parts of the UI are visible/hidden */
+  this.flags = {
+    main: false,
+    name: true,
+    log: true,
+    score: false,
+    debug: false,
+    respawn: false,
+    end: false
+  };
 }
 
 /* Hide all */
@@ -33,23 +39,35 @@ GameUI.prototype.hide = function() {
 /* Steps UI and returns true if imp input is absorbed by a UI element */
 /* Window is a Vec2 of the size, in pixels, of the game window for this draw */
 GameUI.prototype.step = function(imp, state, window) {
+  /* Show or hide ui based on current flags */
+  if(this.flags.main) {
+    this.main.show();
+    this.name.hide();
+    this.log.hide();
+    this.score.hide();
+    this.debug.setVisible(this.flags.debug);
+    this.respawn.hide();
+    this.end.hide();
+  }
+  else {
+    var ded = this.game.control === -1;
+    var gam = this.game.gameOver;
+    
+    this.main.hide();
+    this.name.setVisible(this.flags.name);
+    this.log.setVisible(this.flags.log);
+    this.score.setVisible(this.flags.score||ded||gam);
+    this.debug.setVisible(this.flags.debug);
+    this.respawn.setVisible(this.flags.respawn||ded);
+    this.end.setVisible(this.flags.end||gam);
+  }
+  
+  /* Update ui and pass input through */
   var hit = false;
   for(var i=0;i<this.elements.length;i++) {
     if(this.elements[i].step(imp, state, window)) { hit = true; }
   }
   return hit;
-};
-
-GameUI.prototype.openMainMenu = function() { if(this.main.hidden) { this.main.show(); } };
-GameUI.prototype.closeMainMenu = function() { if(!this.main.hidden) { this.main.hide(); } };
-GameUI.prototype.toggleMainMenu = function() {
-  if(this.main.hidden) { this.main.show(); }
-  else { this.main.hide(); }
-};
-
-GameUI.prototype.toggleDebugMenu = function() {
-  if(this.debug.hidden) { this.debug.show(); }
-  else { this.debug.hide(); }
 };
 
 /* Window is a Vec2 of the size, in pixels, of the game window for this draw */

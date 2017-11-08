@@ -41,6 +41,23 @@ util.font.serrateText = function(text, font, size, width) {
   return lines;
 };
 
+/* Returns the given text but truncated off the left side to the given width */
+/* Also replaces start of text with ... to show it's truncated. This is for chat window mostly */
+util.font.truncateText = function(text, font, size, width) {
+  if(text.length < 1) { return ""; }
+  var length = 0;
+  var line = "";
+  var fdat = util.font.getFontData(font);
+  var b = false;
+  for(var i=text.length-1;i>=0;i--) {
+    var cdat = util.font.getCharacterData(font, text[i]);
+    if(width < length+((cdat.advance/fdat.size)*size)) { b = true; break; }
+    else { line += text[i]; length += (cdat.advance/fdat.size)*size; }
+  }
+  line = line.split("").reverse().join("");
+  return b ? ("..." + line.substr(3, line.length-1)) : line;
+};
+
 util.font.getFontData = function(font) {
   for(var i=0;i<this.fonts.length;i++) {
     if(this.fonts[i].name === font) {

@@ -10,6 +10,7 @@ function RespawnUI(game, ui, name) {
   GenericUI.call(this, game, ui, name);
 }
 
+RespawnUI.prototype.setVisible = GenericUI.prototype.setVisible;
 RespawnUI.prototype.show = GenericUI.prototype.show;
 RespawnUI.prototype.hide = GenericUI.prototype.hide;
 RespawnUI.prototype.refresh = function() {
@@ -58,7 +59,7 @@ RespawnUI.prototype.generate = function() {
         var align = container.makeAlign(window);
         var over = parent.pointInElement(imp.mouse[i].pos, this, window, align);
         if(over) { this.onClick(); return true; }
-        else { this.offClick(); }
+        else { this.offClick();    return false; }
       }
     }
     return false;

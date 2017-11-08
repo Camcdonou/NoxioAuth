@@ -71,7 +71,7 @@ Input.prototype.popInputs = function() {
 
 Input.prototype.keyboard.event = function(evt, state) {
   this.keys[evt.keyCode] = state;  
-  if(state) { this.inputs.push(evt.keyCode); }
+  if(state) { this.inputs.push({key: evt.keyCode, char: evt.key.length!==1?"":evt.key}); }
 };
 
 Input.prototype.destroy = function() {

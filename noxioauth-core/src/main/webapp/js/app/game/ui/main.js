@@ -8,21 +8,12 @@
 /* Define Game UI Main Menu Class */
 function MainUI(game, ui, name) {
   GenericUI.call(this, game, ui, name);
-  
-  this.FADE_MAX_TIME = 30;
 }
 
-MainUI.prototype.show = function() {
-  if(this.hidden) { this.fadeTimer = this.FADE_MAX_TIME; this.refresh(); }
-  this.hidden = false;
-};
+MainUI.prototype.setVisible = GenericUI.prototype.setVisible;
+MainUI.prototype.show = GenericUI.prototype.show;
 MainUI.prototype.hide = GenericUI.prototype.hide;
-MainUI.prototype.refresh = function() {
-  var fmult = util.vec4.make(1.0, 1.0, 1.0, 1.0-(this.fadeTimer/this.FADE_MAX_TIME));
-  var black  = util.vec4.make(0.0, 0.0, 0.0, 0.5);
-  this.fade.neutral.block[0].color = util.vec4.multiply(black, fmult);
-  if(this.fadeTimer > 0) { this.fadeTimer--; }
-};
+MainUI.prototype.refresh = GenericUI.prototype.refresh;
 
 MainUI.prototype.generate = function() {
   var parent = this;
@@ -39,18 +30,14 @@ MainUI.prototype.generate = function() {
   var menuContainer = new UIContainer({x: '=', y: '='});
   var fadeContainer = new UIContainer({x: '+', y: '+'});
   
-  this.fadeTimer = 0;
-  
-  this.fade = {
+  fadeContainer.add({
     neutral: {
       block: [new GenericUIBlock(util.vec2.make(0,0), util.vec2.make(2048,2048), black, colorMat)],
       text: []
     },
     step: function(imp, state, window) { return true; },
     isHovered: false
-  };
-  
-  fadeContainer.add(this.fade);
+  });
   
   /* Reuseable 'checks if clicked then calls an onclick function' */
   var protoOnClick = function(imp, state, window) {
@@ -120,7 +107,7 @@ MainUI.prototype.generate = function() {
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, DEBUG)]
     },
     step: protoOnClick,
-    onClick: function() { parent.ui.toggleDebugMenu(); },
+    onClick: function() { parent.ui.flags.debug = !parent.ui.flags.debug; },
     isHovered: false
   });
   
@@ -158,7 +145,7 @@ MainUI.prototype.generate = function() {
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, RESUME)]
     },
     step: protoOnClick,
-    onClick: function() { parent.ui.closeMainMenu(); },
+    onClick: function() { parent.ui.flags.main = false; },
     isHovered: false
   });
   

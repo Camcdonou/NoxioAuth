@@ -19,6 +19,7 @@ EndUI.prototype.setTexts = function(title, info) {
   this.generate();
 };
 
+EndUI.prototype.setVisible = GenericUI.prototype.setVisible;
 EndUI.prototype.show = GenericUI.prototype.show;
 EndUI.prototype.hide = GenericUI.prototype.hide;
 EndUI.prototype.refresh = GenericUI.prototype.refresh;

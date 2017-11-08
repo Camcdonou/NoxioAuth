@@ -15,6 +15,7 @@ DebugUI.prototype.setText = function(text) {
   this.text = text;
 };
 
+DebugUI.prototype.setVisible = GenericUI.prototype.setVisible;
 DebugUI.prototype.show = GenericUI.prototype.show;
 DebugUI.prototype.hide = GenericUI.prototype.hide;
 DebugUI.prototype.refresh = function() {
@@ -140,7 +141,7 @@ DebugUI.prototype.generate = function() {
       text:  [new GenericUIText(util.vec2.make(a+o,h+v), s, sblack, fontName, fontMat, CLOSE)]
     },
     step: protoOnClick,
-    onClick: function() { parent.hide(); },
+    onClick: function() { parent.ui.flags.debug = false; },
     isHovered: false
   });
   

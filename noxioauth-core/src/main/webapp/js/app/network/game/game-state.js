@@ -18,9 +18,20 @@ GameState.prototype.handlePacket = function(packet) {
 };
 
 GameState.prototype.newGame = function(packet) {
+  this.info.name = packet.name;
+  
+  var settings = {
+    name: packet.name,
+    gametype: packet.gametype,
+    maxplayers: packet.maxPlayers,
+    scoreToWin: packet.scoreToWin,
+    teams: packet.teams,
+    objective: packet.objective
+  };
+  
   main.menu.connect.show("Loading...");
   main.endGame();
-  main.startGame(packet.name, "STUB", "STUB", packet.maxPlayer, packet.map);
+  main.startGame(packet.name, settings, packet.map);
   main.menu.game.show();
   this.send({type: "g07"});
 };
@@ -39,9 +50,18 @@ GameState.prototype.joinGameSuccess = function(packet) {
 
 GameState.prototype.gameInfo = function(packet) {
   this.info.name = packet.name;
-  this.info.maxPlayers = packet.maxPlayers;
+  
+  var settings = {
+    name: packet.name,
+    gametype: packet.gametype,
+    maxplayers: packet.maxPlayers,
+    scoreToWin: packet.scoreToWin,
+    teams: packet.teams,
+    objective: packet.objective
+  };
+  
   main.menu.connect.show("Loading...");
-  main.startGame(packet.name, "STUB", "STUB", packet.maxPlayer, packet.map);
+  main.startGame(packet.name, settings, packet.map);
   main.menu.game.show();
   this.send({type: "g07"});
 };

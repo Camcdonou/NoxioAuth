@@ -7,31 +7,40 @@
 
 /* Define Game UI Debug Menu Class */
 function ScoreUI(game, ui, name) {
+  this.scores = [];
   GenericUI.call(this, game, ui, name);
-  this.data = [];
 }
 
-ScoreUI.prototype.setData = function(data) {
-  this.data = data;
+ScoreUI.prototype.setScores = function(scs) {
+  this.scores = scs;
   this.clear();
   this.generate();
 };
 
+ScoreUI.prototype.setVisible = GenericUI.prototype.setVisible;
 ScoreUI.prototype.show = GenericUI.prototype.show;
 ScoreUI.prototype.hide = GenericUI.prototype.hide;
-ScoreUI.prototype.refresh = function() {
-  
-};
+ScoreUI.prototype.refresh = GenericUI.prototype.refresh;
 
 ScoreUI.prototype.generate = function() {
-  var TEST_DATA = [
-    {name: "hc", score: "999/0/0"},
-    {name: "infernoplus", score: "4/2/0"},
-    {name: "hop", score: "gay"},
-    {name: "neo", score: "-999/0/0"},
-    {name: "test", score: "0/0/0"}
+  var SPEC_HEAD = {
+    gametype: "CTF",
+    teams: 2,
+    scoreToWin: 3,
+    objective: 1
+  };
+  
+  var SPEC_BODY = [
+    {name: "infernoplus", team: 0, kill: 0, death: 0, objective: 0},
+    {name: "neo", team: 0, kill: 3, death: 999, objective: 2},
+    {name: "hc", team: 0, kill: 0, death: 0, objective: 2},
+    {name: "oshitwaddup", team: 0, kill: 0, death: 0, objective: 0},
+    {name: "datboi", team: 1, kill: 999, death: 1, objective: 2}
   ];
   
+  var SPEC_HEAD = this.game.settings;
+  var SPEC_BODY = this.scores;
+   
   var parent = this;
   var colorMat = this.game.display.getMaterial("ui.color");           // Basic color material
   var fontMat  = this.game.display.getMaterial("ui.calibri");         // Font material
@@ -61,20 +70,36 @@ ScoreUI.prototype.generate = function() {
   var bwb = w*0.2;
   var bwc = w*0.4;
   
-  for(var i=0;i<TEST_DATA.length;i++) {
-    var L = TEST_DATA[i]; i++;
-    var R = i<TEST_DATA.length?TEST_DATA[i]:{name: "", score: ""};
+  var LEFT = []; var RIGHT = [];
+  if(SPEC_HEAD.teams === 2) {
+    for(var i=0;i<SPEC_BODY.length;i++) {
+      if(SPEC_BODY[i].team === 0) { LEFT.push(SPEC_BODY[i]); }
+      else                       { RIGHT.push(SPEC_BODY[i]); }
+    }
+  }
+  else {
+    var ULTIMATE_VARIABLE_OwO = true;
+    for(var i=0;i<SPEC_BODY.length;i++) {
+      if(ULTIMATE_VARIABLE_OwO) { LEFT.push(SPEC_BODY[i]); }
+      else                       { RIGHT.push(SPEC_BODY[i]); }
+      ULTIMATE_VARIABLE_OwO = !ULTIMATE_VARIABLE_OwO;
+    }
+  }
+  
+  for(var i=0;i<LEFT.length||i<RIGHT.length;i++) {
+    var L = i<LEFT.length?LEFT[i]:undefined;
+    var R = i<RIGHT.length?RIGHT[i]:undefined;
     
-    var LNAME        = L.name;
+    var LNAME        = L?L.name:"";
     var LNAME_LENGTH = util.font.textLength(LNAME, fontName, sb);
 
-    var LSCORE        = L.score;
+    var LSCORE        = L?((SPEC_HEAD.objective!==0?(L.objective+"/"):"")+L.kill + "/" + L.death):"";
     var LSCORE_LENGTH = util.font.textLength(LSCORE, fontName, sc);
     
-    var RNAME        = R.name;
+    var RNAME        = R?R.name:"";
     var RNAME_LENGTH = util.font.textLength(RNAME, fontName, sb);
 
-    var RSCORE        = R.score;
+    var RSCORE        = R?((SPEC_HEAD.objective!==0?(R.objective+"/"):"")+R.kill + "/" + R.death):"";
     var RSCORE_LENGTH = util.font.textLength(RSCORE, fontName, sc);
     
     var bwaa = 0;
@@ -101,13 +126,13 @@ ScoreUI.prototype.generate = function() {
     h += sb;
   }
   
-  var CENTER        = "CENTER";
+  var CENTER        = SPEC_HEAD.gametype;
   var CENTER_LENGTH = util.font.textLength(CENTER, fontName, sa);
   
-  var LEFT        = "LEFT";
+  var LEFT        = "Red";
   var LEFT_LENGTH = util.font.textLength(LEFT, fontName, sb);
   
-  var RIGHT        = "RIGHT";
+  var RIGHT        = "Blue";
   var RIGHT_LENGTH = util.font.textLength(RIGHT, fontName, sb);
   
   var hwa = w*0.2;
@@ -120,20 +145,18 @@ ScoreUI.prototype.generate = function() {
   
   this.header = {
     neutral: {
-      block: [
-        new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,sa), swhite, colorMat),
-        new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(hwa,sb), sred, colorMat),
-        new GenericUIBlock(util.vec2.make(hwa+hwb,h), util.vec2.make(hwc,sb), sblue, colorMat)
-      ],
-      text:  [
-        new GenericUIText(util.vec2.make(0+hwaa,h+vb), sb, swhite, fontName, fontMat, LEFT),
-        new GenericUIText(util.vec2.make(hwa+hwba,h+va), sa, sblack, fontName, fontMat, CENTER),
-        new GenericUIText(util.vec2.make(hwa+hwb+hwca,h+vb), sb, swhite, fontName, fontMat, RIGHT)
-      ]
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,sa), swhite, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(hwa+hwba,h+va), sa, sblack, fontName, fontMat, CENTER)]
     },
     step: function(imp, state, window) { return false; },
     isHovered: false
   };
+  if(SPEC_HEAD.teams === 2) {
+    this.header.neutral.block.push(new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(hwa,sb), sred, colorMat));
+    this.header.neutral.block.push(new GenericUIBlock(util.vec2.make(hwa+hwb,h), util.vec2.make(hwc,sb), sblue, colorMat));
+    this.header.neutral.text.push(new GenericUIText(util.vec2.make(0+hwaa,h+vb), sb, swhite, fontName, fontMat, LEFT));
+    this.header.neutral.text.push(new GenericUIText(util.vec2.make(hwa+hwb+hwca,h+vb), sb, swhite, fontName, fontMat, RIGHT));
+  }
   container.add(this.header);
   
   // Invisible spacer block.

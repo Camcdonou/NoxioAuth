@@ -10,6 +10,7 @@ function NameUI(game, ui, name) {
   GenericUI.call(this, game, ui, name);
 }
 
+NameUI.prototype.setVisible = GenericUI.prototype.setVisible;
 NameUI.prototype.show = GenericUI.prototype.show;
 NameUI.prototype.hide = GenericUI.prototype.hide;
 NameUI.prototype.refresh = function() {

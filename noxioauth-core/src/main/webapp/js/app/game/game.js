@@ -4,13 +4,8 @@
 /* global URL */
 
 /* Define NoxioGame Class */
-function NoxioGame(name, description, gametype, maxPlayers, map) {
-  this.info = {
-    name: name,
-    description: description,
-    gametype: gametype,
-    maxPlayers: maxPlayers
-  };
+function NoxioGame(name, settings, map) {
+  this.settings = settings;
   
   this.window = document.getElementById("canvas");
   this.container = document.getElementById("canvas-container");
@@ -29,6 +24,9 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   this.sound = new Sound(this);     // Game audio handler
   this.ui = new GameUI(this);       // Ingame UI
   
+  this.objects = [];                  // All active game objects
+  this.effects = [];                  // Active effects in the world space
+  
   this.ready = false, this.serverReady = false;
   this.loadCache(map.cache);
   this.loadMap(map);
@@ -37,16 +35,14 @@ function NoxioGame(name, description, gametype, maxPlayers, map) {
   
   this.gameOver = false;
   
-  this.debug = {ss: 128, stime: [], ctime: [], dtime: [], ping: [], frames: [], sAvg: 0, cAvg: 0, pAvg: 0, fAvg: 0}; /* SS is Sample Size: The number of frames to sample for data. */
-  for(var i=0;i<this.debug.ss;i++) { this.debug.stime[i] = 0; this.debug.ctime[i] = 0; this.debug.dtime[i] = 0; this.debug.ping[i] = 0; this.debug.frames[i] = 0; }
-  
-  this.objects = [];                  // All active game objects
-  this.effects = [];                  // Active effects in the world space
-  
   this.control = -1;                  // OID of object that the player controls. ( -1 is null )
+  this.chatMsgOut = [];               // Chat messages to send to server on next doInput()
   this.lastMouse = {x: 0.0, y: 1.0};  // Last valid mouse direction sent to server
   
   this.packHand = new PackHand(this);
+  
+  this.debug = {ss: 128, stime: [], ctime: [], dtime: [], ping: [], frames: [], sAvg: 0, cAvg: 0, pAvg: 0, fAvg: 0}; /* SS is Sample Size: The number of frames to sample for data. */
+  for(var i=0;i<this.debug.ss;i++) { this.debug.stime[i] = 0; this.debug.ctime[i] = 0; this.debug.dtime[i] = 0; this.debug.ping[i] = 0; this.debug.frames[i] = 0; }
   
   this.requestAnimFrameFunc = (function() {
     return window.requestAnimationFrame         || 
@@ -252,15 +248,22 @@ NoxioGame.prototype.doInput = function() {
   
   var inputs = [];
   
+  /* Chat Messages */
+  for(var i=0;i<this.chatMsgOut.length;i++) {
+    inputs.push("08;"+this.chatMsgOut[i].replace(/[;,]/g,"_"));
+  }
+  this.chatMsgOut.splice(0, this.chatMsgOut.length);
+  
   /* Global-Client Impulse Input */
-  if(!this.inx27 && this.input.keyboard.keys[27]) { this.ui.toggleMainMenu(); } this.inx27 = this.input.keyboard.keys[27];
+  if(!this.inx27 && this.input.keyboard.keys[27]) { this.ui.flags.main = !this.ui.flags.main; } this.inx27 = this.input.keyboard.keys[27];
   
   if(!pass) {
     /* Client Impulse Input */
     this.display.camera.setZoom(this.input.mouse.spin);
     
     /* Client State Input */
-    if(this.input.keyboard.keys[37]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: 0.01}); }   //Left
+    this.ui.flags.score = !!this.input.keyboard.keys[192];                                          //~
+    if(this.input.keyboard.keys[37]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: 0.01}); }   //Left @TODO: Camera rotate needs bounds and rebind to mouse
     if(this.input.keyboard.keys[39]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: -0.01}); }  //Right
     if(this.input.keyboard.keys[38]) { this.display.camera.addRot({x: 0.01, y: 0.0, z: 0.0}); }   //Up
     if(this.input.keyboard.keys[40]) { this.display.camera.addRot({x: -0.01, y: 0.0, z: 0.0}); }  //Down

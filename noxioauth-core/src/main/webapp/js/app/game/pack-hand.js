@@ -65,38 +65,31 @@ PackHand.prototype.deleteObject = function(data) {
 
 /* SYS::SCORE | scr */
 PackHand.prototype.scores = function(data) {
-  var gametype = data.shift();
-  var description = data.shift();
   var name = data.shift().split(",");
-  var score = data.shift().split(",");
-  var meter = data.shift().split(",");
-  var r = data.shift().split(",");
-  var g = data.shift().split(",");
-  var b = data.shift().split(",");
+  var team = data.shift().split(",");
+  var kill = data.shift().split(",");
+  var death = data.shift().split(",");
+  var objective = data.shift().split(",");
   
   var scs = [];
   for(var i=0;i<name.length;i++) {
-    scs.push({name: name[i], score: score[i], meter: parseFloat(meter[i]), color: {x: parseFloat(r[i]), y: parseFloat(g[i]), z: parseFloat(b[i])}});
+    scs.push({name: name[i], team: parseInt(team[i]), kill: parseInt(kill[i]), death: parseInt(death[i]), objective: parseInt(objective[i])});
   }
   
-//  var scoreUI = this.game.ui.getElement("score");
-//  var title = {title: gametype, description: description};
-//  scoreUI.update(title, scs);
+  this.game.ui.score.setScores(scs);
 };
 
 /* SYS::MESSAGE | msg */
 PackHand.prototype.message = function(data) {
   var msg = data.shift();
-//  
-//  this.game.ui.getElement("log").message(msg);
+  this.game.ui.log.addMessage(msg);
 };
 
 /* SYS::GAMEOVER | end */
 PackHand.prototype.gameOver = function(data) {
   var msg = data.shift();
   
-//  var endUI = this.game.ui.getElement("end");
-//  endUI.create(msg); // Regenerate end screen with server message.
+  this.game.ui.end.setTexts(msg, "Bottom Text~");
   this.game.gameOver = true;
 };
 
@@ -141,5 +134,6 @@ PackHand.prototype.respawnTimer = function(data) {
 
 /* SYS::WHISPER | wsp */
 PackHand.prototype.whisper = function(data) {
-//  this.game.ui.getElement("log").message(data.shift());
+  var msg = data.shift();
+  this.game.ui.log.addMessage(msg);
 };

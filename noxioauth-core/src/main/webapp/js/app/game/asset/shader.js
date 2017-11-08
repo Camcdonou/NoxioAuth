@@ -86,7 +86,7 @@ Asset.prototype.shader.font = {
     {type: "vec4", name: "color"},
   ],
   vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\n\nuniform vec2 transform;\nuniform vec2 size;\n\nuniform vec2 fUV;\nuniform vec2 fST;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4((position*vec3(size, 1.0))+vec3(transform, -0.5), 1.0);\n  vUV=vec3(fUV+(texcoord.st*fST), texcoord.z);\n  gl_Position = Pmatrix*Vmatrix*cPos;\n}\n",
-  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\nuniform vec4 color;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  float a = texture2D(texture0, vUV.st).r;\n  gl_FragColor = vec4(color.rgb, a);\n}\n",
+  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\nuniform vec4 color;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  float a = texture2D(texture0, vUV.st).r;\n  gl_FragColor = vec4(color.rgb, a*color.a);\n}\n",
 };
 
 /* Source File: final_gridg */
