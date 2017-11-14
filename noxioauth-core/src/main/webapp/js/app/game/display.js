@@ -83,6 +83,11 @@ Display.prototype.setupWebGL = function() {
   if(!this.createFramebuffer("world", this.upscale.world)) { return false; }
   if(!this.createFramebuffer("ui", this.upscale.ui)) { return false; }
   
+  /* @TODO: @DEBUG: Used by js/app/game/ui/debug.js exclusively. */
+  var shadowDebug = new Material("~SHADOW_DEBUG_MATERIAL", this.getShader("simpletrans"), {texture0: this.fbo.shadow.tex}, false);
+  this.materials.push(shadowDebug);
+  /* ----------------------------------------------------      */
+  
   return true;
 };
 

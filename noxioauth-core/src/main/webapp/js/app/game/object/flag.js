@@ -8,11 +8,7 @@ function FlagObject(game, oid, pos, vel) {
   GameObject.call(this, game, oid, pos, vel);
   
   this.model = this.game.display.getModel("object.flag.flag");
-  this.material = [
-    this.game.display.getMaterial("multi.default"),
-    this.game.display.getMaterial("multi.default"),
-    this.game.display.getMaterial("multi.default")
-  ];
+  this.material = this.game.display.getMaterial("object.flag.flag");
   
   this.RADIUS = 0.1;               // Collision radius
   this.CULL_RADIUS = 2.0;          // Radius at which to cull this object and all of it's effects.
@@ -52,10 +48,18 @@ FlagObject.prototype.setHeight = GameObject.prototype.setHeight;
 FlagObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
   var exbounds = util.matrix.expandPolygon(bounds, this.CULL_RADIUS);
   if(util.intersection.pointPoly(this.pos, exbounds)) {
+    var color;
+    switch(this.team) {
+      case  0 : { color = util.vec3.make(0.7539, 0.2421, 0.2421); break; }
+      case  1 : { color = util.vec3.make(0.2421, 0.2421, 0.7539); break; }
+      default : { color = util.vec3.make(0.5, 0.5, 0.5); break; }
+    }
+    
     var playerUniformData = [
-      {name: "transform", data: [this.pos.x, this.pos.y, this.height]}
+      {name: "transform", data: [this.pos.x, this.pos.y, this.height]},
+      {name: "color", data: util.vec3.toArray(color)}
     ];
-    geometry.push({model: this.model, material: this.team===0?this.material[1]:this.team===1?this.material[2]:this.material[0], uniforms: playerUniformData});
+    geometry.push({model: this.model, material: this.material, uniforms: playerUniformData});
     for(var i=0;i<this.effects.length;i++) {
       this.effects[i].getDraw(geometry, decals, lights, bounds);
     }

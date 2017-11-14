@@ -13,11 +13,7 @@ function PlayerInferno(game, oid, pos, vel) {
   PlayerObject.call(this, game, oid, pos, vel);
   
   this.model = this.game.display.getModel("multi.smallBox");
-  this.material = [
-    this.game.display.getMaterial("character.inferno.inferno"),
-    this.game.display.getMaterial("character.inferno.inferno"),
-    this.game.display.getMaterial("character.inferno.inferno")
-  ];
+  this.material = this.game.display.getMaterial("character.inferno.inferno");
   
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.725;

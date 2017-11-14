@@ -101,11 +101,16 @@ LogUI.prototype.generate = function() {
             }
             break;
           }
-          case 13 : { parent.game.chatMsgOut.push(parent.message); parent.message = ""; break; }
+          case 13 : { if(parent.message.length > 0) { parent.game.chatMsgOut.push(parent.message); parent.message = ""; } break; }
           default : { parent.message += imp.keyboard[i].char; break; }
         }
       }
       parent.textUpdated = true;
+    }
+    for(var i=0;i<imp.keyboard.length;i++) {
+      if(imp.keyboard[i].key === 13) {
+        this.focus = true; return true;
+      }
     }
     for(var i=0;i<imp.mouse.length;i++) {
       var align = container.makeAlign(window);

@@ -24,7 +24,7 @@ RespawnUI.prototype.refresh = function() {
   var s = 32;
   var v = s*0.15;
   
-  var TEXT        = this.game.respawnTimer<=0?"Press [Left Mouse] to respawn!":"Respawn in " + (this.game.respawnTimer/30).toFixed(1) + " seconds!";
+  var TEXT        = this.game.respawnTimer<=0?"Press [Right Mouse] to respawn!":"Respawn in " + (this.game.respawnTimer/30).toFixed(1) + " seconds!";
   var TEXT_LENGTH = util.font.textLength(TEXT, fontName, s);
   var o = (w*0.5)-(TEXT_LENGTH*0.5);
   
@@ -43,6 +43,13 @@ RespawnUI.prototype.generate = function() {
     this.game.display.getMaterial("ui.cs_stub"),
     this.game.display.getMaterial("ui.cs_stub")
   ];
+  var characterIDs = [
+    "inf",
+    "box",
+    "stb",
+    "stb",
+    "stb"
+  ];
   
   var black  = util.vec4.make(0.0, 0.0, 0.0, 0.5);
   var white  = util.vec4.make(1.0, 1.0, 1.0, 0.75);
@@ -53,13 +60,17 @@ RespawnUI.prototype.generate = function() {
   
   /* Reuseable 'checks if clicked then calls an onclick function' */
   var protoOnClick = function(imp, state, window) {
-    if(this.forceHover) { this.isHovered = true; }
+    if(parent.game.charSelect === this.charId) { this.isHovered = true; }
     for(var i=0;i<imp.mouse.length;i++) {
+      var align = container.makeAlign(window);
+      var over = parent.pointInElement(imp.mouse[i].pos, this, window, align);
       if(imp.mouse[i].btn === 0) {
-        var align = container.makeAlign(window);
-        var over = parent.pointInElement(imp.mouse[i].pos, this, window, align);
         if(over) { this.onClick(); return true; }
         else { this.offClick();    return false; }
+      }
+      else {
+        if(over) { return true; }
+        else { return false; }
       }
     }
     return false;
@@ -107,9 +118,9 @@ RespawnUI.prototype.generate = function() {
         text:  []
       },
       step: protoOnClick,
-      onClick: function() { this.forceHover = true; },
-      offClick: function() { this.forceHover = false; },
-      forceHover: false,
+      onClick: function() { parent.game.charSelect = this.charId; },
+      offClick: function() { },
+      charId: characterIDs[i],
       isHovered: false
     });
   }

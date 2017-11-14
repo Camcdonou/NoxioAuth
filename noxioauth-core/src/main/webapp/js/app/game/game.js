@@ -16,7 +16,7 @@ function NoxioGame(name, settings, map) {
   this.deltaFDLC = util.time.now();
   
   this.frame = 0;
-  this.delta = util.time.now();             // Number of milliseconds since ????
+  this.delta = util.time.now();     // Time of last frame in milliseconds
   
   this.input = new Input(this);     // Mouse, keyboard, and controller handler
   this.asset = new Asset();         // Raw data for models, animations, textures, shaders, sounds, etc, etc, etc...
@@ -24,8 +24,8 @@ function NoxioGame(name, settings, map) {
   this.sound = new Sound(this);     // Game audio handler
   this.ui = new GameUI(this);       // Ingame UI
   
-  this.objects = [];                  // All active game objects
-  this.effects = [];                  // Active effects in the world space
+  this.objects = [];                // All active game objects
+  this.effects = [];                // Active effects in the world space
   
   this.ready = false, this.serverReady = false;
   this.loadCache(map.cache);
@@ -36,6 +36,7 @@ function NoxioGame(name, settings, map) {
   this.gameOver = false;
   
   this.control = -1;                  // OID of object that the player controls. ( -1 is null )
+  this.charSelect = "box";            // ID of character the player wants to play as.
   this.chatMsgOut = [];               // Chat messages to send to server on next doInput()
   this.lastMouse = {x: 0.0, y: 1.0};  // Last valid mouse direction sent to server
   
@@ -303,7 +304,7 @@ NoxioGame.prototype.doInput = function() {
     }
     else {
       /* Spectate State Input */
-      if(this.input.mouse.lmb) { inputs.push("02"); }
+      if(this.input.mouse.rmb) { inputs.push("02;"+this.charSelect); }
       inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y);
     }
   }
