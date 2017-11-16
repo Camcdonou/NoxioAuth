@@ -27,7 +27,7 @@ Sound.prototype.initWebAudio = function() {
   this.volume.gain.value = 1.0;
   this.volume.connect(this.context.destination); // Global Volume -> Speakers
   
-  this.setVolume(0.5);
+  this.setVolume(main.settings.volume.master);
   
   this.sounds = [];
 
@@ -43,6 +43,7 @@ Sound.prototype.initFallback = function() {
 
 /* Updates position of audio context for 3d sound */
 Sound.prototype.update = function() {
+  this.setVolume(main.settings.volume.master);
   var pos = {x: -this.game.display.camera.pos.x, y: -this.game.display.camera.pos.y, z: 2.0};
   if(this.context.listener.positionX) {
     this.context.listener.positionX.value = pos.x;

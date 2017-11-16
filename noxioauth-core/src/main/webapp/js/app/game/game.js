@@ -256,7 +256,7 @@ NoxioGame.prototype.doInput = function() {
   this.chatMsgOut.splice(0, this.chatMsgOut.length);
   
   /* Global-Client Impulse Input */
-  if(!this.inx27 && this.input.keyboard.keys[27]) { this.ui.flags.main = !this.ui.flags.main; } this.inx27 = this.input.keyboard.keys[27];
+  if(!this.inx27 && this.input.keyboard.keys[27]) { this.ui.menuKey(); } this.inx27 = this.input.keyboard.keys[27];
   
   if(!pass) {
     /* Client Impulse Input */

@@ -7,11 +7,13 @@
 
 /* Define Game UI Debug Menu Class */
 function ScoreUI(game, ui, name) {
+  this.teams = [0,0];
   this.scores = [];
   GenericUI.call(this, game, ui, name);
 }
 
-ScoreUI.prototype.setScores = function(scs) {
+ScoreUI.prototype.setScores = function(teamScs, scs) {
+  this.teams = teamScs;
   this.scores = scs;
   this.clear();
   this.generate();
@@ -49,6 +51,8 @@ ScoreUI.prototype.generate = function() {
   var clear  = util.vec4.make(0.0, 0.0, 0.0, 0.0);
   var black  = util.vec4.make(0.0, 0.0, 0.0, 0.5);
   var white  = util.vec4.make(1.0, 1.0, 1.0, 0.5);
+  var blue = util.vec4.make(0.2421, 0.2421, 0.7539, 0.75);
+  var red = util.vec4.make(0.7539, 0.2421, 0.2421, 0.75);
   var swhite = util.vec4.make(1.0, 1.0, 1.0, 1.0);
   var sblack = util.vec4.make(0.0, 0.0, 0.0, 1.0);
   var sblue = util.vec4.make(0.2421, 0.2421, 0.7539, 1.0);
@@ -106,7 +110,7 @@ ScoreUI.prototype.generate = function() {
     var bwba = bwa-LSCORE_LENGTH;
     var bwca = 0;
     var bwda = bwc-RSCORE_LENGTH;
-    
+       
     this.body = {
       neutral: {
         block: [
@@ -122,6 +126,26 @@ ScoreUI.prototype.generate = function() {
       step: function(imp, state, window) { return false; },
       isHovered: false
     };
+    if(SPEC_HEAD.teams < 2) {
+      var moff = 6;
+      var mlen = (bwb*0.5);
+      var mhoff = sb*0.25;
+      var mhs = sb*0.5;
+
+      var mla = bwa-(moff*0.5);
+      var mlb = mla+mlen;
+      
+      if(L) {
+        var LEFT_METER  = SPEC_HEAD.objective===0?Math.min(L.kill/SPEC_HEAD.scoreToWin, 1):Math.min(L.objective/SPEC_HEAD.scoreToWin, 1);
+        this.body.neutral.block.push(new GenericUIBlock(util.vec2.make(mla+moff,h+mhoff), util.vec2.make(mlen-moff, mhs), white, colorMat));
+        this.body.neutral.block.push(new GenericUIBlock(util.vec2.make(mla+moff,h+mhoff), util.vec2.make((mlen-moff)*LEFT_METER, mhs), white, colorMat));
+      }
+      if(R) {
+        var RIGHT_METER = SPEC_HEAD.objective===0?Math.min(R.kill/SPEC_HEAD.scoreToWin, 1):Math.min(R.objective/SPEC_HEAD.scoreToWin, 1);
+        this.body.neutral.block.push(new GenericUIBlock(util.vec2.make(mlb+moff,h+mhoff), util.vec2.make(mlen-moff, mhs), white, colorMat));
+        this.body.neutral.block.push(new GenericUIBlock(util.vec2.make(mlb+moff,h+mhoff), util.vec2.make((mlen-moff)*RIGHT_METER, mhs), white, colorMat));
+      }
+    }
     container.add(this.body);
     h += sb;
   }
@@ -151,9 +175,14 @@ ScoreUI.prototype.generate = function() {
     step: function(imp, state, window) { return false; },
     isHovered: false
   };
-  if(SPEC_HEAD.teams === 2) {
+  if(SPEC_HEAD.teams >= 2) {
+    var LEFT_METER  = Math.min(this.teams[0]/SPEC_HEAD.scoreToWin, 1);
+    var RIGHT_METER = Math.min(this.teams[1]/SPEC_HEAD.scoreToWin, 1);
+    
     this.header.neutral.block.push(new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(hwa,sb), sred, colorMat));
     this.header.neutral.block.push(new GenericUIBlock(util.vec2.make(hwa+hwb,h), util.vec2.make(hwc,sb), sblue, colorMat));
+    this.header.neutral.block.push(new GenericUIBlock(util.vec2.make(0,h+sb), util.vec2.make(hwa*LEFT_METER,sa-sb), red, colorMat));
+    this.header.neutral.block.push(new GenericUIBlock(util.vec2.make(hwa+hwb+(hwc*(1.0-RIGHT_METER)),h+sb), util.vec2.make(hwc*RIGHT_METER,sa-sb), blue, colorMat));
     this.header.neutral.text.push(new GenericUIText(util.vec2.make(0+hwaa,h+vb), sb, swhite, fontName, fontMat, LEFT));
     this.header.neutral.text.push(new GenericUIText(util.vec2.make(hwa+hwb+hwca,h+vb), sb, swhite, fontName, fontMat, RIGHT));
   }

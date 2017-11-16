@@ -11,6 +11,8 @@ function GameUI(game) {
     new RespawnUI(this.game, this, "respawn"),
     new EndUI(this.game, this, "end"),
     new DebugUI(this.game, this, "debug"),
+    new OptionUI(this.game, this, "option"),
+    new SettingUI(this.game, this, "setting"),
     new MainUI(this.game, this, "main")
   ];
   for(var i=0;i<this.elements.length;i++) {
@@ -27,13 +29,12 @@ function GameUI(game) {
     respawn: false,
     end: false
   };
+  this.sub = "main";
 }
 
-/* Hide all */
-GameUI.prototype.hide = function() {
-  for(var i=0;i<this.elements.length;i++) {
-    this.elements[i].hide();
-  }
+GameUI.prototype.menuKey = function() {
+  this.flags.main = !this.flags.main;
+  if(!this.flags.main) { this.sub = "main"; }
 };
 
 /* Steps UI and returns true if imp input is absorbed by a UI element */
@@ -41,7 +42,9 @@ GameUI.prototype.hide = function() {
 GameUI.prototype.step = function(imp, state, window) {
   /* Show or hide ui based on current flags */
   if(this.flags.main) {
-    this.main.show();
+    this.main.setVisible(this.sub === "main");
+    this.option.setVisible(this.sub === "option");
+    this.setting.setVisible(this.sub === "setting");
     this.name.hide();
     this.log.hide();
     this.score.hide();
@@ -54,6 +57,8 @@ GameUI.prototype.step = function(imp, state, window) {
     var gam = this.game.gameOver;
     
     this.main.hide();
+    this.option.hide();
+    this.setting.hide();
     this.name.setVisible(this.flags.name);
     this.log.setVisible(this.flags.log);
     this.score.setVisible(this.flags.score||ded||gam);

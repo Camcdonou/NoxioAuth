@@ -135,7 +135,7 @@ DebugUI.prototype.generate = function() {
       text:  [new GenericUIText(util.vec2.make(a+o,h+v), s, sblack, fontName, fontMat, CHEAT)]
     },
     step: protoOnClick,
-    onClick: function() { },
+    onClick: function() { parent.game.sound.setMusic(parent.game.sound.getSound("music/roll.wav", 1.0), true); },
     isHovered: false
   });
   

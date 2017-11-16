@@ -65,6 +65,8 @@ PackHand.prototype.deleteObject = function(data) {
 
 /* SYS::SCORE | scr */
 PackHand.prototype.scores = function(data) {
+  var teamScs = data.shift().split(",");
+  
   var name = data.shift().split(",");
   var team = data.shift().split(",");
   var kill = data.shift().split(",");
@@ -76,7 +78,7 @@ PackHand.prototype.scores = function(data) {
     scs.push({name: name[i], team: parseInt(team[i]), kill: parseInt(kill[i]), death: parseInt(death[i]), objective: parseInt(objective[i])});
   }
   
-  this.game.ui.score.setScores(scs);
+  this.game.ui.score.setScores(teamScs, scs);
 };
 
 /* SYS::MESSAGE | msg */

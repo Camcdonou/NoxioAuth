@@ -88,7 +88,7 @@ MainUI.prototype.generate = function() {
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, SETTINGS)]
     },
     step: protoOnClick,
-    onClick: function() { },
+    onClick: function() { parent.ui.sub = "setting"; },
     isHovered: false
   });
   
@@ -126,7 +126,7 @@ MainUI.prototype.generate = function() {
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, GAME)]
     },
     step: protoOnClick,
-    onClick: function() { },
+    onClick: function() { parent.ui.sub = "option"; },
     isHovered: false
   });
   
@@ -145,7 +145,7 @@ MainUI.prototype.generate = function() {
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, RESUME)]
     },
     step: protoOnClick,
-    onClick: function() { parent.ui.flags.main = false; },
+    onClick: function() { parent.ui.menuKey(); },
     isHovered: false
   });
   
