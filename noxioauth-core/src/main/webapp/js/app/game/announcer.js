@@ -31,8 +31,9 @@ function Announcer(game) {
     go   :: Game Over
 */
 Announcer.prototype.announce = function(code) {
+  var parent = this;
   var longShort = function(path, msg) { 
-    this.announcements.push(this.game.sound.getSound(path, 1.0));
+    parent.announcements.push(parent.game.sound.getSound(path, 1.0));
   };
   
   var spl = code.split(",");
