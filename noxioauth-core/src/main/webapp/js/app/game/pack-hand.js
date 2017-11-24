@@ -20,6 +20,7 @@ PackHand.prototype.gameDataUpdate = function(packet) {
       case "msg" : { this.message(data); break; }
       case "end" : { this.gameOver(data); break; }
       case "tck" : { this.tick(data); break; }
+      case "anc" : { this.announce(data); break; }
       /* Controller::GenerateUpdateData() */
       case "obj" : { this.updateObject(data); break; }
       case "hid" : { this.hideObject(data);   break; }
@@ -100,6 +101,13 @@ PackHand.prototype.tick = function(data) {
   var tick = new Number(data.shift());
   
   this.game.update(tick);
+};
+
+/* SYS::ANNOUNCE | anc */
+PackHand.prototype.announce = function(data) {
+  var code = data.shift();
+  
+  this.game.announcer.announce(code);
 };
 
 /* OBJ::UPDATE | obj */

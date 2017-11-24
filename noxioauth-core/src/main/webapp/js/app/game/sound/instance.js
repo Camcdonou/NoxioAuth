@@ -8,6 +8,7 @@ function SoundInstance(context, path, soundData, gain, volume) {
   this.data = soundData;
   this.ready = false;
   this.played = false;
+  this.playing = false;
   
   if(!this.data.ready()) {
     main.menu.warning.show("Attempted to instance partially loaded sound data: '" + path + "'");
@@ -19,8 +20,10 @@ function SoundInstance(context, path, soundData, gain, volume) {
 }
 
 SoundInstance.prototype.create = function(volume) {
+  var parent = this;
   this.source = this.context.createBufferSource();      // Creates source
   this.source.buffer = this.data.buffer;                // Set source audio
+  this.source.onended = function() { parent.playing = false; };
   this.gain = this.context.createGain();
   this.gain.gain.value = 1.0;
   this.source.connect(this.gain);                       // Source -> Gain
@@ -36,8 +39,9 @@ SoundInstance.prototype.volume = function(gain) {
 };
 
 SoundInstance.prototype.play = function() {
-  if(this.ready && !this.played) { this.source.start(0); this.played = true; }
+  if(this.ready && !this.played) { this.source.start(0); this.playing = true; }
   else if(this.played) { main.menu.warning.show("Attempted to replay sound instance: '" + this.path + "'"); }
+  this.played = true;
 };
 
 SoundInstance.prototype.stop = function() {
@@ -54,8 +58,10 @@ function SpatialSoundInstance(context, path, soundData, gain, volume) {
 }
 
 SpatialSoundInstance.prototype.create = function(volume) {
+  var parent = this;
   this.source = this.context.createBufferSource();      // Creates source
   this.source.buffer = this.data.buffer;                // Set sourcea audio
+  this.source.onended = function() { parent.playing = false; };
   this.gain = this.context.createGain();
   this.gain.gain.value = 1.0;
   this.panner = this.context.createPanner();

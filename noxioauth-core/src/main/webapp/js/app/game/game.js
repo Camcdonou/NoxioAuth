@@ -24,6 +24,8 @@ function NoxioGame(name, settings, map) {
   this.sound = new Sound(this);     // Game audio handler
   this.ui = new GameUI(this);       // Ingame UI
   
+  this.announcer = new Announcer(this); // Says things, kind of like Bubsy
+  
   this.objects = [];                // All active game objects
   this.effects = [];                // Active effects in the world space
   
@@ -67,7 +69,7 @@ function NoxioGame(name, settings, map) {
 };
 
 // @FIXME: remove from production code, this is for building and debugging
-NoxioGame.prototype.generateCache = function() {
+NoxioGame.prototype.generateCache = function() { 
     var type = "TEXT";
     var filename = "generated-cache";
     var data = "";
@@ -173,6 +175,9 @@ NoxioGame.prototype.doUpdate = function(packet) {
     else { this.effects.splice(i--, 1); }
   }
   
+  /* Update announcer */
+  this.announcer.step();
+  
   /* Update timers */
   if(this.respawnTimer>0) { this.respawnTimer--; }
   
@@ -229,7 +234,6 @@ NoxioGame.prototype.update = function(tick) {
   /* === DEBUG BLOCK END ==================== */
 };
 
-/* @FIXME user defineable controls and stuff */
 /* Process player input and send them along to the server */
 NoxioGame.prototype.doInput = function() {
   if(!(this.ready && this.serverReady)) { return; }
@@ -256,14 +260,14 @@ NoxioGame.prototype.doInput = function() {
   this.chatMsgOut.splice(0, this.chatMsgOut.length);
   
   /* Global-Client Impulse Input */
-  if(!this.inx27 && this.input.keyboard.keys[27]) { this.ui.menuKey(); } this.inx27 = this.input.keyboard.keys[27];
+  if(!this.inx27 && this.input.keyboard.keys[27]) { this.ui.menuKey(); } this.inx27 = this.input.keyboard.keys[27]; // Hardcoded Main Menu to ESC
   
   if(!pass) {
     /* Client Impulse Input */
     this.display.camera.setZoom(this.input.mouse.spin);
     
     /* Client State Input */
-    this.ui.flags.score = !!this.input.keyboard.keys[192];                                          //~
+    this.ui.flags.score = !!this.input.keyboard.keys[main.settings.control.scoreboard];                                          //~
     if(this.input.keyboard.keys[37]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: 0.01}); }   //Left @TODO: Camera rotate needs bounds and rebind to mouse
     if(this.input.keyboard.keys[39]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: -0.01}); }  //Right
     if(this.input.keyboard.keys[38]) { this.display.camera.addRot({x: 0.01, y: 0.0, z: 0.0}); }   //Up
@@ -289,10 +293,10 @@ NoxioGame.prototype.doInput = function() {
       }
       else { inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y); }
       
-      if(this.input.keyboard.keys[32]) { actions.push("jmp"); }                                     //Space
-      if(this.input.keyboard.keys[70]) { actions.push("atk"); }                                     //F
-      if(this.input.keyboard.keys[16]) { actions.push("mov"); }                                     //Shift
-      if(this.input.keyboard.keys[84]) { actions.push("tnt"); }                                     //T
+      if(this.input.keyboard.keys[main.settings.control.jump]) { actions.push("jmp"); }
+      if(this.input.keyboard.keys[main.settings.control.actionA]) { actions.push("atk"); }
+      if(this.input.keyboard.keys[main.settings.control.actionB]) { actions.push("mov"); }
+      if(this.input.keyboard.keys[main.settings.control.taunt]) { actions.push("tnt"); }
       
       if(actions.length>0) {
         var act = "05;";

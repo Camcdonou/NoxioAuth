@@ -13,6 +13,17 @@ Settings.prototype.defaults = function() {
     music: 0.5,
     fx: 0.75
   };
+  this.graphics = {
+    
+  };
+  this.control = {
+    enableController: false,
+    actionA: 70,
+    actionB: 68,
+    jump: 32,
+    taunt: 84,
+    scoreboard: 192
+  };
 };
 
 // Gets saved user settings from server
