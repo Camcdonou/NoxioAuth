@@ -32,8 +32,6 @@ GameState.prototype.newGame = function(packet) {
   main.menu.connect.show("Loading...");
   main.endGame();
   main.startGame(packet.name, settings, packet.map);
-  main.menu.game.show();
-  this.send({type: "g07"});
 };
 
 GameState.prototype.gameData = function(packet) {
@@ -62,8 +60,6 @@ GameState.prototype.gameInfo = function(packet) {
   
   main.menu.connect.show("Loading...");
   main.startGame(packet.name, settings, packet.map);
-  main.menu.game.show();
-  this.send({type: "g07"});
 };
 
 GameState.prototype.ready = function() {

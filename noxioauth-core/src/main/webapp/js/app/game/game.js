@@ -104,6 +104,7 @@ NoxioGame.prototype.generateCache = function() {
 
 /* Updates loading screen and flags the client as ready when everything is done downloading. */
 NoxioGame.prototype.loading = function() {
+  if(this.ready) { return; }
   var r = true;
   var loadScreen = "<div class='unselectable load-head'>Loading...</div> <div style='width: 100%;'>";
   for(var i=0;i<this.display.textures.length;i++) {
@@ -115,8 +116,15 @@ NoxioGame.prototype.loading = function() {
     else { loadScreen += "<span class='unselectable load-item-inverse'>" + this.sound.sounds[i].path + "</span>"; }
   }
   loadScreen += "</div>";
-  if(r) { main.menu.game.loading("<div class='unselectable'></div>"); this.ready = true; }
+  if(r) { this.loadDone(); }
   else { main.menu.game.loading(loadScreen); }
+};
+
+/* Called when all cached asset files are done loading. */
+NoxioGame.prototype.loadDone = function() {
+  main.menu.game.loading("<div class='unselectable load-head'>Awaiting server reponse...</div> <div style='width: 100%;'>");
+  this.ready = true;
+  main.net.game.send({type: "g07"});
 };
 
 /* Starts loading all textures/sounds in the map file cache. */
@@ -366,10 +374,10 @@ NoxioGame.prototype.draw = function() {
           this.display.draw();                // Draw game
           this.sound.update();                // Update 3d audio center                               
         }
-        else {
-          this.loading();                     // Update loading screen
-        }
         initial = false;
+    }
+    if(!this.ready || !this.serverReady) {
+      this.loading();                     // Update loading screen
     }
     this.deltaFDLC = util.time.now();
   }

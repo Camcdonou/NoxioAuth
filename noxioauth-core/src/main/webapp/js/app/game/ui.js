@@ -7,9 +7,11 @@ function GameUI(game) {
   this.elements = [
     new NameUI(this.game, this, "name"),
     new LogUI(this.game, this, "log"),
+    new AnnounceUI(this.game, this, "announce"),
     new ScoreUI(this.game, this, "score"),
     new RespawnUI(this.game, this, "respawn"),
     new EndUI(this.game, this, "end"),
+    new ObjectiveUI(this.game, this, "objective"),
     new DebugUI(this.game, this, "debug"),
     new OptionUI(this.game, this, "option"),
     new SettingUI(this.game, this, "setting"),
@@ -25,7 +27,9 @@ function GameUI(game) {
   this.flags = {
     main: false,
     name: true,
+    objective: true,
     log: true,
+    announce: true,
     score: false,
     debug: false,
     respawn: false,
@@ -50,7 +54,9 @@ GameUI.prototype.step = function(imp, state, window) {
     this.audio.setVisible(this.sub === "audio");
     this.control.setVisible(this.sub === "control");
     this.name.hide();
+    this.objective.hide();
     this.log.hide();
+    this.announce.hide();
     this.score.hide();
     this.debug.setVisible(this.flags.debug);
     this.respawn.hide();
@@ -66,7 +72,9 @@ GameUI.prototype.step = function(imp, state, window) {
     this.audio.hide();
     this.control.hide();
     this.name.setVisible(this.flags.name);
+    this.objective.setVisible(this.flags.objective);
     this.log.setVisible(this.flags.log);
+    this.announce.setVisible(this.flags.announce);
     this.score.setVisible(this.flags.score||ded||gam);
     this.debug.setVisible(this.flags.debug);
     this.respawn.setVisible(this.flags.respawn||ded);

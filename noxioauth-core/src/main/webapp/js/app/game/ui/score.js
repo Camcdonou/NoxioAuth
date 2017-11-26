@@ -25,7 +25,7 @@ ScoreUI.prototype.hide = GenericUI.prototype.hide;
 ScoreUI.prototype.refresh = GenericUI.prototype.refresh;
 
 ScoreUI.prototype.generate = function() {
-  var SPEC_HEAD = {
+  /*var SPEC_HEAD = {
     gametype: "CTF",
     teams: 2,
     scoreToWin: 3,
@@ -38,7 +38,7 @@ ScoreUI.prototype.generate = function() {
     {name: "hc", team: 0, kill: 0, death: 0, objective: 2},
     {name: "oshitwaddup", team: 0, kill: 0, death: 0, objective: 0},
     {name: "datboi", team: 1, kill: 999, death: 1, objective: 2}
-  ];
+  ];*/
   
   var SPEC_HEAD = this.game.settings;
   var SPEC_BODY = this.scores;

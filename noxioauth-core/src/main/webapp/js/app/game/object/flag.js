@@ -16,7 +16,7 @@ function FlagObject(game, oid, pos, vel) {
   this.AIR_DRAG = 0.98;            // Friction Scalar
   this.FATAL_IMPACT_SPEED = 0.175; // Savaged by a wall
 
-  this.onBase = 1;
+  this.onBase = 1;                 // 1 -> Flag is on flagstand | 0 -> Flag is not on the flag stand and should draw on hud
   this.team = -1;
 
   this.targetCircle = new Decal(this.game, this.game.display.getMaterial("character.player.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.4, 0.0);

@@ -16,6 +16,7 @@ Main.prototype.init = function() {
 Main.prototype.startGame = function(name, settings, map) {
   if(!this.inGame()) {
     this.game = new NoxioGame(name, settings, map);
+    this.menu.game.show();
   }
   else { this.menu.error.showError("State Error", "Attempted to start a game while a game was running."); this.close(); }
 };

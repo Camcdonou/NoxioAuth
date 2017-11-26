@@ -37,20 +37,20 @@ Asset.prototype.material.ui.cs_box = {
   texture0: "ui/cs_box",
 };
 
+/* Source File: flag.mat */
+Asset.prototype.material.ui.flag = {
+  name: "ui.flag",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "ui/flag",
+};
+
 /* Source File: cs_inferno.mat */
 Asset.prototype.material.ui.cs_inferno = {
   name: "ui.cs_inferno",
   shader: "simpletrans",
   shadow: false,
   texture0: "ui/cs_inferno",
-};
-
-/* Source File: flagIcon.mat */
-Asset.prototype.material.ui.flagIcon = {
-  name: "ui.flagIcon",
-  shader: "simpletrans",
-  shadow: false,
-  texture0: "ui/flag",
 };
 
 /* Source File: color.mat */
