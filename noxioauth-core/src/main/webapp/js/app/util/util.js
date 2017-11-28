@@ -84,6 +84,14 @@ util.vec2.lerp = function(a, b, i) {
   return util.vec2.add(util.vec2.scale(a, 1.0-i), util.vec2.scale(b, i));
 };
 
+/* Find angle between vectors a and b */
+util.vec2.angle = function(a, b) {
+  var dot = util.vec2.dot(a, b);
+  var A = Math.sqrt((a.x*a.x)+(a.y*a.y));
+  var B = Math.sqrt((b.x*b.x)+(b.y*b.y));
+  return Math.acos(dot/(A*B));
+};
+
 util.vec2.average = function(ary) {
   var c = util.vec2.create();
   for(var i=0;i<ary.length;i++) {

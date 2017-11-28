@@ -8,9 +8,13 @@ Asset.prototype.material.object.flag = {};
 Asset.prototype.material.ui = {};
 Asset.prototype.material.multi = {};
 Asset.prototype.material.character = {};
+Asset.prototype.material.character.falco = {};
+Asset.prototype.material.character.falco.effect = {};
 Asset.prototype.material.character.player = {};
 Asset.prototype.material.character.player.decal = {};
 Asset.prototype.material.character.player.effect = {};
+Asset.prototype.material.character.marth = {};
+Asset.prototype.material.character.marth.effect = {};
 Asset.prototype.material.character.inferno = {};
 Asset.prototype.material.character.fox = {};
 Asset.prototype.material.character.fox.ui = {};
@@ -113,6 +117,23 @@ Asset.prototype.material.multi.post_fxaa = {
   shadow: false,
 };
 
+/* Source File: falco.mat */
+Asset.prototype.material.character.falco.falco = {
+  name: "character.falco.falco",
+  shader: "player",
+  shadow: true,
+  texture0: "multi/default",
+};
+
+/* Source File: charge.mat */
+Asset.prototype.material.character.falco.effect.charge = {
+  name: "character.falco.effect.charge",
+  shader: "effect_fire_plane",
+  shadow: false,
+  texture0: "character/falco/effect/chargemask",
+  texture1: "character/falco/effect/firecolor",
+};
+
 /* Source File: targetcircle.mat */
 Asset.prototype.material.character.player.decal.targetcircle = {
   name: "character.player.decal.targetcircle",
@@ -159,6 +180,48 @@ Asset.prototype.material.character.player.effect.blooddrop = {
   shader: "particle",
   shadow: false,
   texture0: "character/player/effect/blooddrop",
+};
+
+/* Source File: marth.mat */
+Asset.prototype.material.character.marth.marth = {
+  name: "character.marth.marth",
+  shader: "player",
+  shadow: true,
+  texture0: "multi/default",
+};
+
+/* Source File: shockwave.mat */
+Asset.prototype.material.character.marth.effect.shockwave = {
+  name: "character.marth.effect.shockwave",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/marth/effect/shockwave",
+};
+
+/* Source File: shockwaveGround.mat */
+Asset.prototype.material.character.marth.effect.shockwaveGround = {
+  name: "character.marth.effect.shockwaveGround",
+  shader: "effect",
+  shadow: false,
+  texture0: "character/marth/effect/shockwave",
+};
+
+/* Source File: slash.mat */
+Asset.prototype.material.character.marth.effect.slash = {
+  name: "character.marth.effect.slash",
+  shader: "effect_slash",
+  shadow: false,
+  texture0: "character/marth/effect/slashmask",
+  texture1: "character/marth/effect/slashgrad",
+};
+
+/* Source File: riposte.mat */
+Asset.prototype.material.character.marth.effect.riposte = {
+  name: "character.marth.effect.riposte",
+  shader: "effect_slash",
+  shadow: false,
+  texture0: "character/marth/effect/ripostemask",
+  texture1: "character/marth/effect/slashgrad",
 };
 
 /* Source File: inferno.mat */

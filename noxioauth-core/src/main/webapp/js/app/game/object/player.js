@@ -68,7 +68,7 @@ PlayerObject.prototype.update = function(data) {
 };
 
 PlayerObject.prototype.jump = function() {
-  this.jumpEffect.trigger(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
+  this.jumpEffect.trigger(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
 };
 
 PlayerObject.prototype.stun = function() {

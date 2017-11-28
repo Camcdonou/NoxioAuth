@@ -46,8 +46,8 @@ RespawnUI.prototype.generate = function() {
   var characterIDs = [
     "inf",
     "box",
-    "stb",
-    "stb",
+    "flc",
+    "mar",
     "stb"
   ];
   
