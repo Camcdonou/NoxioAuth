@@ -4,23 +4,18 @@
 /* global GameObject */
 /* global PlayerObject */
 /* global PointLight */
-/* global ParticleBlip */
-/* global ParticleDash */
 /* global ParticleStun */
 /* global ParticleBloodSplat */
 /* global Decal */
 
-/* Define PlayerFox Class */
-function PlayerFox(game, oid, pos, vel) {
+/* Define PlayerPuff Class */
+function PlayerPuff(game, oid, pos, vel) {
   PlayerObject.call(this, game, oid, pos, vel);
   
   this.model = this.game.display.getModel("multi.smallBox");
-  this.material = this.game.display.getMaterial("character.fox.fox");
+  this.material = this.game.display.getMaterial("character.puff.puff");
   
   /* Constants */
-  this.BLIP_COOLDOWN_MAX = 30;
-  this.DASH_COOLDOWN_ADD = 30;
-  this.DASH_COOLDOWN_MAX = 60;
   
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.725;
@@ -30,21 +25,14 @@ function PlayerFox(game, oid, pos, vel) {
   /* State */
 
   /* Timers */
-  this.blipCooldown = 0;
-  this.dashCooldown = 0;
 
   /* Effects */
-  this.blipEffect = new Effect([
-    {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 1.0), 3.0], update: function(lit){}, attachment: true, delay: 0, length: 3},
-    {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 1.0), 3.0], update: function(lit){lit.color.w -= 1.0/12.0; lit.rad += 0.1; }, attachment: true, delay: 3, length: 12},
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/attack0.wav", 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33},
-    {type: "particle", class: ParticleBlip, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 33}
+  this.restEffect = new Effect([
+    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/attack0.wav", 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33}
   ], false);
   
-  this.dashEffect = new Effect([
-    {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/dash0.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
-    {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 0.75), 2.5], update: function(lit){lit.color.w -= 1.0/45.0; lit.rad += 0.05; }, attachment: false, delay: 0, length: 30},
-    {type: "particle", class: ParticleDash, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 60}
+  this.poundEffect = new Effect([
+    {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 0.75), 2.5], update: function(lit){lit.color.w -= 1.0/45.0; lit.rad += 0.05; }, attachment: false, delay: 0, length: 30}
   ], false);
   
   this.tauntEffect = new Effect([
@@ -73,11 +61,11 @@ function PlayerFox(game, oid, pos, vel) {
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/death1.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 99}
   ], false);
   
-  this.effects.push(this.blipEffect); this.effects.push(this.dashEffect); this.effects.push(this.tauntEffect); this.effects.push(this.jumpEffect);
+  this.effects.push(this.restEffect); this.effects.push(this.poundEffect); this.effects.push(this.tauntEffect); this.effects.push(this.jumpEffect);
   this.effects.push(this.stunEffect); this.effects.push(this.bloodEffect); this.effects.push(this.impactDeathEffect); this.effects.push(this.fallDeathEffect);
 };
 
-PlayerFox.prototype.update = function(data) {
+PlayerPuff.prototype.update = function(data) {
   /* Apply update data to game */
   var team = parseInt(data.shift());
   var pos = util.vec2.parse(data.shift());
@@ -99,8 +87,8 @@ PlayerFox.prototype.update = function(data) {
   for(var i=0;i<effects.length-1;i++) {
     switch(effects[i]) {
       case "jmp" : { this.jump(); break; }
-      case "atk" : { this.blip(); break; }
-      case "mov" : { this.dash(); break; }
+      case "atk" : { this.rest(); break; }
+      case "mov" : { this.pound(); break; }
       case "tnt" : { this.taunt(); break; }
       case "stn" : { this.stun(); break; }
       default : { break; }
@@ -108,45 +96,41 @@ PlayerFox.prototype.update = function(data) {
   }
   
   /* Update Timers */
-  if(this.blipCooldown > 0) { this.blipCooldown--; }
-  if(this.dashCooldown > 0) { this.dashCooldown--; }
   
   /* Step Effects */
   this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1);
-  this.blipEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
-  this.dashEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
+  this.restEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
+  this.poundEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.jumpEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.tauntEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.stunEffect.step(util.vec2.toVec3(this.pos, 0.75+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.bloodEffect.step(util.vec2.toVec3(this.pos, 0.0+this.height), util.vec2.toVec3(this.vel, 0.0));
 };
 
-PlayerFox.prototype.jump = PlayerObject.prototype.jump;
-PlayerFox.prototype.stun = PlayerObject.prototype.stun;
+PlayerPuff.prototype.jump = PlayerObject.prototype.jump;
+PlayerPuff.prototype.stun = PlayerObject.prototype.stun;
 
-PlayerFox.prototype.blip = function() {
-  this.blipEffect.trigger(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
-  this.blipCooldown = this.BLIP_COOLDOWN_MAX;
+PlayerPuff.prototype.rest = function() {
+  this.restEffect.trigger(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
 };
 
-PlayerFox.prototype.dash = function() {
-  this.dashEffect.trigger(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
-  this.dashCooldown += this.DASH_COOLDOWN_ADD;
+PlayerPuff.prototype.pound = function() {
+  this.poundEffect.trigger(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
 };
 
-PlayerFox.prototype.taunt = function() {
+PlayerPuff.prototype.taunt = function() {
   this.tauntEffect.trigger(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
 };
 
-PlayerFox.prototype.setPos = PlayerObject.prototype.setPos;
-PlayerFox.prototype.setVel = PlayerObject.prototype.setVel;
-PlayerFox.prototype.setHeight = PlayerObject.prototype.setHeight;
+PlayerPuff.prototype.setPos = PlayerObject.prototype.setPos;
+PlayerPuff.prototype.setVel = PlayerObject.prototype.setVel;
+PlayerPuff.prototype.setHeight = PlayerObject.prototype.setHeight;
 
-PlayerFox.prototype.setLook = PlayerObject.prototype.setLook;
-PlayerFox.prototype.setSpeed = PlayerObject.prototype.setSpeed;
-PlayerFox.prototype.getDraw = PlayerObject.prototype.getDraw;
+PlayerPuff.prototype.setLook = PlayerObject.prototype.setLook;
+PlayerPuff.prototype.setSpeed = PlayerObject.prototype.setSpeed;
+PlayerPuff.prototype.getDraw = PlayerObject.prototype.getDraw;
 
-PlayerFox.prototype.destroy = function() {
+PlayerPuff.prototype.destroy = function() {
   for(var i=0;i<this.effects.length;i++) {
     this.effects[i].destroy();
   }
@@ -157,6 +141,6 @@ PlayerFox.prototype.destroy = function() {
   else { this.fallDeathEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, 0.0)); }
 };
 
-PlayerFox.prototype.getType = function() {
-  return "obj.player.fox";
+PlayerPuff.prototype.getType = function() {
+  return "obj.player.puff";
 };

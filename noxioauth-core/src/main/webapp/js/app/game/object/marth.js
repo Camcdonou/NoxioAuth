@@ -35,53 +35,53 @@ function PlayerMarth(game, oid, pos, vel) {
   this.slashEffect = new Effect([
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/marth/attack0.wav", "character/marth/attack1.wav"], 0.5], update: function(snd){}, attachment: true, delay: 0, length: 33},
     {type: "particle", class: ParticleSlash, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 15}
-  ]);
+  ], false);
   
   this.readyEffect = new Effect([
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/marth/ready0.wav", 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33},
     {type: "particle", class: ParticleReady, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 15}
-  ]);
+  ], false);
   
   this.comboEffect = new Effect([
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/marth/combo0.wav", "character/marth/combo1.wav", "character/marth/combo2.wav", "character/marth/combo3.wav", "character/marth/combo4.wav"], 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33},
     {type: "particle", class: ParticleReady, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 15}
-  ]);
+  ], false);
   
   this.counterEffect = new Effect([
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/marth/counter0.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33}
-  ]);
+  ], false);
   
   this.riposteEffect = new Effect([
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/marth/riposte0.wav", 0.5], update: function(snd){}, attachment: true, delay: 0, length: 33},
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/marth/riposte1.wav", "character/marth/riposte2.wav", "character/marth/riposte3.wav"], 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
     {type: "particle", class: ParticleRiposte, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 15}
-  ]);
+  ], false);
   
   this.tauntEffect = new Effect([
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/marth/taunt0.wav", "character/marth/taunt1.wav", "character/marth/taunt2.wav", "character/marth/taunt3.wav", "character/marth/taunt4.wav"], 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33}
-  ]);
+  ], false);
   
   this.jumpEffect = new Effect([
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/marth/jump0.wav", "character/marth/jump1.wav", "character/marth/jump2.wav"], 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33}
-  ]);
+  ], false);
   
   this.stunEffect = new Effect([
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/marth/hit0.wav", "character/marth/hit1.wav", "character/marth/hit2.wav", "character/marth/hit3.wav"], 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
     {type: "particle", class: ParticleStun, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 45}
-  ]);
+  ], false);
   
   this.bloodEffect = new Effect([
     {type: "particle", class: ParticleBloodSplat, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 300},
     {type: "decal", class: Decal, params: [this.game, this.game.display.getMaterial("character.player.decal.bloodsplat"), "<vec3 pos>", util.vec3.make(0.0, 0.0, 1.0), 1.5, Math.random()*6.28319], update: function(dcl){}, attachment: false, delay: 0, length: 300}
-  ]);
+  ], false);
   
   this.impactDeathEffect = new Effect([
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/marth/death0.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 60}
-  ]);
+  ], false);
   
   this.fallDeathEffect = new Effect([
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/marth/death1.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 99}
-  ]);
+  ], false);
   
   this.effects.push(this.slashEffect); this.effects.push(this.readyEffect); this.effects.push(this.comboEffect); this.effects.push(this.counterEffect); this.effects.push(this.riposteEffect);
   this.effects.push(this.jumpEffect); this.effects.push(this.stunEffect); this.effects.push(this.bloodEffect); this.effects.push(this.impactDeathEffect); this.effects.push(this.fallDeathEffect);

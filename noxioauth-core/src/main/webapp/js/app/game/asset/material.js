@@ -5,9 +5,11 @@
 Asset.prototype.material = {};
 Asset.prototype.material.object = {};
 Asset.prototype.material.object.flag = {};
+Asset.prototype.material.object.bomb = {};
 Asset.prototype.material.ui = {};
 Asset.prototype.material.multi = {};
 Asset.prototype.material.character = {};
+Asset.prototype.material.character.puff = {};
 Asset.prototype.material.character.falco = {};
 Asset.prototype.material.character.falco.effect = {};
 Asset.prototype.material.character.player = {};
@@ -15,6 +17,8 @@ Asset.prototype.material.character.player.decal = {};
 Asset.prototype.material.character.player.effect = {};
 Asset.prototype.material.character.marth = {};
 Asset.prototype.material.character.marth.effect = {};
+Asset.prototype.material.character.shiek = {};
+Asset.prototype.material.character.shiek.effect = {};
 Asset.prototype.material.character.inferno = {};
 Asset.prototype.material.character.fox = {};
 Asset.prototype.material.character.fox.ui = {};
@@ -28,6 +32,14 @@ Asset.prototype.material.map.final = {};
 /* Source File: flag.mat */
 Asset.prototype.material.object.flag.flag = {
   name: "object.flag.flag",
+  shader: "player",
+  shadow: true,
+  texture0: "multi/default",
+};
+
+/* Source File: bomb.mat */
+Asset.prototype.material.object.bomb.bomb = {
+  name: "object.bomb.bomb",
   shader: "player",
   shadow: true,
   texture0: "multi/default",
@@ -115,6 +127,14 @@ Asset.prototype.material.multi.post_fxaa = {
   name: "multi.post_fxaa",
   shader: "post_fxaa",
   shadow: false,
+};
+
+/* Source File: puff.mat */
+Asset.prototype.material.character.puff.puff = {
+  name: "character.puff.puff",
+  shader: "player",
+  shadow: true,
+  texture0: "multi/default",
 };
 
 /* Source File: falco.mat */
@@ -222,6 +242,46 @@ Asset.prototype.material.character.marth.effect.riposte = {
   shadow: false,
   texture0: "character/marth/effect/ripostemask",
   texture1: "character/marth/effect/slashgrad",
+};
+
+/* Source File: shiek.mat */
+Asset.prototype.material.character.shiek.shiek = {
+  name: "character.shiek.shiek",
+  shader: "player",
+  shadow: true,
+  texture0: "multi/default",
+};
+
+/* Source File: shockwave.mat */
+Asset.prototype.material.character.shiek.effect.shockwave = {
+  name: "character.shiek.effect.shockwave",
+  shader: "effect",
+  shadow: false,
+  texture0: "character/shiek/effect/shockwave",
+};
+
+/* Source File: smoke.mat */
+Asset.prototype.material.character.shiek.effect.smoke = {
+  name: "character.shiek.effect.smoke",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/shiek/effect/smoke",
+};
+
+/* Source File: mark.mat */
+Asset.prototype.material.character.shiek.effect.mark = {
+  name: "character.shiek.effect.mark",
+  shader: "effect",
+  shadow: false,
+  texture0: "character/shiek/effect/mark",
+};
+
+/* Source File: flash.mat */
+Asset.prototype.material.character.shiek.effect.flash = {
+  name: "character.shiek.effect.flash",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/shiek/effect/flash",
 };
 
 /* Source File: inferno.mat */

@@ -51,7 +51,10 @@ PackHand.prototype.createObject = function(data) {
     case "obj.mobile.player.fox" : { this.game.objects.push(new PlayerFox(this.game, oid, pos, vel)); break; }
     case "obj.mobile.player.falco" : { this.game.objects.push(new PlayerFalco(this.game, oid, pos, vel)); break; }
     case "obj.mobile.player.marth" : { this.game.objects.push(new PlayerMarth(this.game, oid, pos, vel)); break; }
+    case "obj.mobile.player.shiek" : { this.game.objects.push(new PlayerShiek(this.game, oid, pos, vel)); break; }
+    case "obj.mobile.player.puff" : { this.game.objects.push(new PlayerPuff(this.game, oid, pos, vel)); break; }
     case "obj.mobile.flag" : { this.game.objects.push(new FlagObject(this.game, oid, pos, vel)); break; }
+    case "obj.mobile.bomb" : { this.game.objects.push(new BombObject(this.game, oid, pos, vel)); break; }
     default : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for '" + type + "' which does not exist.", JSON.stringify(data)); main.close(); break; }
   }
 };

@@ -41,6 +41,8 @@ RespawnUI.prototype.generate = function() {
     this.game.display.getMaterial("ui.cs_box"),
     this.game.display.getMaterial("ui.cs_stub"),
     this.game.display.getMaterial("ui.cs_stub"),
+    this.game.display.getMaterial("ui.cs_stub"),
+    this.game.display.getMaterial("ui.cs_stub"),
     this.game.display.getMaterial("ui.cs_stub")
   ];
   var characterIDs = [
@@ -48,7 +50,9 @@ RespawnUI.prototype.generate = function() {
     "box",
     "flc",
     "mar",
-    "stb"
+    "shk",
+    "puf",
+    "cap"
   ];
   
   var black  = util.vec4.make(0.0, 0.0, 0.0, 0.5);
@@ -98,7 +102,7 @@ RespawnUI.prototype.generate = function() {
   
   h += s+v;
   var b = 128;
-  var t = 5;
+  var t = characterMats.length;
   
   for(var i=0;i<t;i++) {
     o = (w*0.5)-(i*b)+(t*b-(t*b*0.5))-b;

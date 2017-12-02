@@ -41,7 +41,7 @@ Particle.prototype.step = function(pos, vel) {
   for(var i=0;i<this.particles.length;i++) {
     if(--this.particles[i].length <= 0) { this.particles.splice(i,1); }
     else {
-      this.particles[i].update(pos, vel);
+      this.particles[i].update(this.pos, this.vel);
     }
   }
   /* Spawn Delayed */

@@ -6,7 +6,8 @@
 /* NOTE: This class might be best described as "magic". You were warned. */
 
 /* Define Effect Handler Class */
-function Effect(components, radius) {
+function Effect(components, loop) {
+  this.loop = loop;
   this.components = components;   // List of things to create when trigger() is called
   
   this.delayed = [];  /* Spec: {component: <obj>, delay: <int frames>} */
@@ -50,23 +51,27 @@ Effect.prototype.spawn = function(comp, pos, vel) {
   }
   var gen;
   if(comp.type === "sound") {
-    gen = {obj: comp.func.apply(comp.class, paramgen), update: comp.update, attachment: comp.attachment, length: comp.length};
+    gen = {obj: comp.func.apply(comp.class, paramgen), update: comp.update, attachment: comp.attachment, length: comp.length, comp: comp};
     if(gen.attachment) { gen.obj.position(pos); }
     gen.obj.play(pos);
   }
   else {
     paramgen.unshift(null);
-    gen = {obj: new (Function.prototype.bind.apply(comp.class, paramgen)), update: comp.update, attachment: comp.attachment, length: comp.length};
+    gen = {obj: new (Function.prototype.bind.apply(comp.class, paramgen)), update: comp.update, attachment: comp.attachment, length: comp.length, comp: comp};
   }
   this[comp.type].push(gen);
 };
 
+/* @TODO LOOPING EFFECTS HAS BROUGHT UP A MAJOR PROBLEM, HAVE COMPONTENTS FLAG THEM SELVES FOR DISCARDING AND USE LENGTH AS A FUNCTION LOOPING ONLY! */
 /* Updates components of the effect. */
 Effect.prototype.step = function(pos, vel) {
   /* Update Sounds */
   for(var i=0;i<this.sound.length;i++) {
     var snd = this.sound[i];
-    if(--snd.length <= 0) { this.sound.splice(i, 1); }
+    if(--snd.length <= 0) { 
+      var remv = this.sound.splice(i, 1);
+      if(this.loop) { this.spawn(remv[0].comp, snd.attachment?pos:remv[0].obj.pos, snd.attachment?vel:remv[0].obj.vel); }
+    }
     else {
       if(snd.attachment) { snd.obj.position(pos); }
       snd.update(snd.obj);
@@ -75,7 +80,10 @@ Effect.prototype.step = function(pos, vel) {
   /* Update Lights */
   for(var i=0;i<this.light.length;i++) {
     var lit = this.light[i];
-    if(--lit.length <= 0) { this.light.splice(i, 1); }
+    if(--lit.length <= 0) { 
+      var remv = this.light.splice(i, 1);
+      if(this.loop) { this.spawn(remv[0].comp, lit.attachment?pos:remv[0].obj.pos, lit.attachment?vel:remv[0].obj.vel); }
+    }
     else {
       if(lit.attachment) { lit.obj.pos = pos; }
       lit.update(lit.obj);
@@ -84,7 +92,10 @@ Effect.prototype.step = function(pos, vel) {
   /* Update Particles */
   for(var i=0;i<this.particle.length;i++) {
     var prt = this.particle[i];
-    if(--prt.length <= 0) { this.particle.splice(i, 1); }
+    if(--prt.length <= 0) { 
+      var remv = this.particle.splice(i, 1);
+      if(this.loop) { this.spawn(remv[0].comp, prt.attachment?pos:remv[0].obj.pos, prt.attachment?vel:remv[0].obj.vel); }
+    }
     else {
       if(prt.attachment) { prt.obj.step(pos, vel); }
       else { prt.obj.step(); }
@@ -94,7 +105,10 @@ Effect.prototype.step = function(pos, vel) {
   /* Update Decals */
   for(var i=0;i<this.decal.length;i++) {
     var dcl = this.decal[i];
-    if(--dcl.length <= 0) { this.decal.splice(i, 1); }
+    if(--dcl.length <= 0) { 
+      var remv = this.decal.splice(i, 1);
+      if(this.loop) { this.spawn(remv[0].comp, dcl.attachment?pos:remv[0].obj.pos, dcl.attachment?vel:remv[0].obj.vel); }
+    }
     else {
       if(dcl.attachment) { dcl.obj.step(pos, vel); }
       dcl.update(dcl.obj);
