@@ -7,6 +7,7 @@
 /* global ParticleStun */
 /* global ParticleSmoke */
 /* global ParticleMark */
+/* global ParticleAirJump */
 /* global ParticleBloodSplat */
 /* global Decal */
 
@@ -70,6 +71,10 @@ function PlayerShiek(game, oid, pos, vel) {
     {type: "particle", class: ParticleStun, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 45}
   ], false);
   
+  this.airEffect = new Effect([
+    {type: "particle", class: ParticleAirJump, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: false, delay: 0, length: 30}
+  ], false);
+  
   this.bloodEffect = new Effect([
     {type: "particle", class: ParticleBloodSplat, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 300},
     {type: "decal", class: Decal, params: [this.game, this.game.display.getMaterial("character.player.decal.bloodsplat"), "<vec3 pos>", util.vec3.make(0.0, 0.0, 1.0), 1.5, Math.random()*6.28319], update: function(dcl){}, attachment: false, delay: 0, length: 300}
@@ -83,7 +88,7 @@ function PlayerShiek(game, oid, pos, vel) {
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/death1.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 99}
   ], false);
   
-  this.effects.push(this.attackEffect); this.effects.push(this.chargeEffect); this.effects.push(this.markEffect); this.effects.push(this.noMarkEffect); this.effects.push(this.smokeEffect); this.effects.push(this.tauntEffect); this.effects.push(this.jumpEffect);
+  this.effects.push(this.attackEffect); this.effects.push(this.chargeEffect); this.effects.push(this.markEffect); this.effects.push(this.noMarkEffect); this.effects.push(this.smokeEffect); this.effects.push(this.tauntEffect); this.effects.push(this.jumpEffect); this.effects.push(this.airEffect);
   this.effects.push(this.locationEffect); this.effects.push(this.stunEffect); this.effects.push(this.bloodEffect); this.effects.push(this.impactDeathEffect); this.effects.push(this.fallDeathEffect);
 };
 
@@ -110,6 +115,7 @@ PlayerShiek.prototype.update = function(data) {
   this.name = !name ? undefined : name; 
   for(var i=0;i<effects.length-1;i++) {
     switch(effects[i]) {
+      case "air" : { this.air(); break; } 
       case "jmp" : { this.jump(); break; }
       case "atk" : { this.attack(); break; }
       case "chr" : { this.charge(); break; }
@@ -133,12 +139,15 @@ PlayerShiek.prototype.update = function(data) {
   this.noMarkEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.smokeEffect.step();
   this.locationEffect.step();
+  this.airEffect.step();
   this.jumpEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.tauntEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.stunEffect.step(util.vec2.toVec3(this.pos, 0.75+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.bloodEffect.step(util.vec2.toVec3(this.pos, 0.0+this.height), util.vec2.toVec3(this.vel, 0.0)); //@TODO remove?
 };
 
+
+PlayerShiek.prototype.air  = PlayerObject.prototype.air;
 PlayerShiek.prototype.jump = PlayerObject.prototype.jump;
 PlayerShiek.prototype.stun = function() {
   PlayerObject.prototype.stun.call(this);

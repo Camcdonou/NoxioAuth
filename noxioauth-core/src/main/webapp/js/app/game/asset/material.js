@@ -8,18 +8,27 @@ Asset.prototype.material.object.flag = {};
 Asset.prototype.material.object.bomb = {};
 Asset.prototype.material.ui = {};
 Asset.prototype.material.multi = {};
+Asset.prototype.material.multi.hitbox = {};
 Asset.prototype.material.character = {};
 Asset.prototype.material.character.puff = {};
+Asset.prototype.material.character.puff.ui = {};
 Asset.prototype.material.character.falco = {};
+Asset.prototype.material.character.falco.ui = {};
 Asset.prototype.material.character.falco.effect = {};
 Asset.prototype.material.character.player = {};
+Asset.prototype.material.character.player.ui = {};
 Asset.prototype.material.character.player.decal = {};
 Asset.prototype.material.character.player.effect = {};
 Asset.prototype.material.character.marth = {};
+Asset.prototype.material.character.marth.ui = {};
 Asset.prototype.material.character.marth.effect = {};
+Asset.prototype.material.character.captain = {};
+Asset.prototype.material.character.captain.ui = {};
 Asset.prototype.material.character.shiek = {};
+Asset.prototype.material.character.shiek.ui = {};
 Asset.prototype.material.character.shiek.effect = {};
 Asset.prototype.material.character.inferno = {};
+Asset.prototype.material.character.inferno.ui = {};
 Asset.prototype.material.character.fox = {};
 Asset.prototype.material.character.fox.ui = {};
 Asset.prototype.material.character.fox.decal = {};
@@ -45,28 +54,12 @@ Asset.prototype.material.object.bomb.bomb = {
   texture0: "multi/default",
 };
 
-/* Source File: cs_box.mat */
-Asset.prototype.material.ui.cs_box = {
-  name: "ui.cs_box",
-  shader: "simpletrans",
-  shadow: false,
-  texture0: "ui/cs_box",
-};
-
 /* Source File: flag.mat */
 Asset.prototype.material.ui.flag = {
   name: "ui.flag",
   shader: "simpletrans",
   shadow: false,
   texture0: "ui/flag",
-};
-
-/* Source File: cs_inferno.mat */
-Asset.prototype.material.ui.cs_inferno = {
-  name: "ui.cs_inferno",
-  shader: "simpletrans",
-  shadow: false,
-  texture0: "ui/cs_inferno",
 };
 
 /* Source File: color.mat */
@@ -85,12 +78,12 @@ Asset.prototype.material.ui.calibri = {
   texture0: "ui/calibri",
 };
 
-/* Source File: cs_stub.mat */
-Asset.prototype.material.ui.cs_stub = {
-  name: "ui.cs_stub",
-  shader: "simpletrans",
+/* Source File: hitbox.mat */
+Asset.prototype.material.multi.hitbox.hitbox = {
+  name: "multi.hitbox.hitbox",
+  shader: "effect",
   shadow: false,
-  texture0: "ui/cs_stub",
+  texture0: "multi/default",
 };
 
 /* Source File: post_msaa.mat */
@@ -129,12 +122,28 @@ Asset.prototype.material.multi.post_fxaa = {
   shadow: false,
 };
 
+/* Source File: iconlarge.mat */
+Asset.prototype.material.character.puff.ui.iconlarge = {
+  name: "character.puff.ui.iconlarge",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "character/puff/ui/icon_lg",
+};
+
 /* Source File: puff.mat */
 Asset.prototype.material.character.puff.puff = {
   name: "character.puff.puff",
   shader: "player",
   shadow: true,
   texture0: "multi/default",
+};
+
+/* Source File: iconlarge.mat */
+Asset.prototype.material.character.falco.ui.iconlarge = {
+  name: "character.falco.ui.iconlarge",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "character/falco/ui/icon_lg",
 };
 
 /* Source File: falco.mat */
@@ -152,6 +161,14 @@ Asset.prototype.material.character.falco.effect.charge = {
   shadow: false,
   texture0: "character/falco/effect/chargemask",
   texture1: "character/falco/effect/firecolor",
+};
+
+/* Source File: iconlarge.mat */
+Asset.prototype.material.character.player.ui.iconlarge = {
+  name: "character.player.ui.iconlarge",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "character/player/ui/icon_lg",
 };
 
 /* Source File: targetcircle.mat */
@@ -194,12 +211,28 @@ Asset.prototype.material.character.player.effect.bloodsplash = {
   texture0: "character/player/effect/bloodsplash",
 };
 
+/* Source File: airjump.mat */
+Asset.prototype.material.character.player.effect.airjump = {
+  name: "character.player.effect.airjump",
+  shader: "effect",
+  shadow: false,
+  texture0: "character/player/effect/airjump",
+};
+
 /* Source File: blooddrop.mat */
 Asset.prototype.material.character.player.effect.blooddrop = {
   name: "character.player.effect.blooddrop",
   shader: "particle",
   shadow: false,
   texture0: "character/player/effect/blooddrop",
+};
+
+/* Source File: iconlarge.mat */
+Asset.prototype.material.character.marth.ui.iconlarge = {
+  name: "character.marth.ui.iconlarge",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "character/marth/ui/icon_lg",
 };
 
 /* Source File: marth.mat */
@@ -244,6 +277,30 @@ Asset.prototype.material.character.marth.effect.riposte = {
   texture1: "character/marth/effect/slashgrad",
 };
 
+/* Source File: iconlarge.mat */
+Asset.prototype.material.character.captain.ui.iconlarge = {
+  name: "character.captain.ui.iconlarge",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "character/captain/ui/icon_lg",
+};
+
+/* Source File: captain.mat */
+Asset.prototype.material.character.captain.captain = {
+  name: "character.captain.captain",
+  shader: "player",
+  shadow: true,
+  texture0: "multi/default",
+};
+
+/* Source File: iconlarge.mat */
+Asset.prototype.material.character.shiek.ui.iconlarge = {
+  name: "character.shiek.ui.iconlarge",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "character/shiek/ui/icon_lg",
+};
+
 /* Source File: shiek.mat */
 Asset.prototype.material.character.shiek.shiek = {
   name: "character.shiek.shiek",
@@ -284,12 +341,28 @@ Asset.prototype.material.character.shiek.effect.flash = {
   texture0: "character/shiek/effect/flash",
 };
 
+/* Source File: iconlarge.mat */
+Asset.prototype.material.character.inferno.ui.iconlarge = {
+  name: "character.inferno.ui.iconlarge",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "character/inferno/ui/icon_lg",
+};
+
 /* Source File: inferno.mat */
 Asset.prototype.material.character.inferno.inferno = {
   name: "character.inferno.inferno",
   shader: "player",
   shadow: true,
   texture0: "character/inferno/inferno",
+};
+
+/* Source File: iconlarge.mat */
+Asset.prototype.material.character.fox.ui.iconlarge = {
+  name: "character.fox.ui.iconlarge",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "character/fox/ui/icon_lg",
 };
 
 /* Source File: blipIcon.mat */

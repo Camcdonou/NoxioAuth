@@ -6,7 +6,6 @@
 /* Define Blip Particle System Class */
 function ParticleMark(game, pos, vel) {
   Particle.call(this, game, pos, vel);
-  this.frame = 0;
 }
 
 ParticleMark.prototype.create = function() {
@@ -25,10 +24,7 @@ ParticleMark.prototype.create = function() {
 
 ParticleMark.prototype.pushPart = Particle.prototype.pushPart;
 
-ParticleMark.prototype.step = function(pos, vel) {
-  Particle.prototype.step.call(this, pos, vel);
-  this.frame++;
-};
+ParticleMark.prototype.step = Particle.prototype.step;
 
 ParticleMark.prototype.getDraw = function(geometry, decals, lights, bounds) {
   for(var i=0;i<this.particles.length;i++) {
@@ -37,7 +33,6 @@ ParticleMark.prototype.getDraw = function(geometry, decals, lights, bounds) {
       {name: "transform", data: util.vec3.toArray(part.properties.pos)},
       {name: "scale", data: part.properties.scale},
       {name: "color", data: util.vec4.toArray(part.properties.color)},
-      {name: "frame", data: this.frame},
       {name: "rotation", data: part.properties.angle}
     ];
     geometry.push({model: part.model, material: part.material, uniforms: partUniformData});

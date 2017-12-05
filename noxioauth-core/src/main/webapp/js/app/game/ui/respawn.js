@@ -37,17 +37,17 @@ RespawnUI.prototype.generate = function() {
   var fontMat  = this.game.display.getMaterial("ui.calibri");         // Font material
   var fontName = "Calibri";                                           // Name of this font for text rendering
   var characterMats = [                                               // Materials used for character select icons
-    this.game.display.getMaterial("ui.cs_inferno"),
-    this.game.display.getMaterial("ui.cs_box"),
-    this.game.display.getMaterial("ui.cs_stub"),
-    this.game.display.getMaterial("ui.cs_stub"),
-    this.game.display.getMaterial("ui.cs_stub"),
-    this.game.display.getMaterial("ui.cs_stub"),
-    this.game.display.getMaterial("ui.cs_stub")
+    this.game.display.getMaterial("character.inferno.ui.iconlarge"),
+    this.game.display.getMaterial("character.fox.ui.iconlarge"),
+    this.game.display.getMaterial("character.falco.ui.iconlarge"),
+    this.game.display.getMaterial("character.marth.ui.iconlarge"),
+    this.game.display.getMaterial("character.shiek.ui.iconlarge"),
+    this.game.display.getMaterial("character.puff.ui.iconlarge"),
+    this.game.display.getMaterial("character.captain.ui.iconlarge")
   ];
   var characterIDs = [
     "inf",
-    "box",
+    "fox",
     "flc",
     "mar",
     "shk",

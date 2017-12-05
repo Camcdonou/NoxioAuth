@@ -34,6 +34,14 @@ function PlayerObject(game, oid, pos, vel) {
 
   /* Effects */
   this.targetCircle = new Decal(this.game, this.game.display.getMaterial("character.player.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), util.vec3.make(0.0, 0.0, 1.0), 1.1, 0.0);
+
+  /* Visual Hitboxes */
+  this.hitboxMat = this.game.display.getMaterial("multi.hitbox.hitbox");
+  this.hitboxPos = this.pos;
+  this.hitboxColor = util.vec4.make(1, 0, 0, 0.5);
+  this.hitboxScale = 1;
+  this.hitBoxAngle = 0;
+  this.drawHitbox = undefined;
 };
 
 PlayerObject.prototype.update = function(data) {
@@ -57,6 +65,7 @@ PlayerObject.prototype.update = function(data) {
   this.name = !name ? undefined : name; 
   for(var i=0;i<effects.length-1;i++) {
     switch(effects[i]) {
+      case "air" : { this.air(); break; }
       case "jmp" : { this.jump(); break; }
       case "stn" : { this.stun(); break; }
       default : { break; }
@@ -65,6 +74,10 @@ PlayerObject.prototype.update = function(data) {
   
   /* Step Effects */
   this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1);
+};
+
+PlayerObject.prototype.air = function() {
+  this.airEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, 0.0));
 };
 
 PlayerObject.prototype.jump = function() {
@@ -106,6 +119,16 @@ PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
       this.effects[i].getDraw(geometry, decals, lights, bounds);
     }
     this.targetCircle.getDraw(decals, bounds);
+    if(this.drawHitbox && this.height > -0.5) {
+      var hitboxUniformData = [
+        {name: "transform", data: [this.hitboxPos.x, this.hitboxPos.y, 0.01]},
+        {name: "scale", data: this.hitboxScale},
+        {name: "color", data: util.vec4.toArray(this.hitboxColor)},
+        {name: "rotation", data: this.hitBoxAngle}
+      ];
+      geometry.push({model: this.drawHitbox, material: this.hitboxMat, uniforms: hitboxUniformData});
+      this.drawHitbox = undefined;
+    }
   }
 };
 
