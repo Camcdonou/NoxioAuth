@@ -304,9 +304,10 @@ Asset.prototype.shader.decal_glow = {
     {type: "vec3", name: "dNormal"},
     {type: "float", name: "dSize"},
     {type: "float", name: "dAngle"},
+    {type: "vec4", name: "color"},
   ],
   vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\nattribute vec3 normal;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\n\nvarying vec3 vPos;\n\nvoid main(void) {\n  vPos = position+transform;\n  vec4 cPos = vec4(vPos, 1.0);\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
-  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\n\nvarying vec3 vPos;\n\nuniform vec3 dPos;\nuniform vec3 dNormal;\nuniform float dSize;\nuniform float dAngle;\n\nmat3 rotateZ(float rad) {\n    float c = cos(rad);\n    float s = sin(rad);\n    return mat3(\n        c, s, 0.0,\n        -s, c, 0.0,\n        0.0, 0.0, 1.0\n    );\n}\n\nvoid main(void) {\n  vec3 rPos = dPos-vPos;\n  rPos = rotateZ(dAngle) * rPos;\n  vec3 dUVW = (rPos+vec3(0.5/dSize))*dSize;\n\n  vec4 color=vec4(texture2D(texture0, dUVW.st));\n\n  if(dUVW.s > 0.0 && dUVW.s < 1.0 && dUVW.t > 0.0 && dUVW.t < 1.0 && dUVW.p > 0.0 && dUVW.p < 1.0) { gl_FragColor = color; }\n  else { discard; }\n}\n",
+  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\n\nvarying vec3 vPos;\n\nuniform vec3 dPos;\nuniform vec3 dNormal;\nuniform float dSize;\nuniform float dAngle;\n\nuniform vec4 color;\n\nmat3 rotateZ(float rad) {\n    float c = cos(rad);\n    float s = sin(rad);\n    return mat3(\n        c, s, 0.0,\n        -s, c, 0.0,\n        0.0, 0.0, 1.0\n    );\n}\n\nvoid main(void) {\n  vec3 rPos = dPos-vPos;\n  rPos = rotateZ(dAngle) * rPos;\n  vec3 dUVW = (rPos+vec3(0.5/dSize))*dSize;\n\n  vec4 tex=vec4(texture2D(texture0, dUVW.st));\n\n  if(dUVW.s > 0.0 && dUVW.s < 1.0 && dUVW.t > 0.0 && dUVW.t < 1.0 && dUVW.p > 0.0 && dUVW.p < 1.0) { gl_FragColor = tex*color; }\n  else { discard; }\n}\n",
 };
 
 /* Source File: defaultg */

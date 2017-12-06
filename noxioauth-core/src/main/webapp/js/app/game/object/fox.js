@@ -17,11 +17,12 @@ function PlayerFox(game, oid, pos, vel) {
   
   this.model = this.game.display.getModel("multi.smallBox");
   this.material = this.game.display.getMaterial("character.fox.fox");
+  this.icon = this.game.display.getMaterial("character.fox.ui.iconlarge");
   
   /* Constants */
-  this.BLIP_COOLDOWN_MAX = 30;
-  this.DASH_COOLDOWN_ADD = 30;
-  this.DASH_COOLDOWN_MAX = 60;
+  this.BLIP_POWER_MAX = 30;
+  this.DASH_POWER_ADD = 30;
+  this.DASH_POWER_MAX = 60;
   
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.725;
@@ -80,6 +81,12 @@ function PlayerFox(game, oid, pos, vel) {
   
   this.effects.push(this.blipEffect); this.effects.push(this.dashEffect); this.effects.push(this.tauntEffect); this.effects.push(this.jumpEffect); this.effects.push(this.airEffect);
   this.effects.push(this.stunEffect); this.effects.push(this.bloodEffect); this.effects.push(this.impactDeathEffect); this.effects.push(this.fallDeathEffect);
+  
+  /* UI */
+  this.uiMeters = [
+    {type: "bar", iconMat: this.game.display.getMaterial("character.fox.ui.meterblip"), length: 16, scalar: 1.0},
+    {type: "bar", iconMat: this.game.display.getMaterial("character.fox.ui.meterdash"), length: 14, scalar: 1.0}
+  ];
 };
 
 PlayerFox.prototype.update = function(data) {
@@ -118,7 +125,8 @@ PlayerFox.prototype.update = function(data) {
   if(this.dashCooldown > 0) { this.dashCooldown--; }
   
   /* Step Effects */
-  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1);
+  var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
+  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1, angle);
   this.blipEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.dashEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.airEffect.step();
@@ -126,6 +134,10 @@ PlayerFox.prototype.update = function(data) {
   this.tauntEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.stunEffect.step(util.vec2.toVec3(this.pos, 0.75+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.bloodEffect.step(util.vec2.toVec3(this.pos, 0.0+this.height), util.vec2.toVec3(this.vel, 0.0));
+  
+  /* Update UI */
+  this.uiMeters[0].scalar = 1.0-(this.blipCooldown/this.BLIP_POWER_MAX);
+  this.uiMeters[1].scalar = Math.max(0, 1.0-(this.dashCooldown/this.DASH_POWER_MAX));
 };
 
 PlayerFox.prototype.air  = PlayerObject.prototype.air;
@@ -134,12 +146,12 @@ PlayerFox.prototype.stun = PlayerObject.prototype.stun;
 
 PlayerFox.prototype.blip = function() {
   this.blipEffect.trigger(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
-  this.blipCooldown = this.BLIP_COOLDOWN_MAX;
+  this.blipCooldown = this.BLIP_POWER_MAX;
 };
 
 PlayerFox.prototype.dash = function() {
   this.dashEffect.trigger(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
-  this.dashCooldown += this.DASH_COOLDOWN_ADD;
+  this.dashCooldown += this.DASH_POWER_ADD;
 };
 
 PlayerFox.prototype.taunt = function() {

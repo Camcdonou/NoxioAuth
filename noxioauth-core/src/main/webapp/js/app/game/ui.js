@@ -7,6 +7,7 @@ function GameUI(game) {
   this.elements = [
     new NameUI(this.game, this, "name"),
     new LogUI(this.game, this, "log"),
+    new MeterUI(this.game, this, "meter"),
     new AnnounceUI(this.game, this, "announce"),
     new ScoreUI(this.game, this, "score"),
     new RespawnUI(this.game, this, "respawn"),
@@ -29,6 +30,7 @@ function GameUI(game) {
     name: true,
     objective: true,
     log: true,
+    meter: true,
     announce: true,
     score: false,
     debug: false,
@@ -56,6 +58,7 @@ GameUI.prototype.step = function(imp, state, window) {
     this.name.hide();
     this.objective.hide();
     this.log.hide();
+    this.meter.hide();
     this.announce.hide();
     this.score.hide();
     this.debug.setVisible(this.flags.debug);
@@ -74,6 +77,7 @@ GameUI.prototype.step = function(imp, state, window) {
     this.name.setVisible(this.flags.name);
     this.objective.setVisible(this.flags.objective);
     this.log.setVisible(this.flags.log);
+    this.meter.setVisible(this.flags.meter);
     this.announce.setVisible(this.flags.announce);
     this.score.setVisible(this.flags.score||ded||gam);
     this.debug.setVisible(this.flags.debug);

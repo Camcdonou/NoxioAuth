@@ -18,10 +18,12 @@ function PlayerFalco(game, oid, pos, vel) {
   
   this.model = this.game.display.getModel("multi.smallBox");
   this.material = this.game.display.getMaterial("character.falco.falco");
+  this.icon = this.game.display.getMaterial("character.falco.ui.iconlarge");
   
   /* Constants */
-  this.BLIP_COOLDOWN_MAX = 30;
-  this.DASH_COOLDOWN_MAX = 45;
+  this.BLIP_POWER_MAX = 30;
+  this.DASH_COOLDOWN_LENGTH = 45;
+  this.CHARGE_TIME_LENGTH = 20;
   
   /* Settings */
   this.radius = 0.5; this.weight = 1.1; this.friction = 0.725;
@@ -31,6 +33,7 @@ function PlayerFalco(game, oid, pos, vel) {
   /* State */
 
   /* Timers */
+  this.channelTimer = 0;
   this.blipCooldown = 0;
   this.dashCooldown = 0;
 
@@ -87,6 +90,12 @@ function PlayerFalco(game, oid, pos, vel) {
   this.effects.push(this.blipEffect); this.effects.push(this.dashEffect); this.effects.push(this.tauntEffect); this.effects.push(this.jumpEffect); this.effects.push(this.airEffect);
   this.effects.push(this.stunEffect); this.effects.push(this.bloodEffect); this.effects.push(this.impactDeathEffect); this.effects.push(this.fallDeathEffect);
   this.effects.push(this.chargeEffect);
+  
+  /* UI */
+  this.uiMeters = [
+    {type: "bar", iconMat: this.game.display.getMaterial("character.falco.ui.meterblip"), length: 16, scalar: 1.0},
+    {type: "bar", iconMat: this.game.display.getMaterial("character.falco.ui.meterdash"), length: 14, scalar: 1.0}
+  ];
 };
 
 PlayerFalco.prototype.update = function(data) {
@@ -124,9 +133,11 @@ PlayerFalco.prototype.update = function(data) {
   /* Update Timers */
   if(this.blipCooldown > 0) { this.blipCooldown--; }
   if(this.dashCooldown > 0) { this.dashCooldown--; }
+  if(this.channelTimer > 0) { this.channelTimer--; }
   
   /* Step Effects */
-  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1);
+  var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
+  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1, angle);
   this.blipEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.dashEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.chargeEffect.step(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, 0.0));
@@ -135,6 +146,10 @@ PlayerFalco.prototype.update = function(data) {
   this.tauntEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.stunEffect.step(util.vec2.toVec3(this.pos, 0.75+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.bloodEffect.step(util.vec2.toVec3(this.pos, 0.0+this.height), util.vec2.toVec3(this.vel, 0.0));
+  
+  /* Update UI */
+  this.uiMeters[0].scalar = 1-(this.blipCooldown/this.BLIP_POWER_MAX);
+  this.uiMeters[1].scalar = this.channelTimer>0?(this.channelTimer/this.CHARGE_TIME_LENGTH):(1-(this.dashCooldown/(this.DASH_COOLDOWN_LENGTH-this.CHARGE_TIME_LENGTH)));
 };
 
 PlayerFalco.prototype.air  = PlayerObject.prototype.air;
@@ -142,11 +157,13 @@ PlayerFalco.prototype.jump = PlayerObject.prototype.jump;
 PlayerFalco.prototype.stun = function() {
   PlayerObject.prototype.stun.call(this);
   this.chargeEffect.destroy(); //@TODO: maybe change from 'destroy' to 'clear' or 'stop'
+  this.channelTimer = 0;
+  this.dashCooldown = 0;
 };
 
 PlayerFalco.prototype.blip = function() {
   this.blipEffect.trigger(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
-  this.blipCooldown = this.BLIP_COOLDOWN_MAX;
+  this.blipCooldown = this.BLIP_POWER_MAX;
 };
 
 PlayerFalco.prototype.dash = function() {
@@ -155,7 +172,8 @@ PlayerFalco.prototype.dash = function() {
 
 PlayerFalco.prototype.charge = function() {
   this.chargeEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, 0.0));
-  this.dashCooldown = this.DASH_COOLDOWN_MAX;
+  this.channelTimer = this.CHARGE_TIME_LENGTH;
+  this.dashCooldown = this.DASH_COOLDOWN_LENGTH;
 };
 
 PlayerFalco.prototype.taunt = function() {

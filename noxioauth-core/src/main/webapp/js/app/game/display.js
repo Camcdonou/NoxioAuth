@@ -467,7 +467,8 @@ Display.prototype.draw = function() {
       {name: "dPos", data: [decal.pos.x, decal.pos.y, decal.pos.z]},
       {name: "dNormal", data: [decal.normal.x, decal.normal.y, decal.normal.z]},
       {name: "dSize", data: decal.size},
-      {name: "dAngle", data: decal.angle}
+      {name: "dAngle", data: decal.angle},
+      {name: "color", data: util.vec4.toArray(decal.color)}
     ];
     decal.material.shader.enable(gl);
     decal.material.enable(gl);

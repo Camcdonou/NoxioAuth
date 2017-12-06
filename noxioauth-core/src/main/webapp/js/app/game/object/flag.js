@@ -19,7 +19,7 @@ function FlagObject(game, oid, pos, vel) {
   this.onBase = 1;                 // 1 -> Flag is on flagstand | 0 -> Flag is not on the flag stand and should draw on hud
   this.team = -1;
 
-  this.targetCircle = new Decal(this.game, this.game.display.getMaterial("character.player.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.4, 0.0);
+  this.targetCircle = new ColorDecal(this.game, this.game.display.getMaterial("object.object.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.4, 0.0, util.vec4.make(1,1,1,1));
 };
 
 FlagObject.prototype.update = function(data) {
@@ -38,7 +38,7 @@ FlagObject.prototype.update = function(data) {
   this.onBase = onBase;
   
   /* Step Effects */
-  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 0.4);
+  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 0.4, 0.0);
 };
 
 FlagObject.prototype.setPos = GameObject.prototype.setPos;
@@ -53,6 +53,11 @@ FlagObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
       case  0 : { color = util.vec3.make(0.7539, 0.2421, 0.2421); break; }
       case  1 : { color = util.vec3.make(0.2421, 0.2421, 0.7539); break; }
       default : { color = util.vec3.make(0.5, 0.5, 0.5); break; }
+    }
+    switch(this.team) {
+      case 0  : { this.targetCircle.setColor(util.vec4.make(0.7539, 0.2421, 0.2421, 1)); break; }
+      case 1  : { this.targetCircle.setColor(util.vec4.make(0.2421, 0.2421, 0.7539, 1)); break; }
+      default : { this.targetCircle.setColor(util.vec4.make(1,1,1,1)); break; }
     }
     
     var flagUniformData = [

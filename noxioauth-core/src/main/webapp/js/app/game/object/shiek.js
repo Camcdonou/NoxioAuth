@@ -17,6 +17,7 @@ function PlayerShiek(game, oid, pos, vel) {
   
   this.model = this.game.display.getModel("multi.smallBox");
   this.material = this.game.display.getMaterial("character.shiek.shiek");
+  this.icon = this.game.display.getMaterial("character.shiek.ui.iconlarge");
   
   /* Constants */
   this.FLASH_CHARGE_LENGTH = 10;
@@ -90,6 +91,11 @@ function PlayerShiek(game, oid, pos, vel) {
   
   this.effects.push(this.attackEffect); this.effects.push(this.chargeEffect); this.effects.push(this.markEffect); this.effects.push(this.noMarkEffect); this.effects.push(this.smokeEffect); this.effects.push(this.tauntEffect); this.effects.push(this.jumpEffect); this.effects.push(this.airEffect);
   this.effects.push(this.locationEffect); this.effects.push(this.stunEffect); this.effects.push(this.bloodEffect); this.effects.push(this.impactDeathEffect); this.effects.push(this.fallDeathEffect);
+  
+  /* UI */
+  this.uiMeters = [
+    {type: "bar", iconMat: this.game.display.getMaterial("character.player.ui.meterstub"), length: 8, scalar: 0.0}
+  ];
 };
 
 PlayerShiek.prototype.update = function(data) {
@@ -132,7 +138,8 @@ PlayerShiek.prototype.update = function(data) {
   if(this.chargeTimer > 0) { this.chargeTimer--; }
   
   /* Step Effects */
-  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1);
+  var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
+  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1, angle);
   this.attackEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.chargeEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.markEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
@@ -144,6 +151,9 @@ PlayerShiek.prototype.update = function(data) {
   this.tauntEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.stunEffect.step(util.vec2.toVec3(this.pos, 0.75+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.bloodEffect.step(util.vec2.toVec3(this.pos, 0.0+this.height), util.vec2.toVec3(this.vel, 0.0)); //@TODO remove?
+  
+  /* Update UI */
+  this.uiMeters[0].scalar = this.markLocation?1:0;
 };
 
 

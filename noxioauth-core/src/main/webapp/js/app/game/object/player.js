@@ -2,7 +2,7 @@
 /* global main */
 /* global util */
 /* global GameObject */
-/* global Decal */
+/* global ColorDecal */
 
 /* Define PlayerObject class */
 /* PlayerObject is an abstract class and should never actually be created. 
@@ -33,7 +33,8 @@ function PlayerObject(game, oid, pos, vel) {
   /* Timers */
 
   /* Effects */
-  this.targetCircle = new Decal(this.game, this.game.display.getMaterial("character.player.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), util.vec3.make(0.0, 0.0, 1.0), 1.1, 0.0);
+  var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
+  this.targetCircle = new ColorDecal(this.game, this.game.display.getMaterial("character.player.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), util.vec3.make(0.0, 0.0, 1.0), 1.1, angle, util.vec4.make(1,1,1,1));
 
   /* Visual Hitboxes */
   this.hitboxMat = this.game.display.getMaterial("multi.hitbox.hitbox");
@@ -73,7 +74,8 @@ PlayerObject.prototype.update = function(data) {
   }
   
   /* Step Effects */
-  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1);
+  var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
+  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1, angle);
 };
 
 PlayerObject.prototype.air = function() {
@@ -108,6 +110,11 @@ PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
       case  0 : { color = util.vec3.make(0.7539, 0.2421, 0.2421); break; }
       case  1 : { color = util.vec3.make(0.2421, 0.2421, 0.7539); break; }
       default : { color = util.vec3.make(0.5, 0.5, 0.5); break; }
+    }
+    switch(this.team) {
+      case 0  : { this.targetCircle.setColor(util.vec4.make(0.7539, 0.2421, 0.2421, 1)); break; }
+      case 1  : { this.targetCircle.setColor(util.vec4.make(0.2421, 0.2421, 0.7539, 1)); break; }
+      default : { this.targetCircle.setColor(util.vec4.make(1,1,1,1)); break; }
     }
     
     var playerUniformData = [

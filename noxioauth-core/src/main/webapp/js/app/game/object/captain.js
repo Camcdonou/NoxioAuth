@@ -17,8 +17,14 @@ function PlayerCaptain(game, oid, pos, vel) {
   
   this.model = this.game.display.getModel("multi.smallBox");
   this.material = this.game.display.getMaterial("character.captain.captain");
+  this.icon = this.game.display.getMaterial("character.captain.ui.iconlarge");
   
   /* Constants */
+  this.PUNCH_COOLDOWN_LENGTH = 45;
+  this.PUNCH_CHARGE_LENGTH = 35;
+  this.KICK_COOLDOWN_LENGTH = 45;
+  this.KICK_LENGTH = 12;
+  
   this.PUNCH_HITBOX_SIZE = 0.75;
   this.PUNCH_HITBOX_OFFSET = 0.5;
   
@@ -33,6 +39,10 @@ function PlayerCaptain(game, oid, pos, vel) {
 
   /* Timers */
   this.charging = false;
+  this.chargeTimer = 0;
+  this.punchCooldown = 0;
+  this.kickActive = 0;
+  this.kickCooldown = 0;
 
   /* Effects */
   this.chargeEffect = new Effect([
@@ -83,6 +93,12 @@ function PlayerCaptain(game, oid, pos, vel) {
   
   /* Visual Hitboxes */
   this.hitboxModel = this.game.display.getModel("multi.hitbox.eqtriY");
+  
+  /* UI */
+  this.uiMeters = [
+    {type: "bar", iconMat: this.game.display.getMaterial("character.captain.ui.meterkick"), length: 16, scalar: 1.0},
+    {type: "bar", iconMat: this.game.display.getMaterial("character.captain.ui.meterpunch"), length: 14, scalar: 0.0}
+  ];
 };
 
 PlayerCaptain.prototype.update = function(data) {
@@ -119,15 +135,20 @@ PlayerCaptain.prototype.update = function(data) {
   
   /* Update Timers */
   if(this.charging) {
-  this.hitboxPos = util.vec2.add(this.pos, util.vec2.scale(this.punchDirection, this.PUNCH_HITBOX_OFFSET));
-  this.hitboxColor = util.vec4.make(0, 1, 0, 0.5);
-  this.hitboxScale = this.PUNCH_HITBOX_SIZE;
-  this.hitBoxAngle = (util.vec2.angle(util.vec2.make(1, 0), this.punchDirection)*(this.punchDirection.y>0?-1:1))+(Math.PI*0.5);
-  this.drawHitbox = this.hitboxModel;
+    this.hitboxPos = util.vec2.add(this.pos, util.vec2.scale(this.punchDirection, this.PUNCH_HITBOX_OFFSET));
+    this.hitboxColor = util.vec4.make(0, 1, 0, 0.5);
+    this.hitboxScale = this.PUNCH_HITBOX_SIZE;
+    this.hitBoxAngle = (util.vec2.angle(util.vec2.make(1, 0), this.punchDirection)*(this.punchDirection.y>0?-1:1))+(Math.PI*0.5);
+    this.drawHitbox = this.hitboxModel;
   }
+  if(this.chargeTimer > 0) { this.chargeTimer--; }
+  if(this.punchCooldown > 0) { this.punchCooldown--; }
+  if(this.kickActive > 0) { this.kickActive--; }
+  if(this.kickCooldown > 0) { this.kickCooldown--; }
   
   /* Step Effects */
-  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1);
+  var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
+  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1, angle);
   this.chargeEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.punchEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.kickEffect.step(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
@@ -136,6 +157,10 @@ PlayerCaptain.prototype.update = function(data) {
   this.tauntEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.stunEffect.step(util.vec2.toVec3(this.pos, 0.75+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.bloodEffect.step(util.vec2.toVec3(this.pos, 0.0+this.height), util.vec2.toVec3(this.vel, 0.0));
+  
+  /* Update UI */
+  this.uiMeters[0].scalar = this.kickActive>0?this.kickActive/this.KICK_LENGTH:1-(this.kickCooldown/(this.KICK_COOLDOWN_LENGTH-this.KICK_LENGTH));
+  this.uiMeters[1].scalar = this.chargeTimer>0?1-(this.chargeTimer/this.PUNCH_CHARGE_LENGTH):this.punchCooldown/(this.PUNCH_COOLDOWN_LENGTH-this.PUNCH_CHARGE_LENGTH);
 };
 
 PlayerCaptain.prototype.air  = PlayerObject.prototype.air;
@@ -143,11 +168,17 @@ PlayerCaptain.prototype.jump = PlayerObject.prototype.jump;
 PlayerCaptain.prototype.stun = function() {
   PlayerObject.prototype.stun.call(this);
   this.charging = false;
+  this.chargeTimer = 0;
+  this.punchCooldown = 0;
+  this.kickActive = 0;
+  this.kickCooldown = 0;
 };
 
 PlayerCaptain.prototype.charge = function() {
   this.chargeEffect.trigger(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.charging = true;
+  this.chargeTimer = this.PUNCH_CHARGE_LENGTH;
+  this.punchCooldown = this.PUNCH_COOLDOWN_LENGTH;
   this.punchDirection = this.look;
 };
 
@@ -164,6 +195,8 @@ PlayerCaptain.prototype.punch = function() {
 PlayerCaptain.prototype.kick = function() {
   this.kickEffect.trigger(util.vec2.toVec3(this.pos, 0.5+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.kickDirection = this.look;
+  this.kickActive = this.KICK_LENGTH;
+  this.kickCooldown = this.KICK_COOLDOWN_LENGTH;
 };
 
 PlayerCaptain.prototype.taunt = function() {

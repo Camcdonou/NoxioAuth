@@ -15,6 +15,10 @@ function PlayerInferno(game, oid, pos, vel) {
   
   this.model = this.game.display.getModel("multi.smallBox");
   this.material = this.game.display.getMaterial("character.inferno.inferno");
+  this.icon = this.game.display.getMaterial("character.inferno.ui.iconlarge");
+  
+  /* Constants */
+  this.GEN_COOLDOWN_LENGTH = 10;
   
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.725;
@@ -24,7 +28,8 @@ function PlayerInferno(game, oid, pos, vel) {
   /* State */
 
   /* Timers */
-
+  this.genCooldown = 0;
+  
   /* Effects */
   this.tauntEffect = new Effect([
     {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/inferno/taunt0.wav", "character/inferno/taunt1.wav"], 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33}
@@ -59,6 +64,11 @@ function PlayerInferno(game, oid, pos, vel) {
   this.effects.push(this.tauntEffect); this.effects.push(this.jumpEffect); this.effects.push(this.airEffect);
   this.effects.push(this.stunEffect); this.effects.push(this.bloodEffect);
   this.effects.push(this.impactDeathEffect); this.effects.push(this.fallDeathEffect);
+  
+  /* UI */
+  this.uiMeters = [
+    {type: "bar", iconMat: this.game.display.getMaterial("character.player.ui.meterstub"), length: 16, scalar: 1.0}
+  ];
 };
 
 PlayerInferno.prototype.update = function(data) {
@@ -83,6 +93,7 @@ PlayerInferno.prototype.update = function(data) {
   for(var i=0;i<effects.length-1;i++) {
     switch(effects[i]) {
       case "air" : { this.air(); break; } 
+      case "mov" : { this.ouch(); break; }
       case "jmp" : { this.jump(); break; }
       case "tnt" : { this.taunt(); break; }
       case "stn" : { this.stun(); break; }
@@ -90,13 +101,24 @@ PlayerInferno.prototype.update = function(data) {
     }
   }
   
+  /* Update Timers */
+  if(this.genCooldown > 0) { this.genCooldown--; }
+  
   /* Step Effects */
-  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1);
+  var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
+  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1, angle);
   this.airEffect.step();
   this.jumpEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.tauntEffect.step(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.stunEffect.step(util.vec2.toVec3(this.pos, 0.75+this.height), util.vec2.toVec3(this.vel, 0.0));
   this.bloodEffect.step(util.vec2.toVec3(this.pos, 0.0+this.height), util.vec2.toVec3(this.vel, 0.0));
+  
+  /* Update UI */
+  this.uiMeters[0].scalar = 1.0-(this.genCooldown/this.GEN_COOLDOWN_LENGTH);
+};
+
+PlayerInferno.prototype.ouch = function() {
+  this.genCooldown = this.GEN_COOLDOWN_LENGTH;
 };
 
 PlayerInferno.prototype.taunt = function() {
