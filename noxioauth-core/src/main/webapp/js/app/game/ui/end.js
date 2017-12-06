@@ -29,13 +29,6 @@ EndUI.prototype.generate = function() {
   var colorMat = this.game.display.getMaterial("ui.color");           // Basic color material
   var fontMat  = this.game.display.getMaterial("ui.calibri");         // Font material
   var fontName = "Calibri";                                           // Name of this font for text rendering
-  var characterMats = [                                               // Materials used for character select icons
-    this.game.display.getMaterial("ui.cs_inferno"),
-    this.game.display.getMaterial("ui.cs_box"),
-    this.game.display.getMaterial("ui.cs_stub"),
-    this.game.display.getMaterial("ui.cs_stub"),
-    this.game.display.getMaterial("ui.cs_stub")
-  ];
   
   var black  = util.vec4.make(0.0, 0.0, 0.0, 0.5);
   var white  = util.vec4.make(1.0, 1.0, 1.0, 0.75);
