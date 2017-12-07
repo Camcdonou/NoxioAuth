@@ -9,8 +9,8 @@
 function ObjectiveUI(game, ui, name) {
   GenericUI.call(this, game, ui, name);
   
-  this.FLAG_ICON_FADE_RANG = 2.5;    // Radius to start fading in icon
-  this.FLAG_ICON_FADE_DIST = 1;      // Distance from starting fade to being fully opaque
+  this.ICON_FADE_RANG = 2.5;    // Radius to start fading in icon
+  this.ICON_FADE_DIST = 1;      // Distance from starting fade to being fully opaque
 }
 
 ObjectiveUI.prototype.setVisible = GenericUI.prototype.setVisible;
@@ -27,40 +27,53 @@ ObjectiveUI.prototype.generate = function() {
   var parent = this;
   var colorMat = this.game.display.getMaterial("ui.color");           // Basic color material
   var flagMat = this.game.display.getMaterial("ui.flag");             // Flag icon
+  var kingMat = this.game.display.getMaterial("ui.king");             // King of the Hill icon
+  var ultMat = this.game.display.getMaterial("ui.ultimate");         // Ultimate Lifeform icon
   var fontMat  = this.game.display.getMaterial("ui.calibri");         // Font material
   var fontName = "Calibri";                                           // Name of this font for text rendering
   
   var black  = util.vec4.make(0.0, 0.0, 0.0, 0.5);
   var sred   = util.vec4.make(1.0, 0.0, 0.0, 1.0);
   var sblue  = util.vec4.make(0.0, 0.0, 1.0, 1.0);
+  var swhite = util.vec4.make(1.0, 1.0, 1.0, 1.0);
   
   var container = new UIContainer({x: '+', y: '+'});
   
-  var flags = [];
+  var objectives = [];
   for(var i=0;i<this.game.objects.length;i++) {
     if(this.game.objects[i].getType() === "obj.flag" && this.game.objects[i].onBase === 0 && !this.game.objects[i].hide) {
       var dist = util.vec2.distance(this.game.objects[i].pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
-      var fade = Math.min(Math.max(0, dist-this.FLAG_ICON_FADE_RANG)/this.FLAG_ICON_FADE_DIST, 1);
-      flags.push({team: this.game.objects[i].team, pos: util.vec2.toVec3(this.game.objects[i].pos, this.game.objects[i].height+1.0), fade: fade});
+      var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
+      objectives.push({mat: flagMat, pos: util.vec2.toVec3(this.game.objects[i].pos, this.game.objects[i].height+1.0), team: this.game.objects[i].team, fade: fade, offset: 0});
+    }
+    else if(this.game.objects[i].getType() === "obj.hill" && !this.game.objects[i].hide) {
+      var dist = util.vec2.distance(this.game.objects[i].pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
+      var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
+      objectives.push({mat: kingMat, pos: util.vec2.toVec3(this.game.objects[i].pos, this.game.objects[i].height+1.0), team: -1, fade: fade, offset: 0});
+    }
+    else if(this.game.objects[i].ultimate && !this.game.objects[i].hide) {
+      var dist = util.vec2.distance(this.game.objects[i].pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
+      var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
+      objectives.push({mat: ultMat, pos: util.vec2.toVec3(this.game.objects[i].pos, this.game.objects[i].height+1.0), team: -1, fade: fade, offset: 32});
     }
   }
   
   var s = 32;
   var v = s*0.5;
   
-  for(var i=0;i<flags.length;i++) {
-    var screenCoord = util.matrix.projection(this.game.window, this.game.display.camera, flags[i].pos);
+  for(var i=0;i<objectives.length;i++) {
+    var screenCoord = util.matrix.projection(this.game.window, this.game.display.camera, objectives[i].pos);
     
     var x = (Math.min(0.9, Math.max(0.1, ((screenCoord.x*0.5)+0.5))) * this.game.display.window.width) - (v);
-    var y = (Math.min(0.9, Math.max(0.1, ((screenCoord.y*0.5)+0.5))) * this.game.display.window.height) - (v);
+    var y = (Math.min(0.9, Math.max(0.1, ((screenCoord.y*0.5)+0.5))) * this.game.display.window.height) - (v) + objectives[i].offset;
     
-    var bclr = util.vec4.copy(black); bclr.w *= flags[i].fade;
-    var fclr = util.vec4.copy(flags[i].team===0?sred:sblue); fclr.w *= flags[i].fade;
+    var bclr = util.vec4.copy(black); bclr.w *= objectives[i].fade;
+    var fclr = util.vec4.copy(objectives[i].team===0?sred:(objectives[i].team===1?sblue:swhite)); fclr.w *= objectives[i].fade;
     container.add({
       neutral: {
         block: [
           new GenericUIBlock(util.vec2.make(x,y), util.vec2.make(s,s), bclr, colorMat),
-          new GenericUIBlock(util.vec2.make(x,y), util.vec2.make(s,s), fclr, flagMat)
+          new GenericUIBlock(util.vec2.make(x,y), util.vec2.make(s,s), fclr, objectives[i].mat)
         ],
         text:  []
       },

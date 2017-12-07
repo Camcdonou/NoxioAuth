@@ -97,6 +97,7 @@ PlayerInferno.prototype.update = function(data) {
       case "jmp" : { this.jump(); break; }
       case "tnt" : { this.taunt(); break; }
       case "stn" : { this.stun(); break; }
+      case "ult" : { this.ultimate = true; break; }
       default : { break; }
     }
   }

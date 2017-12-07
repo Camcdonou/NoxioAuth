@@ -18,8 +18,13 @@ function Announcer(game) {
     btd  :: Betrayed   
     btl  :: Betrayl
     dm   :: Deathmatch
+    kh   :: King
+    tkh  :: Team King
+    ulf  :: Ultimate Lifeform
     tdm  :: Team Deathmatch
     ctf  :: Capture the Flag
+    khm  :: Hill Moved
+    hc   :: New Ultimate Lifeform
     bs   :: Blue Team Score
     rs   :: Red Team Score
     bft  :: Blue Team Flag Taken
@@ -30,7 +35,7 @@ function Announcer(game) {
     pf   :: Perfect
     hu   :: Humiliation
     go   :: Game Over
-*/
+  */
 Announcer.prototype.announce = function(code) {
   var parent = this;
   var longShort = function(path, msg, inv) { 
@@ -78,6 +83,9 @@ Announcer.prototype.announce = function(code) {
       break;
     }
     case "dm"  : { longShort("announcer/dm.wav", "Deathmatch", false); break; }
+    case "kh"  : { longShort("announcer/kh.wav", "Deathmatch", false); break; }
+    case "tkh"  : { longShort("announcer/tkh.wav", "Deathmatch", false); break; }
+    case "ulf"  : { longShort("announcer/ulf.wav", "Deathmatch", false); break; }
     case "tdm" : { longShort("announcer/tdm.wav", "Team Deathmatch", false); break; }
     case "ctf" : { longShort("announcer/ctf.wav", "Capture the Flag", false); break; }
     case "kj"  : { longShort("announcer/killjoy.wav", "Killjoy!", true); break; }
@@ -85,6 +93,8 @@ Announcer.prototype.announce = function(code) {
     case "ll" : { longShort("announcer/lostlead.wav"); break; }
     case "btd" : { longShort("announcer/betrayed.wav"); break; }
     case "btl" : { longShort("announcer/betrayal.wav"); break; }
+    case "khm"  : { longShort("announcer/hillmoved.wav", "Hill Moved", false); break; }
+    case "hc"  : { longShort("announcer/newultimate.wav", "You are the Ultimate Lifeform!", true); break; }
     case "rs"  : { longShort("announcer/redscore.wav", "Red Team Scored!", false); break; }
     case "rft" : { longShort("announcer/bluehasflag.wav"); break; }
     case "rfr" : { longShort("announcer/redflagreturn.wav"); break; }

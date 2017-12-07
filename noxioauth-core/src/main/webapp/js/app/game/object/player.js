@@ -28,6 +28,7 @@ function PlayerObject(game, oid, pos, vel) {
   this.fatalImpactSpeed = 0.175;
   
   /* State */
+  this.ultimate = false;
   this.team = -1;
 
   /* Timers */
@@ -69,6 +70,7 @@ PlayerObject.prototype.update = function(data) {
       case "air" : { this.air(); break; }
       case "jmp" : { this.jump(); break; }
       case "stn" : { this.stun(); break; }
+      case "ult" : { this.ultimate = true; break; }
       default : { break; }
     }
   }
@@ -116,6 +118,16 @@ PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
       case 1  : { this.targetCircle.setColor(util.vec4.make(0.2421, 0.2421, 0.7539, 1)); break; }
       default : { this.targetCircle.setColor(util.vec4.make(1,1,1,1)); break; }
     }
+    var rainbow = [
+      util.vec3.make(1.0,0.0,0.0),
+      util.vec3.make(1.0,0.0,1.0),
+      util.vec3.make(0.0,0.0,1.0),
+      util.vec3.make(0.0,1.0,1.0),
+      util.vec3.make(1.0,1.0,0.0),
+      util.vec3.make(1.0,0.0,0.0)
+    ];
+    var ind = Math.floor(this.game.frame/128)%(rainbow.length-1);
+    if(this.ultimate) { color = util.vec3.lerp(rainbow[ind], rainbow[ind+1], (this.game.frame%128)/128); }
     
     var playerUniformData = [
       {name: "transform", data: [this.pos.x, this.pos.y, this.height]},

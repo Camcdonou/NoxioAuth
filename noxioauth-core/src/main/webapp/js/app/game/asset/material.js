@@ -7,6 +7,7 @@ Asset.prototype.material.object = {};
 Asset.prototype.material.object.object = {};
 Asset.prototype.material.object.object.decal = {};
 Asset.prototype.material.object.flag = {};
+Asset.prototype.material.object.hill = {};
 Asset.prototype.material.object.bomb = {};
 Asset.prototype.material.ui = {};
 Asset.prototype.material.multi = {};
@@ -56,6 +57,14 @@ Asset.prototype.material.object.flag.flag = {
   texture0: "multi/default",
 };
 
+/* Source File: hill.mat */
+Asset.prototype.material.object.hill.hill = {
+  name: "object.hill.hill",
+  shader: "hill",
+  shadow: false,
+  texture0: "multi/default",
+};
+
 /* Source File: bomb.mat */
 Asset.prototype.material.object.bomb.bomb = {
   name: "object.bomb.bomb",
@@ -70,6 +79,22 @@ Asset.prototype.material.ui.flag = {
   shader: "simpletrans",
   shadow: false,
   texture0: "ui/flag",
+};
+
+/* Source File: king.mat */
+Asset.prototype.material.ui.king = {
+  name: "ui.king",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "ui/king",
+};
+
+/* Source File: ultimate.mat */
+Asset.prototype.material.ui.ultimate = {
+  name: "ui.ultimate",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "ui/ultimate",
 };
 
 /* Source File: color.mat */

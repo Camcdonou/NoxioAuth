@@ -129,6 +129,7 @@ PlayerCaptain.prototype.update = function(data) {
       case "mov" : { this.kick(); break; }
       case "tnt" : { this.taunt(); break; }
       case "stn" : { this.stun(); break; }
+      case "ult" : { this.ultimate = true; break; }
       default : { break; }
     }
   }

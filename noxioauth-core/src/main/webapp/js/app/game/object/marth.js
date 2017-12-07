@@ -153,6 +153,7 @@ PlayerMarth.prototype.update = function(data) {
       case "rip" : { this.riposte(counterDir); break; }
       case "tnt" : { this.taunt(); break; }
       case "stn" : { this.stun(); break; }
+      case "ult" : { this.ultimate = true; break; }
       default : { break; }
     }
   }

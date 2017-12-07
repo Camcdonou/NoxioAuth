@@ -310,6 +310,26 @@ Asset.prototype.shader.decal_glow = {
   fragment: "precision mediump float;\n\nuniform sampler2D texture0;\n\nvarying vec3 vPos;\n\nuniform vec3 dPos;\nuniform vec3 dNormal;\nuniform float dSize;\nuniform float dAngle;\n\nuniform vec4 color;\n\nmat3 rotateZ(float rad) {\n    float c = cos(rad);\n    float s = sin(rad);\n    return mat3(\n        c, s, 0.0,\n        -s, c, 0.0,\n        0.0, 0.0, 1.0\n    );\n}\n\nvoid main(void) {\n  vec3 rPos = dPos-vPos;\n  rPos = rotateZ(dAngle) * rPos;\n  vec3 dUVW = (rPos+vec3(0.5/dSize))*dSize;\n\n  vec4 tex=vec4(texture2D(texture0, dUVW.st));\n\n  if(dUVW.s > 0.0 && dUVW.s < 1.0 && dUVW.t > 0.0 && dUVW.t < 1.0 && dUVW.p > 0.0 && dUVW.p < 1.0) { gl_FragColor = tex*color; }\n  else { discard; }\n}\n",
 };
 
+/* Source File: hillg */
+Asset.prototype.shader.hill = {
+  name: "hill",
+  attributes: [
+    {type: "vec3", name: "position"},
+    {type: "vec3", name: "texcoord"},
+  ],
+  uniforms: [
+    {type: "mat4", name: "Pmatrix"},
+    {type: "mat4", name: "Vmatrix"},
+    {type: "mat4", name: "Mmatrix"},
+    {type: "vec3", name: "transform"},
+    {type: "vec3", name: "scale"},
+    {type: "sampler2D", name: "texture0"},
+    {type: "vec4", name: "color"},
+  ],
+  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\nuniform vec3 scale;\n\nvarying vec3 vPos;\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4((position*scale)+transform, 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\n\nuniform vec4 color;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 tex = texture2D(texture0, vUV.st)*color;\n  gl_FragColor = tex;\n}\n",
+};
+
 /* Source File: defaultg */
 Asset.prototype.shader.default = {
   name: "default",

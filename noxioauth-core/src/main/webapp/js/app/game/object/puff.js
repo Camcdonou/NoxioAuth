@@ -128,6 +128,7 @@ PlayerPuff.prototype.update = function(data) {
       case "htb" : { this.poundHit(); break; }
       case "tnt" : { this.taunt(); break; }
       case "stn" : { this.stun(); break; }
+      case "ult" : { this.ultimate = true; break; }
       default : { break; }
     }
   }
