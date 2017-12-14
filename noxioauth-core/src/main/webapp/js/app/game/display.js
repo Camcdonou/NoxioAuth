@@ -68,7 +68,7 @@ Display.prototype.setupWebGL = function() {
   var maxUniform = gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS);
   if(maxUniform < 64) { main.menu.error.showError("GLSL returned MAX_VERTEX_UNIFORM_VECTORS as : " + maxUniform); return false; }
   this.PL_UNIFORM_MAX = maxUniform * 0.33; this.LL_UNIFORM_MAX = maxUniform * 0.33;
-  console.log("## GLSL UNIFORM MAX: " + maxUniform); /* @DEBUG */
+  console.log("##DEBUG GLSL UNIFORM MAX: " + maxUniform); /* @DEBUG */
   
   if(!this.createTexture("multi/default")) { return false; }
   
@@ -433,7 +433,6 @@ Display.prototype.draw = function() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);                                                        // Clear Color and Depth from previous draw.
   gl.enable(gl.BLEND);                                                                                        // Enable Transparency 
   this.fbo.shadow.tex.enable(gl, 5);                                                                          // Enable shadow depth texture
-  console.log(EYEPOS  + " || " +  EYEDIR);
   var uniformData = [
     {name: "Pmatrix", data: PROJMATRIX},
     {name: "Vmatrix", data: VIEWMATRIX},
@@ -446,7 +445,7 @@ Display.prototype.draw = function() {
     {name: "eyeCenter", data: EYEPOS},
     {name: "eyeDirection", data: EYEDIR},
     {name: "aLightDirection", data: LIGHTDIR},
-    {name: "shadowTextureSize", data: this.fbo.shadow.width},
+    {name: "shadowTextureSize", data: this.fbo.shadow.fb.width},
     {name: "texture5", data: 5}
   ];
   for(var i=0;i<mapGeomSorted.length;i++) {                                       // Draws world

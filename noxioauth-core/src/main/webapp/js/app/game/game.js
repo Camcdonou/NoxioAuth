@@ -273,13 +273,13 @@ NoxioGame.prototype.doInput = function() {
   if(!pass) {
     /* Client Impulse Input */
     this.display.camera.setZoom(this.input.mouse.spin);
+    if(this.input.mouse.mmb) {
+      var rot = util.vec3.make(this.input.mouse.mov.y*0.002, 0, -this.input.mouse.mov.x*0.003);
+      this.display.camera.addRot(rot);
+    }
     
     /* Client State Input */
     this.ui.flags.score = !!this.input.keyboard.keys[main.settings.control.scoreboard];                                          //~
-    if(this.input.keyboard.keys[37]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: 0.01}); }   //Left @TODO: Camera rotate needs bounds and rebind to mouse
-    if(this.input.keyboard.keys[39]) { this.display.camera.addRot({x: 0.0, y: 0.0, z: -0.01}); }  //Right
-    if(this.input.keyboard.keys[38]) { this.display.camera.addRot({x: 0.01, y: 0.0, z: 0.0}); }   //Up
-    if(this.input.keyboard.keys[40]) { this.display.camera.addRot({x: -0.01, y: 0.0, z: 0.0}); }  //Down
     
     /* Control Check */
     if(obj) {

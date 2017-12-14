@@ -49,10 +49,12 @@ Camera.prototype.setPos = function(pos) {
 
 Camera.prototype.setRot = function(rot) {
   this.interp.rot = rot;
+  this.interp.rot.x = Math.min(-0.01, Math.max(-1.1765659999999967, this.interp.rot.x));
 };
 
 Camera.prototype.addRot = function(rot) {
   this.interp.rot = util.vec3.add(this.interp.rot, rot);
+  this.interp.rot.x = Math.min(-0.01, Math.max(-1.1765659999999967, this.interp.rot.x));
 };
 
 /* Returns worldspace center point of camera and a eye direction normal */

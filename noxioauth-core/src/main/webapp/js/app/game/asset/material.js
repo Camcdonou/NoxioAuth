@@ -188,6 +188,7 @@ Asset.prototype.material.character.puff.puff = {
   shader: "player",
   shadow: true,
   texture0: "multi/default",
+  texture1: "multi/normal",
 };
 
 /* Source File: iconlarge.mat */
@@ -220,6 +221,7 @@ Asset.prototype.material.character.falco.falco = {
   shader: "player",
   shadow: true,
   texture0: "multi/default",
+  texture1: "multi/normal",
 };
 
 /* Source File: charge.mat */
@@ -261,6 +263,7 @@ Asset.prototype.material.character.player.decal.bloodsplat = {
   shader: "decal",
   shadow: false,
   texture0: "character/player/decal/bloodsplat",
+  texture1: "character/player/decal/bloodsplatnormal",
 };
 
 /* Source File: bloodsplatsmall.mat */
@@ -269,6 +272,7 @@ Asset.prototype.material.character.player.decal.bloodsplatsmall = {
   shader: "decal",
   shadow: false,
   texture0: "character/player/decal/bloodsplatsmall",
+  texture1: "character/player/decal/bloodsplatsmallnormal",
 };
 
 /* Source File: star.mat */
@@ -333,6 +337,7 @@ Asset.prototype.material.character.marth.marth = {
   shader: "player",
   shadow: true,
   texture0: "multi/default",
+  texture1: "multi/normal",
 };
 
 /* Source File: shockwave.mat */
@@ -399,6 +404,7 @@ Asset.prototype.material.character.captain.captain = {
   shader: "player",
   shadow: true,
   texture0: "multi/default",
+  texture1: "multi/normal",
 };
 
 /* Source File: iconlarge.mat */
@@ -415,6 +421,7 @@ Asset.prototype.material.character.shiek.shiek = {
   shader: "player",
   shadow: true,
   texture0: "multi/default",
+  texture1: "multi/normal",
 };
 
 /* Source File: shockwave.mat */
@@ -463,6 +470,7 @@ Asset.prototype.material.character.inferno.inferno = {
   shader: "player",
   shadow: true,
   texture0: "character/inferno/inferno",
+  texture1: "multi/normal",
 };
 
 /* Source File: iconlarge.mat */
@@ -495,6 +503,7 @@ Asset.prototype.material.character.fox.fox = {
   shader: "player",
   shadow: true,
   texture0: "multi/default",
+  texture1: "multi/normal",
 };
 
 /* Source File: shockwave.mat */
