@@ -55,6 +55,14 @@ Camera.prototype.addRot = function(rot) {
   this.interp.rot = util.vec3.add(this.interp.rot, rot);
 };
 
+/* Returns worldspace center point of camera and a eye direction normal */
+/* {pos: <vec3>, dir: <vec3>} */
+Camera.prototype.getEye = function() {
+  var ep = util.vec3.add(this.pos, util.vec3.rotate(util.vec3.make(0,0,-this.zoom), this.rot));
+  var ed = util.vec3.normalize(util.vec3.subtract(this.pos, ep));
+  return {pos: ep, dir: ed};
+};
+
 Camera.prototype.getBounds = function(aspect) {
   /* @FIXME inefficent. It should be possible to get 2 opposite corners and calcualte the rest of the polygon. That would be better. */
   var a1 = util.matrix.unprojection({width: 1.0, height: aspect}, this, {x: 0.0, y: 0.0}, 0.0);

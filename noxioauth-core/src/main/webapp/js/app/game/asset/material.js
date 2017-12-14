@@ -134,6 +134,7 @@ Asset.prototype.material.multi.default = {
   shader: "default",
   shadow: true,
   texture0: "multi/default",
+  texture1: "multi/normal",
 };
 
 /* Source File: post.mat */

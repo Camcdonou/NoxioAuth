@@ -174,6 +174,33 @@ util.vec3.lerp = function(a, b, i) {
   return util.vec3.add(util.vec3.scale(a, 1.0-i), util.vec3.scale(b, i));
 };
 
+util.vec3.rotate = function(a, b) {
+  var c = util.vec3.rotateX(a, b.x);
+  c = util.vec3.rotateY(c, b.y);
+  c = util.vec3.rotateZ(c, b.z);
+  return c;
+};
+
+util.vec3.rotateX = function(a, r) {
+    var cosDegrees = Math.cos(r);
+    var sinDegrees = Math.sin(r);
+
+    var y = (a.y * cosDegrees) + (a.z * sinDegrees);
+    var z = (a.y * -sinDegrees) + (a.z * cosDegrees);
+
+    return {x: a.x, y: y, z: z};
+};
+
+util.vec3.rotateY = function(a, r) {
+    var cosDegrees = Math.cos(r);
+    var sinDegrees = Math.sin(r);
+
+    var x = (a.x * cosDegrees) + (a.z * sinDegrees);
+    var z = (a.x * -sinDegrees) + (a.z * cosDegrees);
+
+    return {x: x, y: a.y, z: z};
+};
+
 util.vec3.rotateZ = function(a, r) {
     var cosDegrees = Math.cos(r);
     var sinDegrees = Math.sin(r);

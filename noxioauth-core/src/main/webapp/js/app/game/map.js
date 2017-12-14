@@ -19,7 +19,7 @@ Map.prototype.loadPallete = function(display, tileList) {
   var pallete = [{model: undefined, material: undefined}];
   for(var i=1;i<tileList.length;i++) {
     var model = display.getModel(tileList[i].model);
-    var material = display.getMaterial(tileList[i].material);
+    var material = display.getMaterial("multi.default"); /* DEBUG <tileList[i].material> */
     pallete.push({model: model, material: material});
   }
   return pallete;

@@ -56,6 +56,7 @@ Display.prototype.setupWebGL = function() {
   if(!gl.getExtension('OES_standard_derivatives')) { return false; }
   
   /* @TODO: user settings for upscale/post/shadow/etc */
+  this.shadow = {size: 2048};
   this.upscale = {sky: 1.0, world: 1.0, ui: 1.0};
   
   this.textures = [];
@@ -67,6 +68,7 @@ Display.prototype.setupWebGL = function() {
   var maxUniform = gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS);
   if(maxUniform < 64) { main.menu.error.showError("GLSL returned MAX_VERTEX_UNIFORM_VECTORS as : " + maxUniform); return false; }
   this.PL_UNIFORM_MAX = maxUniform * 0.33; this.LL_UNIFORM_MAX = maxUniform * 0.33;
+  console.log("## GLSL UNIFORM MAX: " + maxUniform); /* @DEBUG */
   
   if(!this.createTexture("multi/default")) { return false; }
   
@@ -78,10 +80,10 @@ Display.prototype.setupWebGL = function() {
   if(!this.createModel(this.game.asset.model.multi.box)) { return false; }
   if(!this.createModel(this.game.asset.model.multi.sheet)) { return false; }
   
-  if(!this.createShadowFramebuffer("shadow", 512)) { return false; }
-  if(!this.createFramebuffer("sky", this.upscale.sky)) { return false; }
-  if(!this.createFramebuffer("world", this.upscale.world)) { return false; }
-  if(!this.createFramebuffer("ui", this.upscale.ui)) { return false; }
+  if(!this.createShadowFramebuffer("shadow", this.shadow.size, 1.0)) { return false; }
+  if(!this.createFramebuffer("sky", 512, this.upscale.sky)) { return false; }
+  if(!this.createFramebuffer("world", 512, this.upscale.world)) { return false; }
+  if(!this.createFramebuffer("ui", 512, this.upscale.ui)) { return false; }
   
   /* @TODO: @DEBUG: Used by js/app/game/ui/debug.js exclusively. */
   var shadowDebug = new Material("~SHADOW_DEBUG_MATERIAL", this.getShader("simpletrans"), {texture0: this.fbo.shadow.tex}, false);
@@ -233,10 +235,8 @@ Display.prototype.createShadowFramebuffer = function(name, size) {
 };
 
 /* Returns true if a framebuffer object is created */
-Display.prototype.createFramebuffer = function(name, upscale) {
+Display.prototype.createFramebuffer = function(name, size, upscale) {
   var gl = this.gl; // Sanity Save
-  
-  var size = 512;
   
   var fb = gl.createFramebuffer();
   gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
@@ -317,9 +317,12 @@ Display.prototype.draw = function() {
     mat4.rotate(DEROTATEMATRIX, DEROTATEMATRIX, this.camera.rot.x, [1.0, 0.0, 0.0]);
     mat4.rotate(DEROTATEMATRIX, DEROTATEMATRIX, this.camera.rot.y, [0.0, 1.0, 0.0]);
     mat4.rotate(DEROTATEMATRIX, DEROTATEMATRIX, this.camera.rot.z, [0.0, 0.0, 1.0]);
+  var eye = this.camera.getEye();
+  var EYEPOS = util.vec3.toArray(eye.pos);
+  var EYEDIR = util.vec3.toArray(eye.dir);
 
   // We basically place the center of the shadow proj on the ground of the map and put the near clip behind us. Allows for easier centering.
-  var SHADOW_MAX_RADIUS = 12.0;                       // After this point everything is shadow. Prevents cheating via hacking camera around.
+  var SHADOW_MAX_RADIUS = 12.0;                       // After this point everything is shadow. Prevents cheating via hacking camera around. (also a const in shaders, so change there as well if you change here)
   var sbnd = SHADOW_MAX_RADIUS+1.0;
   var sclip = (SHADOW_MAX_RADIUS+1.0)*2.0;
   var PROJMATRIX_SHADOW = mat4.create(); mat4.ortho(PROJMATRIX_SHADOW, -sbnd, sbnd,-sbnd, sbnd, -sclip, sclip); /* @FIXME HARDCODED SIZE! NEEDS TO RESIZE TO VIEW FRUSTRUM */
@@ -430,6 +433,7 @@ Display.prototype.draw = function() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);                                                        // Clear Color and Depth from previous draw.
   gl.enable(gl.BLEND);                                                                                        // Enable Transparency 
   this.fbo.shadow.tex.enable(gl, 5);                                                                          // Enable shadow depth texture
+  console.log(EYEPOS  + " || " +  EYEDIR);
   var uniformData = [
     {name: "Pmatrix", data: PROJMATRIX},
     {name: "Vmatrix", data: VIEWMATRIX},
@@ -439,8 +443,10 @@ Display.prototype.draw = function() {
     {name: "PmatrixLight", data: PROJMATRIX_SHADOW},
     {name: "Omatrix", data: OFFSETMATRIX},
     {name: "cameraCenter", data: [-this.camera.pos.x, -this.camera.pos.y]},
-    {name: "sourceDirection", data: LIGHTDIR},
-    {name: "shadowMaxRadius", data: SHADOW_MAX_RADIUS},
+    {name: "eyeCenter", data: EYEPOS},
+    {name: "eyeDirection", data: EYEDIR},
+    {name: "aLightDirection", data: LIGHTDIR},
+    {name: "shadowTextureSize", data: this.fbo.shadow.width},
     {name: "texture5", data: 5}
   ];
   for(var i=0;i<mapGeomSorted.length;i++) {                                       // Draws world
