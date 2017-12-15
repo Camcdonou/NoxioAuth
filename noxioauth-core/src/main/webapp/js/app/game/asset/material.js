@@ -39,6 +39,7 @@ Asset.prototype.material.character.fox.effect = {};
 Asset.prototype.material.sky = {};
 Asset.prototype.material.sky.final = {};
 Asset.prototype.material.map = {};
+Asset.prototype.material.map.tin = {};
 Asset.prototype.material.map.final = {};
 
 /* Source File: targetcircle.mat */
@@ -155,6 +156,13 @@ Asset.prototype.material.multi.shadow = {
 Asset.prototype.material.multi.post_fxaa = {
   name: "multi.post_fxaa",
   shader: "post_fxaa",
+  shadow: false,
+};
+
+/* Source File: debug.mat */
+Asset.prototype.material.multi.debug = {
+  name: "multi.debug",
+  shader: "debug",
   shadow: false,
 };
 
@@ -555,7 +563,60 @@ Asset.prototype.material.sky.final.sky = {
   texture1: "sky/final/lines",
   texture2: "sky/final/multi_space",
   texture3: "sky/final/twink",
-  texture4: "sky/final/multi_difference",
+  texture4: "multi/multi_dif",
+};
+
+/* Source File: metal_rough.mat */
+Asset.prototype.material.map.tin.metal_rough = {
+  name: "map.tin.metal_rough",
+  shader: "tin",
+  shadow: true,
+  texture0: "map/tin/metal_rough",
+  texture1: "map/tin/flat_normal",
+  texture2: "map/tin/edge_color",
+  texture3: "multi/multi_dif",
+};
+
+/* Source File: grid.mat */
+Asset.prototype.material.map.tin.grid = {
+  name: "map.tin.grid",
+  shader: "tin_grid",
+  shadow: true,
+  texture0: "map/tin/grid",
+  texture1: "map/tin/flat_normal",
+  texture2: "map/tin/grid_multi",
+  texture3: "multi/multi_dif",
+  texture4: "map/tin/edge_color",
+};
+
+/* Source File: light.mat */
+Asset.prototype.material.map.tin.light = {
+  name: "map.tin.light",
+  shader: "glow",
+  shadow: true,
+  texture0: "map/tin/light",
+};
+
+/* Source File: metal_dark.mat */
+Asset.prototype.material.map.tin.metal_dark = {
+  name: "map.tin.metal_dark",
+  shader: "tin",
+  shadow: true,
+  texture0: "map/tin/metal_dark",
+  texture1: "map/tin/flat_normal",
+  texture2: "map/tin/edge_color",
+  texture3: "multi/multi_dif",
+};
+
+/* Source File: metal_light.mat */
+Asset.prototype.material.map.tin.metal_light = {
+  name: "map.tin.metal_light",
+  shader: "tin",
+  shadow: true,
+  texture0: "map/tin/metal",
+  texture1: "map/tin/flat_normal",
+  texture2: "map/tin/edge_color",
+  texture3: "multi/multi_dif",
 };
 
 /* Source File: grid.mat */

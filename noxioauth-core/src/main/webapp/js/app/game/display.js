@@ -10,7 +10,7 @@ function Display(game) {
   this.container = this.game.container;   // DOM element containing the canvas
   this.window = this.game.window;         // The canvas we are going to render to
   
-  this.frame = 0;                         // Used by some shaders as a uniform to animate things
+  this.frame = 0;                         // Used by some shaders as a uniform to animate things @TODO: link to this.game.frame counter instead
   this.camera = new Camera();
   
   if(!this.initWebGL()) { this.initFallback(); }
@@ -80,10 +80,10 @@ Display.prototype.setupWebGL = function() {
   if(!this.createModel(this.game.asset.model.multi.box)) { return false; }
   if(!this.createModel(this.game.asset.model.multi.sheet)) { return false; }
   
-  if(!this.createShadowFramebuffer("shadow", this.shadow.size, 1.0)) { return false; }
-  if(!this.createFramebuffer("sky", 512, this.upscale.sky)) { return false; }
-  if(!this.createFramebuffer("world", 512, this.upscale.world)) { return false; }
-  if(!this.createFramebuffer("ui", 512, this.upscale.ui)) { return false; }
+  if(!this.createShadowFramebuffer("shadow", this.shadow.size)) { return false; }
+  if(!this.createFramebuffer("sky", this.upscale.sky)) { return false; }
+  if(!this.createFramebuffer("world", this.upscale.world)) { return false; }
+  if(!this.createFramebuffer("ui", this.upscale.ui)) { return false; }
   
   /* @TODO: @DEBUG: Used by js/app/game/ui/debug.js exclusively. */
   var shadowDebug = new Material("~SHADOW_DEBUG_MATERIAL", this.getShader("simpletrans"), {texture0: this.fbo.shadow.tex}, false);
@@ -235,13 +235,13 @@ Display.prototype.createShadowFramebuffer = function(name, size) {
 };
 
 /* Returns true if a framebuffer object is created */
-Display.prototype.createFramebuffer = function(name, size, upscale) {
+Display.prototype.createFramebuffer = function(name, upscale) {
   var gl = this.gl; // Sanity Save
   
   var fb = gl.createFramebuffer();
   gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
-  fb.width = size;
-  fb.height = size;
+  fb.width = 512;
+  fb.height = 512;
   
   var tex = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -446,6 +446,7 @@ Display.prototype.draw = function() {
     {name: "eyeDirection", data: EYEDIR},
     {name: "aLightDirection", data: LIGHTDIR},
     {name: "shadowTextureSize", data: this.fbo.shadow.fb.width},
+    {name: "frame", data: this.frame},
     {name: "texture5", data: 5}
   ];
   for(var i=0;i<mapGeomSorted.length;i++) {                                       // Draws world
@@ -513,10 +514,6 @@ Display.prototype.draw = function() {
   
   /* === Draw Sky ======================================================================================================== */
   /* ===================================================================================================================== */
-  var blocks = [];
-  var texts = [];
-  this.game.ui.getDraw(blocks, texts, this.game.input.mouse.pos, {x: this.window.width, y: this.window.height}); //Get all UI elements to draw
-  
   gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.sky.fb);                                                    // Enable menu framebuffer
   gl.viewport(0, 0, (this.window.width*this.fbo.sky.upscale), (this.window.height*this.fbo.sky.upscale)); // Resize to canvas
   gl.clearColor(0.0, 0.0, 0.0, 1.0);                                                                      // Transparent Black Background
@@ -663,7 +660,8 @@ Display.prototype.draw = function() {
   gl.enable(gl.DEPTH_TEST);           // Reenable depth testing after post draw
   this.fbo.world.tex.disable(gl, 6);  // Disable world FBO render texture
   this.fbo.ui.tex.disable(gl, 7);     // Disable ui FBO render texture
-
+  this.fbo.sky.tex.enable(gl, 8);     // Disable sky FBO render texture 
+  
   gl.flush();
 };
 
