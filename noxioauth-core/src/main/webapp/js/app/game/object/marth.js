@@ -256,7 +256,9 @@ PlayerMarth.prototype.getDraw = function(geometry, decals, lights, bounds) {
     
     var playerUniformData = [
       {name: "transform", data: [this.pos.x, this.pos.y, this.height]},
-      {name: "color", data: util.vec3.toArray(color)}
+      {name: "color", data: util.vec3.toArray(color)},
+      {name: "rotation", data: 0.0},
+      {name: "scale", data: 1.0}
     ];
     geometry.push({model: this.model, material: this.material, uniforms: playerUniformData});
     for(var i=0;i<this.effects.length;i++) {

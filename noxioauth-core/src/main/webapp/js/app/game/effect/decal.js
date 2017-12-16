@@ -11,6 +11,8 @@ function Decal(game, material, pos, normal, size, angle) {
   this.size = 1.0/size;
   this.angle = angle;
   
+  this.color = util.vec4.make(1,1,1,1);
+  
   this.geometry = this.game.map.getGeometryNear(this.pos, this.size);
 }
 
@@ -21,7 +23,7 @@ Decal.prototype.move = function(pos, size, angle) {
 };
 
 Decal.prototype.getDraw = function(decals, bounds) {
-  decals.push({geometry: this.geometry, material: this.material, pos: this.pos, normal: this.normal, size: this.size, angle: this.angle, color: util.vec4.make(1,1,1,1)});
+  decals.push({geometry: this.geometry, material: this.material, pos: this.pos, normal: this.normal, size: this.size, angle: this.angle, color: this.color});
 };
 
 function ColorDecal(game, material, pos, normal, size, angle, color) {
@@ -34,6 +36,4 @@ ColorDecal.prototype.move = Decal.prototype.move;
 
 ColorDecal.prototype.setColor = function(color) { this.color = color; };
 
-ColorDecal.prototype.getDraw = function(decals, bounds) {
-  decals.push({geometry: this.geometry, material: this.material, pos: this.pos, normal: this.normal, size: this.size, angle: this.angle, color: this.color});
-};
+ColorDecal.prototype.getDraw = Decal.prototype.getDraw;

@@ -4,35 +4,36 @@
 
 function Map(display, data) {
   if(!display.gl) { return; } /* If no GL then no nothing */
-  this.pallete = this.loadPallete(display, data.tileSet);
-  this.doodadPallete = this.loadPallete(display, data.doodadSet);
-    
   this.size = {x: data.bounds[0], y: data.bounds[1]};
+  this.pallete = this.loadPallete(display, data.tileSet);
   this.data = data.map;
+
   this.collision = {floor: data.floor, wall: data.wall};
+  
+  this.doodadPallete = this.loadPallete(display, data.doodadSet);
   this.doodads = data.doodads;
+  
   this.spawns = data.spawns;
 };
 
-/* index 0 is always treated as a blank space. in map files define it as undefined,undefined; */
-Map.prototype.loadPallete = function(display, tileList) {
-  var pallete = [{model: undefined, material: undefined}];
-  for(var i=1;i<tileList.length;i++) {
-    var model = display.getModel(tileList[i].model);
-    var material = display.getMaterial(tileList[i].material);
+/* index 0 is always treated as a blank space. in map files define it as multi.box,multi.default; */
+Map.prototype.loadPallete = function(display, set) {
+  var pallete = [];
+  for(var i=0;i<set.length;i++) {
+    var model = display.getModel(set[i].model);
+    var material = display.getMaterial(set[i].material);
     pallete.push({model: model, material: material});
   }
   return pallete;
 };
 
 Map.prototype.getNearWalls = function(pos, radius) {
-  return this.collision.wall;
+  return this.collision.wall; /* @TODO: implement properly */
 };
 
 Map.prototype.getNearFloors = function(pos, radius) {
-  return this.collision.floor;
+  return this.collision.floor; /* @TODO: implement properly */
 };
-
 
 /* Returns all tile model data within the radius of the given position. Used primarily for collecting geometry for decals to draw on to. */
 Map.prototype.getGeometryNear = function(pos, radius) {
@@ -79,9 +80,20 @@ Map.prototype.getDraw = function(geometry, bounds) {
       if(this.data[j][i] === 0) { continue; }
       if(!util.intersection.pointPoly({x: i, y: j}, bounds)) { continue; }
       var tileUniformData = [
-        {name: "transform", data: [i, j, 0.0]}
+        {name: "transform", data: [i, j, 0.0]},
+        {name: "rotation", data: 0.0},
+        {name: "scale", data: 1.0}
       ];
       geometry.push({model: this.pallete[this.data[j][i]].model, material: this.pallete[this.data[j][i]].material, uniforms: tileUniformData});
     }
+  }
+  for(var i=0;i<this.doodads.length;i++) {
+    if(!util.intersection.pointPoly(this.doodads[i].pos, bounds)) { continue; }
+    var doodadUniformData = [
+      {name: "transform", data: util.vec3.toArray(util.vec3.add(this.doodads[i].pos, util.vec3.make(-0.5, -0.5, 0.0)))},
+      {name: "rotation", data: this.doodads[i].rot},
+      {name: "scale", data: this.doodads[i].scale}
+    ];
+    geometry.push({model: this.doodadPallete[this.doodads[i].index].model, material: this.doodadPallete[this.doodads[i].index].material, uniforms: doodadUniformData});
   }
 };

@@ -474,7 +474,9 @@ Display.prototype.draw = function() {
       {name: "dNormal", data: [decal.normal.x, decal.normal.y, decal.normal.z]},
       {name: "dSize", data: decal.size},
       {name: "dAngle", data: decal.angle},
-      {name: "color", data: util.vec4.toArray(decal.color)}
+      {name: "color", data: util.vec4.toArray(decal.color)},
+      {name: "rotation", data: 0.0},
+      {name: "scale", data: 1.0}      // @TODO: Can't draw decals on rotated/scaled geometry (doodads) because of this
     ];
     decal.material.shader.enable(gl);
     decal.material.enable(gl);
