@@ -37,7 +37,7 @@ HillObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
     var hillUniformData = [
       {name: "transform", data: [this.pos.x, this.pos.y, 0]},
       {name: "scale", data: [this.size.x, this.size.y, 1.0]},
-      {name: "color", data: [1,1,1,0.5]}
+      {name: "color", data: [1,1,1,1]}
     ];
     geometry.push({model: this.model, material: this.material, uniforms: hillUniformData});
   }

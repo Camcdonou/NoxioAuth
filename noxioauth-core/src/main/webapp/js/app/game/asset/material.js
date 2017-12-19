@@ -64,6 +64,7 @@ Asset.prototype.material.object.hill.hill = {
   shader: "hill",
   shadow: false,
   texture0: "multi/default",
+  texture1: "object/hill/gradient",
 };
 
 /* Source File: bomb.mat */
@@ -572,7 +573,7 @@ Asset.prototype.material.map.tin.metal_rough = {
   shader: "tin",
   shadow: true,
   texture0: "map/tin/metal_rough",
-  texture1: "map/tin/flat_normal",
+  texture1: "map/tin/metal_rough_normal",
   texture2: "map/tin/edge_color",
   texture3: "multi/multi_dif",
 };
@@ -584,9 +585,9 @@ Asset.prototype.material.map.tin.grid = {
   shadow: true,
   texture0: "map/tin/grid",
   texture1: "map/tin/flat_normal",
-  texture2: "map/tin/grid_multi",
+  texture2: "map/tin/edge_color",
   texture3: "multi/multi_dif",
-  texture4: "map/tin/edge_color",
+  texture4: "map/tin/grid_multi",
 };
 
 /* Source File: light.mat */

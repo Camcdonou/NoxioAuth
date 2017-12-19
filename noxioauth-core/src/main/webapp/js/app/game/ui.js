@@ -18,6 +18,7 @@ function GameUI(game) {
     new SettingUI(this.game, this, "setting"),
     new AudioUI(this.game, this, "audio"),
     new ControlUI(this.game, this, "control"),
+    new GraphicUI(this.game, this, "graphic"),
     new MainUI(this.game, this, "main")
   ];
   for(var i=0;i<this.elements.length;i++) {
@@ -55,6 +56,7 @@ GameUI.prototype.step = function(imp, state, window) {
     this.setting.setVisible(this.sub === "setting");
     this.audio.setVisible(this.sub === "audio");
     this.control.setVisible(this.sub === "control");
+    this.graphic.setVisible(this.sub === "graphic");
     this.name.hide();
     this.objective.hide();
     this.log.hide();
@@ -74,6 +76,7 @@ GameUI.prototype.step = function(imp, state, window) {
     this.setting.hide();
     this.audio.hide();
     this.control.hide();
+    this.graphic.hide();
     this.name.setVisible(this.flags.name);
     this.objective.setVisible(this.flags.objective);
     this.log.setVisible(this.flags.log);

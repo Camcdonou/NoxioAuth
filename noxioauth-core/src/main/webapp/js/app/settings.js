@@ -14,7 +14,10 @@ Settings.prototype.defaults = function() {
     fx: 0.75
   };
   this.graphics = {
-    
+    upGame: 1.0,
+    upUi: 1.0,
+    upSky: 1.0,
+    shadowSize: 2048
   };
   this.control = {
     enableController: false,

@@ -16,7 +16,7 @@
 function PlayerFalco(game, oid, pos, vel) {
   PlayerObject.call(this, game, oid, pos, vel);
   
-  this.model = this.game.display.getModel("multi.smallBox");
+  this.model = this.game.display.getModel("character.player.player");
   this.material = this.game.display.getMaterial("character.falco.falco");
   this.icon = this.game.display.getMaterial("character.falco.ui.iconlarge");
   

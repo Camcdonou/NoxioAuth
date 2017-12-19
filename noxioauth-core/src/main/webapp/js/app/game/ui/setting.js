@@ -126,7 +126,7 @@ SettingUI.prototype.generate = function() {
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, GRAPHIC)]
     },
     step: protoOnClick,
-    onClick: function() { },
+    onClick: function() { parent.ui.sub = "graphic"; },
     isHovered: false
   });
   

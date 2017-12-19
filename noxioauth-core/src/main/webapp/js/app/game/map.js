@@ -7,6 +7,12 @@ function Map(display, data) {
   this.size = {x: data.bounds[0], y: data.bounds[1]};
   this.pallete = this.loadPallete(display, data.tileSet);
   this.data = data.map;
+  this.CONST_ROT = [
+    0.0,
+    1.5707963268,
+    3.1415926536,
+    4.7123889804
+  ];
 
   this.collision = {floor: data.floor, wall: data.wall};
   
@@ -27,6 +33,13 @@ Map.prototype.loadPallete = function(display, set) {
   return pallete;
 };
 
+Map.prototype.getCameraDefault = function() {
+  for(var i=0;i<this.spawns.length;i++) {
+    if(this.spawns[i].type === "camera") { return this.spawns[i].pos; }
+  }
+  return util.vec2.make(this.size.x*0.5, this.size.y*0.5);
+};
+
 Map.prototype.getNearWalls = function(pos, radius) {
   return this.collision.wall; /* @TODO: implement properly */
 };
@@ -40,12 +53,15 @@ Map.prototype.getGeometryNear = function(pos, radius) {
   var geometry = [];
   for(var j=0;j<this.size.y;j++) {
     for(var i=0;i<this.size.x;i++) {
-      if(this.data[j][i] === 0) { continue; }
+      var dat = this.data[j][i];
+      if(dat.ind === 0) { continue; }
       if(util.vec2.distance(pos, {x: i, y: j}) > radius+1.42) { continue; } // Hypotnuse of tile + radius of decal
       var tileUniformData = [
-        {name: "transform", data: [i, j, 0.0]}
+        {name: "transform", data: [i, j, 0.0]},
+        {name: "rotation", data: this.CONST_ROT[dat.rot]},
+        {name: "scale", data: 1.0}
       ];
-      geometry.push({model: this.pallete[this.data[j][i]].model, material: this.pallete[this.data[j][i]].material, uniforms: tileUniformData});
+      geometry.push({model: this.pallete[dat.ind].model, material: this.pallete[dat.ind].material, uniforms: tileUniformData});
     }
   }
   return geometry;
@@ -77,14 +93,15 @@ Map.prototype.collideVec3 = function(pos, vel) {
 Map.prototype.getDraw = function(geometry, bounds) {
   for(var j=0;j<this.size.y;j++) {
     for(var i=0;i<this.size.x;i++) {
-      if(this.data[j][i] === 0) { continue; }
+      var dat = this.data[j][i];
+      if(dat.ind === 0) { continue; }
       if(!util.intersection.pointPoly({x: i, y: j}, bounds)) { continue; }
       var tileUniformData = [
         {name: "transform", data: [i, j, 0.0]},
-        {name: "rotation", data: 0.0},
+        {name: "rotation", data: this.CONST_ROT[dat.rot]},
         {name: "scale", data: 1.0}
       ];
-      geometry.push({model: this.pallete[this.data[j][i]].model, material: this.pallete[this.data[j][i]].material, uniforms: tileUniformData});
+      geometry.push({model: this.pallete[dat.ind].model, material: this.pallete[dat.ind].material, uniforms: tileUniformData});
     }
   }
   for(var i=0;i<this.doodads.length;i++) {

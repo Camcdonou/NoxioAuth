@@ -33,6 +33,11 @@ function NoxioGame(name, settings, map) {
   this.loadCache(map.cache);
   this.loadMap(map);
   
+  /* Set camera to the default camera specatate spot */
+  var cdef = this.map.getCameraDefault("camera");
+  this.display.camera.setPos(util.vec2.toVec3(util.vec2.inverse(cdef), 0.0));
+  this.display.camera.immediate();
+  
   this.respawnTimer = 0;
   
   this.gameOver = false;

@@ -56,8 +56,8 @@ Display.prototype.setupWebGL = function() {
   if(!gl.getExtension('OES_standard_derivatives')) { return false; }
   
   /* @TODO: user settings for upscale/post/shadow/etc */
-  this.shadow = {size: 2048};
-  this.upscale = {sky: 1.0, world: 1.0, ui: 1.0};
+  this.shadow = {size: main.settings.graphics.shadowSize};
+  this.upscale = {sky: main.settings.graphics.upSky, world: main.settings.graphics.upGame, ui: main.settings.graphics.upUi};
   
   this.textures = [];
   this.shaders = [];
@@ -86,8 +86,8 @@ Display.prototype.setupWebGL = function() {
   if(!this.createFramebuffer("ui", this.upscale.ui)) { return false; }
   
   /* @TODO: @DEBUG: Used by js/app/game/ui/debug.js exclusively. */
-  var shadowDebug = new Material("~SHADOW_DEBUG_MATERIAL", this.getShader("simpletrans"), {texture0: this.fbo.shadow.tex}, false);
-  this.materials.push(shadowDebug);
+  this.shadowDebugMat = new Material("~SHADOW_DEBUG_MATERIAL", this.getShader("simpletrans"), {texture0: this.fbo.shadow.tex}, false);
+  this.materials.push(this.shadowDebugMat);
   /* ----------------------------------------------------      */
   
   return true;
@@ -474,9 +474,7 @@ Display.prototype.draw = function() {
       {name: "dNormal", data: [decal.normal.x, decal.normal.y, decal.normal.z]},
       {name: "dSize", data: decal.size},
       {name: "dAngle", data: decal.angle},
-      {name: "color", data: util.vec4.toArray(decal.color)},
-      {name: "rotation", data: 0.0},
-      {name: "scale", data: 1.0}      // @TODO: Can't draw decals on rotated/scaled geometry (doodads) because of this
+      {name: "color", data: util.vec4.toArray(decal.color)}
     ];
     decal.material.shader.enable(gl);
     decal.material.enable(gl);
@@ -693,6 +691,13 @@ Display.prototype.sortGeometry = function(geometry) {
     }
     materialGroup.draws.push({model: geom.model, uniforms: geom.uniforms});
   }
+  for(var i=0,j=0;j<geomSorted.length;i++,j++) {
+    if(!geomSorted[i].materials[0].material.castShadow) {
+      var spl = geomSorted.splice(i, 1)[0];
+      geomSorted.push(spl);
+      i--;
+    }
+  }
   return geomSorted;
 };
 
@@ -773,6 +778,27 @@ Display.prototype.getModel = function(name) {
   
   main.menu.warning.show("Failed to load model: '" + name + "'");
   return this.getModel("multi.box");
+};
+
+/* Called when graphics settings are changed and we need to adjust to the new settings. */
+Display.prototype.settingsChanged = function() {
+  if(!this.gl) { return; }
+  var gl = this.gl; // Sanity Save
+  
+  this.fbo.world.upscale = main.settings.graphics.upGame;
+  this.fbo.ui.upscale = main.settings.graphics.upUi;
+  this.fbo.sky.upscale = main.settings.graphics.upSky;
+  if(main.settings.graphics.shadowSize !== this.fbo.shadow.fb.width) {
+    this.shadow.size = main.settings.graphics.shadowSize;
+    var deleteFBO = function(fbo) {
+      gl.deleteFramebuffer(fbo.fb);
+      gl.deleteRenderbuffer(fbo.rb);
+      gl.deleteTexture(fbo.tex.glTexture);
+    };
+    deleteFBO(this.fbo.shadow);
+    this.createShadowFramebuffer("shadow", this.shadow.size);
+    this.shadowDebugMat.texture = {texture0: this.fbo.shadow.tex};
+  }
 };
 
 Display.prototype.destroy = function() {
