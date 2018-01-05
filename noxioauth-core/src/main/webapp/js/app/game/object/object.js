@@ -57,6 +57,4 @@ GameObject.prototype.destroy = function() {
   
 };
 
-GameObject.prototype.getType = function() {
-  return "obj";
-};
+GameObject.prototype.type = function() { return "nul"; };

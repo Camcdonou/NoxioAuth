@@ -184,7 +184,7 @@ NoxioGame.prototype.doUpdate = function(packet) {
   
   /* Step world effects */
   for(var i=0;i<this.effects.length;i++) {
-    if(this.effects[i].effect.active()) { this.effects[i].effect.step(util.vec2.toVec3(this.effects[i].pos, 0.0), {x: 0.0, y: 0.0, z: 0.0}); }
+    if(this.effects[i].effect.active()) { this.effects[i].effect.step(this.effects[i].pos, this.effects[i].vel); }
     else { this.effects.splice(i--, 1); }
   }
   
@@ -204,7 +204,6 @@ NoxioGame.prototype.update = function(tick) {
   this.lastDelta = util.time.now();           // Update last delta first to avoid small time offsets
   
   /* === DEBUG BLOCK START ==================== */
-  var now = util.time.now();
   var ping = 1337;
   
   this.debug.ping.pop();
@@ -229,10 +228,7 @@ NoxioGame.prototype.update = function(tick) {
   this.debug.pAvg = pAvg/this.debug.ss;
   /* === DEBUG BLOCK END ==================== */
   
-  /* === DEBUG BLOCK START ==================== */
-  this.debug.ctime.pop();
-  this.debug.ctime.unshift(util.time.now() - now);
-  
+  /* === DEBUG BLOCK START ==================== */  
   this.ui.debug.setText(
     "WHO[ " + main.net.user + "@" + main.net.game.state.info.name + "@" + main.net.game.info.name + " ]\n-\n" +
     "S[ " + (this.debug.sAvg).toFixed(2) + "ms ] C[ " + (this.debug.cAvg).toFixed(2) + "ms ] D[ " + (this.debug.dAvg).toFixed(2) + "ms ]\n-\n" +
@@ -354,7 +350,8 @@ NoxioGame.prototype.deleteObject = function(oid) {
     if(this.objects[i].oid === oid) {
       this.objects[i].destroy();
       for(var j=0;this.objects[i].effects&&j<this.objects[i].effects.length;j++) {
-        if(this.objects[i].effects[j].active()) { this.effects.push({pos: this.objects[i].pos, radius: this.objects[i].cullRadius, effect: this.objects[i].effects[j]}); }
+        if(this.objects[i].effects[j].effect.active()) {
+          this.effects.push({pos: util.vec3.add(util.vec2.toVec3(this.objects[i].pos, this.objects[i].height), this.objects[i].effects[j].offset), vel: util.vec2.toVec3(this.objects[i].vel, this.objects[i].vspeed), radius: this.objects[i].cullRadius, effect: this.objects[i].effects[j].effect}); }
       }
       this.objects.splice(i, 1);
       return true;
@@ -364,37 +361,44 @@ NoxioGame.prototype.deleteObject = function(oid) {
 };
 
 NoxioGame.prototype.draw = function() {
-  var start = util.time.now();
-  var now = start;
+  var now = util.time.now();
   
   if((now - this.deltaFDLC) / this.SERVER_TICK_RATE > 0.75) {
     this.delta = now;
-    
+                  /* DEBUG CTIME START */
+                  /* */ var start = util.time.now();
+                  /* DEBUG CTIME END */
     /* Attempt to stay at the FDLC_TARGET but always use a frame if we have one no matter what. */
     var initial = true;
     while(this.packetFDLC.length > this.FDLC_TARGET || (initial && this.packetFDLC.length > 0)) {
         var packet = this.packetFDLC.shift();
         this.doUpdate(packet);
-        if(this.ready && this.serverReady) {  // Don't draw or play sound until game is fully loaded
-          this.display.draw();                // Draw game
-          this.sound.update();                // Update 3d audio center                               
-        }
         initial = false;
+    }
+                  /* DEBUG CTIME START */
+                  /* */ this.debug.ctime.pop();
+                  /* */ this.debug.ctime.unshift(util.time.now() - start);
+                  /* DEBUG CTIME END */
+    if(this.ready && this.serverReady) {  // Don't draw or play sound until game is fully loaded
+                  /* DEBUG FPS START */
+                  /* */ var start = util.time.now();
+                  /* DEBUG FPS END */
+      this.display.draw();                // Draw game
+      this.sound.update();                // Update 3d audio center            
+                  /* DEBUG FPS START */
+                  /* */ var finish = util.time.now();
+                  /* */ this.debug.frames.pop();
+                  /* */ this.debug.dtime.pop();
+                  /* */ this.debug.frames.unshift(finish);
+                  /* */ this.debug.dtime.unshift(finish - start);
+                  /* DEBUG FPS END */
     }
     if(!this.ready || !this.serverReady) {
       this.loading();                     // Update loading screen
     }
     this.deltaFDLC = util.time.now();
   }
-
-  /* DEBUG FPS STUFF */
-  var finish = util.time.now();
-  this.debug.frames.pop();
-  this.debug.dtime.pop();
-  this.debug.frames.unshift(finish);
-  this.debug.dtime.unshift(finish - start);
   
-    
   this.nextFrame = this.requestAnimFrameFunc.call(window, function() { if(main.inGame()) { main.game.draw(); }}); // Javascript 🙄
 };
 

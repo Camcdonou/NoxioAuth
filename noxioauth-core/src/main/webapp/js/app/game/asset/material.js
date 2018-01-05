@@ -15,6 +15,7 @@ Asset.prototype.material.multi.hitbox = {};
 Asset.prototype.material.character = {};
 Asset.prototype.material.character.puff = {};
 Asset.prototype.material.character.puff.ui = {};
+Asset.prototype.material.character.puff.effect = {};
 Asset.prototype.material.character.falco = {};
 Asset.prototype.material.character.falco.ui = {};
 Asset.prototype.material.character.falco.effect = {};
@@ -56,6 +57,7 @@ Asset.prototype.material.object.flag.flag = {
   shader: "player",
   shadow: true,
   texture0: "multi/default",
+  texture1: "multi/normal",
 };
 
 /* Source File: hill.mat */
@@ -73,6 +75,7 @@ Asset.prototype.material.object.bomb.bomb = {
   shader: "player",
   shadow: true,
   texture0: "multi/default",
+  texture1: "multi/normal",
 };
 
 /* Source File: flag.mat */
@@ -120,7 +123,7 @@ Asset.prototype.material.multi.hitbox.hitbox = {
   name: "multi.hitbox.hitbox",
   shader: "effect",
   shadow: false,
-  texture0: "multi/default",
+  texture0: "multi/hitbox/hitbox",
 };
 
 /* Source File: post_msaa.mat */
@@ -198,6 +201,14 @@ Asset.prototype.material.character.puff.puff = {
   shadow: true,
   texture0: "multi/default",
   texture1: "multi/normal",
+};
+
+/* Source File: sleep.mat */
+Asset.prototype.material.character.puff.effect.sleep = {
+  name: "character.puff.effect.sleep",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/puff/effect/z",
 };
 
 /* Source File: iconlarge.mat */
@@ -431,6 +442,14 @@ Asset.prototype.material.character.shiek.shiek = {
   shadow: true,
   texture0: "multi/default",
   texture1: "multi/normal",
+};
+
+/* Source File: explode.mat */
+Asset.prototype.material.character.shiek.effect.explode = {
+  name: "character.shiek.effect.explode",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/shiek/effect/tempexplode",
 };
 
 /* Source File: shockwave.mat */

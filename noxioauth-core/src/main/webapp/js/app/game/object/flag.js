@@ -9,13 +9,12 @@ function FlagObject(game, oid, pos, vel) {
   
   this.model = this.game.display.getModel("object.flag.flag");
   this.material = this.game.display.getMaterial("object.flag.flag");
-  
-  this.RADIUS = 0.1;               // Collision radius
-  this.CULL_RADIUS = 2.0;          // Radius at which to cull this object and all of it's effects.
-  this.FRICTION = 0.725;           // Friction Scalar
-  this.AIR_DRAG = 0.98;            // Friction Scalar
-  this.FATAL_IMPACT_SPEED = 0.175; // Savaged by a wall
 
+  /* Settings */
+  this.radius = 0.1; this.friction = 0.725;
+  this.cullRadius = 3.0;
+
+  /* State */
   this.onBase = 1;                 // 1 -> Flag is on flagstand | 0 -> Flag is not on the flag stand and should draw on hud
   this.team = -1;
 
@@ -46,7 +45,7 @@ FlagObject.prototype.setVel = GameObject.prototype.setVel;
 FlagObject.prototype.setHeight = GameObject.prototype.setHeight;
 
 FlagObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
-  var exbounds = util.matrix.expandPolygon(bounds, this.CULL_RADIUS);
+  var exbounds = util.matrix.expandPolygon(bounds, this.cullRadius);
   if(util.intersection.pointPoly(this.pos, exbounds)) {
     var color;
     switch(this.team) {
@@ -68,7 +67,7 @@ FlagObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
     ];
     geometry.push({model: this.model, material: this.material, uniforms: flagUniformData});
     for(var i=0;i<this.effects.length;i++) {
-      this.effects[i].getDraw(geometry, decals, lights, bounds);
+      this.effects[i].effect.getDraw(geometry, decals, lights, bounds);
     }
     this.targetCircle.getDraw(decals, bounds);
   }
@@ -80,6 +79,4 @@ FlagObject.prototype.destroy = function() {
   }
 };
 
-FlagObject.prototype.getType = function() {
-  return "obj.flag";
-};
+FlagObject.prototype.type = function() { return "flg"; };

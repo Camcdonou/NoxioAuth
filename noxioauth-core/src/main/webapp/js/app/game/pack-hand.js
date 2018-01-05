@@ -44,19 +44,16 @@ PackHand.prototype.createObject = function(data) {
   if(obj !== undefined) { main.menu.warning.show("Desync: Tried to create OBJ that already exists '" + oid + "::" + type + "'."); return; } 
   
   switch(type) {
-    case "obj" : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for abstract type '" + type + "'.", JSON.stringify(data)); main.close(); break; }
-    case "obj.mobile" : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for abstract type '" + type + "'.", JSON.stringify(data)); main.close(); break; }
-    case "obj.mobile.player" : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for abstract type '" + type + "'.", JSON.stringify(data)); main.close(); }
-    case "obj.mobile.player.inferno" : { this.game.objects.push(new PlayerInferno(this.game, oid, pos, vel)); break; }
-    case "obj.mobile.player.fox" : { this.game.objects.push(new PlayerFox(this.game, oid, pos, vel)); break; }
-    case "obj.mobile.player.falco" : { this.game.objects.push(new PlayerFalco(this.game, oid, pos, vel)); break; }
-    case "obj.mobile.player.marth" : { this.game.objects.push(new PlayerMarth(this.game, oid, pos, vel)); break; }
-    case "obj.mobile.player.shiek" : { this.game.objects.push(new PlayerShiek(this.game, oid, pos, vel)); break; }
-    case "obj.mobile.player.puff" : { this.game.objects.push(new PlayerPuff(this.game, oid, pos, vel)); break; }
-    case "obj.mobile.player.captain" : { this.game.objects.push(new PlayerCaptain(this.game, oid, pos, vel)); break; }
-    case "obj.mobile.flag" : { this.game.objects.push(new FlagObject(this.game, oid, pos, vel)); break; }
-    case "obj.hill" : { this.game.objects.push(new HillObject(this.game, oid, pos, vel)); break; }
-    case "obj.mobile.bomb" : { this.game.objects.push(new BombObject(this.game, oid, pos, vel)); break; }
+    case "inf" : { this.game.objects.push(new PlayerInferno(this.game, oid, pos, vel)); break; }
+    case "fox" : { this.game.objects.push(new PlayerFox(this.game, oid, pos, vel)); break; }
+    case "flc" : { this.game.objects.push(new PlayerFalco(this.game, oid, pos, vel)); break; }
+    case "mar" : { this.game.objects.push(new PlayerMarth(this.game, oid, pos, vel)); break; }
+    case "shk" : { this.game.objects.push(new PlayerShiek(this.game, oid, pos, vel)); break; }
+    case "puf" : { this.game.objects.push(new PlayerPuff(this.game, oid, pos, vel)); break; }
+    case "cap" : { this.game.objects.push(new PlayerCaptain(this.game, oid, pos, vel)); break; }
+    case "flg" : { this.game.objects.push(new FlagObject(this.game, oid, pos, vel)); break; }
+    case "hil" : { this.game.objects.push(new HillObject(this.game, oid, pos, vel)); break; }
+    case "bmb" : { this.game.objects.push(new BombObject(this.game, oid, pos, vel)); break; }
     default : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for '" + type + "' which does not exist.", JSON.stringify(data)); main.close(); break; }
   }
 };

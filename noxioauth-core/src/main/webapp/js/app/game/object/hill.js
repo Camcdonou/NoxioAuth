@@ -10,10 +10,11 @@ function HillObject(game, oid, pos, vel) {
   this.model = this.game.display.getModel("object.hill.hill");
   this.material = this.game.display.getMaterial("object.hill.hill");
   
+  /* Settings */
+  this.cullRadius = 7.0;          // Radius at which to cull this object and all of it's effects.
+  
+  /* State */
   this.size = util.vec2.make(1, 1);
-  
-  this.CULL_RADIUS = 7.0;          // Radius at which to cull this object and all of it's effects.
-  
   this.team = -1;
 };
 
@@ -32,7 +33,7 @@ HillObject.prototype.setVel = GameObject.prototype.setVel;
 HillObject.prototype.setHeight = GameObject.prototype.setHeight;
 
 HillObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
-  var exbounds = util.matrix.expandPolygon(bounds, this.CULL_RADIUS);
+  var exbounds = util.matrix.expandPolygon(bounds, this.cullRadius);
   if(util.intersection.pointPoly(this.pos, exbounds)) {
     var hillUniformData = [
       {name: "transform", data: [this.pos.x, this.pos.y, 0]},
@@ -47,6 +48,4 @@ HillObject.prototype.destroy = function() {
   
 };
 
-HillObject.prototype.getType = function() {
-  return "obj.hill";
-};
+HillObject.prototype.type = function() { return "hil"; };

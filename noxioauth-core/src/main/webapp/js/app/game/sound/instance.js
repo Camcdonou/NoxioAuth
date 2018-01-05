@@ -104,6 +104,11 @@ SpatialSoundInstance.prototype.position = function(pos) {
 };
 
 SpatialSoundInstance.prototype.volume = SoundInstance.prototype.volume;
-SpatialSoundInstance.prototype.play = SoundInstance.prototype.play;
+SpatialSoundInstance.prototype.play = function(pos) {
+  this.position(pos);
+  if(this.ready && !this.played) { this.source.start(0); this.playing = true; }
+  else if(this.played) { main.menu.warning.show("Attempted to replay sound instance: '" + this.path + "'"); }
+  this.played = true;
+};
 SpatialSoundInstance.prototype.stop = SoundInstance.prototype.stop;
 SpatialSoundInstance.prototype.loop = SoundInstance.prototype.loop;

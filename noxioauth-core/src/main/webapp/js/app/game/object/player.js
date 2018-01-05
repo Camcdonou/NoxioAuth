@@ -2,7 +2,10 @@
 /* global main */
 /* global util */
 /* global GameObject */
+/* global Decal */
 /* global ColorDecal */
+/* global ParticleAirJump */
+/* global ParticleBloodSplat */
 
 /* Define PlayerObject class */
 /* PlayerObject is an abstract class and should never actually be created. 
@@ -25,15 +28,32 @@ function PlayerObject(game, oid, pos, vel) {
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.725;
   this.moveSpeed = 0.0375; this.jumpHeight = 0.175; this.cullRadius = 1.0;
-  this.fatalImpactSpeed = 0.175;
   
   /* State */
-  this.ultimate = false;
+  this.glow = 0.0;          // Scalar from 0 to 1, used to shift color to white for things like marths counter
+  this.ultimate = false;    // Super glowy woo
   this.team = -1;
 
   /* Timers */
 
   /* Effects */
+  this.airEffect = {
+    effect: new Effect([
+      {type: "particle", class: ParticleAirJump, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: false, delay: 0, length: 30}
+    ], false),
+    offset: util.vec3.make(0,0,0),
+    trigger: PlayerObject.prototype.effectTrigger};
+  this.effects.push(this.airEffect);
+  
+  this.bloodEffect = {
+    effect: new Effect([
+      {type: "particle", class: ParticleBloodSplat, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: false, delay: 0, length: 300},
+      {type: "decal", class: Decal, params: [this.game, this.game.display.getMaterial("character.player.decal.bloodsplat"), "<vec3 pos>", util.vec3.make(0.0, 0.0, 1.0), 1.5, Math.random()*6.28319], update: function(dcl){}, attachment: false, delay: 0, length: 300}
+    ], false),
+    offset: util.vec3.make(0,0,0.25),
+    trigger: PlayerObject.prototype.effectTrigger};
+  this.effects.push(this.bloodEffect);
+  
   var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
   this.targetCircle = new ColorDecal(this.game, this.game.display.getMaterial("character.player.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), util.vec3.make(0.0, 0.0, 1.0), 1.1, angle, util.vec4.make(1,1,1,1));
 
@@ -46,8 +66,29 @@ function PlayerObject(game, oid, pos, vel) {
   this.drawHitbox = undefined;
 };
 
+PlayerObject.prototype.effectTrigger = function(pos, vel) {
+  this.effect.trigger(util.vec3.add(this.offset, pos), vel);
+};
+
 PlayerObject.prototype.update = function(data) {
-  /* Apply update data to game */
+  /* Apply update data to object */
+  this.parseUpd(data);
+  
+  /* Timers */
+  this.timers();
+  
+  /* Step Effects */
+  var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
+  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1, angle);
+  for(var i=0;i<this.effects.length;i++) {
+    this.effects[i].effect.step(util.vec3.add(this.effects[i].offset, util.vec2.toVec3(this.pos, this.height)), util.vec2.toVec3(this.vel, this.vspeed));
+  }
+  
+  /* UI */
+  this.ui();
+};
+
+PlayerObject.prototype.parseUpd = function(data) {
   var team = parseInt(data.shift());
   var pos = util.vec2.parse(data.shift());
   var vel = util.vec2.parse(data.shift());
@@ -64,32 +105,35 @@ PlayerObject.prototype.update = function(data) {
   this.setHeight(height, vspeed);
   this.setLook(look);
   this.setSpeed(speed);
-  this.name = !name ? undefined : name; 
+  this.name = !name ? undefined : name;
   for(var i=0;i<effects.length-1;i++) {
-    switch(effects[i]) {
-      case "air" : { this.air(); break; }
-      case "jmp" : { this.jump(); break; }
-      case "stn" : { this.stun(); break; }
-      case "ult" : { this.ultimate = true; break; }
-      default : { break; }
-    }
+    this.effectSwitch(effects[i]);
   }
-  
-  /* Step Effects */
-  var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
-  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1, angle);
 };
 
+PlayerObject.prototype.effectSwitch = function(e) {
+  switch(e) {
+    case "air" : { this.air(); break; }
+    case "jmp" : { this.jump(); break; }
+    case "stn" : { this.stun(); break; }
+    case "ult" : { this.ultimate = true; break; }
+    default : { main.menu.warning.show("Invalid effect value: '" + e + "' @ Player.js :: effectSwitch()"); break; }
+  }
+};
+
+PlayerObject.prototype.timers = function() { /* Override me daddy~ */ };
+PlayerObject.prototype.ui = function() { /* Me too daddy~ */ };
+
 PlayerObject.prototype.air = function() {
-  this.airEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, 0.0));
+  this.airEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
 };
 
 PlayerObject.prototype.jump = function() {
-  this.jumpEffect.trigger(util.vec2.toVec3(this.pos, 0.25+this.height), util.vec2.toVec3(this.vel, 0.0));
+  this.jumpEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
 };
 
 PlayerObject.prototype.stun = function() {
-  this.stunEffect.trigger(util.vec2.toVec3(this.pos, 0.75+this.height), util.vec2.toVec3(this.vel, 0.0));
+  this.stunEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
 };
 
 PlayerObject.prototype.setPos = GameObject.prototype.setPos;
@@ -107,27 +151,29 @@ PlayerObject.prototype.setSpeed = function(speed) {
 PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
   var exbounds = util.matrix.expandPolygon(bounds, this.cullRadius);
   if(util.intersection.pointPoly(this.pos, exbounds)) {
-    var color;
-    switch(this.team) {
-      case  0 : { color = util.vec3.make(0.7539, 0.2421, 0.2421); break; }
-      case  1 : { color = util.vec3.make(0.2421, 0.2421, 0.7539); break; }
-      default : { color = util.vec3.make(0.5, 0.5, 0.5); break; }
+    var color, dcolor;
+    if(this.ultimate) {
+      var rainbow = [
+        util.vec3.make(1.0,0.0,0.0),
+        util.vec3.make(1.0,0.0,1.0),
+        util.vec3.make(0.0,0.0,1.0),
+        util.vec3.make(0.0,1.0,1.0),
+        util.vec3.make(1.0,1.0,0.0),
+        util.vec3.make(1.0,0.0,0.0)
+      ];
+      var ind = Math.floor(this.game.frame/128)%(rainbow.length-1);
+      color = util.vec3.lerp(rainbow[ind], rainbow[ind+1], (this.game.frame%128)/128);
+      dcolor = color;
     }
-    switch(this.team) {
-      case 0  : { this.targetCircle.setColor(util.vec4.make(0.7539, 0.2421, 0.2421, 1)); break; }
-      case 1  : { this.targetCircle.setColor(util.vec4.make(0.2421, 0.2421, 0.7539, 1)); break; }
-      default : { this.targetCircle.setColor(util.vec4.make(1,1,1,1)); break; }
+    else {
+      switch(this.team) {
+        case  0 : { color = util.vec3.make(0.7539, 0.2421, 0.2421); dcolor = color; break; }
+        case  1 : { color = util.vec3.make(0.2421, 0.2421, 0.7539); dcolor = color; break; }
+        default : { color = util.vec3.make(0.5, 0.5, 0.5); dcolor = util.vec3.make(1, 1, 1); break; }
+      }
     }
-    var rainbow = [
-      util.vec3.make(1.0,0.0,0.0),
-      util.vec3.make(1.0,0.0,1.0),
-      util.vec3.make(0.0,0.0,1.0),
-      util.vec3.make(0.0,1.0,1.0),
-      util.vec3.make(1.0,1.0,0.0),
-      util.vec3.make(1.0,0.0,0.0)
-    ];
-    var ind = Math.floor(this.game.frame/128)%(rainbow.length-1);
-    if(this.ultimate) { color = util.vec3.lerp(rainbow[ind], rainbow[ind+1], (this.game.frame%128)/128); }
+    color = util.vec3.lerp(color, util.vec3.make(1.0, 1.0, 1.0), this.glow);
+    this.targetCircle.setColor(util.vec3.toVec4(dcolor, 1));
     
     var playerUniformData = [
       {name: "transform", data: [this.pos.x, this.pos.y, this.height]},
@@ -137,7 +183,7 @@ PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
     ];
     geometry.push({model: this.model, material: this.material, uniforms: playerUniformData});
     for(var i=0;i<this.effects.length;i++) {
-      this.effects[i].getDraw(geometry, decals, lights, bounds);
+      this.effects[i].effect.getDraw(geometry, decals, lights, bounds);
     }
     this.targetCircle.getDraw(decals, bounds);
     if(this.drawHitbox && this.height > -0.5) {
@@ -155,10 +201,13 @@ PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
 
 PlayerObject.prototype.destroy = function() {
   for(var i=0;i<this.effects.length;i++) {
-    this.effects[i].destroy();
+    this.effects[i].effect.destroy();
   }
+  if(this.height > -1.0) {
+    this.bloodEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+    this.impactDeathEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+  }
+  else { this.fallDeathEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)); }
 };
 
-PlayerObject.prototype.getType = function() {
-  return "obj.player";
-};
+PlayerObject.prototype.type = function() { return "nul"; };

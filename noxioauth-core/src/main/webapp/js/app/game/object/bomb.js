@@ -2,6 +2,8 @@
 /* global main */
 /* global util */
 /* global GameObject */
+/* global PointLight */
+/* global ParticleExplosionSmall */
 
 /* Define Bomb Object Class */
 function BombObject(game, oid, pos, vel) {
@@ -10,18 +12,35 @@ function BombObject(game, oid, pos, vel) {
   this.model = this.game.display.getModel("object.bomb.bomb");
   this.material = this.game.display.getMaterial("object.bomb.bomb");
   
-  this.RADIUS = 0.1;               // Collision radius
-  this.CULL_RADIUS = 1.0;          // Radius at which to cull this object and all of it's effects.
-  this.FRICTION = 0.725;           // Friction Scalar
-  this.AIR_DRAG = 0.98;            // Friction Scalar
-  this.FATAL_IMPACT_SPEED = 0.175; // Savaged by a wall
+  /* Settings */
+  this.radius = 0.1; this.weight = 1.0; this.friction = 0.625;
+  this.cullRadius = 1.0;
 
+  /* State */
   this.team = -1;
-
-  //this.targetCircle = new Decal(this.game, this.game.display.getMaterial("character.player.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.4, 0.0);
+  
+  /* Effects */
+  this.impactEffect = {
+    effect: new Effect([
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/grenade1.wav", 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33}
+    ], false),
+    offset: util.vec3.make(0,0,0.05),
+    trigger: PlayerObject.prototype.effectTrigger};
+  this.effects.push(this.impactEffect);
+  
+  this.detonateEffect = {
+    effect: new Effect([
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/grenade2.wav", 0.3], update: function(snd){}, attachment: false, delay: 0, length: 33},
+      {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.972, 0.820, 0.523, 0.95), 1.05], update: function(lit){lit.color.w -= 0.95/7.0; lit.rad += 0.065;}, attachment: false, delay: 0, length: 7},
+      {type: "particle", class: ParticleExplosionSmall, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: false, delay: 0, length: 7}
+    ], false),
+    offset: util.vec3.make(0,0,0.05),
+    trigger: PlayerObject.prototype.effectTrigger};
+  this.effects.push(this.detonateEffect);
 };
 
 BombObject.prototype.update = function(data) {
+  /* Apply update data to object */
   var team = parseInt(data.shift());
   var pos = util.vec2.parse(data.shift());
   var vel = util.vec2.parse(data.shift());
@@ -33,17 +52,31 @@ BombObject.prototype.update = function(data) {
   this.setPos(pos);
   this.setVel(vel);
   this.setHeight(height, vspeed);
+  for(var i=0;i<effects.length-1;i++) {
+    switch(effects[i]) {
+      case "imp" : { this.impact(); break; }
+      default : { main.menu.warning.show("Invalid effect value: '" + effects[i] + "' @ Bomb.js :: update()"); break; }
+    }
+  }
+  
+  /* Timers */
   
   /* Step Effects */
-  //this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 0.4);
+  for(var i=0;i<this.effects.length;i++) {
+    this.effects[i].effect.step(util.vec3.add(this.effects[i].offset, util.vec2.toVec3(this.pos, this.height)), util.vec2.toVec3(this.vel, this.vspeed));
+  }
 };
 
 BombObject.prototype.setPos = GameObject.prototype.setPos;
 BombObject.prototype.setVel = GameObject.prototype.setVel;
 BombObject.prototype.setHeight = GameObject.prototype.setHeight;
 
+BombObject.prototype.impact = function() {
+  this.impactEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+};
+
 BombObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
-  var exbounds = util.matrix.expandPolygon(bounds, this.CULL_RADIUS);
+  var exbounds = util.matrix.expandPolygon(bounds, this.cullRadius);
   if(util.intersection.pointPoly(this.pos, exbounds)) {
     var color;
     switch(this.team) {
@@ -60,18 +93,16 @@ BombObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
     ];
     geometry.push({model: this.model, material: this.material, uniforms: bombUniformData});
     for(var i=0;i<this.effects.length;i++) {
-      this.effects[i].getDraw(geometry, decals, lights, bounds);
+      this.effects[i].effect.getDraw(geometry, decals, lights, bounds);
     }
-    //this.targetCircle.getDraw(decals, bounds);
   }
 };
 
 BombObject.prototype.destroy = function() {
   for(var i=0;i<this.effects.length;i++) {
-    this.effects[i].destroy();
+    this.effects[i].effect.destroy();
   }
+  this.detonateEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
 };
 
-BombObject.prototype.getType = function() {
-  return "obj.bomb";
-};
+BombObject.prototype.type = function() { return "bmb"; };
