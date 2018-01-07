@@ -22,8 +22,10 @@ function PlayerCaptain(game, oid, pos, vel) {
   /* Constants */
   this.PUNCH_COOLDOWN_LENGTH = 45;
   this.PUNCH_CHARGE_LENGTH = 35;
-  this.KICK_COOLDOWN_LENGTH = 45;
-  this.KICK_LENGTH = 12;
+  this.KICK_COOLDOWN_LENGTH = 60;
+  this.KICK_LENGTH = 8;
+  this.KICK_RADIUS = 0.65;
+  this.KICK_OFFSET = 0.1;
   
   this.PUNCH_HITBOX_SIZE = 0.75;
   this.PUNCH_HITBOX_OFFSET = 0.5;
@@ -46,7 +48,7 @@ function PlayerCaptain(game, oid, pos, vel) {
   /* Effects */
   this.chargeEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/captain/punch0.wav", 0.5], update: function(snd){}, attachment: true, delay: 0, length: 33}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/captain/punch0.wav", 0.45], update: function(snd){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -71,7 +73,7 @@ function PlayerCaptain(game, oid, pos, vel) {
   
   this.tauntEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/captain/taunt0.wav", "character/captain/taunt1.wav", "character/captain/taunt2.wav", "character/captain/taunt3.wav"], 0.5], update: function(snd){}, attachment: true, delay: 0, length: 33}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/captain/taunt0.wav", "character/captain/taunt1.wav", "character/captain/taunt2.wav", "character/captain/taunt3.wav"], 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -79,7 +81,7 @@ function PlayerCaptain(game, oid, pos, vel) {
   
   this.jumpEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/captain/jump0.wav", "character/captain/jump1.wav"], 0.5], update: function(snd){}, attachment: true, delay: 0, length: 33}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/captain/jump0.wav", "character/captain/jump1.wav"], 0.25], update: function(snd){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -87,7 +89,7 @@ function PlayerCaptain(game, oid, pos, vel) {
   
   this.stunEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/captain/hit0.wav", "character/captain/hit1.wav"], 0.5], update: function(snd){}, attachment: true, delay: 0, length: 33},
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/captain/hit0.wav", "character/captain/hit1.wav"], 0.35], update: function(snd){}, attachment: true, delay: 0, length: 33},
       {type: "particle", class: ParticleStun, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 45}
     ], false),
     offset: util.vec3.make(0,0,0.5),
@@ -96,7 +98,7 @@ function PlayerCaptain(game, oid, pos, vel) {
 
   this.impactDeathEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/captain/death0.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 60}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/captain/death0.wav", 0.7], update: function(snd){}, attachment: true, delay: 0, length: 60}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -104,14 +106,15 @@ function PlayerCaptain(game, oid, pos, vel) {
   
   this.fallDeathEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/captain/death1.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 99}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/captain/death1.wav", 0.7], update: function(snd){}, attachment: true, delay: 0, length: 99}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
   this.effects.push(this.fallDeathEffect);
     
   /* Visual Hitboxes */
-  this.hitboxModel = this.game.display.getModel("multi.hitbox.eqtriY");
+  this.hitboxModelA = this.game.display.getModel("multi.hitbox.eqtriY");
+  this.hitboxModelB = this.game.display.getModel("multi.hitbox.circle");
   
   /* UI */
   this.uiMeters = [
@@ -138,17 +141,17 @@ PlayerCaptain.prototype.effectSwitch = function(e) {
 };
 
 PlayerCaptain.prototype.timers = function() {
+  if(this.kickActive > 0) { this.kicking(); this.kickActive--; }
+  if(this.kickCooldown > 0) { this.kickCooldown--; }
+  if(this.chargeTimer > 0) { this.chargeTimer--; }
+  if(this.punchCooldown > 0) { this.punchCooldown--; }
   if(this.charging) {
     this.hitboxPos = util.vec2.add(this.pos, util.vec2.scale(this.punchDirection, this.PUNCH_HITBOX_OFFSET));
     this.hitboxColor = util.vec4.make(0, 1, 0, 0.5);
     this.hitboxScale = this.PUNCH_HITBOX_SIZE;
     this.hitBoxAngle = (util.vec2.angle(util.vec2.make(1, 0), this.punchDirection)*(this.punchDirection.y>0?-1:1))+(Math.PI*0.5);
-    this.drawHitbox = this.hitboxModel;
+    this.drawHitbox = this.hitboxModelA;
   }
-  if(this.chargeTimer > 0) { this.chargeTimer--; }
-  if(this.punchCooldown > 0) { this.punchCooldown--; }
-  if(this.kickActive > 0) { this.kickActive--; }
-  if(this.kickCooldown > 0) { this.kickCooldown--; }
 };
 
 PlayerCaptain.prototype.ui = function() {
@@ -182,7 +185,7 @@ PlayerCaptain.prototype.punch = function() {
   this.hitboxColor = util.vec4.make(1, 0, 0, 0.5);
   this.hitboxScale = this.PUNCH_HITBOX_SIZE;
   this.hitBoxAngle = (util.vec2.angle(util.vec2.make(1, 0), this.punchDirection)*(this.punchDirection.y>0?-1:1))+(Math.PI*0.5);
-  this.drawHitbox = this.hitboxModel;
+  this.drawHitbox = this.hitboxModelA;
 };
 
 PlayerCaptain.prototype.kick = function() {
@@ -190,6 +193,14 @@ PlayerCaptain.prototype.kick = function() {
   this.kickDirection = this.look;
   this.kickActive = this.KICK_LENGTH;
   this.kickCooldown = this.KICK_COOLDOWN_LENGTH;
+};
+
+PlayerCaptain.prototype.kicking = function() {
+  this.hitboxPos = util.vec2.add(this.pos, util.vec2.scale(this.kickDirection, this.KICK_OFFSET));
+  this.hitboxColor = util.vec4.make(1, 0, 0, 0.5);
+  this.hitboxScale = this.KICK_RADIUS;
+  this.hitBoxAngle = 0;
+  this.drawHitbox = this.hitboxModelB;
 };
 
 PlayerCaptain.prototype.taunt = function() {

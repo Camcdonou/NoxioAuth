@@ -628,6 +628,14 @@ Asset.prototype.material.map.tin.metal_dark = {
   texture3: "multi/multi_dif",
 };
 
+/* Source File: orb.mat */
+Asset.prototype.material.map.tin.orb = {
+  name: "map.tin.orb",
+  shader: "orb",
+  shadow: false,
+  texture0: "multi/multi_dif",
+};
+
 /* Source File: metal_light.mat */
 Asset.prototype.material.map.tin.metal_light = {
   name: "map.tin.metal_light",

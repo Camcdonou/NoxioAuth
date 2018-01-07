@@ -43,7 +43,7 @@ function PlayerShiek(game, oid, pos, vel) {
   
   this.markEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/mark0.wav", 0.5], update: function(snd){}, attachment: true, delay: 0, length: 33}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/mark0.wav", 0.45], update: function(snd){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -68,7 +68,7 @@ function PlayerShiek(game, oid, pos, vel) {
   
   this.chargeEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/flash0.wav", 0.5], update: function(snd){}, attachment: true, delay: 0, length: 33}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/flash0.wav", 0.45], update: function(snd){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -84,7 +84,7 @@ function PlayerShiek(game, oid, pos, vel) {
   
   this.tauntEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/taunt0.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/taunt0.wav", 0.45], update: function(snd){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -100,7 +100,7 @@ function PlayerShiek(game, oid, pos, vel) {
   
   this.stunEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/shiek/hit0.wav", "character/shiek/hit1.wav", "character/shiek/hit2.wav"], 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/shiek/hit0.wav", "character/shiek/hit1.wav", "character/shiek/hit2.wav"], 0.45], update: function(snd){}, attachment: true, delay: 0, length: 33},
       {type: "particle", class: ParticleStun, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 45}
     ], false),
     offset: util.vec3.make(0,0,0.5),
@@ -109,7 +109,7 @@ function PlayerShiek(game, oid, pos, vel) {
   
   this.impactDeathEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/death0.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 60}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/death0.wav", 0.7], update: function(snd){}, attachment: true, delay: 0, length: 60}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -117,7 +117,7 @@ function PlayerShiek(game, oid, pos, vel) {
   
   this.fallDeathEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/death1.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 99}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/death1.wav", 0.7], update: function(snd){}, attachment: true, delay: 0, length: 99}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};

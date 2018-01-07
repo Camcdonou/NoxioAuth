@@ -41,7 +41,7 @@ function PlayerFalco(game, oid, pos, vel) {
     effect: new Effect([
       {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 1.0), 3.0], update: function(lit){}, attachment: true, delay: 0, length: 3},
       {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 1.0), 3.0], update: function(lit){lit.color.w -= 1.0/12.0; lit.rad += 0.1; }, attachment: true, delay: 3, length: 12},
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/attack0.wav", 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33},
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/attack0.wav", 0.35], update: function(snd){}, attachment: true, delay: 0, length: 33},
       {type: "particle", class: ParticleBlip, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.5),
@@ -50,7 +50,7 @@ function PlayerFalco(game, oid, pos, vel) {
   
   this.chargeEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/charge0.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/charge0.wav", 0.75], update: function(snd){}, attachment: true, delay: 0, length: 33},
       {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.8, 0.45, 0.25, 0.15), 1.0], update: function(lit){lit.color.w += 1.0/25.0; lit.rad += 0.05; }, attachment: true, delay: 0, length: 20},
       {type: "particle", class: ParticleCharge, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 20}
     ], false),
@@ -60,7 +60,7 @@ function PlayerFalco(game, oid, pos, vel) {
   
   this.dashEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/dash0.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/dash0.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33},
       {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 0.75), 2.5], update: function(lit){lit.color.w -= 1.0/45.0; lit.rad += 0.05; }, attachment: false, delay: 0, length: 30},
       {type: "particle", class: ParticleDash, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 60}
     ], false),
@@ -70,7 +70,7 @@ function PlayerFalco(game, oid, pos, vel) {
   
   this.tauntEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/taunt0.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/taunt0.wav", 0.5], update: function(snd){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -78,7 +78,7 @@ function PlayerFalco(game, oid, pos, vel) {
   
   this.jumpEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/jump0.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/jump0.wav", 0.35], update: function(snd){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -86,7 +86,7 @@ function PlayerFalco(game, oid, pos, vel) {
   
   this.stunEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/falco/hit0.wav","character/falco/hit1.wav"], 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/falco/hit0.wav","character/falco/hit1.wav"], 0.5], update: function(snd){}, attachment: true, delay: 0, length: 33},
       {type: "particle", class: ParticleStun, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 45}
     ], false),
     offset: util.vec3.make(0,0,0.5),
@@ -95,7 +95,7 @@ function PlayerFalco(game, oid, pos, vel) {
   
   this.impactDeathEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/death0.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 60}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/death0.wav", 0.7], update: function(snd){}, attachment: true, delay: 0, length: 60}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -103,7 +103,7 @@ function PlayerFalco(game, oid, pos, vel) {
   
   this.fallDeathEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/death1.wav", 0.8], update: function(snd){}, attachment: true, delay: 0, length: 99}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/death1.wav", 0.7], update: function(snd){}, attachment: true, delay: 0, length: 99}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};

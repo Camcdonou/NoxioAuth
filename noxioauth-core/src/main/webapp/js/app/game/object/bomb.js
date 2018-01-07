@@ -22,7 +22,7 @@ function BombObject(game, oid, pos, vel) {
   /* Effects */
   this.impactEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/grenade1.wav", 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/grenade1.wav", 0.3], update: function(snd){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.05),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -30,7 +30,7 @@ function BombObject(game, oid, pos, vel) {
   
   this.detonateEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/grenade2.wav", 0.3], update: function(snd){}, attachment: false, delay: 0, length: 33},
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/grenade2.wav", 0.2], update: function(snd){}, attachment: false, delay: 0, length: 33},
       {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.972, 0.820, 0.523, 0.95), 1.05], update: function(lit){lit.color.w -= 0.95/7.0; lit.rad += 0.065;}, attachment: false, delay: 0, length: 7},
       {type: "particle", class: ParticleExplosionSmall, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: false, delay: 0, length: 7}
     ], false),

@@ -55,7 +55,7 @@ function PlayerPuff(game, oid, pos, vel) {
   
   this.poundEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/puff/pound0.wav", 0.5], update: function(snd){}, attachment: true, delay: 0, length: 33}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/puff/pound0.wav", 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -63,7 +63,7 @@ function PlayerPuff(game, oid, pos, vel) {
   
   this.poundHitEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/puff/pound1.wav", 1.0], update: function(snd){}, attachment: true, delay: 0, length: 33}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/puff/pound1.wav", 0.75], update: function(snd){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -71,7 +71,7 @@ function PlayerPuff(game, oid, pos, vel) {
   
   this.tauntEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/puff/taunt0.wav", "character/puff/taunt1.wav"], 0.5], update: function(snd){}, attachment: true, delay: 0, length: 33}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/puff/taunt0.wav", "character/puff/taunt1.wav"], 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -79,7 +79,7 @@ function PlayerPuff(game, oid, pos, vel) {
   
   this.jumpEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/puff/jump0.wav", 0.3], update: function(snd){}, attachment: true, delay: 0, length: 33}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/puff/jump0.wav", 0.15], update: function(snd){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -87,7 +87,7 @@ function PlayerPuff(game, oid, pos, vel) {
   
   this.stunEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/puff/hit0.wav", "character/puff/hit1.wav"], 0.8], update: function(snd){}, attachment: true, delay: 0, length: 33},
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/puff/hit0.wav", "character/puff/hit1.wav"], 0.45], update: function(snd){}, attachment: true, delay: 0, length: 33},
       {type: "particle", class: ParticleStun, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 45}
     ], false),
     offset: util.vec3.make(0,0,0.5),

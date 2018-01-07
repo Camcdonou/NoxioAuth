@@ -273,7 +273,7 @@ NoxioGame.prototype.doInput = function() {
   
   if(!pass) {
     /* Client Impulse Input */
-    this.display.camera.setZoom(this.input.mouse.spin);
+    this.display.camera.setZoom(this.input.mouse.spin*0.65);
     if(this.input.mouse.mmb) {
       var rot = util.vec3.make(this.input.mouse.mov.y*0.002, 0, -this.input.mouse.mov.x*0.003);
       this.display.camera.addRot(rot);
