@@ -47,7 +47,7 @@ function PlayerMarth(game, oid, pos, vel) {
   /* Effects */
   this.slashEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/marth/attack0.wav", 0.45], update: function(snd){}, attachment: true, delay: 0, length: 33},
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/marth/attack0.wav", 0.35], update: function(snd){}, attachment: true, delay: 0, length: 33},
       {type: "particle", class: ParticleSlash, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 15}
     ], false),
     offset: util.vec3.make(0,0,0.25),
@@ -56,7 +56,7 @@ function PlayerMarth(game, oid, pos, vel) {
   
   this.slashHitEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/marth/slash0.wav", 0.45], update: function(snd){}, attachment: true, delay: 0, length: 33}
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/marth/slash0.wav", 0.25], update: function(snd){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -64,7 +64,7 @@ function PlayerMarth(game, oid, pos, vel) {
   
   this.readyEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/marth/ready0.wav", 0.35], update: function(snd){}, attachment: true, delay: 0, length: 33},
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/marth/ready0.wav", 0.65], update: function(snd){}, attachment: true, delay: 0, length: 33},
       {type: "particle", class: ParticleReady, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 15}
     ], false),
     offset: util.vec3.make(0,0,0),
