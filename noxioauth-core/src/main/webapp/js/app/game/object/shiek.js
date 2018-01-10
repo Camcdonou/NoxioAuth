@@ -21,6 +21,7 @@ function PlayerShiek(game, oid, pos, vel) {
   
   /* Constants */
   this.FLASH_CHARGE_LENGTH = 10;
+  this.BANG_COOLDOWN_LENGTH = 20; this.BANG_POWER_USE = 15; this.BANG_POWER_MAX = 80;
   
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.755;
@@ -31,6 +32,7 @@ function PlayerShiek(game, oid, pos, vel) {
 
   /* Timers */
   this.chargeTimer = 0;
+  this.bangPower = this.BANG_POWER_MAX;
 
   /* Effects */
   this.attackEffect = {
@@ -125,6 +127,7 @@ function PlayerShiek(game, oid, pos, vel) {
 
   /* UI */
   this.uiMeters = [
+    {type: "bar", iconMat: this.game.display.getMaterial("character.player.ui.meterstub"), length: 16, scalar: 1.0},
     {type: "bar", iconMat: this.game.display.getMaterial("character.player.ui.meterstub"), length: 8, scalar: 0.0}
   ];
 };
@@ -151,10 +154,12 @@ PlayerShiek.prototype.effectSwitch = function(e) {
 PlayerShiek.prototype.timers = function() {
   if(this.chargeTimer > 0) { this.chargeTimer--; this.glow = 1-(this.chargeTimer/this.FLASH_CHARGE_LENGTH); }
   else { this.glow = 0; }
+  if(this.bangPower < this.BANG_POWER_MAX) { this.bangPower++; }
 };
 
 PlayerShiek.prototype.ui = function() {
-  this.uiMeters[0].scalar = this.markLocation?1:0;
+  this.uiMeters[0].scalar = (this.bangPower/this.BANG_POWER_MAX);
+  this.uiMeters[1].scalar = this.markLocation?1:0;
 };
 
 PlayerShiek.prototype.air  = PlayerObject.prototype.air;
@@ -167,6 +172,9 @@ PlayerShiek.prototype.stun = function() {
 
 PlayerShiek.prototype.attack = function() {
   this.attackEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+  var count = Math.max(Math.min(3, this.bangPower / this.BANG_POWER_USE), 1);
+  this.bangPower -= Math.max(count*this.BANG_POWER_USE, this.BANG_POWER_USE);
+  if(this.bangPower < 0) { this.bangPower = 0; }
 };
 
 PlayerShiek.prototype.charge = function() {

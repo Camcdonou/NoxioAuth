@@ -23,9 +23,9 @@ function PlayerCaptain(game, oid, pos, vel) {
   this.PUNCH_COOLDOWN_LENGTH = 45;
   this.PUNCH_CHARGE_LENGTH = 35;
   this.KICK_COOLDOWN_LENGTH = 60;
-  this.KICK_LENGTH = 8;
-  this.KICK_RADIUS = 0.65;
-  this.KICK_OFFSET = 0.1;
+  this.KICK_LENGTH = 7;
+  this.KICK_RADIUS = 0.55;
+  this.KICK_OFFSET = 0.05;
   
   this.PUNCH_HITBOX_SIZE = 0.75;
   this.PUNCH_HITBOX_OFFSET = 0.5;

@@ -48,6 +48,14 @@ function PlayerFalco(game, oid, pos, vel) {
     trigger: PlayerObject.prototype.effectTrigger};
   this.effects.push(this.blipEffect);
   
+  this.criticalEffect = {
+    effect: new Effect([
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/critical0.wav", 0.75], update: function(snd){}, attachment: true, delay: 0, length: 33}
+    ], false),
+    offset: util.vec3.make(0,0,0.25),
+    trigger: PlayerObject.prototype.effectTrigger};
+  this.effects.push(this.criticalEffect);
+  
   this.chargeEffect = {
     effect: new Effect([
       {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/charge0.wav", 0.75], update: function(snd){}, attachment: true, delay: 0, length: 33},
@@ -125,6 +133,7 @@ PlayerFalco.prototype.effectSwitch = function(e) {
     case "air" : { this.air(); break; } 
     case "jmp" : { this.jump(); break; }
     case "atk" : { this.blip(); break; }
+    case "crt" : { this.crit(); break; }
     case "mov" : { this.dash(); break; }
     case "chr" : { this.charge(); break; }
     case "tnt" : { this.taunt(); break; }
@@ -157,6 +166,10 @@ PlayerFalco.prototype.stun = function() {
 PlayerFalco.prototype.blip = function() {
   this.blipEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
   this.blipCooldown = this.BLIP_POWER_MAX;
+};
+
+PlayerFalco.prototype.crit = function() {
+  this.criticalEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
 };
 
 PlayerFalco.prototype.dash = function() {
