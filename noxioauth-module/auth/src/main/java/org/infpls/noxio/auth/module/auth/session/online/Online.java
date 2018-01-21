@@ -42,9 +42,9 @@ public class Online extends SessionState {
   private void serverInfo(final PacketO02 p) throws IOException {
     /* @TODO Dummy data */
     final List<ServerInfo> predef = new ArrayList();
-//    predef.add(new ServerInfo("EXT-TEST-1", "68.32.114.183", 7001));
-//    predef.add(new ServerInfo("INT-TEST-1", "10.0.0.253", 7001));
-//    predef.add(new ServerInfo("LOC-TEST-1", "localhost", 7001));
+    predef.add(new ServerInfo("EXT-TEST-1", "68.32.114.183", 7001));
+    predef.add(new ServerInfo("INT-TEST-1", "10.0.0.253", 7001));
+    predef.add(new ServerInfo("LOC-TEST-1", "localhost", 7001));
     predef.add(new ServerInfo("PUB-TEST-1", "infernoplus.com", 80));
     sendPacket(new PacketO01(predef));
   }

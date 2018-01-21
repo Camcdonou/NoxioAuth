@@ -41,7 +41,7 @@ Asset.prototype.material.sky = {};
 Asset.prototype.material.sky.final = {};
 Asset.prototype.material.map = {};
 Asset.prototype.material.map.tin = {};
-Asset.prototype.material.map.final = {};
+Asset.prototype.material.map.copper = {};
 
 /* Source File: targetcircle.mat */
 Asset.prototype.material.object.object.decal.targetcircle = {
@@ -647,38 +647,60 @@ Asset.prototype.material.map.tin.metal_light = {
   texture3: "multi/multi_dif",
 };
 
-/* Source File: grid.mat */
-Asset.prototype.material.map.final.grid = {
-  name: "map.final.grid",
-  shader: "final_grid",
+/* Source File: metal_rough.mat */
+Asset.prototype.material.map.copper.metal_rough = {
+  name: "map.copper.metal_rough",
+  shader: "copper_wall",
+  shadow: true,
+  texture0: "map/copper/metal_rough",
+  texture1: "map/copper/cross_normal",
+  texture2: "map/copper/edge_color",
+  texture3: "multi/multi_dif",
+};
+
+/* Source File: field.mat */
+Asset.prototype.material.map.copper.field = {
+  name: "map.copper.field",
+  shader: "glow",
   shadow: false,
-  texture0: "map/final/grid",
+  texture0: "map/copper/light",
 };
 
-/* Source File: ceiling.mat */
-Asset.prototype.material.map.final.ceiling = {
-  name: "map.final.ceiling",
-  shader: "final",
+/* Source File: light.mat */
+Asset.prototype.material.map.copper.light = {
+  name: "map.copper.light",
+  shader: "glow",
   shadow: true,
-  texture0: "map/final/stage_dark",
-  texture1: "map/final/edge_color",
+  texture0: "map/copper/light",
 };
 
-/* Source File: floor.mat */
-Asset.prototype.material.map.final.floor = {
-  name: "map.final.floor",
-  shader: "final",
+/* Source File: metal_dark.mat */
+Asset.prototype.material.map.copper.metal_dark = {
+  name: "map.copper.metal_dark",
+  shader: "tin",
   shadow: true,
-  texture0: "map/final/stage",
-  texture1: "map/final/edge_color",
+  texture0: "map/copper/metal_dark",
+  texture1: "map/copper/flat_normal",
+  texture2: "map/copper/edge_color",
+  texture3: "multi/multi_dif",
 };
 
-/* Source File: wall.mat */
-Asset.prototype.material.map.final.wall = {
-  name: "map.final.wall",
-  shader: "final",
+/* Source File: box.mat */
+Asset.prototype.material.map.copper.box = {
+  name: "map.copper.box",
+  shader: "glow",
+  shadow: false,
+  texture0: "map/copper/light",
+};
+
+/* Source File: metal_light.mat */
+Asset.prototype.material.map.copper.metal_light = {
+  name: "map.copper.metal_light",
+  shader: "tin",
   shadow: true,
-  texture0: "map/final/stage",
-  texture1: "map/final/edge_color",
+  texture0: "map/copper/metal",
+  texture1: "map/copper/flat_normal",
+  texture2: "map/copper/edge_color",
+  texture3: "multi/multi_dif",
 };
 
