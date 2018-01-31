@@ -126,6 +126,7 @@ ControlUI.prototype.generate = function() {
     {nam: "Taunt", fld: "taunt"},
     {nam: "Action #2", fld: "actionB"},
     {nam: "Action #1", fld: "actionA"},
+    {nam: "Toss Flag", fld: "toss"},
     {nam: "Jump", fld: "jump"}
   ];
   for(var i=0;i<SPEC.length;i++) {

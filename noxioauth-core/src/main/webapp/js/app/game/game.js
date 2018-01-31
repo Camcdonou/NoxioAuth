@@ -305,6 +305,7 @@ NoxioGame.prototype.doInput = function() {
       if(this.input.keyboard.keys[main.settings.control.jump]) { actions.push("jmp"); }
       if(this.input.keyboard.keys[main.settings.control.actionA]) { actions.push("atk"); }
       if(this.input.keyboard.keys[main.settings.control.actionB]) { actions.push("mov"); }
+      if(this.input.keyboard.keys[main.settings.control.toss]) { actions.push("tos"); }
       if(this.input.keyboard.keys[main.settings.control.taunt]) { actions.push("tnt"); }
       
       if(actions.length>0) {

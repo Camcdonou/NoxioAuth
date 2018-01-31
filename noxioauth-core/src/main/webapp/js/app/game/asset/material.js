@@ -688,9 +688,10 @@ Asset.prototype.material.map.copper.metal_dark = {
 /* Source File: box.mat */
 Asset.prototype.material.map.copper.box = {
   name: "map.copper.box",
-  shader: "glow",
+  shader: "cube",
   shadow: false,
-  texture0: "map/copper/light",
+  texture0: "map/copper/cube",
+  texture1: "multi/multi_dif",
 };
 
 /* Source File: metal_light.mat */

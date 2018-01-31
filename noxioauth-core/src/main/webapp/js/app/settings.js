@@ -25,6 +25,7 @@ Settings.prototype.defaults = function() {
     actionB: 68,
     jump: 32,
     taunt: 84,
+    toss: 83,
     scoreboard: 192
   };
 };

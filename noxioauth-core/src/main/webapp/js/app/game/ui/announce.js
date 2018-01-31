@@ -43,7 +43,7 @@ AnnounceUI.prototype.generate = function() {
   var container = new UIContainer({x: '+', y: '-'});
   
   var w = 512;
-  var s = 24;
+  var s = 32;
   var v = s*0.15;
   var a = 8;
   
