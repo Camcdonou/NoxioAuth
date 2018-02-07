@@ -130,6 +130,7 @@ NoxioGame.prototype.loadDone = function() {
   main.menu.game.loading("<div class='unselectable load-head'>Awaiting server reponse...</div> <div style='width: 100%;'>");
   this.ready = true;
   main.net.game.send({type: "g07"});
+  main.gauss.hide();
 };
 
 /* Starts loading all textures/sounds in the map file cache. */

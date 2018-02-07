@@ -4,6 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         
         <link rel="stylesheet" type="text/css" href="css/app.css">
+        <link rel="stylesheet" type="text/css" href="css/gauss.css">
         <link rel="stylesheet" type="text/css" href="css/errorModal.css">
     </head>
     
@@ -18,18 +19,18 @@
       </div>
       
       <!-- Login / Create Account Menu -->
-      <div id="auth" class="main-menu-container" style="display: none">
-        <div class="main-menu-inverse lg">Noxio</div>
-        <div id="auth-login" class="main-menu btn lg" onclick="main.menu.auth.items.login.show()">Login</div>
-          <div id="auth-login-username" class="main-menu inp sm"><input id="auth-login-username-input" class="main-menu-input" type="text" placeholder="Username"/></div>
-          <div id="auth-login-password" class="main-menu inp sm"><input id="auth-login-password-input" class="main-menu-input" type="password" placeholder="Password"></div>
-          <div id="auth-login-login" class="main-menu btn sm" onclick="main.menu.auth.items.login.onEnter()">Login</div>
-        <div id="auth-create" class="main-menu btn lg" onclick="main.menu.auth.items.create.show()">New User</div>
-          <div id="auth-create-username" class="main-menu inp sm"><input id="auth-create-username-input" class="main-menu-input" type="text" placeholder="Username"/></div>
-          <div id="auth-create-password" class="main-menu inp sm"><input id="auth-create-password-input" class="main-menu-input" type="password" placeholder="Password"/></div>
-          <div id="auth-create-create" class="main-menu btn sm" onclick="main.menu.auth.items.create.onEnter()">Create</div>
-        <div id="auth-about" class="main-menu btn lg" onclick="main.menu.auth.items.about.show()">About</div>
-          <div id="auth-about-about" class="main-menu sm">Noxio | Development v0.1 | © InfernoPlus</div>
+      <div id="auth" class="menu-container" style="display: none">
+        <div class="menu logo"><img alt='20XX Logo' src='img/aes/logo.png'/></div>
+        <div id="auth-login" class="menu cat" onclick="main.menu.auth.items.login.show()">Login</div>
+          <div id="auth-login-username" class="menu sub fld"><input id="auth-login-username-input" class="inp" type="text" placeholder="Username"/></div>
+          <div id="auth-login-password" class="menu sub fld"><input id="auth-login-password-input" class="inp" type="password" placeholder="Password"></div>
+          <div id="auth-login-login" class="menu sub btn ico-blip" onclick="main.menu.auth.items.login.onEnter()"></div>
+        <div id="auth-create" class="menu cat" onclick="main.menu.auth.items.create.show()">New User</div>
+          <div id="auth-create-username" class="menu sub fld"><input id="auth-create-username-input" class="inp" type="text" placeholder="Username"/></div>
+          <div id="auth-create-password" class="menu sub fld"><input id="auth-create-password-input" class="inp" type="password" placeholder="Password"/></div>
+          <div id="auth-create-create" class="menu sub btn ico-blip" onclick="main.menu.auth.items.create.onEnter()"></div>
+        <div id="auth-about" class="menu cat" onclick="main.menu.auth.items.about.show()">About</div>
+          <div id="auth-about-about" class="menu sub about">Noxio | Development v@TODO | © InfernoPlus</div>
       </div>
       
       <!-- Game Server / Settings Menu -->
@@ -72,6 +73,15 @@
         <div id="game-load" class="unselectable game-load" oncontextmenu="return false"></div>
       </div>
       
+      <!-- Background -->
+      <div id="gauss" class="gauss unselectable" style="display: none">
+        <div id="gauss-container" class="gauss-canvas" oncontextmenu="return false">
+          <canvas id="gauss-canvas" width="320" height="240">
+            Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.
+          </canvas>
+        </div>
+      </div>
+      
       <!-- Error Modal -->
       <div id="errorModal" class="error-modal">
         <!-- Error Modal Content -->
@@ -101,6 +111,7 @@
       
       <!-- Misc -->
       <script src="js/app/settings.js"></script>
+      <script src="js/app/gauss/gauss.js"></script>
        
       <!-- UI Frontend -->
       <script src="js/app/menu/error-menu.js"></script>

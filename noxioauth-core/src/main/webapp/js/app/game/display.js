@@ -54,8 +54,7 @@ Display.prototype.setupWebGL = function() {
   )) { return false; }
   
   if(!gl.getExtension('OES_standard_derivatives')) { return false; }
-  
-  /* @TODO: user settings for upscale/post/shadow/etc */
+
   this.shadow = {size: main.settings.graphics.shadowSize};
   this.upscale = {sky: main.settings.graphics.upSky, world: main.settings.graphics.upGame, ui: main.settings.graphics.upUi};
   

@@ -1,172 +1,103 @@
 body {
   background-color: #000000;
-  background-image: url("../img/aes/bkg_gaus.png");
-  background-repeat: no-repeat;
-  background-size: 100%;
-  
   margin: 0px 0px 0px 0px;
 }
 
-.main-menu-container {
-  margin: 3% 0 0 0;
+.menu-container {
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  
   font-family: "Calibri", monospace;
   color: rgba(255, 255, 255, 1.0);
-  
-  float: left;
-  width: 40%;
 }
 
-.main-menu {
+.logo {
+  padding: 8px 8px 8px 8px;
+  width: auto;
+}
+
+.menu {
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
   background-color: rgba(255, 255, 255, 0.0);
-  border: 3px solid rgba(255, 255, 255, 1.0);
-  border-left: 0px none rgba(255, 255, 255, 0.0);
   
-  padding: 8px 16px 8px 8px;
-  margin: 0px 0px 8px 0px;
-  
-  font-weight: bold;
-  text-align: right;
+  text-align: center;
+  font-size: 24px;
 }
 
-.main-menu-inverse {
+.cat {
+  font-size: 32px;
+}
+
+.cat:hover {
   background-color: rgba(255, 255, 255, 1.0);
-  border: 3px solid rgba(255, 255, 255, 1.0);
-  border-left: 0px none rgba(255, 255, 255, 0.0);
-  
-  padding: 8px 16px 8px 8px;
-  margin: 0px 0px 8px 0px;
-  
-  font-weight: bold;
-  text-align: right;
-  color: #000000;
-}
-
-.main-menu-input {
-  background:rgba(255,255,255,0.3);
-  border: none;
-  border-radius: 8px;
-  
-  text-align: right;
-  color: white;
-  padding: 2px 6px 2px 2px;
-}
-
-.main-menu-input::-webkit-input-placeholder {
-  color: rgba(255,255,255,0.5);
-}
-
-.main-menu-text {
-  padding: 4px 8px 0px 4px;
-  margin: 0px 12px 0px 0px;
-  text-align: right;
-  width: 100%;
-  
-  font-weight: bold;
-  float: left;
-}
-
-.info-animate {
-  opacity: 0;
-  
-  animation: info-fade 8s;
-  -moz-animation: info-fade 8s;
-  -webkit-animation: info-fade 8s;
-  -o-animation: info-fade 8s;
-}
-
-@keyframes info-fade {
-   0% {opacity: 1;}
-   25% {opacity: 1;}
-   100% {opacity: 0;} 
-} 
-
-.lg {
-  border-radius: 0px 36px 36px 0px;
-  font-size: 20px;
-  width: 100%;
-}
-
-.sm {
-  border-radius: 0px 32px 32px 0px;
-  font-size: 16px;
-  width: 90%;
+  color: rgba(0, 0, 0, 1.0);
 }
 
 .btn {
-  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.25) !IMPORTANT;
+}
+
+.btn:hover {
+  background-color: rgba(255, 255, 255, 1.0) !IMPORTANT;
+  color: rgba(0, 0, 0, 1.0);
+}
+
+.fld {
+  
 }
 
 .inp {
-  cursor: text;
+  border: none;
+  margin: 0 0 0 0;
+  padding: 2px 6px 2px 2px;
+  width: 100%;
+  
+  font-size: 18px;
+  
+  text-align: center;
+  background:rgba(255,255,255,0);
+  color: rgba(255, 255, 255, 1.0);
+}
+
+.inp:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 1.0);
+}
+
+.inp::-webkit-input-placeholder {
+  color: rgba(255,255,255,0.65);
+}
+
+.ico-blip { 
+  background-image: url(../img/aes/blip.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20px 20px;
+  height: 24px;
+  width: 100%;
+}
+
+.ico-blip:hover {
+  background-image: url(../img/aes/blip-hov.png);
+}
+
+.about {
+  font-size: 14px;
+}
+
+.sub {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .selected {
-  background-color: rgba(255, 255, 255, 0.33) !important;
-}
-
-.main-menu:hover {
-  background-color: rgba(255, 255, 255, 0.33);
-}
-
-
-.right-menu-container {
-  margin: 3% 0 0 0;
-  font-family: "Calibri", monospace;
-  color: rgba(255, 255, 255, 1.0);
-  
-  float: right;
-  display: inline;
-  width: 45%;
-  
-  font-weight: bold;
-}
-
-.right-menu-header {
   background-color: rgba(255, 255, 255, 1.0);
-  border: 3px solid rgba(255, 255, 255, 1.0);
-  border-right: 0px none rgba(255, 255, 255, 0.0);
-  border-radius: 32px 0px 0px 32px;
-  
-  padding: 8px 8px 8px 16px;
-  
-  font-size: 20px;
-  color: #000000;
-}
-
-.right-menu-item {
-  padding: 4px 0px 0px 8px;
-  margin: 0px 0px 0px 12px;
-}
-
-.right-menu-item:hover { 
-  background-color: rgba(255, 255, 255, 0.33);
-}
-
-.menu-refresh-button {
-  float: right;
-  text-align: right;
-  padding: 0px 16px 0px 16px;
-  cursor: pointer;
-}
-
-.main-warn {
-  position: absolute;
-  margin: 8px 0px 0px 8px;
-  
-  font-family: "Calibri", monospace;
-  color: rgba(255, 255, 255, 1.0);
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.right-menu-help-text { 
-  margin: 2px 0 0 0;
-  font-family: "Calibri", monospace;
-  color: rgba(255, 255, 255, 1.0);
-  
-  float: right;
-  display: inline;
-  width: 45%;
+  color: rgba(0, 0, 0, 1.0);
 }
 
 .game-load {
@@ -216,18 +147,6 @@ body {
   display: inline-block;
 }
 
-.unselectable {
-   -moz-user-select: -moz-none;
-   -khtml-user-select: none;
-   -webkit-user-select: none;
-
-   /*
-     Introduced in IE 10.
-     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
-   */
-   -ms-user-select: none;
-   user-select: none;
-}
 
 .fullscreen {
   margin: 0 0 0 0;
@@ -239,4 +158,17 @@ body {
   height: 100%;
   
   font-weight: bold;
+}
+
+.unselectable {
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
 }

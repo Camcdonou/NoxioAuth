@@ -6,10 +6,13 @@ function Main () {
   this.menu = new Menu();                // Handles HTML menus, does NOT handle ingame OpenGL menus.
   this.net = new Network();              // Manages websocket connections with server.
   this.settings = new Settings();        // Contains settings like rebindable controls, graphics quality, and sound volume.
+  this.gauss = new Gauss();
 };
 
 /* We can't start the engine during the construction of new Main() so we do it here instead. */
 Main.prototype.init = function() {
+  this.gauss.init();
+  this.gauss.show();
   this.net.auth.establish();
 };
 
@@ -29,6 +32,7 @@ Main.prototype.endGame = function() {
   if(this.inGame()) {
     this.game.destroy();
     this.game = undefined;
+    this.gauss.show();
   }
 };
 

@@ -63,6 +63,14 @@ function AuthMenu() {
       ]
     }
   };
+  
+  /* ENTER keypress to SUBMIT on fields.*/
+  var tmp = this;
+  this.items.login.items[0].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.login.items[2].click(); } });
+  this.items.login.items[1].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.login.items[2].click(); } });
+  
+  this.items.create.items[0].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.create.items[2].click(); } });
+  this.items.create.items[1].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.create.items[2].click(); } });
 };
 
 /* Shows this menu */
