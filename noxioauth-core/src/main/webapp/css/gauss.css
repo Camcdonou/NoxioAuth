@@ -1,0 +1,21 @@
+.gauss {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index:-2;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  color: rgba(255, 255, 255, 1.0);
+  
+  width: 100%;
+  height: 100%;
+}
+
+.gauss-canvas {
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  color: rgba(255, 255, 255, 1.0);
+  
+  width: 100%;
+  height: 100%;
+}
