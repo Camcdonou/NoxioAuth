@@ -20,12 +20,12 @@ LobbyState.prototype.joinLobbyError = function(packet) {
 
 LobbyState.prototype.joinLobby = function(lid) {
   this.send({type: "b04", lid: lid});
-  main.menu.connect.show("Joining game lobby...");
+  main.menu.connect.show("Joining game lobby", 0);
 };
 
 LobbyState.prototype.createLobby = function(name) {
   this.send({type: "b03", name: name});
-  main.menu.connect.show("Creating game lobby...");
+  main.menu.connect.show("Creating game lobby", 0);
 };
 
 LobbyState.prototype.ready = function() {

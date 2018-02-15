@@ -29,7 +29,7 @@ GameState.prototype.newGame = function(packet) {
     objective: packet.objective
   };
   
-  main.menu.connect.show("Loading...");
+  main.menu.connect.show("Loading", 0);
   main.endGame();
   main.startGame(packet.name, settings, packet.map);
 };
@@ -58,7 +58,7 @@ GameState.prototype.gameInfo = function(packet) {
     objective: packet.objective
   };
   
-  main.menu.connect.show("Loading...");
+  main.menu.connect.show("Loading", 0);
   main.startGame(packet.name, settings, packet.map);
 };
 
@@ -67,7 +67,7 @@ GameState.prototype.ready = function() {
 };
 
 GameState.prototype.leaveGame = function() {
-  main.menu.connect.show("Leaving game...");
+  main.menu.connect.show("Leaving game", 0);
   this.send({type: "g03"});
 };
 

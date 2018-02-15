@@ -27,11 +27,12 @@ body {
   background-color: rgba(255, 255, 255, 0.0);
   
   text-align: center;
-  font-size: 24px;
+  font-size: 18px;
 }
 
 .cat {
   font-size: 32px;
+  cursor: pointer;
 }
 
 .cat:hover {
@@ -41,6 +42,7 @@ body {
 
 .btn {
   background-color: rgba(255, 255, 255, 0.25) !IMPORTANT;
+  cursor: pointer;
 }
 
 .btn:hover {
@@ -49,7 +51,7 @@ body {
 }
 
 .fld {
-  
+
 }
 
 .inp {
@@ -74,7 +76,7 @@ body {
   color: rgba(255,255,255,0.65);
 }
 
-.ico-blip { 
+.ico-blip {
   background-image: url(../img/aes/blip.png);
   background-repeat: no-repeat;
   background-position: center;
@@ -85,6 +87,78 @@ body {
 
 .ico-blip:hover {
   background-image: url(../img/aes/blip-hov.png);
+}
+
+.ico-con {
+    width: 28px;
+    height: 28px;
+    padding-left: 8px;
+    margin-bottom: -5px;
+}
+
+.con {
+  font-size: 32px;
+  background-color: rgba(255, 255, 255, 1.0);
+  color: rgba(0, 0, 0, 1.0);
+  padding: 0px 8px 0px 8px;
+}
+
+.usr {
+  font-size: 32px;
+  background-color: rgba(255, 255, 255, 0.0);
+  color: rgba(255, 255, 255, 1.0);
+  width: 335px;
+}
+
+serv {
+    padding-left: 8px;
+    text-align: left !IMPORTANT;
+}
+
+.ico-serv {
+    float: right;
+    width: 16px;
+    height: 16px;
+    padding-right: 8px;
+    margin-top: 3px;
+}
+
+.loc {
+  font-size: 32px;
+  background-color: rgba(255, 255, 255, 0.0);
+  color: rgba(255, 255, 255, 1.0);
+  width: 335px;
+}
+
+.ref {
+  font-size: 32px;
+  background-color: rgba(255, 255, 255, 0.0);
+  color: rgba(255, 255, 255, 1.0);
+  width: 600px;
+  height: 39px;
+}
+
+.ico-ref {
+  cursor: pointer;
+}
+
+.ico-ref:hover {
+  text-shadow: 0px 0px 8px white;
+}
+
+.lob {
+  font-size: 32px;
+  background-color: rgba(255, 255, 255, 1.0);
+  color: rgba(0, 0, 0, 1.0);
+  height: 39px;
+}
+
+.left-container {
+  float: left;
+}
+
+.right-container {
+  float: right;
 }
 
 .about {
@@ -98,6 +172,30 @@ body {
 .selected {
   background-color: rgba(255, 255, 255, 1.0);
   color: rgba(0, 0, 0, 1.0);
+}
+
+.per30 {
+  width: 30%;
+  text-align: center;
+  display: inline-block;
+}
+
+.per10 {
+  width: 10%;
+  text-align: center;
+  display: inline-block;
+}
+
+.warn {
+  position: absolute;
+  margin: 0px 0px 0px 0px;
+  padding: 6px 32px 2px 6px;
+  font-family: "Calibri", monospace;
+  color: rgba(255, 255, 255, 1.0);
+  background-color: rgba(255, 255, 255, 0.15);
+  
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .game-load {

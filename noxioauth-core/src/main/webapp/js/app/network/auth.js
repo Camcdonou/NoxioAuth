@@ -21,10 +21,10 @@ Auth.prototype.establish = function() {
   
   var getStatus = function(r) {
     if(r>=addresses.length) {
-      main.menu.connect.show("Failed to retrieve server status...");
+      main.menu.connect.show("Failed to retrieve server status", 1);
       return;
     }
-    main.menu.connect.show("Checking server status @" + addresses[r] + "...");
+    main.menu.connect.show("Checking server status @" + addresses[r], 0);
     $.ajax({
       url: "http://" + addresses[r] + "/noxioauth/status",
       type: 'GET',
@@ -49,7 +49,7 @@ Auth.prototype.connect = function(address){
   }
 
   this.webSocket = new WebSocket("ws://" + address + "/noxioauth/auth");
-  main.menu.connect.show("Connecting @" + address + "...");
+  main.menu.connect.show("Connecting @" + address, 0);
 
   this.webSocket.onopen = function(event){
     if(event.type !== "open") {

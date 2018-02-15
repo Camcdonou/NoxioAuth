@@ -1,21 +1,25 @@
 <html>
     <head>
-        <title>Noxio</title>
+        <title>20XX</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         
+        <link rel="icon" href="img/aes/icon.png">
         <link rel="stylesheet" type="text/css" href="css/app.css">
         <link rel="stylesheet" type="text/css" href="css/gauss.css">
         <link rel="stylesheet" type="text/css" href="css/errorModal.css">
     </head>
     
-    <body ondragstart="return false;" ondrop="return false;">
+    <body ondragstart="return false;" ondrop="return false;" onresize="main.menu.resize()">
       
       <!-- Warning Class -->
-      <div id="warning" class="main-warn info-animate" style="display: none">...</div>
+      <div id="warning" class="warn" style="display: none">...</div>
 
       <!-- Connection Display -->
-      <div id="connect" class="main-menu-container" style="display: none">
-        <div id="connect-info" class="main-menu lg">...</div>
+      <div id="connect" class="menu-container" style="display: none">
+        <div id="connect-info" class="menu con">
+          <img alt='Preload SVG.' src='img/aes/alert.svg' class='ico-con'/>
+          <img alt='Preload SVG.' src='img/aes/spin-black.svg' class='ico-con'/>
+        </div>
       </div>
       
       <!-- Login / Create Account Menu -->
@@ -30,35 +34,36 @@
           <div id="auth-create-password" class="menu sub fld"><input id="auth-create-password-input" class="inp" type="password" placeholder="Password"/></div>
           <div id="auth-create-create" class="menu sub btn ico-blip" onclick="main.menu.auth.items.create.onEnter()"></div>
         <div id="auth-about" class="menu cat" onclick="main.menu.auth.items.about.show()">About</div>
-          <div id="auth-about-about" class="menu sub about">Noxio | Development v@TODO | © InfernoPlus</div>
+          <div id="auth-about-about" class="menu sub about">Noxio/20XX | Beta v@TODO | © InfernoPlus</div>
       </div>
       
       <!-- Game Server / Settings Menu -->
-      <div id="online" class="main-menu-container" style="display: none">
-        <div id="online-user" class="main-menu-inverse lg">User</div>
-        <div id="online-server" class="main-menu btn lg" onclick="main.menu.online.items.server.show()">Servers</div>
+      <div id="online" class="menu-container" style="display: none">
+        <div id="online-user" class="menu usr">User</div>
+        <div id="online-server" class="menu cat" onclick="main.menu.online.items.server.show()">Servers</div>
           <span id="online-server-cont"></span>
-        <div id="online-setting" class="main-menu btn lg" onclick="main.menu.online.items.setting.show()">Settings</div>
-          <div id="online-setting-1" class="main-menu btn sm" onclick="">Never</div>
-          <div id="online-setting-2" class="main-menu btn sm" onclick="">Gonna</div>
-          <div id="online-setting-3" class="main-menu btn sm" onclick="">Give</div>
-          <div id="online-setting-4" class="main-menu btn sm" onclick="">You</div>
-          <div id="online-setting-5" class="main-menu btn sm" onclick="">Up</div>
-        <div id="online-logout" class="main-menu btn lg" onclick="main.menu.online.items.logout.onEnter()">Logout</div>
+        <div id="online-setting" class="menu cat" onclick="main.menu.online.items.setting.show()">Settings</div>
+          <div id="online-setting-1" class="menu sub btn" onclick="">Never</div>
+          <div id="online-setting-2" class="menu sub btn" onclick="">Gonna</div>
+          <div id="online-setting-3" class="menu sub btn" onclick="">Give</div>
+          <div id="online-setting-4" class="menu sub btn" onclick="">You</div>
+          <div id="online-setting-5" class="menu sub btn" onclick="">Up</div>
+        <div id="online-logout" class="menu cat" onclick="main.menu.online.items.logout.onEnter()">Logout</div>
       </div>
       
       <!-- Game Server Lobby -->
-      <div id="lobby" style="display: none">
-        <div class="main-menu-container">
-          <div id="lobby-server" class="main-menu-inverse lg">User@Server Name</div>
-          <div id="lobby-create" class="main-menu btn lg" onclick="main.menu.lobby.items.create.show()">Create Lobby</div>
-            <div id="lobby-create-name" class="main-menu inp sm"><input id="lobby-create-name-input" class="main-menu-input" type="text" placeholder="Lobby Name"/></div>
+      <div id="lobby" class="menu-container" style="display: none">
+        <div class="left-container">
+          <div id="lobby-server" class="menu loc">User@Server Name</div>
+          <div id="lobby-create" class="menu cat" onclick="main.menu.lobby.items.create.show()">Create</div>
+            <div id="lobby-create-name" class="menu sub fld"><input id="lobby-create-name-input" class="inp" type="text" placeholder="Game Name"/></div>
             <div id="lobby-create-create" class="main-menu btn sm">DISABLED</div>
             <!--<div id="lobby-create-create" class="main-menu btn sm" onclick="main.menu.lobby.items.create.onEnter()">Create</div>-->
-          <div id="lobby-leave" class="main-menu btn lg" onclick="main.menu.lobby.items.leave.onEnter()">Leave Server</div>
+          <div id="lobby-leave" class="menu cat" onclick="main.menu.lobby.items.leave.onEnter()">Back</div>
         </div>
-        <div class="right-menu-container">
-          <div class="right-menu-header">Game Lobbies<span class="menu-refresh-button" onclick="main.menu.lobby.list.refresh()"> ↺ </span></div>
+        <div class="right-container">
+          <div class="menu ref"><span class="ico-ref" onclick="main.menu.lobby.list.refresh()"> ↺ </span></div>
+          <div class='menu lob'>Join</div>
           <div id="lobby-list-container"></div>
         </div>
       </div>
@@ -83,7 +88,7 @@
       </div>
       
       <!-- Error Modal -->
-      <div id="errorModal" class="error-modal">
+      <div id="errorModal" class="error-modal" style="display: none">
         <!-- Error Modal Content -->
         <div class="error-modal-content">
           <div class="error-modal-header">

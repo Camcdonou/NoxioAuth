@@ -40,7 +40,7 @@ Main.prototype.endGame = function() {
 Main.prototype.close = function() {
   this.net.close();
   this.endGame();
-  this.menu.connect.show("Connection closed.");
+  this.menu.connect.show("Connection closed", 1);
 };
 
 /* Starts the Engine */
@@ -50,6 +50,5 @@ main.init();
 /* Disconnect and reset page */
 function reset() {
   main.close();
-  main = new Main();
-  main.init();
+  location.reload();
 };

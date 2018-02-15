@@ -6,9 +6,16 @@ function ConnectMenu() {
   this.info = document.getElementById("connect-info");
 };
 
-ConnectMenu.prototype.show = function(message) {
+/* icon params 
+ * 0 - spin
+ * 1 - error
+ */
+ConnectMenu.prototype.show = function(message, icon) {
   main.menu.hideAll();
-  this.info.innerHTML = message;
+  switch(icon) {
+    case 1  : { this.info.innerHTML = message + " <img alt='Error.' src='img/aes/alert.svg' class='ico-con'/>"; break; }
+    default : { this.info.innerHTML = message + " <img alt='Loading.' src='img/aes/spin-black.svg' class='ico-con'/>"; break; }
+  }
   this.element.style.display = "block";
 };
 

@@ -27,6 +27,10 @@ function Menu() {
   this.hideAll();
 };
 
+Menu.prototype.resize = function() {
+  this.lobby.resize();
+};
+
 Menu.prototype.hideAll = function() {
   for(var i=2;i<this.menus.length;i++) { /* Skip first 2 elements because they are ErrorMenu and WarningMenu */
     this.menus[i].hide();

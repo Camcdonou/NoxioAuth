@@ -18,7 +18,7 @@ LoginState.prototype.serverInfo = function(packet) {
 
 LoginState.prototype.ready = function() {
   this.send({type: "l00", user: main.net.user, sid: main.net.sid});
-  main.menu.connect.show("Logging into game server...");
+  main.menu.connect.show("Logging into game server", 0);
 };
 
 LoginState.prototype.send = function(data) {
