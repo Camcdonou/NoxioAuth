@@ -15,7 +15,7 @@ Auth.prototype.establish = function() {
     window.location.host,
     "infernoplus.com",
     "localhost:7001",
-    "68.32.114.183:7001",
+    "68.32.112.73:7001",
     "10.0.0.253:7001"
   ];
   
@@ -79,6 +79,7 @@ Auth.prototype.handlePacket = function(packet) {
   switch(packet.type) {
     case "s00" : { this.setState(packet.state); break; }
     case "s01" : { this.login(packet); break; }
+    case "s02" : { break; } /* Keep alive packet */
     case "x00" : { main.menu.error.showError("Connection Error", packet.message); main.close(); break; }
     case "x01" : { main.menu.error.showErrorException("Server Exception", packet.message, packet.trace); main.close(); break; }
     default : { main.menu.error.showErrorException("Connection Error", "Recieved invalid packet type: " + packet.type, JSON.stringify(packet)); main.close(); break; }

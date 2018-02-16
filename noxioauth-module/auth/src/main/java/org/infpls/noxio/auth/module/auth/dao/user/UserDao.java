@@ -7,6 +7,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.infpls.noxio.auth.module.auth.session.NoxioSession;
 import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
 import org.infpls.noxio.auth.module.auth.util.Hash;
+import org.infpls.noxio.auth.module.auth.session.PacketS02;
 
 /* UserDao handles both user info and logged in user NoxioSessions.
    This is because theres is an overlap in data here
@@ -82,6 +83,7 @@ public class UserDao {
     for(int i=0;i<sessions.size();i++) {
       if(sessions.get(i).loggedIn()) {
         if(sessions.get(i).getUser().equals(user)) {
+          try { sessions.get(i).sendPacket(new PacketS02()); } catch(IOException ex) { ex.printStackTrace(); }  // This is a jank fix that heartbeats a session when someone trys to log in on it while its already logged in.
           return sessions.get(i);
         }
       }
