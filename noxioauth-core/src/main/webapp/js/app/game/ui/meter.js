@@ -37,7 +37,7 @@ MeterUI.prototype.generate = function() {
 
   var container = new UIContainer({x: '+', y: '+'});
   
-  var s = 48;
+  var s = 32;
   
   var genBarMeter = function(iconMat, w, h, scalar) {
     return {
