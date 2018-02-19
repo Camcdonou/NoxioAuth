@@ -8,8 +8,8 @@
 /* Define Game UI Debug Menu Class */
 function MeterUI(game, ui, name) {
   this.FADE_OUT_TIME = 20;
-  GenericUI.call(this, game, ui, name);
   this.meters = undefined;
+  GenericUI.call(this, game, ui, name);
 }
 
 MeterUI.prototype.setVisible = GenericUI.prototype.setVisible;

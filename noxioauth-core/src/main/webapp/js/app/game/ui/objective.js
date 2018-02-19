@@ -6,11 +6,10 @@
 /* global GenericUIText */
 
 /* Define Game UI Respawn Menu Class */
-function ObjectiveUI(game, ui, name) {
-  GenericUI.call(this, game, ui, name);
-  
+function ObjectiveUI(game, ui, name) {  
   this.ICON_FADE_RANG = 2.5;    // Radius to start fading in icon
   this.ICON_FADE_DIST = 1;      // Distance from starting fade to being fully opaque
+  GenericUI.call(this, game, ui, name);
 }
 
 ObjectiveUI.prototype.setVisible = GenericUI.prototype.setVisible;

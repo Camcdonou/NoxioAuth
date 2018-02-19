@@ -7,8 +7,8 @@
 
 /* Define Game UI Debug Menu Class */
 function DebugUI(game, ui, name) {
-  GenericUI.call(this, game, ui, name);
   this.text = "";
+  GenericUI.call(this, game, ui, name);
 }
 
 DebugUI.prototype.setText = function(text) {

@@ -7,7 +7,6 @@
 
 /* Define Game UI Log/Chat Menu Class */
 function LogUI(game, ui, name) {
-  GenericUI.call(this, game, ui, name);
   this.log = "...\n";
   this.message = "";
   
@@ -15,6 +14,7 @@ function LogUI(game, ui, name) {
   this.cursor = false;
   
   this.textUpdated = true;      // If this is flagged as true we refresh the UI data with the currently set text. Prevents constant ui updates.
+  GenericUI.call(this, game, ui, name);
 }
 
 LogUI.prototype.addMessage = function(text) {
@@ -167,6 +167,7 @@ LogUI.prototype.generate = function() {
   
   container.add(this.textArea);
   
+  /*
   h = t;
   
   var NAME        = main.net.game.state.info.name;
@@ -182,6 +183,7 @@ LogUI.prototype.generate = function() {
     step: function(imp, state, window) { return false; },
     isHovered: false
   });
+  */
   
   this.containers.push(container);
 };

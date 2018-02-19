@@ -7,8 +7,8 @@
 
 /* Define Game UI Main Menu Class */
 function ControlUI(game, ui, name) {
-  GenericUI.call(this, game, ui, name);
   this.regen = false;                    // If this is set to true then we need to regenerate this UI.
+  GenericUI.call(this, game, ui, name);
 }
 
 ControlUI.prototype.setVisible = GenericUI.prototype.setVisible;

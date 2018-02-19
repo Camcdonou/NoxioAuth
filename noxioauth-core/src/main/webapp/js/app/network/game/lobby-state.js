@@ -23,8 +23,8 @@ LobbyState.prototype.joinLobby = function(lid) {
   main.menu.connect.show("Joining game lobby", 0);
 };
 
-LobbyState.prototype.createLobby = function(name) {
-  this.send({type: "b03", name: name});
+LobbyState.prototype.createLobby = function(settings) {
+  this.send({type: "b03", settings: "lobby: " + JSON.stringify(settings)});
   main.menu.connect.show("Creating game lobby", 0);
 };
 

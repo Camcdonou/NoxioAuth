@@ -13,7 +13,7 @@ function Display(game) {
   this.frame = 0;                         // Used by some shaders as a uniform to animate things @TODO: link to this.game.frame counter instead
   this.camera = new Camera();
   
-  if(!this.initWebGL()) { this.initFallback(); }
+  if(!this.initWebGL()) { main.menu.error.showError("WebGL Error", "Your browser does not appear to support WebGL."); main.net.close(); }
 };
 
 Display.prototype.initFallback = function() {
@@ -294,7 +294,6 @@ Display.prototype.draw = function() {
   this.window.height = this.container.clientHeight;
   
   /* Check WebGL is OKAY */
-  if(!this.gl) { this.drawFallback(); return; }
   var gl = this.gl; // Sanity Save
   this.frame++;
   

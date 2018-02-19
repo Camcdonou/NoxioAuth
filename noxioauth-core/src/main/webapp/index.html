@@ -56,9 +56,20 @@
         <div class="left-container">
           <div id="lobby-server" class="menu loc">User@Server Name</div>
           <div id="lobby-create" class="menu cat" onclick="main.menu.lobby.items.create.show()">Create</div>
-            <div id="lobby-create-name" class="menu sub fld"><input id="lobby-create-name-input" class="inp" type="text" placeholder="Game Name"/></div>
-            <div id="lobby-create-create" class="main-menu btn sm">DISABLED</div>
-            <!--<div id="lobby-create-create" class="main-menu btn sm" onclick="main.menu.lobby.items.create.onEnter()">Create</div>-->
+            <div id="lobby-create-name" class="menu sub fld"><input id="lobby-create-name-input" class="inp" type="text" placeholder="Lobby Name"/></div>
+            <div id="lobby-create-gametype" class="menu sub btn" onclick="main.menu.lobby.dropDownGametype();">Gametype</div>
+            <div id="lobby-create-gametype-container"></div>
+            <div id="lobby-create-map" class="menu sub btn" onclick="main.menu.lobby.dropDownMap();">Map</div>
+            <div id="lobby-create-map-container"></div>
+            <div id="lobby-create-settings" class="menu sub btn" onclick="main.menu.lobby.dropDownSettings();">Settings</div>
+            <div id="lobby-create-settings-container">
+              <div class='menu sub drop combo'><span class='combo-l'>Max Players&nbsp;</span><input id='lobby-create-settings-maxplayers' class='combo-r' type='number' placeholder='Default'/></div>
+              <div class='menu sub drop combo'><span class='combo-l'>Score Limit&nbsp;</span><input id='lobby-create-settings-scoretowin' class='combo-r' type='number' placeholder='Default'/></div>
+              <div class='menu sub drop combo'><span class='combo-l'>Respawn Time&nbsp;</span><input id='lobby-create-settings-respawntime' class='combo-r' type='number' placeholder='Default'/></div>
+              <div class='menu sub drop combo' onclick='main.menu.lobby.toggleSetting("static_hill")'><span class='combo-l'>Moving Hill&nbsp;</span><input id='lobby-create-settings-statichill' class='combo-r' type='text' disabled placeholder='Default'/></div>
+              <div class='menu sub drop combo'><span class='combo-l'>Score To Move&nbsp;</span><input id='lobby-create-settings-scoretomove' class='combo-r' type='number' placeholder='Default'/></div>
+            </div>
+            <div id="lobby-create-create" class="menu sub btn ico-blip" onclick="main.menu.lobby.items.create.onEnter()"></div>
           <div id="lobby-leave" class="menu cat" onclick="main.menu.lobby.items.leave.onEnter()">Back</div>
         </div>
         <div class="right-container">
@@ -182,6 +193,7 @@
       <script src="js/app/game/ui/name.js"></script>
       <script src="js/app/game/ui/objective.js"></script>
       <script src="js/app/game/ui/log.js"></script>
+      <script src="js/app/game/ui/credit.js"></script>
       <script src="js/app/game/ui/meter.js"></script>
       <script src="js/app/game/ui/announce.js"></script>
       <script src="js/app/game/ui/score.js"></script>

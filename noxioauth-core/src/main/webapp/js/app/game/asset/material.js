@@ -78,6 +78,14 @@ Asset.prototype.material.object.bomb.bomb = {
   texture1: "multi/normal",
 };
 
+/* Source File: credit.mat */
+Asset.prototype.material.ui.credit = {
+  name: "ui.credit",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "ui/credit",
+};
+
 /* Source File: flag.mat */
 Asset.prototype.material.ui.flag = {
   name: "ui.flag",
