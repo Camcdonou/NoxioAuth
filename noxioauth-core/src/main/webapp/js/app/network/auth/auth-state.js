@@ -24,8 +24,8 @@ AuthState.prototype.login = function(username, password) {
   this.send({type: "a01", user: username, hash: sha256(this.salt+sha256(password))});
 };
 
-AuthState.prototype.create = function(username, password) {
-  this.send({type: "a00", user: username, hash: sha256(password)});
+AuthState.prototype.create = function(username, email, password) {
+  this.send({type: "a00", user: username, email: email, hash: sha256(password)});
 };
 
 AuthState.prototype.ready = function() {

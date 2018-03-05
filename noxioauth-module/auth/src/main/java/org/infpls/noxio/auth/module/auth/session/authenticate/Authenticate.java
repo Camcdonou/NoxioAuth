@@ -3,24 +3,27 @@ package org.infpls.noxio.auth.module.auth.session.authenticate;
 import com.google.gson.*;
 import java.io.IOException;
 
+import org.infpls.noxio.auth.module.auth.dao.mail.MailDao;
 import org.infpls.noxio.auth.module.auth.dao.user.UserDao;
 import org.infpls.noxio.auth.module.auth.session.*;
 import org.infpls.noxio.auth.module.auth.util.Hash;
-import org.infpls.noxio.auth.module.auth.util.Salt;
+import org.infpls.noxio.auth.module.auth.util.ID;
 import org.infpls.noxio.auth.module.auth.util.Validation;
 
 
 public class Authenticate extends SessionState {
   
   private final UserDao userDao;
+  private final MailDao mailDao;
   
   private final String salt;
   
-  public Authenticate(final NoxioSession session, final UserDao userDao) throws IOException {
+  public Authenticate(final NoxioSession session, final UserDao userDao, final MailDao mailDao) throws IOException {
     super(session);
     
     this.userDao = userDao;
-    this.salt = Salt.generate();
+    this.mailDao = mailDao;
+    this.salt = ID.generate32();
     
     sendPacket(new PacketS00('a'));
   }
@@ -55,7 +58,7 @@ public class Authenticate extends SessionState {
   }
   
   private void createUser(final PacketA00 p) throws IOException {
-    /* Make sure data is valid */
+    /* Make sure data is valid @TODO: email validation */
     if(!Validation.isAlphaNumeric(p.getUser())) {
       sendPacket(new PacketA03("Username must be Alpha-Numeric characters only."));
       return;
@@ -82,7 +85,8 @@ public class Authenticate extends SessionState {
     }
     
     if(userDao.createUser(p.getUser(), p.getHash())) {
-      sendPacket(new PacketA06()); /* User creation successful */
+      if(mailDao.send(p.getEmail())) { sendPacket(new PacketA06()); } /* User creation successful */
+      else { sendPacket(new PacketA03("Failed to send verification email.")); }
     }
     else {
       sendPacket(new PacketA03("Username is already in use."));

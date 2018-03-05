@@ -8,6 +8,8 @@ import org.infpls.noxio.auth.module.auth.session.NoxioSession;
 import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
 import org.infpls.noxio.auth.module.auth.util.Hash;
 import org.infpls.noxio.auth.module.auth.session.PacketS02;
+import org.infpls.noxio.auth.module.auth.util.ID;
+import org.springframework.dao.DataAccessException;
 
 /* UserDao handles both user info and logged in user NoxioSessions.
    This is because theres is an overlap in data here
@@ -15,10 +17,13 @@ import org.infpls.noxio.auth.module.auth.session.PacketS02;
 */
 
 public class UserDao {
+  private final DaoContainer dao;
+  
   private final List<User> users; /* @FIXME This WILL be changed to a database in time */
   private final List<NoxioSession> sessions; /* This is a list of all active user NoxioSessions. */
   
-  public UserDao() {
+  public UserDao(final DaoContainer dao) {
+    this.dao = dao;
     users = new ArrayList();
     sessions = new ArrayList();
     
@@ -32,8 +37,19 @@ public class UserDao {
   
   public synchronized boolean createUser(final String user, final String hash) {
     User u = getUserByName(user);
+    if(u != null) { return false; }
     
-    if(u != null) {
+    final String uid = ID.generate32();
+    final String salt = ID.generate32();
+    try {
+      dao.jdbc.update(
+        "INSERT into USERS (UID, NAME, DISPLAY, EMAIL, SALT, HASH, PREMIUM, CREATED, UPDATED) VALUES ( ?, ?, ?, ?, ?, ?, 0, NOW(), NOW() )",
+              uid, user, user, "email@email.email", salt, hash
+      );
+    }
+    catch(DataAccessException ex) {
+      System.err.println("UserDao::createuser() - Error in SQL!");
+      ex.printStackTrace();
       return false;
     }
     

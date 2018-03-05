@@ -44,13 +44,15 @@ function AuthMenu() {
       show: show,
       items: [
         document.getElementById("auth-create-username"),
+        document.getElementById("auth-create-email"),
         document.getElementById("auth-create-password"),
         document.getElementById("auth-create-create")
       ],
       onEnter: function() {
         var u = document.getElementById("auth-create-username-input");
+        var e = document.getElementById("auth-create-email-input");
         var p = document.getElementById("auth-create-password-input");
-        main.net.auth.state.create(u.value, p.value);
+        main.net.auth.state.create(u.value, e.value, p.value);
         p.value = "";
       }
     },

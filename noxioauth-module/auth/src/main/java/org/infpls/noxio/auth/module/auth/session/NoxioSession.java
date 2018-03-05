@@ -8,7 +8,7 @@ import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
 import org.infpls.noxio.auth.module.auth.session.authenticate.Authenticate;
 import org.infpls.noxio.auth.module.auth.session.error.*;
 import org.infpls.noxio.auth.module.auth.session.online.Online;
-import org.infpls.noxio.auth.module.auth.util.Salt;
+import org.infpls.noxio.auth.module.auth.util.ID;
 
 public class NoxioSession {
   private final WebSocketSession webSocket;
@@ -21,7 +21,7 @@ public class NoxioSession {
     this.webSocket = webSocket;
     this.dao = dao;
         
-    sessionState = new Authenticate(this, dao.getUserDao());
+    sessionState = new Authenticate(this, dao.getUserDao(), dao.getMailDao());
   }
   
   public void handlePacket(final String data) throws IOException {
@@ -48,7 +48,7 @@ public class NoxioSession {
   public void login(final String user) throws IOException {
     if(loggedIn()) { throw new IOException("This session is already logged in!"); }
     this.user = user;
-    this.sid = Salt.generate();
+    this.sid = ID.generate32();
     sendPacket(new PacketS01(user, sid));
     changeState(1);
   }
