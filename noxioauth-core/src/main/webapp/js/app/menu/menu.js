@@ -12,6 +12,7 @@ function Menu() {
     {id: "error", obj: new ErrorMenu()}, //Unique in that it displays on top as a modal.
     {id: "warning", obj: new WarningMenu()}, //Unique in that it displays as as widget at the top left.
     {id: "connect", obj: new ConnectMenu()},
+    {id: "verify", obj: new VerifyMenu()},
     {id: "auth", obj: new AuthMenu()},
     {id: "online", obj: new OnlineMenu()},
     {id: "lobby", obj: new LobbyMenu()},

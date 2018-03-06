@@ -1,6 +1,33 @@
 package org.infpls.noxio.auth.module.auth.util;
 
 public class Validation {
+  
+  public static String validUserName(final String in) {
+    if(!Validation.isAlphaNumeric(in)) { return "Username must be Alpha-Numeric characters only."; }
+    if(in.length() < 4) { return "Username must be at least 4 characters."; }
+    if(in.length() > 32) { return "Username cannot be longer than 32 characters."; }
+    return null;
+  }
+  
+  private static final String blankHash = Hash.generate("");
+  private static final String undefHash = Hash.generate("undefined");
+  private static final String xxblankHash = Hash.generate("20xx");
+  private static final String xxundefHash = Hash.generate("20undefinedxx");
+  public static String validHash(final String in) {
+    if(in.length() != 64) { return "Invalid password hash."; }
+    if(!Validation.isAlphaNumeric(in)) { return "Invalid password hash."; }
+    if(blankHash.equals(in) || xxblankHash.equals(in)) { return "Password cannot be blank."; }
+    if(undefHash.equals(in) || xxundefHash.equals(in)) { return "Don't use 'undefined' as a password, it's a bad idea."; }
+    return null;
+  }
+  
+  public static String validEmail(final String in) {
+    if(in.length() < 3) { return "Email address is to short."; }
+    if(in.length() > 255) { return "Email address cannot exceed 255 characters."; }
+    if(!in.contains("@")) { return "This Email address does not appear to be valid."; }
+    return null;
+  }
+  
   public static boolean isAlphaNumeric(final String in) {
     return in.matches("[a-zA-Z0-9]*");
   }

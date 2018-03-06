@@ -22,6 +22,14 @@
         </div>
       </div>
       
+      <!-- Verify Email -->
+      <div id="verify" class="menu-container" style="display: none">
+        <div class="menu ver">An email was sent to you with a verification code. Check your spam folder.</div>
+        <div class="menu cat not-btn selected">Verify Account</div>
+          <div class="menu sub fld"><input id="verify-input" class="inp" type="text" placeholder="Verification Code"/></div>
+          <div id="verify-submit" class="menu sub btn ico-blip" onclick="main.menu.verify.submit();"></div>
+      </div>
+      
       <!-- Login / Create Account Menu -->
       <div id="auth" class="menu-container" style="display: none">
         <div class="menu logo"><img alt='20XX Logo' src='img/aes/logo.png'/></div>
@@ -32,7 +40,8 @@
         <div id="auth-create" class="menu cat" onclick="main.menu.auth.items.create.show()">New User</div>
           <div id="auth-create-username" class="menu sub fld"><input id="auth-create-username-input" class="inp" type="text" placeholder="Username"/></div>
           <div id="auth-create-email" class="menu sub fld"><input id="auth-create-email-input" class="inp" type="text" placeholder="Email"/></div>
-          <div id="auth-create-password" class="menu sub fld"><input id="auth-create-password-input" class="inp" type="password" placeholder="Password"/></div>
+          <div id="auth-create-password-a" class="menu sub fld"><input id="auth-create-password-a-input" class="inp" type="password" placeholder="Password"/></div>
+          <div id="auth-create-password-b" class="menu sub fld"><input id="auth-create-password-b-input" class="inp" type="password" placeholder="Confirm Password"/></div>
           <div id="auth-create-create" class="menu sub btn ico-blip" onclick="main.menu.auth.items.create.onEnter()"></div>
         <div id="auth-about" class="menu cat" onclick="main.menu.auth.items.about.show()">About</div>
           <div id="auth-about-about" class="menu sub about">Noxio/20XX | Beta v@TODO | © InfernoPlus</div>
@@ -134,6 +143,7 @@
       <script src="js/app/menu/error-menu.js"></script>
       <script src="js/app/menu/warning-menu.js"></script>
       <script src="js/app/menu/connect-menu.js"></script>
+      <script src="js/app/menu/verify-menu.js"></script>
       <script src="js/app/menu/auth-menu.js"></script>
       <script src="js/app/menu/online-menu.js"></script>
       <script src="js/app/menu/lobby-menu.js"></script>

@@ -28,7 +28,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
   }
 
   @Bean
-  public DataSource datasource_mydb() {
+  public DataSource noxio_datasource() {
       DataSource ds = new DataSource();
       ds.setDriverClassName(driver);
       ds.setUrl(url);

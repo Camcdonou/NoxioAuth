@@ -45,15 +45,18 @@ function AuthMenu() {
       items: [
         document.getElementById("auth-create-username"),
         document.getElementById("auth-create-email"),
-        document.getElementById("auth-create-password"),
+        document.getElementById("auth-create-password-a"),
+        document.getElementById("auth-create-password-b"),
         document.getElementById("auth-create-create")
       ],
       onEnter: function() {
         var u = document.getElementById("auth-create-username-input");
         var e = document.getElementById("auth-create-email-input");
-        var p = document.getElementById("auth-create-password-input");
-        main.net.auth.state.create(u.value, e.value, p.value);
-        p.value = "";
+        var pa = document.getElementById("auth-create-password-a-input");
+        var pb = document.getElementById("auth-create-password-b-input");
+        if(pa.value !== pb.value) { main.menu.warning.show("Your passwords do not match."); return; }
+        main.net.auth.state.create(u.value, e.value, pa.value);
+        pa.value = ""; pb.value = "";
       }
     },
     about: {
@@ -71,8 +74,10 @@ function AuthMenu() {
   this.items.login.items[0].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.login.items[2].click(); } });
   this.items.login.items[1].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.login.items[2].click(); } });
   
-  this.items.create.items[0].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.create.items[2].click(); } });
-  this.items.create.items[1].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.create.items[2].click(); } });
+  this.items.create.items[0].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.create.items[4].click(); } });
+  this.items.create.items[1].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.create.items[4].click(); } });
+  this.items.create.items[2].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.create.items[4].click(); } });
+  this.items.create.items[3].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.create.items[4].click(); } });
 };
 
 /* Shows this menu */

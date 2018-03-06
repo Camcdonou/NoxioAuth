@@ -9,23 +9,49 @@ AuthState.prototype.handlePacket = function(packet) {
   switch(packet.type) {
     case "a03" : { main.menu.warning.show(packet.message); return true; }
     case "a05" : { main.menu.warning.show(packet.message); return true; }
-    case "a06" : { main.menu.warning.show("Account created successfully."); return true; }
-    case "a07" : { this.salt = packet.salt; return true; }
+    case "a06" : { this.createSuccess(); return true; }
+    case "a07" : { /* Old salty packet. Deprecated. */ return true; }
+    case "a11" : { this.sendEmail(); return true; }
+    case "a12" : { this.verifyCode(); return true; }
+    case "a14" : { this.failedSend(); return true; }
+    case "a15" : { this.failedCreate(); return true; }
     default : { return false; }
   }
 };
 
 AuthState.prototype.login = function(username, password) {
-  if(this.salt === undefined) {
-    main.menu.error.showError("Login Error", "Client never recieved salt from server. Aborting.");
-    main.close();
-    return;
-  }
-  this.send({type: "a01", user: username, hash: sha256(this.salt+sha256(password))});
+  this.send({type: "a01", user: username, hash: sha256("20"+password+"xx")});
 };
 
 AuthState.prototype.create = function(username, email, password) {
-  this.send({type: "a00", user: username, email: email, hash: sha256(password)});
+  this.send({type: "a00", user: username, email: email, hash: sha256("20"+password+"xx")});
+};
+
+AuthState.prototype.sendEmail = function() {
+  main.menu.connect.show("Sending Verification Email", 0);
+};
+
+AuthState.prototype.failedSend = function() {
+  main.menu.warning.show("Failed to send verification email.");
+  main.menu.auth.show();
+};
+
+AuthState.prototype.verifyCode = function() {
+  main.menu.verify.show();
+};
+
+AuthState.prototype.submitCode = function(code) {
+  this.send({type: "a13", code: code});
+};
+
+AuthState.prototype.createSuccess = function(code) {
+  main.menu.warning.show("Account created successfully.");
+  main.menu.auth.show();
+};
+
+AuthState.prototype.createFail = function() {
+  main.menu.warning.show("Failed to create account.");
+  main.menu.auth.show();
 };
 
 AuthState.prototype.ready = function() {

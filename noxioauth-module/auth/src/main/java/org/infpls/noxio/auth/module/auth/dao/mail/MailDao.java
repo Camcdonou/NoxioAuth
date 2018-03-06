@@ -1,27 +1,38 @@
 package org.infpls.noxio.auth.module.auth.dao.mail;
 
 import java.util.Properties;
+import javax.annotation.PostConstruct;
 import javax.mail.*;
 import javax.mail.internet.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MailDao {
+  @Value("${mail.host}")
+  private String host;
+  @Value("${mail.port}")
+  private String port;
+  @Value("${mail.user}")
+  private String user;
+  @Value("${mail.pass}")
+  private String pass;
+  
   private final Properties properties;
-  private final String from;
-  private final String user, pass;
-  public MailDao(final String host, final String port, final String user, final String pass) {
+  public MailDao() {
     properties = System.getProperties();
+  }
+  
+  @PostConstruct
+  public void init() {
     properties.put("mail.transport.protocol", "smtp");
     properties.put("mail.smtp.host", host);  /* Security concern @TODO: make this ssl */
     properties.put("mail.smtp.port", port);
     properties.put("mail.smtp.auth", "true");
-    
-    from = user;
-    this.user = user;
-    this.pass = pass;
   }
   
   /* Returns true if sent, false if not. */
-  public boolean send(final String to) {
+  public boolean send(final String to, final String subject, final String content) {
     Authenticator authenticator = new Authenticator() {
         @Override
         protected PasswordAuthentication getPasswordAuthentication() {
@@ -33,10 +44,10 @@ public class MailDao {
 
     try {
       final MimeMessage message = new MimeMessage(session);
-      message.setFrom(new InternetAddress(from));
+      message.setFrom(new InternetAddress(user));
       message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-      message.setSubject("20XX Verify Email");
-      message.setText("Your verification code is: blergh23");
+      message.setSubject(subject);
+      message.setContent(content, "text/html; charset=utf-8");
 
       Transport.send(message);
       return true;
