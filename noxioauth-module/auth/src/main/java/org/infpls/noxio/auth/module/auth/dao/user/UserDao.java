@@ -25,23 +25,50 @@ public class UserDao {
     sessions = new ArrayList();
   }
   
-  public synchronized boolean createUser(final String user, final String email, final String hash) {
+  public synchronized boolean createUser(final String user, final String email, final String hash) throws IOException {
     User u = getUserByName(user);
     if(u != null) { return false; }
     
     final String uid = ID.generate32();
     final String salt = ID.generate32();
     final String sash = Hash.generate(hash + salt);
+    final UserSettings us = new UserSettings(uid);
     try {
       dao.jdbc.update(
-        "INSERT into USERS (UID, NAME, DISPLAY, EMAIL, SALT, HASH, PREMIUM, CREATED, UPDATED, LASTLOGIN) VALUES ( ?, ?, ?, ?, ?, ?, 0, NOW(), NOW(), NOW() )",
+        "INSERT into USERS ( UID, NAME, DISPLAY, EMAIL, SALT, HASH, PREMIUM, CREATED, UPDATED, LASTLOGIN ) VALUES ( ?, ?, ?, ?, ?, ?, 0, NOW(), NOW(), NOW() )",
               uid, user, user, email, salt, sash
+      );
+      dao.jdbc.update(
+        "INSERT into SETTINGS ( " +
+        "UID, UPDATED, " +
+        "VOLMASTER, VOLMUSIC, VOLVOICE, VOLANNOUNCER, VOLFX, " +
+        "GFXUPGAME, GFXUPUI, GFXUPSKY, GFXSHADOWSIZE, GFXSAFEMODE, " +
+        "CONENABLEGAMEPAD, CONACTIONA, CONACTIONB, CONJUMP, CONTAUNT, CONTOSS, CONSCOREBOARD, " +
+        "GAMCOLOR, GAMREDCOLOR, GAMBLUECOLOR, GAMUSECUSTOMSOUND, GAMCUSTOMSOUNDFILE, " +
+        "TOGDISABLEALTS, TOGDISABLECUSTOMSOUND, TOGDISABLECOLOR " +
+        ") VALUES ( ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+              uid, 
+              us.volume.master, us.volume.music, us.volume.voice, us.volume.announcer, us.volume.fx,
+              us.graphics.upGame, us.graphics.upUi, us.graphics.upSky, us.graphics.shadowSize, us.graphics.safeMode,
+              us.control.enableGamepad, us.control.actionA, us.control.actionB, us.control.jump, us.control.taunt, us.control.toss, us.control.scoreboard,
+              us.game.color, us.game.redColor, us.game.blueColor, us.game.useCustomSound, us.game.customSoundFile,
+              us.toggle.disableAlts, us.toggle.disableCustomSound, us.toggle.disableColor
+      );
+      dao.jdbc.update(
+        "INSERT into STATS ( " +
+        "UID, UPDATED, CREDITS, LIFECREDITS, KEELL, DEATH, GAMEWIN, GAMELOSE, BETRAYED, BETRAYL, " +
+        "FIRSTBLOOD, KILLJOY, ENDEDREIGN, FLAGCAPTURE, FLAGDEFENSE, HILLCONTROL, PERFECT, HUMILIATION, " +
+        "MKX02, MKX03, MKX04, MKX05, MKX06, MKX07, MKX08, MKX09, MKX10, MKX11, MKX12, MKX13, MKX14, MKX15, MKX16, MKX17, MKX18, MKX19, MKX20, " +
+        "KSX05, KSX10, KSX15, KSX20, KSX25, KSX30, " +
+        "CUMRES " +
+        ") VALUES ( ?, NOW(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ? )",
+              uid, (int)(Math.random()*37)
       );
     }
     catch(DataAccessException ex) {
       System.err.println("UserDao::createuser() - SQL Error!");
       ex.printStackTrace();
-      return false;
+      throw new IOException("SQL Error during account creation.");
     }
     
     return true;
@@ -53,14 +80,14 @@ public class UserDao {
     2 - incorrect password or username
     3 - user does not exist
   */
-  public synchronized int authenticate(final String user, final String hash) {
+  public synchronized int authenticate(final String user, final String hash) throws IOException {
     User u = getUserByName(user);
     if(u == null) { return 3; } //Does user exist?
     if(getSessionByUser(u.name) != null) { return 1; } //Is this user already logged in?
     return u.hashCompare(hash) ? 0 : 2; //Does the password hash match?
   }
   
-  public User getUserByName(final String user) {
+  public User getUserByName(final String user) throws IOException {
     try {
       final List<Map<String,Object>> results = dao.jdbc.queryForList(
         "SELECT * FROM USERS WHERE NAME=?",
@@ -73,15 +100,17 @@ public class UserDao {
     catch(DataAccessException ex) {
       System.err.println("UserDao::getUserByName() - SQL Error!");
       ex.printStackTrace();
+      throw new IOException("SQL Error during user lookup.");
     }
     catch(ClassCastException | NullPointerException ex) {
       System.err.println("UserDao::getUserByName() - SQL Data Mapping Error!");
       ex.printStackTrace();
+      throw new IOException("SQL Error during user lookup.");
     }
     return null;
   }
   
-  public User getUserByEmail(final String email) {
+  public User getUserByEmail(final String email) throws IOException {
     try {
       final List<Map<String,Object>> results = dao.jdbc.queryForList(
         "SELECT * FROM USERS WHERE EMAIL=?",
@@ -94,12 +123,97 @@ public class UserDao {
     catch(DataAccessException ex) {
       System.err.println("UserDao::getUserByEmail() - SQL Error!");
       ex.printStackTrace();
+      throw new IOException("SQL Error during user lookup.");
     }
     catch(ClassCastException | NullPointerException ex) {
       System.err.println("UserDao::getUserByEmail() - SQL Data Mapping Error!");
       ex.printStackTrace();
+      throw new IOException("SQL Error during user lookup.");
     }
     return null;
+  }
+  
+  public UserSettings getUserSettings(final String uid) throws IOException {
+    try {
+      final List<Map<String,Object>> results = dao.jdbc.queryForList(
+        "SELECT * FROM SETTINGS WHERE UID=?",
+        uid
+      );
+      if(results.size() > 0) {
+        return new UserSettings(results.get(0));
+      }
+    }
+    catch(DataAccessException ex) {
+      System.err.println("UserDao::getUserSettings() - SQL Error!");
+      ex.printStackTrace();
+      throw new IOException("SQL Error during user settings retrieval.");
+    }
+    catch(ClassCastException | NullPointerException ex) {
+      System.err.println("UserDao::getUserSettings() - SQL Data Mapping Error!");
+      ex.printStackTrace();
+      throw new IOException("SQL Error during user settings retrieval.");
+    }
+    return null;
+  }
+    
+  public void saveUserSettings(final UserSettings us) {
+    dao.jdbc.update(
+      "UPDATE SETTINGS SET " +
+      "UPDATED=NOW(), " +
+      "VOLMASTER=?, VOLMUSIC=?, VOLVOICE=?, VOLANNOUNCER=?, VOLFX=?, " +
+      "GFXUPGAME=?, GFXUPUI=?, GFXUPSKY=?, GFXSHADOWSIZE=?, GFXSAFEMODE=?, " +
+      "CONENABLEGAMEPAD=?, CONACTIONA=?, CONACTIONB=?, CONJUMP=?, CONTAUNT=?, CONTOSS=?, CONSCOREBOARD=?, " +
+      "GAMCOLOR=?, GAMREDCOLOR=?, GAMBLUECOLOR=?, GAMUSECUSTOMSOUND=?, GAMCUSTOMSOUNDFILE=?, " +
+      "TOGDISABLEALTS=?, TOGDISABLECUSTOMSOUND=?, TOGDISABLECOLOR=? " +
+      "WHERE UID=?",
+            us.volume.master, us.volume.music, us.volume.voice, us.volume.announcer, us.volume.fx,
+            us.graphics.upGame, us.graphics.upUi, us.graphics.upSky, us.graphics.shadowSize, us.graphics.safeMode,
+            us.control.enableGamepad, us.control.actionA, us.control.actionB, us.control.jump, us.control.taunt, us.control.toss, us.control.scoreboard,
+            us.game.color, us.game.redColor, us.game.blueColor, us.game.useCustomSound, us.game.customSoundFile,
+            us.toggle.disableAlts, us.toggle.disableCustomSound, us.toggle.disableColor,
+            us.uid
+    );
+  }
+  
+  public UserStats getUserStats(final String uid) throws IOException {
+    try {
+      final List<Map<String,Object>> results = dao.jdbc.queryForList(
+        "SELECT * FROM STATS WHERE UID=?",
+        uid
+      );
+      if(results.size() > 0) {
+        return new UserStats(results.get(0));
+      }
+    }
+    catch(DataAccessException ex) {
+      System.err.println("UserDao::getUserStats() - SQL Error!");
+      ex.printStackTrace();
+      throw new IOException("SQL Error during user stats retrieval.");
+    }
+    catch(ClassCastException | NullPointerException ex) {
+      System.err.println("UserDao::getUserStats() - SQL Data Mapping Error!");
+      ex.printStackTrace();
+      throw new IOException("SQL Error during user stats retrieval.");
+    }
+    return null;
+  }
+  
+  public void saveUserStats(final UserStats us) {
+    dao.jdbc.update(
+      "UPDATE STATS SET " +
+      "UPDATED = NOW(), CREDITS=?, LIFECREDITS=?, KEELL=?, DEATH=?, GAMEWIN=?, GAMELOSE=?, BETRAYED=?, BETRAYL=?, " +
+      "FIRSTBLOOD=?, KILLJOY=?, ENDEDREIGN=?, FLAGCAPTURE=?, FLAGDEFENSE=?, HILLCONTROL=?, PERFECT=?, HUMILIATION=?, " +
+      "MKX02=?, MKX03=?, MKX04=?, MKX05=?, MKX06=?, MKX07=?, MKX08=?, MKX09=?, MKX10=?, MKX11=?, MKX12=?, MKX13=?, MKX14=?, MKX15=?, MKX16=?, MKX17=?, MKX18=?, MKX19=?, MKX20=?, " +
+      "KSX05=?, KSX10=?, KSX15=?, KSX20=?, KSX25=?, KSX30=?, " +
+      "CUMRES=? " +
+      "WHERE UID=?",
+            us.credits, us.lifeCredits, us.kill, us.death, us.gameWin, us.gameLose, us.betrayed, us.betrayl,
+            us.firstBlood, us.killJoy, us.endedReign, us.flagCapture, us.flagDefense, us.hillControl, us.perfect, us.humiliation,
+            us.mkx02, us.mkx03, us.mkx04, us.mkx05, us.mkx06, us.mkx07, us.mkx08, us.mkx09, us.mkx10, us.mkx11, us.mkx12, us.mkx13, us.mkx14, us.mkx15, us.mkx16, us.mkx17, us.mkx18, us.mkx19, us.mkx20,
+            us.ksx05, us.ksx10, us.ksx15, us.ksx20, us.ksx25, us.ksx30,
+            us.cumRes,
+            us.uid
+    );
   }
     
   public NoxioSession createSession(final WebSocketSession webSocket, DaoContainer dao) throws IOException {

@@ -80,6 +80,7 @@ Auth.prototype.handlePacket = function(packet) {
     case "s00" : { this.setState(packet.state); break; }
     case "s01" : { this.login(packet); break; }
     case "s02" : { break; } /* Keep alive packet */
+    case "s04" : { main.stats = packet.stats; break; } /* User Stats Update */
     case "x00" : { main.menu.error.showError("Connection Error", packet.message); main.close(); break; }
     case "x01" : { main.menu.error.showErrorException("Server Exception", packet.message, packet.trace); main.close(); break; }
     default : { main.menu.error.showErrorException("Connection Error", "Recieved invalid packet type: " + packet.type, JSON.stringify(packet)); main.close(); break; }
@@ -103,6 +104,9 @@ Auth.prototype.setState = function(state) {
 Auth.prototype.login = function(packet) {
   main.net.user = packet.user;
   main.net.sid = packet.sid;
+  main.settings.load(packet.settings);
+  main.stats = packet.stats;
+  console.log(main.stats);
 };
 
 Auth.prototype.send = function(packet){

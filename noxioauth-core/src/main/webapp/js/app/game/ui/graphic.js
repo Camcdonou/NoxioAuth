@@ -8,12 +8,17 @@
 /* Define Game UI Main Menu Class */
 function GraphicUI(game, ui, name) {
   this.regen = false;                    // If this is set to true then we need to regenerate this UI.
+  this.changed = false;                  // If this is true then we need to save user settings when this menu closes AKA this.hide()
   GenericUI.call(this, game, ui, name);
 }
 
 GraphicUI.prototype.setVisible = GenericUI.prototype.setVisible;
 GraphicUI.prototype.show = GenericUI.prototype.show;
-GraphicUI.prototype.hide = GenericUI.prototype.hide;
+GraphicUI.prototype.hide = function() {
+  GenericUI.prototype.hide.call(this);
+  if(this.changed) { main.settings.save(); this.changed = false; }
+};
+
 GraphicUI.prototype.refresh = function() {
   if(this.regen) {
     this.regen = false;
@@ -156,7 +161,7 @@ GraphicUI.prototype.generate = function() {
         ]
       },
       step: protoOnClick,
-      onClick: function() {parent.regen = true; sets[this.fld] = this.nxtVal; },
+      onClick: function() {parent.regen = true; parent.changed; sets[this.fld] = this.nxtVal; },
       fld: SPEC[i].fld,
       nxtVal: SPEC[i].nxt,
       isHovered: false

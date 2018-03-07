@@ -8,12 +8,18 @@
 /* Define Game UI Main Menu Class */
 function ControlUI(game, ui, name) {
   this.regen = false;                    // If this is set to true then we need to regenerate this UI.
+  this.changed = false;                  // If this is true then we need to save user settings when this menu closes AKA this.hide()
   GenericUI.call(this, game, ui, name);
 }
 
 ControlUI.prototype.setVisible = GenericUI.prototype.setVisible;
 ControlUI.prototype.show = GenericUI.prototype.show;
-ControlUI.prototype.hide = GenericUI.prototype.hide;
+
+ControlUI.prototype.hide = function() {
+  GenericUI.prototype.hide.call(this);
+  if(this.changed) { main.settings.save(); this.changed = false; }
+};
+
 ControlUI.prototype.refresh = function() {
   if(this.regen) {
     this.regen = false;
@@ -65,8 +71,7 @@ ControlUI.prototype.generate = function() {
     if(this.focus) {
       this.isHovered = true;
       for(var i=0;i<imp.keyboard.length;i++) {
-        SPEC_SETTINGS.control[this.field] = imp.keyboard[i].key;
-        SPEC_SETTINGS.saveUserSettings();
+        SPEC_SETTINGS.control[this.field] = imp.keyboard[i].key; parent.changed = true;
         this.focus = false;
         parent.regen = true;
         return true;

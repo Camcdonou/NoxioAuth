@@ -76,6 +76,7 @@ public class Authenticate extends SessionState {
       final Gson gson = new GsonBuilder().create();
       Packet p = gson.fromJson(data, Packet.class);
       if(p.getType() == null) { close("Invalid data: NULL TYPE"); return; } //Switch statements throw Null Pointer if this happens.
+      if(handleGenericPacket(gson, p, data)) { return; }
       switch(p.getType()) {
         case "a00" : { createUser(gson.fromJson(data, PacketA00.class)); break; }
         case "a01" : { authenticate(gson.fromJson(data, PacketA01.class)); break; }

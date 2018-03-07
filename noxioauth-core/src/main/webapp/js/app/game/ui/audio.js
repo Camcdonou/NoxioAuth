@@ -7,12 +7,18 @@
 
 /* Define Game UI Main Menu Class */
 function AudioUI(game, ui, name) {
+  this.changed = false;                  // If this is true then we need to save user settings when this menu closes AKA this.hide()
   GenericUI.call(this, game, ui, name);
 }
 
 AudioUI.prototype.setVisible = GenericUI.prototype.setVisible;
 AudioUI.prototype.show = GenericUI.prototype.show;
-AudioUI.prototype.hide = GenericUI.prototype.hide;
+
+AudioUI.prototype.hide = function() {
+  GenericUI.prototype.hide.call(this);
+  if(this.changed) { main.settings.save(); this.changed = false; }
+};
+
 AudioUI.prototype.refresh = GenericUI.prototype.refresh;
 
 
@@ -92,7 +98,7 @@ AudioUI.prototype.generate = function() {
         var blok = this.neutral.block[1];
         var coordAdjust = util.vec2.make(mos.x, window.y-mos.y);                   // GL draws from bottom-left because.... downs?
         var aPos = util.vec2.add(blok.pos, align);
-        this.onSlider(Math.max(Math.min((coordAdjust.x-aPos.x)/blok.size.x, 1.0), 0.0));
+        this.onSlider(Math.max(Math.min((coordAdjust.x-aPos.x)/blok.size.x, 1.0), 0.0)); parent.changed = true;
         this.neutral.block[2].size.x = sliw*SPEC_SETTINGS.volume[this.setting];
         return true;
     }
@@ -190,7 +196,7 @@ AudioUI.prototype.generate = function() {
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, swhite, fontName, fontMat, MASTER)]
     },
     step: protoSlider,
-    onSlider: function(val) { SPEC_SETTINGS.volume.master = val; SPEC_SETTINGS.saveUserSettings(); },
+    onSlider: function(val) { SPEC_SETTINGS.volume.master = val; },
     setting: "master",
     dragging: false,
     isHovered: false

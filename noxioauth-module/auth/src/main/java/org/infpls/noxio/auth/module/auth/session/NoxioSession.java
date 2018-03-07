@@ -5,6 +5,7 @@ import com.google.gson.*;
 import org.springframework.web.socket.*;
 
 import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
+import org.infpls.noxio.auth.module.auth.dao.user.*;
 import org.infpls.noxio.auth.module.auth.session.authenticate.Authenticate;
 import org.infpls.noxio.auth.module.auth.session.error.*;
 import org.infpls.noxio.auth.module.auth.session.online.Online;
@@ -14,7 +15,11 @@ public class NoxioSession {
   private final WebSocketSession webSocket;
   private final DaoContainer dao;
   
-  private String user, sid;
+  private String sid;
+  private User user;
+  private UserSettings settings;
+  private UserStats stats;
+  
   private SessionState sessionState;
  
   public NoxioSession(final WebSocketSession webSocket, final DaoContainer dao) throws IOException {
@@ -25,6 +30,7 @@ public class NoxioSession {
   }
   
   public void handlePacket(final String data) throws IOException {
+    
     sessionState.handlePacket(data);
   }
   
@@ -45,12 +51,25 @@ public class NoxioSession {
     }
   }
   
-  public void login(final String user) throws IOException {
+  public void login(final String usr) throws IOException {
     if(loggedIn()) { throw new IOException("This session is already logged in!"); }
-    this.user = user;
-    this.sid = ID.generate32();
-    sendPacket(new PacketS01(user, sid));
+    sid = ID.generate32();
+    user = dao.getUserDao().getUserByName(usr);
+    settings = dao.getUserDao().getUserSettings(user.uid);
+    stats = dao.getUserDao().getUserStats(user.uid);
+    if(user == null || settings == null || stats == null) { close("Fatal error during login. Please contact support."); return; }
+    sendPacket(new PacketS01(user.name, sid, settings, stats));
     changeState(1);
+  }
+  
+  public void saveSettings(final UserSettings usrsets) throws IOException {
+    settings = new UserSettings(settings, usrsets);
+    dao.getUserDao().saveUserSettings(settings);
+  }
+  
+  private void saveStats() throws IOException {
+    dao.getUserDao().saveUserStats(stats);
+    if(isOpen()) { sendPacket(new PacketS04(stats)); }
   }
   
   public boolean loggedIn() {
@@ -58,7 +77,7 @@ public class NoxioSession {
   }
   
   public String getUser() {
-    return user;
+    return user.name;
   }
   
   public String getSessionId() {
@@ -69,7 +88,12 @@ public class NoxioSession {
     return webSocket.getId();
   }
   
+  public boolean isOpen() { 
+    return webSocket.isOpen();
+  }
+  
   public void destroy() throws IOException {
+    saveStats();
     sessionState.destroy();
   }
   

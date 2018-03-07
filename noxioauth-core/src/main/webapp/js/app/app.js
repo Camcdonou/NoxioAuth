@@ -6,6 +6,7 @@ function Main () {
   this.menu = new Menu();                // Handles HTML menus, does NOT handle ingame OpenGL menus.
   this.net = new Network();              // Manages websocket connections with server.
   this.settings = new Settings();        // Contains settings like rebindable controls, graphics quality, and sound volume.
+  this.stats = undefined;                // Contains read only user account data like credits, total wins, and rank
   this.gauss = new Gauss();
 };
 

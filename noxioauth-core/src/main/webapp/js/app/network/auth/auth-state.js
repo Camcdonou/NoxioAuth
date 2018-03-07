@@ -14,7 +14,7 @@ AuthState.prototype.handlePacket = function(packet) {
     case "a11" : { this.sendEmail(); return true; }
     case "a12" : { this.verifyCode(); return true; }
     case "a14" : { this.failedSend(); return true; }
-    case "a15" : { this.failedCreate(); return true; }
+    case "a15" : { this.createFail(); return true; }
     default : { return false; }
   }
 };

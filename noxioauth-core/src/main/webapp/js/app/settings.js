@@ -1,41 +1,25 @@
 "use strict";
 /* global main */
 
-function Settings() {
-  this.defaults();
-  this.downloadUserSettings();
-}
+/* This class contains all user defined settings */
+/* These are saved to the server and loaded when you login */
 
-// Sets default values to user settings, this is done initially incase retrieving user settings fails
-Settings.prototype.defaults = function() {
-  this.volume = {
-    master: 0.9,
-    music: 0.5,
-    fx: 0.75
-  };
-  this.graphics = {
-    upGame: 1.0,
-    upUi: 1.0,
-    upSky: 1.0,
-    shadowSize: 2048
-  };
-  this.control = {
-    enableController: false,
-    actionA: 70,
-    actionB: 68,
-    jump: 32,
-    taunt: 84,
-    toss: 83,
-    scoreboard: 192
-  };
+function Settings() { this.skeys = []; }
+
+/* Loads the servers settings info in to this class. */
+Settings.prototype.load = function(settings) {
+  var keys = Object.keys(settings);
+  for(var i=0;i<keys.length;i++) {
+    this[keys[i]] = settings[keys[i]];
+  }
+  this.skeys = keys;
 };
 
-// Gets saved user settings from server
-Settings.prototype.downloadUserSettings = function() {
-  // @TODO: EYYYYYYYYYYYYyyy
-};
-
-// Saves changed setting to server
-Settings.prototype.saveUserSettings = function() {
-  
+/* Uses saved keylist generate a settings object and then send it to the server to save */
+Settings.prototype.save = function() {
+  var settings = {};
+  for(var i=0;i<this.skeys.length;i++) {
+    settings[this.skeys[i]] = this[this.skeys[i]];
+  }
+  main.net.auth.send({type: "s03", settings: settings});
 };

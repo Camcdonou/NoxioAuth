@@ -29,6 +29,7 @@ public class Online extends SessionState {
       final Gson gson = new GsonBuilder().create();
       Packet p = gson.fromJson(data, Packet.class);
       if(p.getType() == null) { close("Invalid data: NULL TYPE"); return; } //Switch statements throw Null Pointer if this happens.
+      if(handleGenericPacket(gson, p, data)) { return; }
       switch(p.getType()) {
         case "o02" : { serverInfo(gson.fromJson(data, PacketO02.class)); break; }
         case "o03" : { stateReady(gson.fromJson(data, PacketO03.class)); break; }

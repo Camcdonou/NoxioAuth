@@ -35,6 +35,8 @@ public class AuthWebSocket extends TextWebSocketHandler {
       catch(Exception e) {
         System.err.println("Exception thrown in " + this.toString() + ":::handleTextMessage");
         e.printStackTrace();
+        try { ((NoxioSession)(webSocket.getAttributes().get("session"))).close(e); }
+        catch(IOException ex) { ex.printStackTrace(); }
       }
     }
   
