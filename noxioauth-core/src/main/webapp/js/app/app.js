@@ -7,7 +7,8 @@ function Main () {
   this.net = new Network();              // Manages websocket connections with server.
   this.settings = new Settings();        // Contains settings like rebindable controls, graphics quality, and sound volume.
   this.stats = undefined;                // Contains read only user account data like credits, total wins, and rank
-  this.gauss = new Gauss();
+  this.unlocks = new Unlocks();          // Contains read only user account data pertaining to unlockable content/features
+  this.gauss = new Gauss();              // Animated background handler
 };
 
 /* We can't start the engine during the construction of new Main() so we do it here instead. */

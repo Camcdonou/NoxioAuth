@@ -1,3 +1,7 @@
+/* == Init == */
+CREATE DATABASE 20XX;
+USE 20XX;
+
 /* == Wipe == */
 
 DROP TABLE USERS;
@@ -6,9 +10,6 @@ DROP TABLE STATS;
 DROP TABLE UNLOCKS;
 
 /* == Build ==*/
-
-CREATE DATABASE 20XX;
-USE 20XX;
 
 CREATE TABLE USERS (
  UID  varchar(32) NOT NULL,
@@ -115,24 +116,25 @@ CREATE TABLE STATS (
 
 CREATE TABLE UNLOCKS (
  UID  varchar(32) NOT NULL,
+ UPDATED timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
  /* --Characters-- */
- CHARBOX  bool,
- CHARCRATE bool,
- CHARVOXEL bool,
- CHARCARGO bool,
- CHARBLOCK bool,
- CHARQUAD bool,
- CHARINFERNO bool,
+ CHAR_BOX  bool,
+ CHAR_CRATE bool,
+ CHAR_VOXEL bool,
+ CHAR_CARGO bool,
+ CHAR_BLOCK bool,
+ CHAR_QUAD bool,
+ CHAR_INFERNO bool,
  /* --Alternates-- */
- ALTBOXGOLD bool,
- ALTQUADFIRE bool,
- ALTBOXRED bool,
- ALTCRATEORANGE bool,
- ALTVOXELGREEN bool,
- ALTBLOCKROUND bool,
+ ALT_BOXGOLD bool,
+ ALT_BOXRED bool,
+ ALT_CRATEORANGE bool,
+ ALT_VOXELGREEN bool,
+ ALT_QUADFIRE bool,
+ ALT_BLOCKROUND bool,
  /* --Features-- */
- FTCOLOR bool,
- FTSOUND bool,
+ FT_COLOR bool,
+ FT_SOUND bool,
  CONSTRAINT UNLOCKS_UC UNIQUE (UID)
 );
 

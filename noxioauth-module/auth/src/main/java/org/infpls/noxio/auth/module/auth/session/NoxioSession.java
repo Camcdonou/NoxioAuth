@@ -19,6 +19,7 @@ public class NoxioSession {
   private User user;
   private UserSettings settings;
   private UserStats stats;
+  private UserUnlocks unlocks;
   
   private SessionState sessionState;
  
@@ -57,8 +58,9 @@ public class NoxioSession {
     user = dao.getUserDao().getUserByName(usr);
     settings = dao.getUserDao().getUserSettings(user.uid);
     stats = dao.getUserDao().getUserStats(user.uid);
-    if(user == null || settings == null || stats == null) { close("Fatal error during login. Please contact support."); return; }
-    sendPacket(new PacketS01(user.name, sid, settings, stats));
+    unlocks = dao.getUserDao().getUserUnlocks(user.uid);
+    if(user == null || settings == null || stats == null || unlocks == null) { close("Fatal error during login. Please contact support."); return; }
+    sendPacket(new PacketS01(user.name, sid, settings, stats, unlocks));
     changeState(1);
   }
   
