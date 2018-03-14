@@ -70,8 +70,15 @@ public class NoxioSession {
   }
   
   private void saveStats() throws IOException {
-    dao.getUserDao().saveUserStats(stats);
-    if(isOpen()) { sendPacket(new PacketS04(stats)); }
+    if(loggedIn()) {
+      dao.getUserDao().saveUserStats(stats);
+      if(isOpen()) { sendPacket(new PacketS04(stats)); }
+    }
+  }
+  
+  public UserData getUserData() {
+    if(!loggedIn()) { return null; }
+    return new UserData(user, settings, unlocks);
   }
   
   public boolean loggedIn() {
@@ -117,5 +124,21 @@ public class NoxioSession {
     ex.printStackTrace(pw);
     sendPacket(new PacketX01(ex.getMessage(), sw.toString()));
     webSocket.close(CloseStatus.NOT_ACCEPTABLE);
+  }
+  
+  public class UserData {
+    public final String uid;                   // Unique ID for user
+    public final String name, display;         // User is always lower case
+    public final boolean premium;              // Payed user
+
+    public final UserSettings settings;
+    public final UserUnlocks unlocks;
+
+    public UserData(final User user, final UserSettings settings, final UserUnlocks unlocks) {
+      uid = user.uid;
+      name = user.name; display = user.display;
+      premium = user.premium;
+      this.settings = settings; this.unlocks = unlocks;
+    }
   }
 }

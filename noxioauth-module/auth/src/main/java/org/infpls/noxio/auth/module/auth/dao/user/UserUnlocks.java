@@ -12,10 +12,6 @@ public class UserUnlocks {
       CHAR_BOX, CHAR_CRATE, CHAR_VOXEL, CHAR_CARGO, CHAR_BLOCK, CHAR_QUAD, CHAR_INFERNO,
       ALT_BOXGOLD, ALT_BOXRED, ALT_CRATEORANGE, ALT_VOXELGREEN, ALT_BLOCKROUND, ALT_QUADFIRE,
       FT_COLOR, FT_SOUND;
-      
-    public String k() {
-        return this.name();
-    }
   }
   
   private static class Types {
@@ -39,7 +35,7 @@ public class UserUnlocks {
     new Unlock(Key.ALT_BLOCKROUND, "Curvy Block", "At least 7 polygons probably.", Types.ALTERNATE, 50000, false),
     new Unlock(Key.ALT_QUADFIRE, "Bad Quad", "Exactly the same character but really bad.", Types.ALTERNATE, 50000, false),
           
-    new Unlock(Key.FT_COLOR, "Custom Colors", "Allows you to change your color in Free For All games.", Types.FEATURE, 25000, false),
+    new Unlock(Key.FT_COLOR, "Custom Colors", "Allows you to change your color in non-team games.", Types.FEATURE, 25000, false),
     new Unlock(Key.FT_SOUND, "Custom Sounds", "Allows you to upload and and use a custom sound effect. Plays when you come in 1st.", Types.ALTERNATE, 999999999, false)
   );
   
