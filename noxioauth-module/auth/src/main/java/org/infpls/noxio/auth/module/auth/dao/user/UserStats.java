@@ -1,17 +1,19 @@
 package org.infpls.noxio.auth.module.auth.dao.user;
 
 import java.util.Map;
+import org.infpls.noxio.auth.module.auth.session.PacketH01; /* @TODO: noxio shared package for this bit as well */
 
 public class UserStats {
   public final String uid;                   // Unique ID linking this to the user
   
-  public int credits, lifeCredits;
-  public int kill, death, gameWin, gameLose, betrayed, betrayl;
-  public int firstBlood, killJoy, endedReign, flagCapture, flagDefense, hillControl;
-  public int perfect, humiliation;
-  public int mkx02, mkx03, mkx04, mkx05, mkx06, mkx07, mkx08, mkx09, mkx10, mkx11, mkx12, mkx13, mkx14, mkx15, mkx16, mkx17, mkx18, mkx19, mkx20;
-  public int ksx05, ksx10, ksx15, ksx20, ksx25, ksx30;
-  public int cumRes;
+  private int credits;
+  public final int lifeCredits;
+  public final int kill, death, gameWin, gameLose, betrayed, betrayl;
+  public final int firstBlood, killJoy, endedReign, flagCapture, flagDefense, hillControl;
+  public final int perfect, humiliation;
+  public final int mkx02, mkx03, mkx04, mkx05, mkx06, mkx07, mkx08, mkx09, mkx10, mkx11, mkx12, mkx13, mkx14, mkx15, mkx16, mkx17, mkx18, mkx19, mkx20;
+  public final int ksx05, ksx10, ksx15, ksx20, ksx25, ksx30;
+  public final int cumRes;
   
   public UserStats(final Map<String, Object> data) {
     uid = (String)data.get("UID");
@@ -65,4 +67,63 @@ public class UserStats {
     
     cumRes = (int)data.get("CUMRES");
   }
+  
+  public UserStats(final UserStats a, final PacketH01.Stats b) {
+    uid = a.uid;
+    credits = Math.max(0, a.getCredits() + b.credits);
+    lifeCredits = a.lifeCredits + b.credits;
+    
+    kill = a.kill + b.kill;
+    death = a.death + b.death;
+    gameWin = a.gameWin + b.gameWin;
+    gameLose = a.gameLose + b.gameLose;
+    betrayed = a.betrayed + b.betrayed;
+    betrayl = a.betrayl + b.betrayl;
+    
+    firstBlood = a.firstBlood + b.firstBlood;
+    killJoy = a.killJoy + b.killJoy;
+    endedReign = a.endedReign + b.endedReign;
+    flagCapture = a.flagCapture + b.flagCapture;
+    flagDefense = a.flagDefense + b.flagDefense;
+    hillControl = a.hillControl + b.hillControl;
+    
+    perfect = a.perfect + b.perfect;
+    humiliation = a.humiliation + b.humiliation;
+    
+    mkx02 = a.mkx02 + b.mkx02;
+    mkx03 = a.mkx03 + b.mkx03;
+    mkx04 = a.mkx04 + b.mkx04;
+    mkx05 = a.mkx05 + b.mkx05;
+    mkx06 = a.mkx06 + b.mkx06;
+    mkx07 = a.mkx07 + b.mkx07;
+    mkx08 = a.mkx08 + b.mkx08;
+    mkx09 = a.mkx09 + b.mkx09;
+    mkx10 = a.mkx10 + b.mkx10;
+    mkx11 = a.mkx11 + b.mkx11;
+    mkx12 = a.mkx12 + b.mkx12;
+    mkx13 = a.mkx13 + b.mkx13;
+    mkx14 = a.mkx14 + b.mkx14;
+    mkx15 = a.mkx15 + b.mkx15;
+    mkx16 = a.mkx16 + b.mkx16;
+    mkx17 = a.mkx17 + b.mkx17;
+    mkx18 = a.mkx18 + b.mkx18;
+    mkx19 = a.mkx19 + b.mkx19;
+    mkx20 = a.mkx20 + b.mkx20;
+    
+    ksx05 = a.ksx05 + b.ksx05;
+    ksx10 = a.ksx10 + b.ksx10;
+    ksx15 = a.ksx15 + b.ksx15;
+    ksx20 = a.ksx20 + b.ksx20;
+    ksx25 = a.ksx25 + b.ksx25;
+    ksx30 = a.ksx30 + b.ksx30;
+    
+    cumRes = Math.max(0, a.cumRes + b.cumRes);
+  }
+  
+  public UserStats add(final PacketH01.Stats b) {
+    return new UserStats(this, b);
+  }
+  
+  public int getCredits() { return credits; }
+  public void subtractCredits(int sub) { credits = Math.max(0, credits-sub); }
 }

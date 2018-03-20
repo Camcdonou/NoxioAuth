@@ -10,16 +10,20 @@ function CreditUI(game, ui, name) {
   this.total = 0;
   this.addTotal = 0;
   this.adding = 0;
+  
+  this.setTotal(main.stats.credits);
   GenericUI.call(this, game, ui, name);
 }
 
 CreditUI.prototype.setTotal = function(total) {
   this.total = total;
+  this.last = main.stats.credits;
 };
 
 CreditUI.prototype.add = function(amount) {
   this.adding += amount;
   this.addTotal += amount;
+  this.last = main.stats.credits;
 };
 
 CreditUI.prototype.setVisible = GenericUI.prototype.setVisible;
@@ -27,6 +31,10 @@ CreditUI.prototype.show = GenericUI.prototype.show;
 CreditUI.prototype.hide = GenericUI.prototype.hide;
 
 CreditUI.prototype.refresh = function() {
+  var cc = main.stats.credits - this.last;
+  if(cc > 0) {
+    this.add(cc);
+  }
   if(this.adding > 0) { this.adding--; this.total++; }
   else { this.addTotal = 0; }
   this.clear();

@@ -69,6 +69,14 @@ public class NoxioSession {
     dao.getUserDao().saveUserSettings(settings);
   }
   
+  public void recordStats(final PacketH01.Stats nuStats) {
+    stats = stats.add(nuStats);
+    try { saveStats(); }
+    catch(IOException ex) {
+      ex.printStackTrace();
+    }
+  }
+  
   private void saveStats() throws IOException {
     if(loggedIn()) {
       dao.getUserDao().saveUserStats(stats);
@@ -82,7 +90,7 @@ public class NoxioSession {
   }
   
   public boolean loggedIn() {
-    return user != null;
+    return user != null && isOpen();
   }
   
   public String getUser() {

@@ -27,6 +27,7 @@ PackHand.prototype.gameDataUpdate = function(packet) {
       case "ctl" : { this.control(data); break; }
       case "rst" : { this.respawnTimer(data); break; }
       case "wsp" : { this.whisper(data); break; }
+      case "crd" : { this.credits(data); break; }
       default : { main.menu.warning.show("Game data parsing interupted unexpectedly on '" + field + "' with " + data.length + " fields remaining."); break; }
     }
   }
@@ -150,4 +151,10 @@ PackHand.prototype.respawnTimer = function(data) {
 PackHand.prototype.whisper = function(data) {
   var msg = data.shift();
   this.game.ui.log.addMessage(msg);
+};
+
+/* SYS::ADDCRED | crd */
+PackHand.prototype.credits = function(data) {
+  var crds = parseInt(data.shift());
+  main.stats.credits += crds;
 };
