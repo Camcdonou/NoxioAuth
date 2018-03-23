@@ -11,7 +11,6 @@ Unlocks.prototype.load = function(data) {
 
 /* short for "has access to". returns true if the user has the requested unlock. */
 Unlocks.prototype.has = function(key) {
-  var ind = this.unlocks.indexOf(key);
-  return !!~ind ? this.unlocks[ind] : false;
+  return this.unlocks[key];
 };
 

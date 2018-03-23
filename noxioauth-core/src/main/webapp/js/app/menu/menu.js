@@ -9,12 +9,14 @@
 function Menu() {
   /* Register all menu classes here*/
   var m = [
-    {id: "error", obj: new ErrorMenu()}, //Unique in that it displays on top as a modal.
-    {id: "warning", obj: new WarningMenu()}, //Unique in that it displays as as widget at the top left.
+    {id: "error", obj: new ErrorMenu()}, // Displays on top as a modal.
+    {id: "warning", obj: new WarningMenu()}, // Displays as a widget at the top left.
+    {id: "credit", obj: new CreditMenu()}, // Displays as a widget at top right, independantly shown/hidden by other menus.
     {id: "connect", obj: new ConnectMenu()},
     {id: "verify", obj: new VerifyMenu()},
     {id: "auth", obj: new AuthMenu()},
     {id: "online", obj: new OnlineMenu()},
+    {id: "unlock", obj: new UnlockMenu()},
     {id: "lobby", obj: new LobbyMenu()},
     {id: "game", obj: new GameMenu()}
   ];
@@ -33,7 +35,7 @@ Menu.prototype.resize = function() {
 };
 
 Menu.prototype.hideAll = function() {
-  for(var i=2;i<this.menus.length;i++) { /* Skip first 2 elements because they are ErrorMenu and WarningMenu */
+  for(var i=2;i<this.menus.length;i++) { /* Skip first 2 elements because they are ErrorMenu and WarningMenu which display on top of all other menus */
     this.menus[i].hide();
   }
 };

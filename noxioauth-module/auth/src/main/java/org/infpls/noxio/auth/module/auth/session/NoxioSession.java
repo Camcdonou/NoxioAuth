@@ -69,6 +69,20 @@ public class NoxioSession {
     dao.getUserDao().saveUserSettings(settings);
   }
   
+  public String doUnlock(final UserUnlocks.Unlock unlock) throws IOException {
+    /* Checks */
+    if(unlocks.has(unlock.key)) { return "You already have this unlocked."; }
+    if(stats.getCredits() <= unlock.price) { return "You do not have enough credits."; }
+    
+    /* Unlock */
+    unlocks.unlock(unlock.key);
+    dao.getUserDao().doUserUnlock(unlocks, unlock.key);
+    stats.subtractCredits(unlock.price);
+    saveStats();
+    sendPacket(new PacketS05(unlocks));
+    return null;
+  }
+  
   public void recordStats(final PacketH01.Stats nuStats) {
     stats = stats.add(nuStats);
     try { saveStats(); }

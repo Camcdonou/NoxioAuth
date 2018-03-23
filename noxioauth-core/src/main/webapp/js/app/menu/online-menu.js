@@ -1,7 +1,7 @@
 "use strict";
 /* global main */
 
-function OnlineMenu() {
+function OnlineMenu() {  
   this.element = document.getElementById("online");
   
   /* Prototype functions for sub menus to use */
@@ -55,6 +55,16 @@ function OnlineMenu() {
         document.getElementById("online-server-cont")
       ]
     },
+    unlock: {
+      element: document.getElementById("online-unlock"),
+      hide: hide,
+      show: show,
+      items: [
+        document.getElementById("online-unlock-1"),
+        document.getElementById("online-unlock-2"),
+        document.getElementById("online-unlock-3")
+      ]
+    },
     setting: {
       element: document.getElementById("online-setting"),
       hide: hide,
@@ -83,6 +93,7 @@ OnlineMenu.prototype.show = function() {
   this.hideAll();
   document.getElementById("online-user").innerHTML = main.net.user;
   this.items.server.show();
+  main.menu.credit.show();
   this.element.style.display = "block";
 };
 
@@ -94,6 +105,7 @@ OnlineMenu.prototype.hide = function() {
 /* Hides all sub menus in this menu */
 OnlineMenu.prototype.hideAll = function() {
   this.items.server.hide();
+  this.items.unlock.hide();
   this.items.setting.hide();
   this.items.logout.hide();
 };

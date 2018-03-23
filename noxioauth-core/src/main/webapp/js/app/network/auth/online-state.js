@@ -8,6 +8,9 @@ function OnlineState() {
 OnlineState.prototype.handlePacket = function(packet) {
   switch(packet.type) {
     case "o01" : { main.menu.online.items.server.showServerInfo(packet.servers); return true; }
+    case "o04" : { main.menu.unlock.loadUnlockList(packet.unlocks); return true; }
+    case "o08" : { this.unlockSuccess(); return true; }
+    case "o09" : { this.unlockFail(packet.message); return true; }
     default : { return false; }
   }
 };
@@ -30,6 +33,20 @@ OnlineState.prototype.checkServerStatus = function(id, address, port, info) {
 OnlineState.prototype.ready = function() {
   this.send({type: "o03"});
   main.menu.online.show();
+};
+
+OnlineState.prototype.requestUnlock = function(key) {
+  this.send({type: "o07", key: key});
+  main.menu.connect.show("Unlocking...", 0);
+};
+
+OnlineState.prototype.unlockSuccess = function() {
+  main.menu.unlock.show();
+};
+
+OnlineState.prototype.unlockFail = function(message) {
+  main.menu.warning.show(message);
+  main.menu.unlock.show();
 };
 
 OnlineState.prototype.send = function(data) {

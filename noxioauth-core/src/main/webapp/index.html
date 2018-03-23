@@ -13,6 +13,11 @@
       
       <!-- Warning Class -->
       <div id="warning" class="warn" style="display: none">...</div>
+      
+      <!-- Credit Display -->
+      <div id="credit" class="credit" style="display: none">
+        <div class="credit-ico"></div><div class="credit-num" id="credit-num">...</div>
+      </div>
 
       <!-- Connection Display -->
       <div id="connect" class="menu-container" style="display: none">
@@ -52,6 +57,10 @@
         <div id="online-user" class="menu usr">User</div>
         <div id="online-server" class="menu cat" onclick="main.menu.online.items.server.show()">Servers</div>
           <span id="online-server-cont"></span>
+        <div id="online-unlock" class="menu cat" onclick="main.menu.online.items.unlock.show()">Unlocks</div>
+          <div id="online-unlock-1" class="menu sub btn" onclick="main.menu.unlock.show('CHARACTER')">Characters</div>
+          <div id="online-unlock-2" class="menu sub btn" onclick="main.menu.unlock.show('ALTERNATE')">Alternates</div>
+          <div id="online-unlock-3" class="menu sub btn" onclick="main.menu.unlock.show('FEATURE')">Features</div>
         <div id="online-setting" class="menu cat" onclick="main.menu.online.items.setting.show()">Settings</div>
           <div id="online-setting-1" class="menu sub btn" onclick="">Never</div>
           <div id="online-setting-2" class="menu sub btn" onclick="">Gonna</div>
@@ -59,6 +68,29 @@
           <div id="online-setting-4" class="menu sub btn" onclick="">You</div>
           <div id="online-setting-5" class="menu sub btn" onclick="">Up</div>
         <div id="online-logout" class="menu cat" onclick="main.menu.online.items.logout.onEnter()">Logout</div>
+      </div>
+      
+      <!-- Unlock Menu -->
+      <div id="unlock" class="menu-container" style="display: none">
+        <div id="unlock-head" class="unl-head">User</div>
+        <div id="unlock-container" class="unl-cont">...</div>
+        <div class="unl-cont"><div id="unlock-back" class="unl-back" onclick="main.menu.online.show()">Back</div></div>
+      </div>
+      <div id="unlock-info" class="unl-info">
+          <div class='unl-info-cont'>
+            <div class="unl-info-top">
+              <div id="unlock-info-close" class="unl-info-close">&times;</div>
+              <div id="unlock-info-mod-name" class="unl-info-head">...</div>
+            </div>
+            <div class="unl-info-body">
+              <div class="unl-mod-img-cont"><img id="unlock-info-mod-img" src='' alt="Preview image" class='unl-mod-img'></div>
+              <div class="unl-mod-cont">
+                <div class='unl-mod-cred'></div><div id="unlock-info-mod-price" class='unl-mod-price'>...</div>
+                <div id="unlock-info-mod-desc" class='unl-mod-desc'>...</div>
+              </div>
+            </div>
+            <div id="unlock-info-confirm" class="unl-info-confirm"></div>
+          </div>
       </div>
       
       <!-- Game Server Lobby -->
@@ -143,10 +175,12 @@
       <!-- UI Frontend -->
       <script src="js/app/menu/error-menu.js"></script>
       <script src="js/app/menu/warning-menu.js"></script>
+      <script src="js/app/menu/credit-menu.js"></script>
       <script src="js/app/menu/connect-menu.js"></script>
       <script src="js/app/menu/verify-menu.js"></script>
       <script src="js/app/menu/auth-menu.js"></script>
       <script src="js/app/menu/online-menu.js"></script>
+      <script src="js/app/menu/unlock-menu.js"></script>
       <script src="js/app/menu/lobby-menu.js"></script>
       <script src="js/app/menu/game-menu.js"></script>
       <script src="js/app/menu/menu.js"></script>

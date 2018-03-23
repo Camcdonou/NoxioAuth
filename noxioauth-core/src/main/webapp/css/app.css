@@ -1,3 +1,5 @@
+/* @TODO: This CSS file is a bit out of control. It needs to be split into seperate files corresponding to different pages invidiual styles */
+
 body {
   background-color: #000000;
   margin: 0px 0px 0px 0px;
@@ -139,37 +141,6 @@ body {
   padding: 0px 8px 0px 8px;
 }
 
-/*.ver {
-  display: inline-block;
-  font-size: 24px;
-  background-color: rgba(255, 255, 255, 1.0);
-  color: rgba(0, 0, 0, 1.0);
-  padding: 0px 8px 0px 8px;
-}
-
-.ver-inp {
-  display: inline-block;
-  border: none;
-  margin: 0 0 0 0;
-  padding: 2px 6px 2px 2px;
-  width: 100%;
-  
-  font-size: 18px;
-  
-  text-align: center;
-  background:rgba(0, 0, 0, 0.25);
-  color: rgba(0, 0, 0, 1.0);
-}
-
-.ver-inp:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-  color: rgba(0, 0, 0, 1.0);
-}
-
-.ver-inp::-webkit-input-placeholder {
-  color: rgba(0, 0, 0, 0.65);
-}*/
-
 .ver {
   font-size: 12px;
   background-color: rgba(255, 255, 255, 0.0);
@@ -269,6 +240,197 @@ serv {
   display: inline-block;
 }
 
+.unl-head {
+  font-size: 32px;
+  background-color: rgba(255, 255, 255, 0.0);
+  color: rgba(255, 255, 255, 1.0);
+  text-align: center;
+}
+
+.unl-cont {
+  text-align: center;
+}
+
+.unl-box {
+  display: inline-block;
+  width: 175px;
+  height: 175px;
+  border: 2px solid rgba(255, 255, 255, 1.0);
+  padding: 2px;
+  margin: 4px;
+}
+
+.unl-box:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.unl-box-img-cont {
+  width: 100%;
+  text-align: center;
+}
+
+.unl-box-img {
+  width: 135px;
+  height: 135px;
+}
+
+.unl-box-name {
+  display: block;
+  color: rgba(255, 255, 255, 1.0);
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 4px;
+}
+
+.unl-box-cred {
+  display: inline-block;
+  color: rgba(255, 255, 255, 1.0);
+  width: 14px;
+  height: 14px;
+  margin-left: 4px;
+  margin-bottom: -2px;
+  background-image: url(../img/aes/credit.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 14px 14px;
+}
+
+.unl-box-price {
+  display: inline-block;
+  color: rgba(255, 255, 255, 1.0);
+  font-size: 14px;
+  font-weight: normal;
+  margin-left: 2px;
+}
+
+.unl-back {
+  cursor: pointer;
+  display: inline-block;
+  width: 33%;
+  text-align: center;
+  font-size: 24px;
+  background-color: rgba(255, 255, 255, 0.0);
+  color: rgba(255, 255, 255, 1.0);
+}
+
+.unl-back:hover {
+  background-color: rgba(255, 255, 255, 1.0);
+  color: rgba(0, 0, 0, 1.0);
+}
+
+.unl-info {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.8);
+    font-family: "Calibri", monospace;
+}
+
+.unl-info-cont {
+    position: relative;
+    top: 25%;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 450px;
+    height: 300px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.35),0 6px 20px 0 rgba(0,0,0,0.3);
+}
+
+.unl-info-top {
+    background-color: rgba(255, 255, 255, 1.0);
+    color: rgba(0, 0, 0, 1.0);    
+}
+
+.unl-info-head {
+  display: inline-block;
+  font-size: 32px;
+  margin-left: 8px;
+}
+
+.unl-info-close {
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+  font-size: 32px;
+  margin-right: 8px;
+  margin-bottom: -2px;
+}
+
+.unl-info-body {
+  border-left: 2px solid rgba(255, 255, 255, 1.0);
+  border-right: 2px solid rgba(255, 255, 255, 1.0);
+}
+
+.unl-info-confirm {
+  cursor: pointer;
+  background-image: url(../img/aes/blip.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 28px 28px;
+  background-color: rgba(255, 255, 255, 0.45);
+  height: 32px;
+  
+  border: 2px solid rgba(255, 255, 255, 1.0);
+  border-top: none;
+}
+
+.unl-info-confirm:hover {
+  background-image: url(../img/aes/blip-hov.png);
+  background-color: rgba(255, 255, 255, 1.0);
+}
+
+.unl-mod-img-cont {
+  display:inline-block;
+}
+
+.unl-mod-img {
+  display: block;
+  width: 227px;
+  height: 227px;
+}
+
+.unl-mod-cont {
+  display: inline-block;
+  float: right;
+  width: 210px;
+  margin-top: 16px;
+}
+
+.unl-mod-cred {
+  display: inline-block;
+  color: rgba(255, 255, 255, 1.0);
+  width: 20px;
+  height: 20px;
+  margin-bottom: -3px;
+  background-image: url(../img/aes/credit.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20px 20px;
+}
+
+.unl-mod-price {
+  display: inline-block;
+  color: rgba(255, 255, 255, 1.0);
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 4px;
+  margin-left: 2px;
+}
+
+.unl-mod-desc {
+  display: block;
+  color: rgba(255, 255, 255, 1.0);
+  font-size: 18px;
+  margin-left: 4px;
+}
+
 .warn {
   position: absolute;
   margin: 0px 0px 0px 0px;
@@ -279,6 +441,35 @@ serv {
   
   font-size: 16px;
   font-weight: bold;
+}
+
+.credit {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  margin: 0px 0px 0px 0px;
+  padding: 6px 6px 2px 6px;
+  font-family: "Calibri", monospace;
+  color: rgba(0, 0, 0, 1.0);
+  background-color: rgba(255, 255, 255, 1.0);
+  font-size: 24px;
+}
+
+.credit-num {
+  display: inline-block;
+  margin-left: 4px;
+}
+
+.credit-ico {
+  display: inline-block;
+  color: rgba(255, 255, 255, 1.0);
+  width: 24px;
+  height: 24px;
+  margin-bottom: -4px;
+  background-image: url(../img/aes/credit-inv.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 24px 24px;
 }
 
 .game-load {
