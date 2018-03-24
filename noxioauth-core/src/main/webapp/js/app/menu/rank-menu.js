@@ -10,16 +10,20 @@ function RankMenu() {
   
   this.displayLifeCredits = 0;
   this.displayRank = undefined;
+  
+  this.visible = false;
 };
 
 RankMenu.prototype.show = function() {
   this.element.style.display = "block";
+  this.visible = true;
   if(!this.displayRank) { this.displayRank = main.stats.globalCount; }
   
   this.update();
 };
 
 RankMenu.prototype.update = function() {
+  if(!this.visible) { return; } /* Don't do cool updatey interpolation unless the menu is visible. */
   this.displayLifeCredits += (main.stats.lifeCredits - this.displayLifeCredits) * 0.03;
   this.displayRank += (main.stats.rank - this.displayRank) * 0.03;
   
@@ -38,4 +42,5 @@ RankMenu.prototype.update = function() {
 
 RankMenu.prototype.hide = function() {
   this.element.style.display = "none";
+  this.visible = false;
 };
