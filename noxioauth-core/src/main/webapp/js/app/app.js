@@ -18,6 +18,12 @@ Main.prototype.init = function() {
   this.net.auth.establish();
 };
 
+Main.prototype.setStats = function(stats) {
+  this.stats = stats;
+  this.menu.credit.update();
+  this.menu.rank.update();
+};
+
 Main.prototype.startGame = function(name, settings, map) {
   if(!this.inGame()) {
     this.game = new NoxioGame(name, settings, map);

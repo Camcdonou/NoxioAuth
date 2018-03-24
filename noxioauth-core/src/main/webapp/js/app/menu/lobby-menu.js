@@ -237,6 +237,7 @@ LobbyMenu.prototype.show = function() {
   this.list.refresh();
   this.items.create.show();
   main.menu.credit.show();
+  main.menu.rank.show();
   this.element.style.display = "block";
   if(!this.customGame.rotation[0].gametype) { this.drops.settings.button.style.display = "none"; }
   this.resize();

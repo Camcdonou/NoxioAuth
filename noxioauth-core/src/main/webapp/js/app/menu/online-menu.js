@@ -73,8 +73,7 @@ function OnlineMenu() {
         document.getElementById("online-setting-1"),
         document.getElementById("online-setting-2"),
         document.getElementById("online-setting-3"),
-        document.getElementById("online-setting-4"),
-        document.getElementById("online-setting-5")
+        document.getElementById("online-setting-4")
       ]
     },
     logout: {
@@ -94,6 +93,7 @@ OnlineMenu.prototype.show = function() {
   document.getElementById("online-user").innerHTML = main.net.user;
   this.items.server.show();
   main.menu.credit.show();
+  main.menu.rank.show();
   this.element.style.display = "block";
 };
 

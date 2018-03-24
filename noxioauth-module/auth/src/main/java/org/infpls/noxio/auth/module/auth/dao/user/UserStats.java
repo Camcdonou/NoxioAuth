@@ -7,6 +7,7 @@ public class UserStats {
   public final String uid;                   // Unique ID linking this to the user
   
   private int credits;
+  public final long rank, globalCount;
   public final int lifeCredits;
   public final int kill, death, gameWin, gameLose, betrayed, betrayl;
   public final int firstBlood, killJoy, endedReign, flagCapture, flagDefense, hillControl;
@@ -18,6 +19,8 @@ public class UserStats {
   public UserStats(final Map<String, Object> data) {
     uid = (String)data.get("UID");
     
+    rank = (long)((double)data.get("RANK")); /* @TODO: I have no fucking clue y mysql returns the row number as a double. it make me angry. low priority bugfix */
+    globalCount = (long)data.get("GLOBALCOUNT");
     credits = (int)data.get("CREDITS");
     lifeCredits = (int)data.get("LIFECREDITS");
 
@@ -70,6 +73,8 @@ public class UserStats {
   
   public UserStats(final UserStats a, final PacketH01.Stats b) {
     uid = a.uid;
+    
+    rank = a.rank; globalCount = a.globalCount;
     credits = Math.max(0, a.getCredits() + b.credits);
     lifeCredits = a.lifeCredits + b.credits;
     

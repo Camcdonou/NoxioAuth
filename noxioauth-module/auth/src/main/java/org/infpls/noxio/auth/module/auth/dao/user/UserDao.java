@@ -1,7 +1,6 @@
 package org.infpls.noxio.auth.module.auth.dao.user;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.*;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -192,11 +191,11 @@ public class UserDao {
       throw new IOException("SQL Error during user settings save.");
     }
   }
-  
+    
   public UserStats getUserStats(final String uid) throws IOException {
     try {
       final List<Map<String,Object>> results = dao.jdbc.queryForList(
-        "SELECT * FROM STATS WHERE UID=?",
+        "SELECT x.*, c.GLOBALCOUNT FROM (SELECT t.*, @rownum := @rownum + 1 AS RANK FROM STATS AS t, (SELECT @rownum := 0) AS r ORDER BY LIFECREDITS DESC) AS x, (SELECT COUNT(*) AS GLOBALCOUNT FROM STATS) AS c WHERE UID=?",
         uid
       );
       if(results.size() > 0) {

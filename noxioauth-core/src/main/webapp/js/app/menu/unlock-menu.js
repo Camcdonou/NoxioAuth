@@ -100,6 +100,7 @@ UnlockMenu.prototype.show = function(type) {
     case "FEATURE"   : { this.generateMenu("Special Features", this.listFeatures); break; }
   }
   main.menu.credit.show();
+  main.menu.rank.show();
   this.element.style.display = "block";
 };
 
