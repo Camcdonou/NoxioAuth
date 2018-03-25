@@ -23,7 +23,6 @@ public class Online extends SessionState {
      > o02 request server info
      > o03 state ready
      < o04 unlock list
-     < o05 stat global rank
      > o07 request unlock
      < o08 unlock succeed
      < o09 unlock fail

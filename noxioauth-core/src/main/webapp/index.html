@@ -76,7 +76,7 @@
           <div id="online-setting-1" class="menu sub btn" onclick="main.menu.stat.show()">Stats</div>
           <div id="online-setting-2" class="menu sub btn" onclick="">Controls</div>
           <div id="online-setting-3" class="menu sub btn" onclick="">Graphics</div>
-          <div id="online-setting-4" class="menu sub btn" onclick="">Game</div>
+          <div id="online-setting-4" class="menu sub btn" onclick="main.menu.setgame.show()">Game</div>
         <div id="online-logout" class="menu cat" onclick="main.menu.online.items.logout.onEnter()">Logout</div>
       </div>
       
@@ -103,18 +103,41 @@
           </div>
       </div>
       
+      <!-- Stat Menu -->
       <div id="stat" class="menu-container" style="display: none">
-        <div id="stat-sub-cont">
+        <div>
           <div id="stat-left" class="stat-cont-left"></div>
           <div id="stat-right" class="stat-cont-right"></div>
         </div>
-        <div id="stat-buttons" class="stat-sub-cont">
-          <div id="stat-back" class="stat-btn" onclick="main.menu.stat.goBack()">Back</div>
+        <div class="stat-sub-cont">
+          <div id="stat-back" class="stat-btn" onclick="main.menu.stat.back()">Back</div>
           <div id="stat-general" class="stat-btn" onclick="main.menu.stat.generateList('general')">General</div>
           <div id="stat-objective" class="stat-btn" onclick="main.menu.stat.generateList('objective')">Objective</div>
           <div id="stat-multi" class="stat-btn" onclick="main.menu.stat.generateList('multi')">Multi-Kill</div>
           <div id="stat-spree" class="stat-btn" onclick="main.menu.stat.generateList('spree')">Spree</div>
         </div>
+      </div>
+      
+      <!-- Settings Game Menu -->
+      <div id="setgame" class="menu-container" style="display: none">
+        <div>
+          <div id="setgame-left" class="stat-cont-left">
+            <div class='setgame-name'>Player Color</div>
+            <div class='setgame-name'>Red Team Color</div>
+            <div class='setgame-name'>Blue Team Color</div>
+          </div>
+          <div id="setgame-right" class="setgame-cont-right">
+            <div class='setgame-val' id="setgame-color"></div>
+            <div class='setgame-val' id="setgame-redcolor"></div>
+            <div class='setgame-val' id="setgame-bluecolor"></div>
+          </div>
+        </div>
+        <div class="setgame-sub-cont">
+          <div id="setgame-back" class="setgame-btn" onclick="main.menu.setgame.back()">Back</div>
+        </div>
+      </div>
+      <div id="setgame-modal" class="setgame-modal" style="display: none">
+          <div id="setgame-modal-cont" class='setgame-modal-cont'>...</div>
       </div>
       
       <!-- Game Server Lobby -->
@@ -190,6 +213,7 @@
       <!-- Util -->
       <script src="js/app/util/util.js"></script>
       <script src="js/app/util/font.js"></script>
+      <script src="js/app/util/kalide.js"></script>
       
       <!-- Misc -->
       <script src="js/app/settings.js"></script>
@@ -207,6 +231,7 @@
       <script src="js/app/menu/online-menu.js"></script>
       <script src="js/app/menu/unlock-menu.js"></script>
       <script src="js/app/menu/stat-menu.js"></script>
+      <script src="js/app/menu/setting-game-menu.js"></script>
       <script src="js/app/menu/lobby-menu.js"></script>
       <script src="js/app/menu/game-menu.js"></script>
       <script src="js/app/menu/menu.js"></script>

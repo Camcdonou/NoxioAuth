@@ -19,6 +19,7 @@ function Menu() {
     {id: "online", obj: new OnlineMenu()},
     {id: "unlock", obj: new UnlockMenu()},
     {id: "stat", obj: new StatMenu()},
+    {id: "setgame", obj: new SettingGameMenu()},
     {id: "lobby", obj: new LobbyMenu()},
     {id: "game", obj: new GameMenu()}
   ];

@@ -19,10 +19,10 @@ function UnlockMenu() {
   };
   
   var parent = this;
-  this.modal.close.onclick = function() { parent.info.style.display = "none"; };
+  this.modal.close.onclick = function() { parent.hideInfoModal(); };
   window.onclick = function(event) {
     if (event.target === parent.info) {
-      main.menu.unlock.info.style.display = "none";
+      main.menu.unlock.hideInfoModal();
     }
   };
   
@@ -76,7 +76,7 @@ UnlockMenu.prototype.showInfoModal = function(index) {
   this.modal.img.src = "img/aes/unl/" + itm.key + ".png";
   this.modal.price.innerHTML = itm.price;
   this.modal.desc.innerHTML = itm.description;
-  this.modal.confirm.onclick = function() { main.menu.unlock.confirmUnlock(index+""); };
+  this.modal.confirm.onclick = function() { main.menu.unlock.confirmUnlock(index); };
   
   this.info.style.display = "block";
 };

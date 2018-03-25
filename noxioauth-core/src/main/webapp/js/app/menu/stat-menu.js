@@ -7,14 +7,12 @@ function StatMenu() {
   this.left = document.getElementById("stat-left");
   this.right = document.getElementById("stat-right");
   
-  this.back = document.getElementById("stat-back");
   this.general = document.getElementById("stat-general");
   this.objective = document.getElementById("stat-objective");
   this.multi = document.getElementById("stat-multi");
   this.spree = document.getElementById("stat-spree");
   
   this.buttons = [
-    this.back,
     this.general,
     this.objective,
     this.multi,
@@ -97,7 +95,7 @@ StatMenu.prototype.generateList = function(type){
   this.right.innerHTML = r;
 };
 
-StatMenu.prototype.goBack = function() {
+StatMenu.prototype.back = function() {
   main.menu.online.show();
 };
 
