@@ -12,8 +12,8 @@
 /* global Decal */
 
 /* Define PlayerFox Class */
-function PlayerCaptain(game, oid, pos, vel) {
-  PlayerObject.call(this, game, oid, pos, vel);
+function PlayerCaptain(game, oid, pos, team, color) {
+  PlayerObject.call(this, game, oid, pos, 0, team, color);
   
   this.model = this.game.display.getModel("character.player.player");
   this.material = this.game.display.getMaterial("character.captain.captain");
@@ -217,4 +217,11 @@ PlayerCaptain.prototype.getDraw = PlayerObject.prototype.getDraw;
 
 PlayerCaptain.prototype.destroy = PlayerObject.prototype.destroy;
 
-PlayerCaptain.prototype.type = function() { return "cap"; };
+PlayerCaptain.prototype.type = function() { return "crg"; };
+
+/* Permutation dictionary */
+PlayerCaptain.classByPermutation = function(perm) {
+  switch(perm) {
+    default : { return PlayerCaptain; }
+  }
+};

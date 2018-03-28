@@ -102,6 +102,14 @@ Asset.prototype.material.ui.king = {
   texture0: "ui/king",
 };
 
+/* Source File: lockIconLarge.mat */
+Asset.prototype.material.ui.lockIconLarge = {
+  name: "ui.lockIconLarge",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "ui/lock",
+};
+
 /* Source File: ultimate.mat */
 Asset.prototype.material.ui.ultimate = {
   name: "ui.ultimate",
@@ -553,7 +561,7 @@ Asset.prototype.material.character.fox.effect.shockwave = {
 /* Source File: speedline.mat */
 Asset.prototype.material.character.fox.effect.speedline = {
   name: "character.fox.effect.speedline",
-  shader: "particle",
+  shader: "particle2tone",
   shadow: false,
   texture0: "character/fox/effect/speedline",
 };
@@ -561,7 +569,7 @@ Asset.prototype.material.character.fox.effect.speedline = {
 /* Source File: blipBright.mat */
 Asset.prototype.material.character.fox.effect.blipBright = {
   name: "character.fox.effect.blipBright",
-  shader: "particle",
+  shader: "particle2tone",
   shadow: false,
   texture0: "character/fox/effect/blip_bright",
 };
@@ -577,7 +585,7 @@ Asset.prototype.material.character.fox.effect.spark = {
 /* Source File: blip.mat */
 Asset.prototype.material.character.fox.effect.blip = {
   name: "character.fox.effect.blip",
-  shader: "particle",
+  shader: "particle2tone",
   shadow: false,
   texture0: "character/fox/effect/blip",
 };

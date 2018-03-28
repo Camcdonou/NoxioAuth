@@ -12,14 +12,19 @@
  * a mirror of the Java class located in the NoxioGame project.
  * Be sure to override or inherit all functions here!
  */
-function GameObject(game, oid, pos, vel) {
+function GameObject(game, oid, pos, permutation, team, color) {
   this.game = game;
   
   this.oid = oid;
   this.hide = false;
   
   this.pos = pos;
-  this.vel = vel;
+  this.vel = util.vec2.create();
+  
+  this.permutation = permutation;
+  this.team = team;
+  this.color = color;
+  
   this.effects = [];
   
   this.height = 0.0;

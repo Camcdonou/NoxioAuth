@@ -28,6 +28,25 @@ function SettingGameMenu() {
     }
   };
   
+  this.toggles = [
+    {
+      element: document.getElementById("setgame-hidecolor"),
+      setting: "disableColor"
+    },
+    {
+      element: document.getElementById("setgame-hidealt"),
+      setting: "disableAlts"
+    },
+    {
+      element: document.getElementById("setgame-hidechat"),
+      setting: "disableLog"
+    },
+    {
+      element: document.getElementById("setgame-hidemeter"),
+      setting: "disableMeter"
+    }
+  ];
+  
   window.onclick = function(event) {
     if (event.target === parent.modal) {
       main.menu.setgame.hideColorModal();
@@ -39,6 +58,7 @@ SettingGameMenu.prototype.update = function() {
   this.generateColorBtns(this.colorValues.color, util.kalide.getColorsNoTruncate(main.settings.game.color));
   this.generateColorBtns(this.colorValues.redColor, util.kalide.getRedsNoTruncate(main.settings.game.redColor));
   this.generateColorBtns(this.colorValues.blueColor, util.kalide.getBluesNoTruncate(main.settings.game.blueColor));
+  this.updateToggles();
 };
 
 /* Builds the color display and editor things. */
@@ -66,6 +86,20 @@ SettingGameMenu.prototype.generateColorBtns = function(obj, colors) {
       "style='" + style + "' " +
       "onclick='main.menu.setgame.showColorModal(\"" + obj.name + "\", " + i + ")'></div>";
   }
+};
+
+SettingGameMenu.prototype.updateToggles = function() {
+  for(var i=0;i<this.toggles.length;i++) {
+    var tog = this.toggles[i];
+    tog.element.innerHTML = main.settings.toggle[tog.setting] ? "On" : "Off";
+  }
+};
+
+SettingGameMenu.prototype.toggle = function(ind) {
+  var tog = this.toggles[ind];
+  main.settings.toggle[tog.setting] = !main.settings.toggle[tog.setting];
+  this.updateToggles();
+  this.changed = true;
 };
 
 SettingGameMenu.prototype.showColorModal = function(name, ind) {

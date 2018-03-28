@@ -4,8 +4,8 @@
 /* global GameObject */
 
 /* Define Hill Object Class */
-function HillObject(game, oid, pos, vel) {
-  GameObject.call(this, game, oid, pos, vel);
+function HillObject(game, oid, pos, permutation, team, color) {
+  GameObject.call(this, game, oid, pos, permutation, team, color);
   
   this.model = this.game.display.getModel("object.hill.hill");
   this.material = this.game.display.getMaterial("object.hill.hill");
@@ -15,15 +15,12 @@ function HillObject(game, oid, pos, vel) {
   
   /* State */
   this.size = util.vec2.make(1, 1);
-  this.team = -1;
 };
 
 HillObject.prototype.update = function(data) {
-  var team = parseInt(data.shift());
   var pos = util.vec2.parse(data.shift());
   var siz = util.vec2.parse(data.shift());
   
-  this.team = team;
   this.setPos(pos);
   this.size = siz;
 };

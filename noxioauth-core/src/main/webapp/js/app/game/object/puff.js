@@ -9,8 +9,8 @@
 /* global Decal */
 
 /* Define PlayerPuff Class */
-function PlayerPuff(game, oid, pos, vel) {
-  PlayerObject.call(this, game, oid, pos, vel);
+function PlayerPuff(game, oid, pos, team, color) {
+  PlayerObject.call(this, game, oid, pos, 0, team, color);
   
   this.model = this.game.display.getModel("character.player.player");
   this.material = this.game.display.getMaterial("character.puff.puff");
@@ -207,4 +207,11 @@ PlayerPuff.prototype.getDraw = PlayerObject.prototype.getDraw;
 
 PlayerPuff.prototype.destroy = PlayerObject.prototype.destroy;
 
-PlayerPuff.prototype.type = function() { return "puf"; };
+PlayerPuff.prototype.type = function() { return "blk"; };
+
+/* Permutation dictionary */
+PlayerPuff.classByPermutation = function(perm) {
+  switch(perm) {
+    default : { return PlayerPuff; }
+  }
+};

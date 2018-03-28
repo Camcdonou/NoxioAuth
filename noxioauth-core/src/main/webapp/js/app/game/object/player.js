@@ -18,12 +18,11 @@
  * The only thing that the PlayerObject constructor does not default is the 
  * model & material. Be sure you set them in the subclass.
  */
-function PlayerObject(game, oid, pos, vel) {
-  GameObject.call(this, game, oid, pos, vel);
+function PlayerObject(game, oid, pos, permutation, team, color) {
+  GameObject.call(this, game, oid, pos, permutation, team, color);
   
-  this.look = {x: 0.0, y: 1.0};  // Normalized direction player is facing
-  this.speed = 0.0;              // Current scalar of max movement speed <0.0 to 1.0>
-  this.effects = [];
+  this.look = util.vec2.make(0.0, 1.0);  // Normalized direction player is facing
+  this.speed = 0.0;                      // Current scalar of max movement speed <0.0 to 1.0>
   
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.725;
@@ -31,8 +30,7 @@ function PlayerObject(game, oid, pos, vel) {
   
   /* State */
   this.glow = 0.0;          // Scalar from 0 to 1, used to shift color to white for things like marths counter
-  this.ultimate = false;    // Super glowy woo
-  this.team = -1;
+  this.objective = false;   // If this is flagged then this played is considered a gametype "objective" and will be globally visible and marked.
 
   /* Timers */
 
@@ -89,7 +87,6 @@ PlayerObject.prototype.update = function(data) {
 };
 
 PlayerObject.prototype.parseUpd = function(data) {
-  var team = parseInt(data.shift());
   var pos = util.vec2.parse(data.shift());
   var vel = util.vec2.parse(data.shift());
   var height = parseFloat(data.shift());
@@ -99,7 +96,6 @@ PlayerObject.prototype.parseUpd = function(data) {
   var name = data.shift();
   var effects = data.shift().split(",");
   
-  this.team = team;
   this.setPos(pos);
   this.setVel(vel);
   this.setHeight(height, vspeed);
@@ -116,7 +112,7 @@ PlayerObject.prototype.effectSwitch = function(e) {
     case "air" : { this.air(); break; }
     case "jmp" : { this.jump(); break; }
     case "stn" : { this.stun(); break; }
-    case "ult" : { this.ultimate = true; break; }
+    case "ult" : { this.objective = true; break; }
     default : { main.menu.warning.show("Invalid effect value: '" + e + "' @ Player.js :: effectSwitch()"); break; }
   }
 };
@@ -151,28 +147,16 @@ PlayerObject.prototype.setSpeed = function(speed) {
 PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
   var exbounds = util.matrix.expandPolygon(bounds, this.cullRadius);
   if(util.intersection.pointPoly(this.pos, exbounds)) {
-    var color, dcolor;
-    if(this.ultimate) {
-      var rainbow = [
-        util.vec3.make(1.0,0.0,0.0),
-        util.vec3.make(1.0,0.0,1.0),
-        util.vec3.make(0.0,0.0,1.0),
-        util.vec3.make(0.0,1.0,1.0),
-        util.vec3.make(1.0,1.0,0.0),
-        util.vec3.make(1.0,0.0,0.0)
-      ];
-      var ind = Math.floor(this.game.frame/128)%(rainbow.length-1);
-      color = util.vec3.lerp(rainbow[ind], rainbow[ind+1], (this.game.frame%128)/128);
-      dcolor = color;
+    var colors, color, dcolor;
+    colors = util.kalide.getColorsAuto(this.color, this.team);
+    if(colors.length > 1) {
+      var ind = Math.floor(this.game.frame/128)%(colors.length);
+      color = util.vec3.lerp(colors[ind], colors[ind+1<colors.length?ind+1:0], (this.game.frame%128)/128);
     }
-    else {
-      switch(this.team) {
-        case  0 : { color = util.vec3.make(0.7539, 0.2421, 0.2421); dcolor = color; break; }
-        case  1 : { color = util.vec3.make(0.2421, 0.2421, 0.7539); dcolor = color; break; }
-        default : { color = util.vec3.make(0.5, 0.5, 0.5); dcolor = util.vec3.make(1, 1, 1); break; }
-      }
-    }
-    color = util.vec3.lerp(color, util.vec3.make(1.0, 1.0, 1.0), this.glow);
+    else { color = colors[0]; }
+    dcolor = this.team === -1 && this.color === 0 ? util.vec3.make(1, 1, 1) : color; // Make decal white for default boys.
+    color = util.vec3.lerp(color, util.vec3.make(1.0, 1.0, 1.0), this.glow); // Mix that glow in~
+    
     this.targetCircle.setColor(util.vec3.toVec4(dcolor, 1));
     
     var playerUniformData = [

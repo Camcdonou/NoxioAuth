@@ -1,6 +1,8 @@
 "use strict";
 /* global main */
 /* global util */
+/* global Function */
+/* global PlayerFox, PlayerFalco, PlayerShiek, PlayerMarth, PlayerPuff, PlayerInferno, PlayerCaptain */
 
 /* Define Game Packet Handler Class */
 function PackHand(game) {
@@ -39,22 +41,31 @@ PackHand.prototype.createObject = function(data) {
   var oid = parseInt(data.shift());
   var type = data.shift();
   var pos = util.vec2.parse(data.shift());
-  var vel = util.vec2.parse(data.shift());
+  var permutation = parseInt(data.shift());
+  var team = parseInt(data.shift());
+  var color = parseInt(data.shift());
   
   var obj = this.game.getObject(oid);
-  if(obj !== undefined) { main.menu.warning.show("Desync: Tried to create OBJ that already exists '" + oid + "::" + type + "'."); return; } 
+  if(obj !== undefined) { main.menu.warning.show("Desync: Tried to create OBJ that already exists '" + oid + "::" + type + "'."); return; }
   
+  /* If user has alt characters or custom colors disabled when we switch the value to 0 */
+  if(main.settings.toggle.disableAlts) { permutation = 0; }
+  if(main.settings.toggle.disableColor) { color = 0; }
+  
+  var objs = this.game.objects;
   switch(type) {
-    case "inf" : { this.game.objects.push(new PlayerInferno(this.game, oid, pos, vel)); break; }
-    case "fox" : { this.game.objects.push(new PlayerFox(this.game, oid, pos, vel)); break; }
-    case "flc" : { this.game.objects.push(new PlayerFalco(this.game, oid, pos, vel)); break; }
-    case "mar" : { this.game.objects.push(new PlayerMarth(this.game, oid, pos, vel)); break; }
-    case "shk" : { this.game.objects.push(new PlayerShiek(this.game, oid, pos, vel)); break; }
-    case "puf" : { this.game.objects.push(new PlayerPuff(this.game, oid, pos, vel)); break; }
-    case "cap" : { this.game.objects.push(new PlayerCaptain(this.game, oid, pos, vel)); break; }
-    case "flg" : { this.game.objects.push(new FlagObject(this.game, oid, pos, vel)); break; }
-    case "hil" : { this.game.objects.push(new HillObject(this.game, oid, pos, vel)); break; }
-    case "bmb" : { this.game.objects.push(new BombObject(this.game, oid, pos, vel)); break; }
+    /* Player Classes :: These use permutation dictionaries */
+    case "box" : { objs.push(new (Function.prototype.bind.apply(PlayerFox.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "crt" : { objs.push(new (Function.prototype.bind.apply(PlayerFalco.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "qua" : { objs.push(new (Function.prototype.bind.apply(PlayerMarth.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "vox" : { objs.push(new (Function.prototype.bind.apply(PlayerShiek.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "blk" : { objs.push(new (Function.prototype.bind.apply(PlayerPuff.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "crg" : { objs.push(new (Function.prototype.bind.apply(PlayerCaptain.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "inf" : { objs.push(new (Function.prototype.bind.apply(PlayerInferno.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    /* Gameplay Object Classes :: These do not use permutation dictionaries */
+    case "flg" : { this.game.objects.push(new FlagObject(this.game, oid, pos, permutation, team, color)); break; }
+    case "hil" : { this.game.objects.push(new HillObject(this.game, oid, pos, permutation, team, color)); break; }
+    case "bmb" : { this.game.objects.push(new BombObject(this.game, oid, pos, permutation, team, color)); break; }
     default : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for '" + type + "' which does not exist.", JSON.stringify(data)); main.close(); break; }
   }
 };

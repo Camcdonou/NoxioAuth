@@ -36,23 +36,37 @@ RespawnUI.prototype.generate = function() {
   var colorMat = this.game.display.getMaterial("ui.color");           // Basic color material
   var fontMat  = this.game.display.getMaterial("ui.calibri");         // Font material
   var fontName = "Calibri";                                           // Name of this font for text rendering
-  var characterMats = [                                               // Materials used for character select icons
-    this.game.display.getMaterial("character.inferno.ui.iconlarge"),
-    this.game.display.getMaterial("character.fox.ui.iconlarge"),
-    this.game.display.getMaterial("character.falco.ui.iconlarge"),
-    this.game.display.getMaterial("character.marth.ui.iconlarge"),
-    this.game.display.getMaterial("character.shiek.ui.iconlarge"),
-    this.game.display.getMaterial("character.puff.ui.iconlarge"),
-    this.game.display.getMaterial("character.captain.ui.iconlarge")
-  ];
-  var characterIDs = [
-    "inf",
-    "fox",
-    "flc",
-    "mar",
-    "shk",
-    "puf",
-    "cap"
+
+  // Materials and ids used for character select icons, organized into groups
+  var LOCKEDMAT = this.game.display.getMaterial("ui.lockIconLarge");
+  var SPEC = [
+    [
+      {id: "inf_n", mat: this.game.display.getMaterial("character.inferno.ui.iconlarge"), lock: !main.unlocks.has("CHAR_INFERNO")}
+    ],
+    [
+      {id: "box_n", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("CHAR_BOX")},
+      {id: "box_red", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXRED")},
+      {id: "box_gld", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXGOLD")}
+    ],
+    [
+      {id: "crt_n", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("CHAR_CRATE")},
+      {id: "crt_orn", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEORANGE")}
+    ],
+    [
+      {id: "qua_n", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("CHAR_QUAD")},
+      {id: "qua_fir", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADFIRE")}
+    ],
+    [
+      {id: "vox_n", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("CHAR_VOXEL")},
+      {id: "vox_grn", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXELGREEN")}
+    ],
+    [
+      {id: "blk_n", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("CHAR_BLOCK")},
+      {id: "blk_rnd", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKROUND")}
+    ],
+    [
+      {id: "crg_n", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("CHAR_CARGO")}
+    ]
   ];
   
   var black  = util.vec4.make(0.0, 0.0, 0.0, 0.5);
@@ -101,32 +115,75 @@ RespawnUI.prototype.generate = function() {
   container.add(this.respawnTimer);
   
   h += s+v;
-  var b = 128;
-  var t = characterMats.length;
+  var b = 112;
+  var bh = b*0.33333;
+  var t = SPEC.length;
   
   for(var i=0;i<t;i++) {
     o = (w*0.5)-(i*b)+(t*b-(t*b*0.5))-b;
-    container.add({
-      neutral: {
-        block: [
-          new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), black, colorMat),
-          new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), swhite, characterMats[i])
-        ],
-        text:  []
-      },
-      hover: {
-        block: [
-          new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), white, colorMat),
-          new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), sblack, characterMats[i])
-        ],
-        text:  []
-      },
-      step: protoOnClick,
-      onClick: function() { parent.game.charSelect = this.charId; },
-      offClick: function() { },
-      charId: characterIDs[i],
-      isHovered: false
-    });
+    if(!SPEC[i][0].lock) {
+      container.add({
+        neutral: {
+          block: [
+            new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), black, colorMat),
+            new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), swhite, SPEC[i][0].mat)
+          ],
+          text:  []
+        },
+        hover: {
+          block: [
+            new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), white, colorMat),
+            new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), sblack, SPEC[i][0].mat)
+          ],
+          text:  []
+        },
+        step: protoOnClick,
+        onClick: function() { parent.game.charSelect = this.charId; },
+        offClick: function() { },
+        charId: SPEC[i][0].id,
+        isHovered: false
+      });
+    }
+    else {
+      container.add({
+        neutral: {
+          block: [
+            new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), black, colorMat),
+            new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), swhite, LOCKEDMAT)
+          ],
+          text:  []
+        },
+        step: function() { },
+        isHovered: false
+      });
+    }
+    var hh = h+b;
+    var bho = o+((b-bh)*0.5);
+    for(var j=1;j<SPEC[i].length;j++) {
+      if(SPEC[i][j].lock) { continue; }
+      container.add({
+        neutral: {
+          block: [
+            new GenericUIBlock(util.vec2.make(o,hh), util.vec2.make(b,bh), black, colorMat),
+            new GenericUIBlock(util.vec2.make(bho,hh), util.vec2.make(bh,bh), swhite, SPEC[i][j].mat)
+          ],
+          text:  []
+        },
+        hover: {
+          block: [
+            new GenericUIBlock(util.vec2.make(o,hh), util.vec2.make(b,bh), white, colorMat),
+            new GenericUIBlock(util.vec2.make(bho,hh), util.vec2.make(bh,bh), sblack, SPEC[i][j].mat)
+          ],
+          text:  []
+        },
+        step: protoOnClick,
+        onClick: function() { parent.game.charSelect = this.charId; },
+        offClick: function() { },
+        charId: SPEC[i][j].id,
+        isHovered: false
+      });
+      hh += bh;
+    }
   }
   
   this.containers.push(container);

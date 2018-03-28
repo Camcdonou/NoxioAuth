@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/* @TODO: something that should be added to a NoxioShared package */
+
 /* Pre defined color list, used for player colors */
 /* Colors are identified by their index in the colors array. */
 /* This class needs to directly match the list on the game server and game client */
@@ -43,6 +45,24 @@ public class Kalide {
     new Color3f(31, 31, 223),
     new Color3f(66, 66, 193)
   );
+  
+  /* ID and Team, team=0 returns red team colors, team=1 returns blue team colors, all else returns regular colors */
+  public static Color3f getColor(int id, int team) {
+    switch(team) {
+      case 0 : { return getRed(id); }
+      case 1 : { return getBlue(id); }
+      default : { return getColor(id); }
+    }
+  }
+  
+  /* ID and Team, team=0 returns red team colors, team=1 returns blue team colors, all else returns regular colors */
+  public static List<Color3f> getColors(int id, int team) {
+    switch(team) {
+      case 0 : { return getReds(id); }
+      case 1 : { return getBlues(id); }
+      default : { return getColors(id); }
+    }
+  }
   
   /* Single id single color */
   public static Color3f getColor(int id) { return kalide(id, COLORS); }

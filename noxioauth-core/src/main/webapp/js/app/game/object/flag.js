@@ -4,8 +4,8 @@
 /* global GameObject */
 
 /* Define Flag Object Class */
-function FlagObject(game, oid, pos, vel) {
-  GameObject.call(this, game, oid, pos, vel);
+function FlagObject(game, oid, pos, permutation, team, color) {
+  GameObject.call(this, game, oid, pos, permutation, team, color);
   
   this.model = this.game.display.getModel("object.flag.flag");
   this.material = this.game.display.getMaterial("object.flag.flag");
@@ -16,13 +16,11 @@ function FlagObject(game, oid, pos, vel) {
 
   /* State */
   this.onBase = 1;                 // 1 -> Flag is on flagstand | 0 -> Flag is not on the flag stand and should draw on hud
-  this.team = -1;
 
   this.targetCircle = new ColorDecal(this.game, this.game.display.getMaterial("object.object.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.4, 0.0, util.vec4.make(1,1,1,1));
 };
 
 FlagObject.prototype.update = function(data) {
-  var team = parseInt(data.shift());
   var pos = util.vec2.parse(data.shift());
   var vel = util.vec2.parse(data.shift());
   var height = parseFloat(data.shift());
@@ -30,7 +28,6 @@ FlagObject.prototype.update = function(data) {
   var onBase = parseInt(data.shift());
   var effects = data.shift().split(",");
   
-  this.team = team;
   this.setPos(pos);
   this.setVel(vel);
   this.setHeight(height, vspeed);

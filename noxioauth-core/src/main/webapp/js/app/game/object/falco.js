@@ -13,8 +13,8 @@
 /* global Decal */
 
 /* Define PlayerFalco Class */
-function PlayerFalco(game, oid, pos, vel) {
-  PlayerObject.call(this, game, oid, pos, vel);
+function PlayerFalco(game, oid, pos, team, color) {
+  PlayerObject.call(this, game, oid, pos, 0, team, color);
   
   this.model = this.game.display.getModel("character.player.player");
   this.material = this.game.display.getMaterial("character.falco.falco");
@@ -24,6 +24,9 @@ function PlayerFalco(game, oid, pos, vel) {
   this.BLIP_POWER_MAX = 30;
   this.DASH_COOLDOWN_LENGTH = 45;
   this.CHARGE_TIME_LENGTH = 20;
+  this.BLIP_COLOR_A = util.vec4.make(0.6666, 0.9058, 1.0, 1.0);
+  this.BLIP_COLOR_B = util.vec4.make(0.4, 0.5450, 1.0, 1.0);
+  this.DASH_LIGHT_COLOR = util.vec4.make(0.6666, 0.9058, 1.0, 0.75);
   
   /* Settings */
   this.radius = 0.5; this.weight = 1.1; this.friction = 0.725;
@@ -39,10 +42,10 @@ function PlayerFalco(game, oid, pos, vel) {
   /* Effects */
   this.blipEffect = {
     effect: new Effect([
-      {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 1.0), 3.0], update: function(lit){}, attachment: true, delay: 0, length: 3},
-      {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 1.0), 3.0], update: function(lit){lit.color.w -= 1.0/12.0; lit.rad += 0.1; }, attachment: true, delay: 3, length: 12},
+      {type: "light", class: PointLight, params: ["<vec3 pos>", this.BLIP_COLOR_A, 3.0], update: function(lit){}, attachment: true, delay: 0, length: 3},
+      {type: "light", class: PointLight, params: ["<vec3 pos>", this.BLIP_COLOR_B, 3.0], update: function(lit){lit.color.w -= 1.0/12.0; lit.rad += 0.1; }, attachment: true, delay: 3, length: 12},
       {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/attack0.wav", 0.35], update: function(snd){}, attachment: true, delay: 0, length: 33},
-      {type: "particle", class: ParticleBlip, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 33}
+      {type: "particle", class: ParticleBlip, params: [this.game, "<vec3 pos>", "<vec3 vel>", this.BLIP_COLOR_A, this.BLIP_COLOR_B], update: function(prt){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.5),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -69,8 +72,8 @@ function PlayerFalco(game, oid, pos, vel) {
   this.dashEffect = {
     effect: new Effect([
       {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/falco/dash0.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33},
-      {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 0.75), 2.5], update: function(lit){lit.color.w -= 1.0/45.0; lit.rad += 0.05; }, attachment: false, delay: 0, length: 30},
-      {type: "particle", class: ParticleDash, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 60}
+      {type: "light", class: PointLight, params: ["<vec3 pos>", this.DASH_LIGHT_COLOR, 2.5], update: function(lit){lit.color.w -= 1.0/45.0; lit.rad += 0.05; }, attachment: false, delay: 0, length: 30},
+      {type: "particle", class: ParticleDash, params: [this.game, "<vec3 pos>", "<vec3 vel>", this.BLIP_COLOR_A, this.BLIP_COLOR_B], update: function(prt){}, attachment: true, delay: 0, length: 60}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -196,4 +199,11 @@ PlayerFalco.prototype.getDraw = PlayerObject.prototype.getDraw;
 
 PlayerFalco.prototype.destroy = PlayerObject.prototype.destroy;
 
-PlayerFalco.prototype.type = function() { return "flc"; };
+PlayerFalco.prototype.type = function() { return "crt"; };
+
+/* Permutation dictionary */
+PlayerFalco.classByPermutation = function(perm) {
+  switch(perm) {
+    default : { return PlayerFalco; }
+  }
+};

@@ -4,7 +4,10 @@
 /* global Particle */
 
 /* Define Dash Particle System Class */
-function ParticleDash(game, pos, vel) {
+function ParticleDash(game, pos, vel, colorA, colorB) {
+  /* Colors to use for particles */
+  this.colorA = colorA;
+  this.colorB = colorB;
   Particle.call(this, game, pos, vel);
 }
 
@@ -14,8 +17,10 @@ ParticleDash.prototype.create = function() {
   var shockwaveMat = this.game.display.getMaterial("character.fox.effect.shockwave");
   var speedLineMat = this.game.display.getMaterial("character.fox.effect.speedline");
   
-  var white = function(){ return {x: 1.0, y: 1.0, z: 1.0, w: 1.0}; };
-  var blue = function() { return {x: 0.42, y: 0.57, z: 1.0, w: 1.0}; };
+  var parent = this;
+  var colorA = function() { return util.vec4.copy(parent.colorA); };
+  var colorB = function() { return util.vec4.copy(parent.colorB); };
+  var white = function(){ return util.vec4.make(1.0, 1.0, 1.0, 1.0); };
   
   var shockwave  = {model: square, material: shockwaveMat, delay: 0, length: 7, update: function(){ this.properties.scale *= 1.15; this.properties.color.w -= 1.0/6.0;}, properties: {pos: this.pos, scale: 1.00, color: white()}};
   this.pushPart(shockwave);
@@ -34,7 +39,7 @@ ParticleDash.prototype.create = function() {
         this.properties.pos = util.vec3.add(this.properties.pos, util.vec3.scale(this.properties.vel, this.properties.speed));
         this.properties.color.w -= 1.0/18.0;
       },
-      properties: {pos: util.vec3.add(util.vec3.add(this.pos, util.vec3.scale(norm, i/6)),util.vec3.scale(rand, 0.75)), vel: reverse, scale: 0.55, speed: 0.15, color: blue(), angle: -Math.atan(norm.y/norm.x)}
+      properties: {pos: util.vec3.add(util.vec3.add(this.pos, util.vec3.scale(norm, i/6)),util.vec3.scale(rand, 0.75)), vel: reverse, scale: 0.55, speed: 0.15, color: colorA(), tone: colorB(), angle: -Math.atan(norm.y/norm.x)}
     });
   }
 };
@@ -53,6 +58,7 @@ ParticleDash.prototype.getDraw = function(geometry, decals, lights, bounds) {
       {name: "color", data: util.vec4.toArray(part.properties.color)},
       {name: "rotation", data: part.properties.angle - cameraZ}
     ];
+    if(part.properties.tone) { partUniformData.push({name: "tone", data: util.vec4.toArray(part.properties.tone)}); } /* second color used by 2tone shader */
     geometry.push({model: part.model, material: part.material, uniforms: partUniformData});
   }
 };

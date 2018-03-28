@@ -47,6 +47,24 @@ util.kalide.BLUES = [
   util.kalide.rgb255vec3(66, 66, 193)
 ];
 
+/* ID and Team, team=0 returns red team colors, team=1 returns blue team colors, all else returns regular colors */
+util.kalide.getColorAuto = function(id, team) {
+  switch(team) {
+    case 0 : { return util.kalide.getRed(id); }
+    case 1 : { return util.kalide.getBlue(id); }
+    default : { return util.kalide.getColor(id); }
+  }
+};
+
+/* ID and Team, team=0 returns red team colors, team=1 returns blue team colors, all else returns regular colors */
+util.kalide.getColorsAuto = function(id, team) {
+  switch(team) {
+    case 0 : { return util.kalide.getReds(id); }
+    case 1 : { return util.kalide.getBlues(id); }
+    default : { return util.kalide.getColors(id); }
+  }
+};
+
 /* Single id single color */
 util.kalide.getColor = function(id) { return util.kalide.kalide(id, util.kalide.COLORS); };
 

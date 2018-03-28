@@ -6,8 +6,8 @@
 /* global ParticleExplosionSmall */
 
 /* Define Bomb Object Class */
-function BombObject(game, oid, pos, vel) {
-  GameObject.call(this, game, oid, pos, vel);
+function BombObject(game, oid, pos, permutation, team, color) {
+  GameObject.call(this, game, oid, pos, permutation, team, color);
   
   this.model = this.game.display.getModel("object.bomb.bomb");
   this.material = this.game.display.getMaterial("object.bomb.bomb");
@@ -17,7 +17,6 @@ function BombObject(game, oid, pos, vel) {
   this.cullRadius = 1.0;
 
   /* State */
-  this.team = -1;
   
   /* Effects */
   this.impactEffect = {
@@ -41,14 +40,12 @@ function BombObject(game, oid, pos, vel) {
 
 BombObject.prototype.update = function(data) {
   /* Apply update data to object */
-  var team = parseInt(data.shift());
   var pos = util.vec2.parse(data.shift());
   var vel = util.vec2.parse(data.shift());
   var height = parseFloat(data.shift());
   var vspeed = parseFloat(data.shift()); 
   var effects = data.shift().split(",");
   
-  this.team = team;
   this.setPos(pos);
   this.setVel(vel);
   this.setHeight(height, vspeed);

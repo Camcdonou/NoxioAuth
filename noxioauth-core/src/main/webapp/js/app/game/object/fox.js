@@ -8,10 +8,11 @@
 /* global ParticleDash */
 /* global ParticleStun */
 /* global Decal */
+/* global PlayerFoxRed */
 
 /* Define PlayerFox Class */
-function PlayerFox(game, oid, pos, vel) {
-  PlayerObject.call(this, game, oid, pos, vel);
+function PlayerFox(game, oid, pos, team, color) {
+  PlayerObject.call(this, game, oid, pos, 0, team, color);
   
   this.model = this.game.display.getModel("character.player.player");
   this.material = this.game.display.getMaterial("character.fox.fox");
@@ -21,6 +22,9 @@ function PlayerFox(game, oid, pos, vel) {
   this.BLIP_POWER_MAX = 30;
   this.DASH_POWER_ADD = 30;
   this.DASH_POWER_MAX = 60;
+  this.BLIP_COLOR_A = util.vec4.make(0.6666, 0.9058, 1.0, 1.0);
+  this.BLIP_COLOR_B = util.vec4.make(0.4, 0.5450, 1.0, 1.0);
+  this.DASH_LIGHT_COLOR = util.vec4.make(0.6666, 0.9058, 1.0, 0.75);
   
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.725;
@@ -35,10 +39,10 @@ function PlayerFox(game, oid, pos, vel) {
   /* Effects */
   this.blipEffect = {
     effect: new Effect([
-      {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 1.0), 3.0], update: function(lit){}, attachment: true, delay: 0, length: 3},
-      {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 1.0), 3.0], update: function(lit){lit.color.w -= 1.0/12.0; lit.rad += 0.1; }, attachment: true, delay: 3, length: 12},
+      {type: "light", class: PointLight, params: ["<vec3 pos>", this.BLIP_COLOR_A, 3.0], update: function(lit){}, attachment: true, delay: 0, length: 3},
+      {type: "light", class: PointLight, params: ["<vec3 pos>", this.BLIP_COLOR_B, 3.0], update: function(lit){lit.color.w -= 1.0/12.0; lit.rad += 0.1; }, attachment: true, delay: 3, length: 12},
       {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/attack0.wav", 0.35], update: function(snd){}, attachment: true, delay: 0, length: 33},
-      {type: "particle", class: ParticleBlip, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 33}
+      {type: "particle", class: ParticleBlip, params: [this.game, "<vec3 pos>", "<vec3 vel>", this.BLIP_COLOR_A, this.BLIP_COLOR_B], update: function(prt){}, attachment: true, delay: 0, length: 33}
     ], false),
     offset: util.vec3.make(0,0,0.5),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -47,8 +51,8 @@ function PlayerFox(game, oid, pos, vel) {
   this.dashEffect = {
     effect: new Effect([
       {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/dash0.wav", 0.65], update: function(snd){}, attachment: true, delay: 0, length: 33},
-      {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.45, 0.5, 1.0, 0.75), 2.5], update: function(lit){lit.color.w -= 1.0/45.0; lit.rad += 0.05; }, attachment: false, delay: 0, length: 30},
-      {type: "particle", class: ParticleDash, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 60}
+      {type: "light", class: PointLight, params: ["<vec3 pos>", this.DASH_LIGHT_COLOR, 2.5], update: function(lit){lit.color.w -= 1.0/45.0; lit.rad += 0.05; }, attachment: false, delay: 0, length: 30},
+      {type: "particle", class: ParticleDash, params: [this.game, "<vec3 pos>", "<vec3 vel>", this.BLIP_COLOR_A, this.BLIP_COLOR_B], update: function(prt){}, attachment: true, delay: 0, length: 60}
     ], false),
     offset: util.vec3.make(0,0,0.25),
     trigger: PlayerObject.prototype.effectTrigger};
@@ -156,4 +160,12 @@ PlayerFox.prototype.getDraw = PlayerObject.prototype.getDraw;
 
 PlayerFox.prototype.destroy = PlayerObject.prototype.destroy;
 
-PlayerFox.prototype.type = function() { return "fox"; };
+PlayerFox.prototype.type = function() { return "box"; };
+
+/* Permutation dictionary */
+PlayerFox.classByPermutation = function(perm) {
+  switch(perm) {
+    case 1 : { return PlayerFoxRed; }
+    default : { return PlayerFox; }
+  }
+};

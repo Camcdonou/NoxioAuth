@@ -13,8 +13,8 @@
 /* global Decal */
 
 /* Define PlayerMarth Class */
-function PlayerMarth(game, oid, pos, vel) {
-  PlayerObject.call(this, game, oid, pos, vel);
+function PlayerMarth(game, oid, pos, team, color) {
+  PlayerObject.call(this, game, oid, pos, 0, team, color);
   
   this.model = this.game.display.getModel("character.player.player");
   this.material = this.game.display.getMaterial("character.marth.marth");
@@ -156,7 +156,6 @@ function PlayerMarth(game, oid, pos, vel) {
 
 PlayerMarth.prototype.update = PlayerObject.prototype.update;
 PlayerMarth.prototype.parseUpd = function(data) {
-  var team = parseInt(data.shift());
   var pos = util.vec2.parse(data.shift());
   var vel = util.vec2.parse(data.shift());
   var height = parseFloat(data.shift());
@@ -167,7 +166,6 @@ PlayerMarth.prototype.parseUpd = function(data) {
   var counterDir = util.vec2.parse(data.shift());                               // This field is unique to marth so we have to override parseUpd for him.
   var effects = data.shift().split(",");
   
-  this.team = team;
   this.setPos(pos);
   this.setVel(vel);
   this.setHeight(height, vspeed);
@@ -269,4 +267,11 @@ PlayerMarth.prototype.getDraw = PlayerObject.prototype.getDraw;
 
 PlayerMarth.prototype.destroy = PlayerObject.prototype.destroy;
 
-PlayerMarth.prototype.type = function() { return "mar"; };
+PlayerMarth.prototype.type = function() { return "qua"; };
+
+/* Permutation dictionary */
+PlayerMarth.classByPermutation = function(perm) {
+  switch(perm) {
+    default : { return PlayerMarth; }
+  }
+};

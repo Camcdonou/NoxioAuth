@@ -10,8 +10,8 @@
 /* global Decal */
 
 /* Define PlayerInferno Class */
-function PlayerInferno(game, oid, pos, vel) {
-  PlayerObject.call(this, game, oid, pos, vel);
+function PlayerInferno(game, oid, pos, team, color) {
+  PlayerObject.call(this, game, oid, pos, 0, team, color);
   
   this.model = this.game.display.getModel("character.player.player");
   this.material = this.game.display.getMaterial("character.inferno.inferno");
@@ -124,3 +124,10 @@ PlayerInferno.prototype.getDraw = PlayerObject.prototype.getDraw;
 PlayerInferno.prototype.destroy = PlayerObject.prototype.destroy;
 
 PlayerInferno.prototype.type = function() { return "inf"; };
+
+/* Permutation dictionary */
+PlayerInferno.classByPermutation = function(perm) {
+  switch(perm) {
+    default : { return PlayerInferno; }      
+  }
+};

@@ -18,6 +18,8 @@ function UnlockMenu() {
     confirm: document.getElementById("unlock-info-confirm")
   };
   
+  this.last = "CHARACTER"; // What this menu was showing the last time show() was called.
+  
   var parent = this;
   this.modal.close.onclick = function() { parent.hideInfoModal(); };
   window.onclick = function(event) {
@@ -94,11 +96,12 @@ UnlockMenu.prototype.hideInfoModal = function() {
 UnlockMenu.prototype.show = function(type) {
   main.menu.hideAll();
   this.hideInfoModal();
-  switch(type) {
+  switch(type?type:this.last) {
     case "CHARACTER" : { this.generateMenu("Characters", this.listCharacters); break; }
     case "ALTERNATE" : { this.generateMenu("Alternate Characters", this.listAlternates); break; }
     case "FEATURE"   : { this.generateMenu("Special Features", this.listFeatures); break; }
   }
+  if(type) { this.last = type; }
   main.menu.credit.show();
   main.menu.rank.show();
   this.element.style.display = "block";

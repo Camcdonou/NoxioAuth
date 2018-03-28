@@ -483,7 +483,7 @@ serv {
 .setgame-cont-right {
   display: inline-block;
   float: right;
-  width: 40%;
+  width: 42%;
   text-align: left;
   padding: 8px 8px 8px 4px;
 }
@@ -494,8 +494,24 @@ serv {
   font-size: 20px;
 }
 
-.setgame-val {
+.setgame-spc {
+  height: 26px;
+}
+
+.setgame-val { }
+
+.setgame-tog {
+  cursor: pointer;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  padding-left: 2px;
+  font-size: 20px;
   font-weight: bold;
+}
+
+.setgame-tog:hover {
+  background-color: rgba(255, 255, 255, 1.0);
+  color: rgba(0, 0, 0, 1.0);
 }
 
 .setgame-color-bx {
@@ -518,7 +534,7 @@ serv {
 .setgame-sub-cont {
   display: block;
   text-align: center;
-  width: 300px;
+  width: 420px;
 }
 
 .setgame-btn {

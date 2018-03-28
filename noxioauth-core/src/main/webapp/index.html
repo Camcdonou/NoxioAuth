@@ -125,11 +125,21 @@
             <div class='setgame-name'>Player Color</div>
             <div class='setgame-name'>Red Team Color</div>
             <div class='setgame-name'>Blue Team Color</div>
+            <div class='setgame-spc'></div>
+            <div class='setgame-name'>Hide Custom Colors</div>
+            <div class='setgame-name'>Hide Alternate Characters</div>
+            <div class='setgame-name'>Hide Game Chat</div>
+            <div class='setgame-name'>Hide Game Meters</div>
           </div>
           <div id="setgame-right" class="setgame-cont-right">
             <div class='setgame-val' id="setgame-color"></div>
             <div class='setgame-val' id="setgame-redcolor"></div>
             <div class='setgame-val' id="setgame-bluecolor"></div>
+            <div class='setgame-spc'></div>
+            <div class='setgame-tog' id='setgame-hidecolor' onclick='main.menu.setgame.toggle(0)'></div>
+            <div class='setgame-tog' id='setgame-hidealt' onclick='main.menu.setgame.toggle(1)'></div>
+            <div class='setgame-tog' id='setgame-hidechat' onclick='main.menu.setgame.toggle(2)'></div>
+            <div class='setgame-tog' id='setgame-hidemeter' onclick='main.menu.setgame.toggle(3)'></div>
           </div>
         </div>
         <div class="setgame-sub-cont">
@@ -310,6 +320,9 @@
       <script src="js/app/game/object/bomb.js"></script>
       <script src="js/app/game/object/flag.js"></script>
       <script src="js/app/game/object/hill.js"></script>
+      
+      <!-- Game Object Alts -->
+      <script src="js/app/game/object/alt/fox-red.js"></script>
       
       <!-- Game Assets -->
       <script src="js/app/game/asset/asset.js"></script>

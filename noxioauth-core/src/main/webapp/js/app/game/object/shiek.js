@@ -12,8 +12,8 @@
 /* global Decal */
 
 /* Define PlayerShiek Class */
-function PlayerShiek(game, oid, pos, vel) {
-  PlayerObject.call(this, game, oid, pos, vel);
+function PlayerShiek(game, oid, pos, team, color) {
+  PlayerObject.call(this, game, oid, pos, 0, team, color);
   
   this.model = this.game.display.getModel("character.player.player");
   this.material = this.game.display.getMaterial("character.shiek.shiek");
@@ -212,4 +212,11 @@ PlayerShiek.prototype.getDraw = PlayerObject.prototype.getDraw;
 
 PlayerShiek.prototype.destroy = PlayerObject.prototype.destroy;
 
-PlayerShiek.prototype.type = function() { return "shk"; };
+PlayerShiek.prototype.type = function() { return "vox"; };
+
+/* Permutation dictionary */
+PlayerShiek.classByPermutation = function(perm) {
+  switch(perm) {
+    default : { return PlayerShiek; }
+  }
+};

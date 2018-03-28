@@ -50,7 +50,7 @@ ObjectiveUI.prototype.generate = function() {
       var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
       objectives.push({mat: kingMat, pos: util.vec2.toVec3(this.game.objects[i].pos, this.game.objects[i].height+1.0), team: -1, fade: fade, offset: 0});
     }
-    else if(this.game.objects[i].ultimate && !this.game.objects[i].hide) {
+    else if(this.game.objects[i].objective && !this.game.objects[i].hide) {
       var dist = util.vec2.distance(this.game.objects[i].pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
       var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
       objectives.push({mat: ultMat, pos: util.vec2.toVec3(this.game.objects[i].pos, this.game.objects[i].height+1.0), team: -1, fade: fade, offset: 32});
