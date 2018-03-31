@@ -1,5 +1,6 @@
 package org.infpls.noxio.auth.module.auth.dao;
 
+import org.infpls.noxio.auth.module.auth.dao.file.FileDao;
 import org.infpls.noxio.auth.module.auth.dao.mail.MailDao;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,8 @@ public class DaoContainer {
   public JdbcTemplate jdbc;
   @Autowired
   private MailDao mailDao;
+  @Autowired
+  private FileDao fileDao;
   
   private final UserDao userDao;
   
@@ -25,4 +28,5 @@ public class DaoContainer {
 
   public UserDao getUserDao() { return userDao;  }
   public MailDao getMailDao() { return mailDao;  }
+  public FileDao getFileDao() { return fileDao;  }
 }

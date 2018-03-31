@@ -6,7 +6,7 @@ function Network () {
   this.auth = new Auth();
   this.game = new Game();
   
-  this.user = "Not Logged In";
+  this.user = undefined;
   this.sid = undefined;
 };
 

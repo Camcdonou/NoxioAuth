@@ -20,6 +20,7 @@ PackHand.prototype.gameDataUpdate = function(packet) {
       case "del" : { this.deleteObject(data); break; }
       case "scr" : { this.scores(data); break; }
       case "msg" : { this.message(data); break; }
+      case "snd" : { this.loadCustomSoundFile(data); break; }
       case "end" : { this.gameOver(data); break; }
       case "tck" : { this.tick(data); break; }
       case "anc" : { this.announce(data); break; }
@@ -104,11 +105,20 @@ PackHand.prototype.message = function(data) {
   this.game.ui.log.addMessage(msg);
 };
 
+/* SYS::LOADSND | snd */
+PackHand.prototype.loadCustomSoundFile = function(data) {
+  var sound = data.shift();
+  if(sound) { this.game.sound.createCustomSound(sound); }
+};
+
 /* SYS::GAMEOVER | end */
 PackHand.prototype.gameOver = function(data) {
-  var msg = data.shift();
+  var head = data.shift();
+  var foot = data.shift();
+  var sound = data.shift();
   
-  this.game.ui.end.setTexts(msg, "Bottom Text~");
+  this.game.ui.end.setTexts(head, foot);
+  if(sound) { this.game.sound.getSound(sound, 0.5).play(); }
   this.game.gameOver = true;
 };
 

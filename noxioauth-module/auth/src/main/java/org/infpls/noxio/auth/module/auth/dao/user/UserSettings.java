@@ -115,7 +115,7 @@ public class UserSettings {
   public class Game {
     public final int color, redColor, blueColor;
     public final boolean useCustomSound;
-    public final String customSoundFile;
+    private String customSoundFile;
     public Game(int c, int rc, int bc, boolean ucs, String csf) {
       color = c;
       redColor = rc;
@@ -123,6 +123,8 @@ public class UserSettings {
       useCustomSound = ucs;
       customSoundFile = csf;
     }
+    public void setCustomSoundFile(String fn) { customSoundFile = fn; }
+    public String getCustomSoundFile() { return customSoundFile; }
   }
   
   public class Toggle {

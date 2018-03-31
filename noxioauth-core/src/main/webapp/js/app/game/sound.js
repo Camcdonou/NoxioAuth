@@ -91,6 +91,13 @@ Sound.prototype.createSound = function(path) {
   return true;
 };
 
+/* Returns boolean. True if created succesfully and false if failed to create. */
+Sound.prototype.createCustomSound = function(name) {
+  var snd = new CustomSoundData(this.context, name);
+  this.sounds.push(snd);
+  return true;
+};
+
 /* Gets the sound at the path given. If it's not already loaded it loads it. If file not found returns default sound. */
 Sound.prototype.getSound = function(path, gain) {
   for(var i=0;i<this.sounds.length;i++) {

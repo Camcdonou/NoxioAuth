@@ -34,7 +34,7 @@ public class UserUnlocks {
     new Unlock(Key.ALT_QUADFIRE, "Bad Quad", "Exactly the same character but really bad.", Type.ALTERNATE, 50000, false),
           
     new Unlock(Key.FT_COLOR, "Custom Colors", "Allows you to change the color of your character. Also allows you to create phasing colors.", Type.FEATURE, 50000, false),
-    new Unlock(Key.FT_SOUND, "Custom Sounds", "Allows you to upload and and use a custom sound effect. Plays when you come in 1st place.", Type.FEATURE, 999999999, false)
+    new Unlock(Key.FT_SOUND, "Custom Sounds", "Allows you to upload and and use a custom sound effect. Plays when you come in 1st place.", Type.FEATURE, 99999999, false)
   );
   
   public static List<Unlock> getUnlockList() {

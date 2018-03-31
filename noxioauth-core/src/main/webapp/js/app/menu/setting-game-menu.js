@@ -28,6 +28,12 @@ function SettingGameMenu() {
     }
   };
   
+  this.sound = {
+    tog: document.getElementById("setgame-usesound"),
+    file: document.getElementById("setgame-snd-file"),
+    data: document.getElementById("setgame-snd-data")
+  };
+  
   this.toggles = [
     {
       element: document.getElementById("setgame-hidecolor"),
@@ -36,6 +42,10 @@ function SettingGameMenu() {
     {
       element: document.getElementById("setgame-hidealt"),
       setting: "disableAlts"
+    },
+    {
+      element: document.getElementById("setgame-hidesound"),
+      setting: "disableCustomSound"
     },
     {
       element: document.getElementById("setgame-hidechat"),
@@ -58,6 +68,25 @@ SettingGameMenu.prototype.update = function() {
   this.generateColorBtns(this.colorValues.color, util.kalide.getColorsNoTruncate(main.settings.game.color));
   this.generateColorBtns(this.colorValues.redColor, util.kalide.getRedsNoTruncate(main.settings.game.redColor));
   this.generateColorBtns(this.colorValues.blueColor, util.kalide.getBluesNoTruncate(main.settings.game.blueColor));
+  this.sound.data.innerHTML = main.settings.game.customSoundFile ? main.settings.game.customSoundFile : "";
+  
+  if(main.unlocks.has("FT_SOUND")) {
+    var tmp = this;
+    this.sound.tog.innerHTML = main.settings.game.useCustomSound ? "On" : "Off";
+    this.sound.tog.classList.remove("setgame-val");
+    this.sound.tog.classList.add("setgame-tog");
+    this.sound.tog.onclick = function() { tmp.useSoundTog(); };
+    this.sound.file.removeAttribute("disabled");
+  }
+  else {
+    this.sound.tog.innerHTML = 
+      "<div class='setgame-lock'></div>";
+    this.sound.tog.classList.remove("setgame-tog");
+    this.sound.tog.classList.add("setgame-val");
+    this.sound.tog.onclick = function() { };
+    this.sound.file.setAttribute("disabled", "disabled");
+  }
+  
   this.updateToggles();
 };
 
@@ -86,6 +115,30 @@ SettingGameMenu.prototype.generateColorBtns = function(obj, colors) {
       "style='" + style + "' " +
       "onclick='main.menu.setgame.showColorModal(\"" + obj.name + "\", " + i + ")'></div>";
   }
+};
+
+SettingGameMenu.prototype.useSoundTog = function() {
+  main.settings.game.useCustomSound = !main.settings.game.useCustomSound;
+  this.changed = true;
+  this.update();
+};
+
+SettingGameMenu.prototype.uploadSound = function() {
+  var fil = this.sound.file.files[0];
+  if(!fil) { /* error */ return; }
+  var upl = new FileUpload("file/sound", fil, main.net.user, main.net.sid);
+  var tmp = this;
+  upl.doUpload(
+    function(fn) {
+      main.menu.warning.show("File uploaded successfully!");
+      tmp.sound.file.value = "";
+      main.settings.game.customSoundFile = fn;
+      tmp.update();
+    },
+    function(error){
+      main.menu.warning.show(error.responseText);
+    }
+  );
 };
 
 SettingGameMenu.prototype.updateToggles = function() {

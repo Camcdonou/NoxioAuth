@@ -51,7 +51,7 @@ public class UserDao {
               us.volume.master, us.volume.music, us.volume.voice, us.volume.announcer, us.volume.fx,
               us.graphics.upGame, us.graphics.upUi, us.graphics.upSky, us.graphics.shadowSize, us.graphics.safeMode,
               us.control.enableGamepad, us.control.actionA, us.control.actionB, us.control.jump, us.control.taunt, us.control.toss, us.control.scoreboard,
-              us.game.color, us.game.redColor, us.game.blueColor, us.game.useCustomSound, us.game.customSoundFile,
+              us.game.color, us.game.redColor, us.game.blueColor, us.game.useCustomSound, us.game.getCustomSoundFile(),
               us.toggle.disableAlts, us.toggle.disableCustomSound, us.toggle.disableColor
       );
       dao.jdbc.update(
@@ -180,7 +180,7 @@ public class UserDao {
               us.volume.master, us.volume.music, us.volume.voice, us.volume.announcer, us.volume.fx,
               us.graphics.upGame, us.graphics.upUi, us.graphics.upSky, us.graphics.shadowSize, us.graphics.safeMode,
               us.control.enableGamepad, us.control.actionA, us.control.actionB, us.control.jump, us.control.taunt, us.control.toss, us.control.scoreboard,
-              us.game.color, us.game.redColor, us.game.blueColor, us.game.useCustomSound, us.game.customSoundFile,
+              us.game.color, us.game.redColor, us.game.blueColor, us.game.useCustomSound, us.game.getCustomSoundFile(),
               us.toggle.disableAlts, us.toggle.disableCustomSound, us.toggle.disableColor,
               us.uid
       );

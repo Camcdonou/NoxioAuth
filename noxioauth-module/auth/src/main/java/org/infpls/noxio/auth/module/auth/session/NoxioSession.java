@@ -66,6 +66,10 @@ public class NoxioSession {
   
   public void saveSettings(final UserSettings usrsets) throws IOException {
     settings = new UserSettings(settings, usrsets);
+    saveSettings();
+  }
+  
+  public void saveSettings() throws IOException {
     dao.getUserDao().saveUserSettings(settings);
   }
   
@@ -97,6 +101,9 @@ public class NoxioSession {
       if(isOpen()) { sendPacket(new PacketS04(stats)); }
     }
   }
+  
+  public UserSettings getSettings() { return settings; }
+  public UserUnlocks getUnlocks() { return unlocks; }
   
   public UserData getUserData() {
     if(!loggedIn()) { return null; }

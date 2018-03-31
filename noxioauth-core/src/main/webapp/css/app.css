@@ -500,6 +500,26 @@ serv {
 
 .setgame-val { }
 
+.setgame-upl {
+  height: 26px;
+}
+
+.setgame-lock {
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  background-color: rgba(0, 0, 0, 0);
+  background-image: url(../img/aes/locked.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20px 20px;
+}
+
+.setgame-fn {
+  font-size: 12px;
+  font-style: italic;
+}
+
 .setgame-tog {
   cursor: pointer;
   margin-top: 2px;

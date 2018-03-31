@@ -7,6 +7,10 @@ public class ID {
     return UUID.randomUUID().toString().replaceAll("-", "");
   }
   
+  public static String generate16() {
+    return UUID.randomUUID().toString().replaceAll("-", "").substring(0,16);
+  }
+  
   public static String generate6() {
     return UUID.randomUUID().toString().replaceAll("-", "").substring(0,6);
   }

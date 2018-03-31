@@ -126,8 +126,12 @@
             <div class='setgame-name'>Red Team Color</div>
             <div class='setgame-name'>Blue Team Color</div>
             <div class='setgame-spc'></div>
+            <div class='setgame-name'>Use Custom Sound</div>
+            <div class='setgame-name'>Upload Custom Sound</div>
+            <div class='setgame-spc'></div>
             <div class='setgame-name'>Hide Custom Colors</div>
             <div class='setgame-name'>Hide Alternate Characters</div>
+            <div class='setgame-name'>Hide Custom Sounds</div>
             <div class='setgame-name'>Hide Game Chat</div>
             <div class='setgame-name'>Hide Game Meters</div>
           </div>
@@ -136,10 +140,14 @@
             <div class='setgame-val' id="setgame-redcolor"></div>
             <div class='setgame-val' id="setgame-bluecolor"></div>
             <div class='setgame-spc'></div>
+            <div class='setgame-tog' id='setgame-usesound'></div>
+            <div class='setgame-upl'><input type="file" name="file" accept=".wav" id="setgame-snd-file" onchange="main.menu.setgame.uploadSound()"/><span id="setgame-snd-data" class="setgame-snd-fn">...</span></div>
+            <div class='setgame-spc'></div>
             <div class='setgame-tog' id='setgame-hidecolor' onclick='main.menu.setgame.toggle(0)'></div>
             <div class='setgame-tog' id='setgame-hidealt' onclick='main.menu.setgame.toggle(1)'></div>
-            <div class='setgame-tog' id='setgame-hidechat' onclick='main.menu.setgame.toggle(2)'></div>
-            <div class='setgame-tog' id='setgame-hidemeter' onclick='main.menu.setgame.toggle(3)'></div>
+            <div class='setgame-tog' id='setgame-hidesound' onclick='main.menu.setgame.toggle(2)'></div>
+            <div class='setgame-tog' id='setgame-hidechat' onclick='main.menu.setgame.toggle(3)'></div>
+            <div class='setgame-tog' id='setgame-hidemeter' onclick='main.menu.setgame.toggle(4)'></div>
           </div>
         </div>
         <div class="setgame-sub-cont">
@@ -224,6 +232,7 @@
       <script src="js/app/util/util.js"></script>
       <script src="js/app/util/font.js"></script>
       <script src="js/app/util/kalide.js"></script>
+      <script src="js/app/util/upload.js"></script>
       
       <!-- Misc -->
       <script src="js/app/settings.js"></script>
