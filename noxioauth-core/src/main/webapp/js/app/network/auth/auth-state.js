@@ -15,6 +15,13 @@ AuthState.prototype.handlePacket = function(packet) {
     case "a12" : { this.verifyCode(); return true; }
     case "a14" : { this.failedSend(); return true; }
     case "a15" : { this.createFail(); return true; }
+    case "a21" : { this.resetRequest(); return true; }
+    case "a22" : { this.resetEmailSent(); return true; }
+    case "a23" : { this.resetInvalid(packet); return true; }
+    case "a24" : { this.resetSubmit(); return true; }
+    case "a25" : { this.resetSuccess(); return true; }
+    case "a26" : { this.resetFail(packet); return true; }
+    case "a27" : { this.resetFailAndCancel(packet); return true; }
     default : { return false; }
   }
 };
@@ -56,6 +63,40 @@ AuthState.prototype.createFail = function() {
 
 AuthState.prototype.ready = function() {
   this.send({type: "a08"});
+  main.menu.auth.show();
+};
+
+AuthState.prototype.resetRequest = function(user, email) {
+  this.send({type: "a21", user: user, email: email});
+  main.menu.connect.show("Sending Reset Email", 0);
+};
+
+AuthState.prototype.resetEmailSent = function() {
+  main.menu.reset.showVerify();
+};
+
+AuthState.prototype.resetInvalid = function(data) {
+  main.menu.warning.show(data.message);
+  main.menu.reset.showRequest();
+};
+
+AuthState.prototype.resetSubmit = function(password, code) {
+  this.send({type: "a24", hash: sha256("20"+password+"xx"), code: code});
+  main.menu.connect.show("Verifying Reset", 0);
+};
+
+AuthState.prototype.resetSuccess = function() {
+  main.menu.warning.show("Password reset.");
+  main.menu.auth.show();
+};
+
+AuthState.prototype.resetFail = function(data) {
+  main.menu.warning.show(data.message);
+  main.menu.reset.showVerify();
+};
+
+AuthState.prototype.resetFailAndCancel = function(data) {
+  main.menu.warning.show(data.message);
   main.menu.auth.show();
 };
 

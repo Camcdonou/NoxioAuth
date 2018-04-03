@@ -5,13 +5,15 @@
         
         <link rel="icon" href="img/aes/icon.png">
         <link rel="stylesheet" type="text/css" href="css/app.css">
+        <link rel="stylesheet" type="text/css" href="css/error.css">
+        <link rel="stylesheet" type="text/css" href="css/info.css">
+        <link rel="stylesheet" type="text/css" href="css/footer.css">
         <link rel="stylesheet" type="text/css" href="css/gauss.css">
-        <link rel="stylesheet" type="text/css" href="css/errorModal.css">
     </head>
     
     <body ondragstart="return false;" ondrop="return false;" onresize="main.menu.resize()">
       
-      <!-- Warning Class -->
+      <!-- Warning -->
       <div id="warning" class="warn" style="display: none">...</div>
       
       <!-- Credit Display -->
@@ -19,7 +21,22 @@
         <div class="credit-ico"></div><div class="credit-num" id="credit-num">...</div>
       </div>
       
-      <!-- Credit Display -->
+      <!-- Info Modal -->
+      <div id="info" class="info-modal" style="display: none">
+        <div class="info-modal-content">
+          <div class="info-modal-head"><span id="info-head" class="info-modal-title">...</span><span id="info-close" class="info-modal-close">&times;</span></div>
+          <div id="info-body" class="info-modal-body">...</div>
+        </div>
+      </div>
+      
+      <!-- Support Footer -->
+      <div id="footer" class="footer" style="display: none">
+        <div class="footer-btn" id="footer-support" onclick="main.menu.info.show('Support', 'Having trouble? Drop us an email at support@20xx.io')">Support</div>
+        <div class="footer-btn" id="footer-forget">Forgot Username</div>
+        <div class="footer-btn" id="footer-reset" onclick="main.menu.reset.showRequest()">Reset Password</div>
+      </div>
+      
+      <!-- Rank Display -->
       <div id="rank" class="rank" style="display: none">
         <div id="rank-bar" class="rank-bar"></div>
         <div class="rank-life-cont">
@@ -29,7 +46,7 @@
           <div class="rank-rank-ico"></div><div id="rank-rank" class="rank-rank">...</div>
         </div>
       </div>
-
+      
       <!-- Connection Display -->
       <div id="connect" class="menu-container" style="display: none">
         <div id="connect-info" class="menu con">
@@ -41,9 +58,28 @@
       <!-- Verify Email -->
       <div id="verify" class="menu-container" style="display: none">
         <div class="menu ver">An email was sent to you with a verification code. Check your spam folder.</div>
-        <div class="menu cat not-btn selected">Verify Account</div>
+        <div class="menu cat not-btn selected">Verify Email</div>
           <div class="menu sub fld"><input id="verify-input" class="inp" type="text" placeholder="Verification Code"/></div>
           <div id="verify-submit" class="menu sub btn ico-blip" onclick="main.menu.verify.submit();"></div>
+      </div>
+      
+      <!-- Reset Password -->
+      <div id="reset" class="menu-container" style="display: none">
+        <div id="reset-request">
+          <div class="menu ver">Enter your email & username. A password reset code will be sent to your email.</div>
+          <div class="menu cat not-btn selected">Reset Password</div>
+            <div class="menu sub fld"><input id="reset-request-user" class="inp" type="text" placeholder="Username"/></div>
+            <div class="menu sub fld"><input id="reset-request-email" class="inp" type="text" placeholder="Email"/></div>
+            <div id="reset-request-submit" class="menu sub btn ico-blip" onclick="main.menu.reset.submitRequest();"></div>
+        </div>
+        <div id="reset-verify">
+          <div class="menu ver">An email was sent to you with a verification code. Check your spam folder.</div>
+          <div class="menu cat not-btn selected">Reset Password</div>
+            <div class="menu sub fld"><input id="reset-verify-pass-a" class="inp" type="password" placeholder="New Password"/></div>
+            <div class="menu sub fld"><input id="reset-verify-pass-b" class="inp" type="password" placeholder="Confirm Password"/></div>
+            <div class="menu sub fld"><input id="reset-verify-code" class="inp" type="text" placeholder="Verification Code"/></div>
+            <div id="reset-verify-submit" class="menu sub btn ico-blip" onclick="main.menu.reset.submitVerify();"></div>
+        </div>
       </div>
       
       <!-- Login / Create Account Menu -->
@@ -242,11 +278,14 @@
       <!-- UI Frontend -->
       <script src="js/app/menu/error-menu.js"></script>
       <script src="js/app/menu/warning-menu.js"></script>
+      <script src="js/app/menu/info-menu.js"></script>
+      <script src="js/app/menu/footer-menu.js"></script>
       <script src="js/app/menu/credit-menu.js"></script>
       <script src="js/app/menu/rank-menu.js"></script>
       <script src="js/app/menu/connect-menu.js"></script>
-      <script src="js/app/menu/verify-menu.js"></script>
       <script src="js/app/menu/auth-menu.js"></script>
+      <script src="js/app/menu/verify-menu.js"></script>
+      <script src="js/app/menu/reset-menu.js"></script>
       <script src="js/app/menu/online-menu.js"></script>
       <script src="js/app/menu/unlock-menu.js"></script>
       <script src="js/app/menu/stat-menu.js"></script>

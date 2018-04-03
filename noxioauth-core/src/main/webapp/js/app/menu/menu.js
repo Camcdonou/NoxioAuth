@@ -11,11 +11,14 @@ function Menu() {
   var m = [
     {id: "error", obj: new ErrorMenu()}, // Displays on top as a modal.
     {id: "warning", obj: new WarningMenu()}, // Displays as a widget at the top left.
+    {id: "info", obj: new InfoMenu()}, // Displays on top as a modal.
+    {id: "footer", obj: new FooterMenu()}, // Displays as a widget at the bottom, independantly shown/hidden by other menus.
     {id: "credit", obj: new CreditMenu()}, // Displays as a widget at top right, independantly shown/hidden by other menus.
     {id: "rank", obj: new RankMenu()}, // Displays as a widget at the bottom, independantly shown/hidden by other menus.
     {id: "connect", obj: new ConnectMenu()},
-    {id: "verify", obj: new VerifyMenu()},
     {id: "auth", obj: new AuthMenu()},
+    {id: "verify", obj: new VerifyMenu()},
+    {id: "reset", obj: new ResetMenu()},
     {id: "online", obj: new OnlineMenu()},
     {id: "unlock", obj: new UnlockMenu()},
     {id: "stat", obj: new StatMenu()},
@@ -38,7 +41,7 @@ Menu.prototype.resize = function() {
 };
 
 Menu.prototype.hideAll = function() {
-  for(var i=2;i<this.menus.length;i++) { /* Skip first 2 elements because they are ErrorMenu and WarningMenu which display on top of all other menus */
+  for(var i=3;i<this.menus.length;i++) { /* Skip first 3 elements because they are ErrorMenu and WarningMenu and InfoMenu which display on top of all other menus */
     this.menus[i].hide();
   }
 };

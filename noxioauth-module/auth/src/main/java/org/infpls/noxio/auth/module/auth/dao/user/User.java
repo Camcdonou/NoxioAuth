@@ -26,4 +26,5 @@ public class User {
   }
   
   public boolean hashCompare(final String h) { return Hash.generate(h+salt).equals(hash); }
+  public String salt(final String h) { return Hash.generate(h + salt); }
 }

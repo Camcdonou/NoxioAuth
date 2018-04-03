@@ -13,8 +13,8 @@ import org.infpls.noxio.auth.module.auth.util.Validation;
 
 public class Authenticate extends SessionState {
   
-  private static String createEmailSubject = "20xx.io Email Verification";
-  private static String createEmailContent = "<html>\n" +
+  private static final String CREATE_EMAIL_SUBJECT = "20xx.io Email Verification";
+  private static final String CREATE_EMAIL_CONTENT = "<html>\n" +
 "<head>\n" +
 "  <title>20XX.io</title>\n" +
 "</head>\n" +
@@ -38,6 +38,26 @@ public class Authenticate extends SessionState {
 "</html>\n" +
 "";
   
+  private static final String RESET_EMAIL_SUBJECT = "20xx.io Password Reset";
+  private static final String RESET_EMAIL_CONTENT = "<html>\n" +
+"<head>\n" +
+"  <title>20XX.io</title>\n" +
+"</head>\n" +
+"<body>\n" +
+"<div style='width: 512px; font-family:Arial,Helvetica,sans-serif;'>\n" +
+" <div style='background-color:#0d1e33; color:#c6d4df;'>\n" +
+" <div style='background-color:#28323a; color:#c6d4df; font-size:32px; padding:8px 8px 0px 8px'>Password Reset Request</div>\n" +
+"  <p style='font-size:18px; padding:0px 8px 0px 8px; color:#c6d4df;'>\n" +
+"  Forgot something?\n</p>" +
+"  <div style='font-size:18px; padding:0px 8px 0px 8px; color:#c6d4df;'>Your verification code is:</div>\n" +
+"  <span style='font-size:32px;background-color:#6c6e70; color:#c6d4df; font-weight: bold; margin:0px 8px 0px 8px;'>$$CODE$$</span>\n" +
+"  <div style='background-color:#0d1e33; color:#0d1e33; font-size:32px;'>_</div>\n" +
+" </div>\n" +
+"</div>\n" +
+"</body>\n" +
+"</html>\n" +
+"";
+  
   private final UserDao userDao;
   private final MailDao mailDao;
 
@@ -45,6 +65,9 @@ public class Authenticate extends SessionState {
   private String createUserEmail;
   private String createUserHash;
   private String createUserCode;
+  
+  private String resetPasswordCode;
+  private User resetUser;
   
   public Authenticate(final NoxioSession session, final UserDao userDao, final MailDao mailDao) throws IOException {
     super(session);
@@ -68,6 +91,13 @@ public class Authenticate extends SessionState {
      < a12 verification request
      > a13 verification code
      < a14 failed to send email
+     > a21 request password reset
+     < a22 reset email sent
+     < a23 reset invalid (incorrect email or whatever)
+     > a24 submit reset w/ verification code
+     < a25 reset success
+     < a26 reset fail
+     < a27 reset fail (and cancel request)
   */
   
   @Override
@@ -83,10 +113,36 @@ public class Authenticate extends SessionState {
         case "a02" : { close(); break; }
         case "a08" : { stateReady(gson.fromJson(data, PacketA08.class)); break; }
         case "a13" : { verifyCreateUser(gson.fromJson(data, PacketA13.class)); break; }
+        case "a21" : { resetPassword(gson.fromJson(data, PacketA21.class)); break; }
+        case "a24" : { verifyResetPassword(gson.fromJson(data, PacketA24.class)); break; }
         default : { close("Invalid data: " + p.getType()); break; }
       }
     } catch(IOException | NullPointerException | JsonParseException ex) {
       close(ex);
+    }
+  }
+  
+  private void stateReady(final PacketA08 p) throws IOException {
+    sendPacket(new PacketA07());
+  }
+  
+  private void authenticate(final PacketA01 p) throws IOException {
+    /* Make sure data is valid */
+    if(!Validation.isAlphaNumeric(p.getUser())) {
+      sendPacket(new PacketA05("Username must be Alpha-Numeric characters only."));
+      return;
+    }
+    if(!Validation.isAlphaNumeric(p.getHash())) {
+      sendPacket(new PacketA05("Password hash is bogus."));
+      return;
+    }
+    
+    switch(userDao.authenticate(p.getUser(), p.getHash())) {
+      case 0 : { session.login(p.getUser()); break; } /* Login successful */
+      case 1 : { sendPacket(new PacketA05("User is already logged in.")); break; }
+      case 2 : { sendPacket(new PacketA05("Incorrect Username or Password.")); break; }
+      case 3 : { sendPacket(new PacketA05("User does not exist.")); break; }
+      default : { sendPacket(new PacketA05("Unknown error.")); break; }
     }
   }
   
@@ -122,9 +178,9 @@ public class Authenticate extends SessionState {
     }
 
     final String vc = ID.generate6();
-    final String emc = createEmailContent.replace("$$USER$$", user).replace("$$CODE$$", vc);
+    final String emc = CREATE_EMAIL_CONTENT.replace("$$USER$$", user).replace("$$CODE$$", vc);
     sendPacket(new PacketA11());                                              // Valid data, sending verification email
-    if(mailDao.send(email, createEmailSubject, emc)) {                        // Verification email has been sent successfully /* @TODO: blocking. */
+    if(mailDao.send(email, CREATE_EMAIL_SUBJECT, emc)) {                        // Verification email has been sent successfully /* @TODO: blocking. */
       createUserName = user;
       createUserEmail = email;
       createUserHash = hash;
@@ -149,28 +205,45 @@ public class Authenticate extends SessionState {
     }
   }
   
-  private void authenticate(final PacketA01 p) throws IOException {
-    /* Make sure data is valid */
-    if(!Validation.isAlphaNumeric(p.getUser())) {
-      sendPacket(new PacketA05("Username must be Alpha-Numeric characters only."));
-      return;
-    }
-    if(!Validation.isAlphaNumeric(p.getHash())) {
-      sendPacket(new PacketA05("Password hash is bogus."));
+  private void resetPassword(final PacketA21 p) throws IOException{
+    final User usr = userDao.getUserByName(p.getUser());
+    
+    /* Validate */
+    if(usr == null || !usr.email.equals(p.getEmail().trim())) {
+      sendPacket(new PacketA23("Invalid username/email"));
       return;
     }
     
-    switch(userDao.authenticate(p.getUser(), p.getHash())) {
-      case 0 : { session.login(p.getUser()); break; } /* Login successful */
-      case 1 : { sendPacket(new PacketA05("User is already logged in.")); break; }
-      case 2 : { sendPacket(new PacketA05("Incorrect Username or Password.")); break; }
-      case 3 : { sendPacket(new PacketA05("User does not exist.")); break; }
-      default : { sendPacket(new PacketA05("Unknown error.")); break; }
+    /* Do */
+    final String vc = ID.generate6();
+    final String emc = RESET_EMAIL_CONTENT.replace("$$USER$$", usr.name).replace("$$CODE$$", vc);
+    if(mailDao.send(usr.email, RESET_EMAIL_SUBJECT, emc)) {
+      resetPasswordCode = vc;
+      resetUser = usr;
+      sendPacket(new PacketA22());
+    }
+    else {
+      sendPacket(new PacketA23("Failed to send reset email."));
     }
   }
   
-  private void stateReady(final PacketA08 p) throws IOException {
-    sendPacket(new PacketA07());
+  private void verifyResetPassword(final PacketA24 p) throws IOException {
+    /* Valid */
+    if(!p.getCode().equals(resetPasswordCode)) {
+      resetPasswordCode = null;
+      resetUser = null;
+      sendPacket(new PacketA27("Incorrect Verification Code")); return;
+    }
+    
+    /* Password Hash */
+    String res;
+    if((res = Validation.validHash(p.getHash())) != null) {
+      sendPacket(new PacketA26(res)); return;
+    }
+    
+    /* Do */
+    userDao.changeUserPassword(resetUser, p.getHash());
+    sendPacket(new PacketA25());
   }
   
   @Override

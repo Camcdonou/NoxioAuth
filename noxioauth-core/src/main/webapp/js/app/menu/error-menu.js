@@ -8,15 +8,13 @@ function ErrorMenu() {
   this.message = document.getElementById("errorModalMessage");
   this.footer = document.getElementById("errorModalFooter");
   
-  this.close.onclick = function() {
-      main.menu.error.modal.style.display = "none";
-  };
-  
-  window.onclick = function(event) {
-    if (event.target === main.menu.error.modal) {
-      main.menu.error.modal.style.display = "none";
+  var parent = this;
+  this.close.onclick = function() { parent.hide(); };
+  document.addEventListener("click", function(event){
+    if (event.target === parent.modal) {
+      parent.hide();
     }
-  };
+  });
 };
 
 ErrorMenu.prototype.showError = function(title, message) {
@@ -36,5 +34,5 @@ ErrorMenu.prototype.showErrorException = function(title, message, trace) {
 };
 
 ErrorMenu.prototype.hide = function() {
-  /* This menu class ignores hide since it displays on top of everything else as a modal. */
+  this.modal.style.display = "none";
 };

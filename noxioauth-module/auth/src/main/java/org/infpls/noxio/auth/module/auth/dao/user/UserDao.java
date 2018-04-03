@@ -143,6 +143,24 @@ public class UserDao {
     return null;
   }
   
+  /* Flags a given unlock */
+  public void changeUserPassword(final User usr, final String hash) throws IOException {
+    final String sash = usr.salt(hash);
+    try {
+      dao.jdbc.update(
+        "UPDATE USERS SET " +
+        "UPDATED = NOW(), HASH = ?" +
+        "WHERE UID=?",
+              sash, usr.uid
+      );
+    }
+    catch(DataAccessException ex) {
+      System.err.println("UserDao::changeUserPassword() - SQL Error!");
+      ex.printStackTrace();
+      throw new IOException("SQL Error during user unlock.");
+    }
+  }
+  
   public UserSettings getUserSettings(final String uid) throws IOException {
     try {
       final List<Map<String,Object>> results = dao.jdbc.queryForList(

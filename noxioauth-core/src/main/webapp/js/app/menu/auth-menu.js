@@ -85,6 +85,7 @@ AuthMenu.prototype.show = function() {
   main.menu.hideAll();
   this.hideAll();
   this.element.style.display = "block";
+  main.menu.footer.show();
 };
 
 /* Hide this menu */

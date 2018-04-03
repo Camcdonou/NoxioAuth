@@ -22,11 +22,11 @@ function UnlockMenu() {
   
   var parent = this;
   this.modal.close.onclick = function() { parent.hideInfoModal(); };
-  window.onclick = function(event) {
+  document.addEventListener("click", function(event){
     if (event.target === parent.info) {
-      main.menu.unlock.hideInfoModal();
+      parent.hideInfoModal();
     }
-  };
+  });
   
   this.listCharacters = [];
   this.listAlternates = [];

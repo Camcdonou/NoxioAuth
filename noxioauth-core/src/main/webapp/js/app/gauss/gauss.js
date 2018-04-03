@@ -1,8 +1,9 @@
 "use strict";
+/* global util */
 /* global main */
 /* global mat4 */
 
-/* Handles HTML5 background */
+/* Handles HTML5 background and HW Accel benchmark and status check */
 function Gauss() {
   this.element = document.getElementById("gauss");
   this.container = document.getElementById("gauss-container");
@@ -36,7 +37,7 @@ Gauss.prototype.init = function() {
     if(!this.gl) { throw new Error("Browser does not appear to support WebGL") ; }
     if(!this.setupWebGL()) { throw new Error("Failed to setup WebGL."); }
   }
-  catch(ex) { console.log("WebGL Error: \n" + "Exception while initializing WebGL: \n" + ex.message); console.log(ex.stack); }
+  catch(ex) { main.menu.warning.show("WebGL Error: \n" + "Exception while initializing WebGL: \n" + ex.message); console.error(ex.stack); }
 };
 
 /* Returns boolean. If false then WebGL failed to setup and we should setup fallback rendering. */
@@ -92,7 +93,8 @@ Gauss.prototype.draw = function() {
     if(this.gl) { this.drawSpace(); }
     else { this.drawFallback(); }
   }
-
+  
+  /* Base Benchmark */
   this.nextFrame = this.requestAnimFrameFunc.call(window, function() { main.gauss.draw(); }); // Javascript 🙄
 };
 
@@ -106,6 +108,20 @@ Gauss.prototype.loading = function() {
       this.tex.noise.ready
     ) {
       this.loaded = true;
+      var parent = this;
+      setTimeout( function() {
+        if(parent.frame < (29*5)) {
+          parent.hide();
+          main.menu.info.show(
+            "Warning!",
+            "Your browser failed the base performance benchmark for 20XX.</br>" +
+            "This generally means that Hardware Acceleration is disabled on your browser.</br>" +
+            "Please enable Hardware Acceleration and refresh the page.</br></br>" +
+            "If this issue continues try switching to an officially supported browser: <i>Google Chrome</i> or <i>Mozilla Firefox</i></br></br>" +
+            "This message can also sometimes be erronesouly flagged by minimizing/switching tabs.</br>"
+          );
+        }
+      }, 5000);
     }
 };
 
@@ -328,6 +344,19 @@ Gauss.prototype.createModel = function(source) {
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(source.indices), gl.STATIC_DRAW);
   
   return new Model(source.name, vertexBuffer, indexBuffer, source.indices.length);
+};
+
+/* Checks to see if WebGL is supported and working, then benchmarks to make sure hardware acceleration is on. */
+/* If a problem is detected then the user is notified with a warning */
+Gauss.prototype.status = function() {
+  if(!this.gl) {
+    main.menu.info.show(
+      "Warning!",
+      "Your browser does not appear to have Hardware Accereration enabled or your browser does not support WebGL.</br>" +
+      "20XX requires Hardware Acceleration to run. Please enable it and refresh the page.</br></br>" +
+      "If this issue continues try switching to an officially supported browser: <i>Google Chrome</i> or <i>Mozilla Firefox</i>"
+    ); return;
+  }
 };
 
 /* ========================================================================== */
