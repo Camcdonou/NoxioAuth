@@ -3,9 +3,10 @@ package org.infpls.noxio.auth.module.auth.util;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class Hash {
-  public static String generate(final String in) {
+  public static String sha256(final String in) {
         try {
           MessageDigest digest = MessageDigest.getInstance("SHA-256");
           byte[] hash = digest.digest(in.getBytes(StandardCharsets.UTF_8));
@@ -20,7 +21,12 @@ public class Hash {
         }
         catch(NoSuchAlgorithmException ex) {
           /* If this ever actually happens I'll be really upset */
+          ex.printStackTrace();
         }
         return null;
+  }
+  
+  public static String bcrypt(final String pass) {
+    return BCrypt.hashpw(pass, BCrypt.gensalt(12));
   }
 }

@@ -9,10 +9,10 @@ public class Validation {
     return null;
   }
   
-  private static final String blankHash = Hash.generate("");
-  private static final String undefHash = Hash.generate("undefined");
-  private static final String xxblankHash = Hash.generate("20xx");
-  private static final String xxundefHash = Hash.generate("20undefinedxx");
+  private static final String blankHash = Hash.sha256("");
+  private static final String undefHash = Hash.sha256("undefined");
+  private static final String xxblankHash = Hash.sha256("20xx");
+  private static final String xxundefHash = Hash.sha256("20undefinedxx");
   public static String validHash(final String in) {
     if(in.length() != 64) { return "Invalid password hash."; }
     if(!Validation.isAlphaNumeric(in)) { return "Invalid password hash."; }

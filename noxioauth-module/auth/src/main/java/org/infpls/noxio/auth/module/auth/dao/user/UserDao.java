@@ -30,13 +30,12 @@ public class UserDao {
     if(u != null) { return false; }
     
     final String uid = ID.generate32();
-    final String salt = ID.generate32();
-    final String sash = Hash.generate(hash + salt);
+    final String sash = Hash.bcrypt(hash);
     final UserSettings us = new UserSettings(uid);
     try {
       dao.jdbc.update(
-        "INSERT into USERS ( UID, NAME, DISPLAY, EMAIL, SALT, HASH, PREMIUM, CREATED, UPDATED, LASTLOGIN ) VALUES ( ?, ?, ?, ?, ?, ?, 0, NOW(), NOW(), NOW() )",
-              uid, user, user, email, salt, sash
+        "INSERT into USERS ( UID, NAME, DISPLAY, EMAIL, HASH, PREMIUM, CREATED, UPDATED, LASTLOGIN ) VALUES ( ?, ?, ?, ?, ?, 0, NOW(), NOW(), NOW() )",
+              uid, user, user, email, sash
       );
       dao.jdbc.update(
         "INSERT into SETTINGS ( " +
@@ -145,7 +144,7 @@ public class UserDao {
   
   /* Flags a given unlock */
   public void changeUserPassword(final User usr, final String hash) throws IOException {
-    final String sash = usr.salt(hash);
+    final String sash = Hash.bcrypt(hash);
     try {
       dao.jdbc.update(
         "UPDATE USERS SET " +
