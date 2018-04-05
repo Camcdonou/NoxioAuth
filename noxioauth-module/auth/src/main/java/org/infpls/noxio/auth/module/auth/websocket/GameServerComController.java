@@ -1,6 +1,7 @@
 package org.infpls.noxio.auth.module.auth.websocket;
 
 import com.google.gson.*;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -17,12 +18,19 @@ public class GameServerComController {
   private DaoContainer dao;
   
   /* @TODO: CRITICAL! SECURITY! requests made in this class must come from a list of valid servers. any other request should be denied */
+  /* Partially implemented but needs adjustment and confirmation */
   
   /* This method is called by a game server to check if a player is logged in and if their session ID is valid. */
   /* If all OK then returns type: l04 and all of the users settings & unlock data */
   /* If not OK then returns type: l03 and a message */
   @RequestMapping(value = "/validate/{user}/{sid}", method = RequestMethod.GET, produces = "application/json")
-  public @ResponseBody ResponseEntity userStatus(@PathVariable(value="user") final String user, @PathVariable(value="sid") final String sid) {
+  public @ResponseBody ResponseEntity userStatus(HttpServletRequest request, @PathVariable(value="user") final String user, @PathVariable(value="sid") final String sid) {
+    /* Validate that this request is made from a white listed game server */
+    if(!dao.getInfoDao().isWhiteListed(request.getRemoteAddr())) {
+      System.err.println("GameServerComController::userStatus() - Unknown address made request :" + request.getRemoteAddr());
+      return new ResponseEntity("{\"type\":\"l03\", \"message\":\"Invalid request.\"}", HttpStatus.FORBIDDEN);
+    }
+    
     NoxioSession session = dao.getUserDao().getSessionByUser(user);
 
     final Gson gson = new GsonBuilder().create();
@@ -40,7 +48,13 @@ public class GameServerComController {
   /* If all OK then returns type: h00 */
   /* If there is an error returns type: h09 and a message */
   @RequestMapping(value = "/report", method = RequestMethod.POST, produces = "application/json")
-  public @ResponseBody ResponseEntity reportStats(@RequestBody final String data) {
+  public @ResponseBody ResponseEntity reportStats(HttpServletRequest request, @RequestBody final String data) {
+    /* Validate that this request is made from a white listed game server */
+    if(!dao.getInfoDao().isWhiteListed(request.getRemoteAddr())) {
+      System.err.println("GameServerComController::reportStats() - Unknown address made request :" + request.getRemoteAddr() + " ... " + data);
+      return new ResponseEntity("{\"type\":\"h09\", \"message\":\"Invalid request.\"}", HttpStatus.FORBIDDEN);
+    }
+    
     final Gson gson = new GsonBuilder().create();
     try {
       final PacketH01 h01 = gson.fromJson(data, PacketH01.class);

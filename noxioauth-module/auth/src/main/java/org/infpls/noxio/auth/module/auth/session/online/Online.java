@@ -4,15 +4,17 @@ import com.google.gson.*;
 import java.io.IOException;
 import java.util.*;
 
+import org.infpls.noxio.auth.module.auth.dao.server.InfoDao;
 import org.infpls.noxio.auth.module.auth.dao.user.UserUnlocks;
 import org.infpls.noxio.auth.module.auth.dao.server.ServerInfo;
 import org.infpls.noxio.auth.module.auth.session.*;
 
 public class Online extends SessionState {
   
-  
-  public Online(final NoxioSession session) throws IOException {
+  private final InfoDao infoDao;
+  public Online(final NoxioSession session, final InfoDao infoDao) throws IOException {
     super(session);
+   this.infoDao = infoDao;
     
     sendPacket(new PacketS00('o'));
   }
@@ -47,13 +49,7 @@ public class Online extends SessionState {
   }
   
   private void serverInfo(final PacketO02 p) throws IOException {
-    /* @TODO Dummy data */
-    final List<ServerInfo> predef = new ArrayList();
-    predef.add(new ServerInfo("EXT-TEST-1", "68.32.112.73", 7001));
-    predef.add(new ServerInfo("INT-TEST-1", "10.0.0.106", 7001));
-    predef.add(new ServerInfo("LOC-TEST-1", "localhost", 7001));
-    predef.add(new ServerInfo("PUB-TEST-1", "infernoplus.com", 80));
-    sendPacket(new PacketO01(predef));
+    sendPacket(new PacketO01(infoDao.getServerList()));
   }
   
   private void stateReady(final PacketO03 p) throws IOException {
