@@ -65,6 +65,9 @@ public class GameServerComController {
       }
       else {
         final User user = dao.getUserDao().getUserByName(h01.getUser());
+        if(user == null) {
+          return new ResponseEntity("{\"type\":\"h09\", \"message\":\"User does not exist or Guest account.\"}", HttpStatus.OK);
+        }
         final UserStats stats = dao.getUserDao().getUserStats(user.uid);
         final UserStats nustats = stats.add(h01.getStats());
         dao.getUserDao().saveUserStats(nustats);

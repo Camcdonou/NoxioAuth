@@ -17,7 +17,7 @@ public class AuthWebSocket extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession webSocket) {
       try {
-        NoxioSession session = dao.getUserDao().createSession(webSocket, dao);
+        final NoxioSession session = dao.getUserDao().createSession(webSocket, dao);
         webSocket.getAttributes().put("session", session);
       }
       catch(Exception e) {
@@ -29,7 +29,7 @@ public class AuthWebSocket extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession webSocket, TextMessage data) {
       try {
-        NoxioSession session = (NoxioSession)(webSocket.getAttributes().get("session"));
+        final NoxioSession session = (NoxioSession)(webSocket.getAttributes().get("session"));
         session.handlePacket(data.getPayload());
       }
       catch(Exception e) {
@@ -50,5 +50,4 @@ public class AuthWebSocket extends TextWebSocketHandler {
         ex.printStackTrace();
       }
     }
-
 }

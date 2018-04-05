@@ -15,6 +15,7 @@ function RankMenu() {
 };
 
 RankMenu.prototype.show = function() {
+  if(main.net.guest) { return; } /* Don't show this for guests. Their rank is null as they are not in the database. */
   this.element.style.display = "block";
   this.visible = true;
   if(!this.displayRank) { this.displayRank = main.stats.globalCount; }

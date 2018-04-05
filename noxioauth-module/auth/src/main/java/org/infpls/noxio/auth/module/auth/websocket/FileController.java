@@ -37,7 +37,7 @@ public class FileController {
     
     /* validate */
     final NoxioSession session = dao.getUserDao().getSessionByUser(uuc.user);
-    if(session == null || !session.getSessionId().equals(uuc.sid)) {
+    if(session == null || !session.getSessionId().equals(uuc.sid) || session.isGuest()) {
       return new ResponseEntity("Invalid credentials.", HttpStatus.NOT_ACCEPTABLE);
     }
     

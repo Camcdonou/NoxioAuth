@@ -66,6 +66,8 @@ public class UserUnlocks {
   public final String uid;
   public final Timestamp updated;
   private final Map<Key, Boolean> unlocks;
+  
+  /* SQL Database Constructor */
   public UserUnlocks(final Map<String, Object> data) {
     unlocks = new HashMap();
     uid = (String)data.remove("uid");
@@ -83,6 +85,17 @@ public class UserUnlocks {
       System.err.println("UserUnlocks::new - Error parsing unlock data from database.");
       ex.printStackTrace();
     }
+  }
+  
+  /* Guest Default Constructor */
+  public UserUnlocks() {
+    unlocks = new HashMap();
+    uid = null;
+    updated = null;
+   
+    /* Uses reflection to map SQL databse names to enums that identify the unlocks */
+    unlocks.put(Key.CHAR_BOX, true);
+    unlocks.put(Key.CHAR_CRATE, true);
   }
   
   public boolean has(Key key) {

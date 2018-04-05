@@ -16,6 +16,7 @@ public class UserStats {
   public final int ksx05, ksx10, ksx15, ksx20, ksx25, ksx30;
   public final int cumRes;
   
+  /* SQL Database Constructor */
   public UserStats(final Map<String, Object> data) {
     uid = (String)data.get("UID");
     
@@ -71,6 +72,8 @@ public class UserStats {
     cumRes = (int)data.get("CUMRES");
   }
   
+  /* Adding new stats constructor */
+  /* @TODO this constructor could be basically removed and instead have the database due the addition and return the resulting new stats */
   public UserStats(final UserStats a, final PacketH01.Stats b) {
     uid = a.uid;
     
@@ -123,6 +126,21 @@ public class UserStats {
     ksx30 = a.ksx30 + b.ksx30;
     
     cumRes = Math.max(0, a.cumRes + b.cumRes);
+  }
+  
+  /* Guest Default Constructor */
+  public UserStats() {
+    uid = null;
+    credits = 250;
+    
+    rank = 0; globalCount = 0;
+    lifeCredits = 0;
+    kill = 0; death = 0; gameWin = 0; gameLose = 0; betrayed = 0; betrayl = 0;
+    firstBlood = 0; killJoy = 0; endedReign = 0; flagCapture = 0; flagDefense = 0; hillControl = 0;
+    perfect = 0; humiliation = 0;
+    mkx02 = 0; mkx03 = 0; mkx04 = 0; mkx05 = 0; mkx06 = 0; mkx07 = 0; mkx08 = 0; mkx09 = 0; mkx10 = 0; mkx11 = 0; mkx12 = 0; mkx13 = 0; mkx14 = 0; mkx15 = 0; mkx16 = 0; mkx17 = 0; mkx18 = 0; mkx19 = 0; mkx20 = 0;
+    ksx05 = 0; ksx10 = 0; ksx15 = 0; ksx20 = 0; ksx25 = 0; ksx30 = 0;
+    cumRes = 0;
   }
   
   public UserStats add(final PacketH01.Stats b) {

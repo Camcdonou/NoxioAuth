@@ -80,6 +80,11 @@ function AuthMenu() {
   this.items.create.items[3].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.create.items[4].click(); } });
 };
 
+AuthMenu.prototype.guest = function() {
+  main.menu.connect.show("Guest Login", 0);
+  main.net.connectGuest();
+};
+
 /* Shows this menu */
 AuthMenu.prototype.show = function() {
   main.menu.hideAll();

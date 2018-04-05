@@ -3,6 +3,7 @@
 
 function OnlineMenu() {  
   this.element = document.getElementById("online");
+  this.motd = true; /* Shows motd when you first login */
   
   /* Prototype functions for sub menus to use */
   var hide = function() {
@@ -86,11 +87,20 @@ function OnlineMenu() {
   };
 };
 
+OnlineMenu.prototype.showMotd = function() {
+  if(!this.motd) { return; }
+  if(!main.net.guest) { /*main.menu.info.show("","");*/ }
+  else { main.menu.info.show("Welcome", "You are logged in as a guest.</br>Your progress and settings will <b>not</b> be saved when you quit.</br></br>Have fun!"); }
+  this.motd = false;
+};
+
+
 /* Shows this menu */
 OnlineMenu.prototype.show = function() {
   main.menu.hideAll();
   this.hideAll();
-  document.getElementById("online-user").innerHTML = main.net.user;
+  document.getElementById("online-user").innerHTML = main.net.display;
+  this.showMotd();
   this.items.server.show();
   main.menu.credit.show();
   main.menu.rank.show();

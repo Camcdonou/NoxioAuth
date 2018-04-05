@@ -7,7 +7,7 @@ function Auth () {
   
 };
 
-Auth.prototype.establish = function() {
+Auth.prototype.establish = function(socket) {
   /* List of addresses to attempt to connect on. 
      Try current domain first then a list of backup addresses for testing & etc...
   */
@@ -29,7 +29,7 @@ Auth.prototype.establish = function() {
       url: "http://" + addresses[r] + "/noxioauth/status",
       type: 'GET',
       timeout: 3000,
-      success: function() { main.net.auth.connect(addresses[r]); },
+      success: function() { main.net.auth.connect(addresses[r], socket); },
       error: function() { getStatus(++r); }
     });
   };
@@ -41,14 +41,14 @@ Auth.prototype.isConnected = function () {
   return this.webSocket !== undefined && this.webSocket.readyState !== WebSocket.CLOSED;
 };
 
-Auth.prototype.connect = function(address){
+Auth.prototype.connect = function(address, socket){
   if(this.isConnected()) {
     main.menu.error.showError("Connection Error", "Attempting to open multiple connections.");
     main.close();
     return;
   }
 
-  this.webSocket = new WebSocket("ws://" + address + "/noxioauth/auth");
+  this.webSocket = new WebSocket("ws://" + address + "/noxioauth/" + socket);
   main.menu.connect.show("Connecting @" + address, 0);
 
   this.webSocket.onopen = function(event){
@@ -105,6 +105,8 @@ Auth.prototype.setState = function(state) {
 Auth.prototype.login = function(packet) {
   main.net.user = packet.user;
   main.net.sid = packet.sid;
+  main.net.display = packet.display;
+  main.net.guest = packet.guest;
   main.settings.load(packet.settings);
   main.setStats(packet.stats);
   main.unlocks.load(packet.unlocks);

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.*;
 import org.springframework.web.socket.WebSocketSession;
 
-import org.infpls.noxio.auth.module.auth.session.NoxioSession;
+import org.infpls.noxio.auth.module.auth.session.*;
 import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
 import org.infpls.noxio.auth.module.auth.util.Hash;
 import org.infpls.noxio.auth.module.auth.session.PacketS02;
@@ -298,7 +298,13 @@ public class UserDao {
   }
     
   public NoxioSession createSession(final WebSocketSession webSocket, DaoContainer dao) throws IOException {
-    NoxioSession session = new NoxioSession(webSocket, dao);
+    NoxioSession session = NoxioSession.create(webSocket, dao);
+    sessions.add(session);
+    return session;
+  }
+  
+  public NoxioSession createSessionGuest(final WebSocketSession webSocket, DaoContainer dao) throws IOException {
+    NoxioSession session = NoxioSessionGuest.create(webSocket, dao);
     sessions.add(session);
     return session;
   }

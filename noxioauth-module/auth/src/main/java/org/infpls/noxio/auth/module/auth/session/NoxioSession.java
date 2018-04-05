@@ -13,20 +13,29 @@ import org.infpls.noxio.auth.module.auth.util.ID;
 
 public class NoxioSession {
   private final WebSocketSession webSocket;
-  private final DaoContainer dao;
+  protected final DaoContainer dao;
   
-  private String sid;
-  private User user;
-  private UserSettings settings;
-  private UserStats stats;
-  private UserUnlocks unlocks;
+  protected String sid;
+  protected User user;
+  protected UserSettings settings;
+  protected UserStats stats;
+  protected UserUnlocks unlocks;
   
-  private SessionState sessionState;
+  protected SessionState sessionState;
  
-  public NoxioSession(final WebSocketSession webSocket, final DaoContainer dao) throws IOException {
+  public static NoxioSession create(final WebSocketSession webSocket, final DaoContainer dao) throws IOException {
+    final NoxioSession session = new NoxioSession(webSocket, dao);
+    session.init();
+    return session;
+  }
+  
+  protected NoxioSession(final WebSocketSession webSocket, final DaoContainer dao) throws IOException {
     this.webSocket = webSocket;
     this.dao = dao;
-        
+  }
+  
+  /* Called after construction */
+  public void init() throws IOException {
     sessionState = new Authenticate(this, dao.getUserDao(), dao.getMailDao());
   }
   
@@ -44,7 +53,7 @@ public class NoxioSession {
     00 - Authentication State
     01 - Online State
   */
-  public void changeState(final int s) throws IOException { /* Not a huge fan of how this works */
+  public void changeState(final int s) throws IOException { /* Not a huge fan of how this works. */
     sessionState.destroy();
     switch(s) {
       case 1 : { sessionState = new Online(this, dao.getInfoDao()); break; }
@@ -60,7 +69,7 @@ public class NoxioSession {
     stats = dao.getUserDao().getUserStats(user.uid);
     unlocks = dao.getUserDao().getUserUnlocks(user.uid);
     if(user == null || settings == null || stats == null || unlocks == null) { close("Fatal error during login. Please contact support."); return; }
-    sendPacket(new PacketS01(user.name, sid, settings, stats, unlocks));
+    sendPacket(new PacketS01(user.name, sid, user.display, isGuest(), settings, stats, unlocks));
     changeState(1);
   }
   
@@ -95,7 +104,7 @@ public class NoxioSession {
     }
   }
   
-  private void saveStats() throws IOException {
+  protected void saveStats() throws IOException {
     if(loggedIn()) {
       dao.getUserDao().saveUserStats(stats);
       if(isOpen()) { sendPacket(new PacketS04(stats)); }
@@ -130,9 +139,13 @@ public class NoxioSession {
     return webSocket.isOpen();
   }
   
+  public boolean isGuest() {
+    return false;
+  }
+  
   public void destroy() throws IOException {
     saveStats();
-    sessionState.destroy();
+    if(sessionState != null) { sessionState.destroy(); }
   }
   
   /* Normal connection close */

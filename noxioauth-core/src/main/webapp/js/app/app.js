@@ -15,7 +15,7 @@ function Main () {
 Main.prototype.init = function() {
   this.gauss.init();
   this.gauss.show();
-  this.net.auth.establish();
+  this.net.connect();
   this.gauss.status();
 };
 

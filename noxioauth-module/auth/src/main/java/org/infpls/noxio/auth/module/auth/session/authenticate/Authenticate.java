@@ -250,5 +250,4 @@ public class Authenticate extends SessionState {
   public void destroy() throws IOException {
     
   }
-  
 }
