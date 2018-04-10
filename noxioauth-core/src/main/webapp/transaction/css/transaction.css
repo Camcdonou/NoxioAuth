@@ -1,0 +1,46 @@
+body {
+  background-color: #000000;
+  margin: 0px 0px 0px 0px;
+}
+
+.menu-container {
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  
+  font-family: "Calibri", monospace;
+  color: rgba(255, 255, 255, 1.0);
+}
+
+.menu {
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+  background-color: rgba(255, 255, 255, 0.0);
+  
+  text-align: center;
+  font-size: 18px;
+}
+
+.ico-disp {
+    width: 28px;
+    height: 28px;
+    padding-left: 8px;
+    margin-bottom: -5px;
+}
+
+.disp {
+  font-size: 32px;
+  background-color: rgba(255, 255, 255, 1.0);
+  color: rgba(0, 0, 0, 1.0);
+  padding: 0px 8px 0px 8px;
+}
+
+.sml {
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.0);
+  color: rgba(255, 255, 255, 1.0);
+}

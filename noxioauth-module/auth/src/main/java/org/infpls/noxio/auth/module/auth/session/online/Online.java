@@ -2,6 +2,7 @@ package org.infpls.noxio.auth.module.auth.session.online;
 
 import com.google.gson.*;
 import java.io.IOException;
+import org.infpls.noxio.auth.module.auth.dao.pay.PaymentDao;
 
 import org.infpls.noxio.auth.module.auth.dao.server.InfoDao;
 import org.infpls.noxio.auth.module.auth.dao.user.UserUnlocks;
@@ -10,6 +11,7 @@ import org.infpls.noxio.auth.module.auth.session.*;
 public class Online extends SessionState {
   
   private final InfoDao infoDao;
+  
   public Online(final NoxioSession session, final InfoDao infoDao) throws IOException {
     super(session);
    this.infoDao = infoDao;
@@ -26,6 +28,9 @@ public class Online extends SessionState {
      > o07 request unlock
      < o08 unlock succeed
      < o09 unlock fail
+     > o20 request payment
+     < o21 request good & redirect
+     < o22 request bad
   */
   
   @Override
@@ -39,6 +44,7 @@ public class Online extends SessionState {
         case "o02" : { serverInfo(gson.fromJson(data, PacketO02.class)); break; }
         case "o03" : { stateReady(gson.fromJson(data, PacketO03.class)); break; }
         case "o07" : { checkUnlock(gson.fromJson(data, PacketO07.class)); break; }
+        case "o20" : { requestPayment(gson.fromJson(data, PacketO20.class)); break; }
         default : { close("Invalid data: " + p.getType()); break; }
       }
     } catch(IOException | NullPointerException | JsonParseException ex) {
@@ -63,6 +69,15 @@ public class Online extends SessionState {
     final String result = session.doUnlock(u);
     if(result == null) { sendPacket(new PacketO08()); }
     else { sendPacket(new PacketO09(result)); }
+  }
+  
+  private void requestPayment(final PacketO20 p) throws IOException {
+    final PaymentDao.Item item = p.getItem();
+    
+    /* do */
+    final String result = session.doPayment(item);
+    if(result != null) { sendPacket(new PacketO21(result)); }
+    else { sendPacket(new PacketO22("Failed to create transaction.")); }
   }
   
   @Override

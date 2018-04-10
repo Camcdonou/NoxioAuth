@@ -4,6 +4,7 @@ import java.io.IOException;
 import org.springframework.web.socket.WebSocketSession;
 
 import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
+import org.infpls.noxio.auth.module.auth.dao.pay.PaymentDao;
 import org.infpls.noxio.auth.module.auth.dao.user.*;
 import org.infpls.noxio.auth.module.auth.session.online.Online;
 import org.infpls.noxio.auth.module.auth.util.*;
@@ -61,6 +62,11 @@ public class NoxioSessionGuest extends NoxioSession {
     saveStats();
     sendPacket(new PacketS05(unlocks));
     return null;
+  }
+  
+  @Override
+  public String doPayment(final PaymentDao.Item item) throws IOException {
+    throw new IOException("Guest Session called invalid function :: doPayment()");
   }
   
   @Override

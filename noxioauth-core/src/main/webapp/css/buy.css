@@ -1,0 +1,63 @@
+/* CSS for app/menu/buy-menu.js */
+.buy-cont {
+  width: 768px;
+}
+
+.buy-cont-left {
+  display: inline-block;
+  width: 48%;
+  text-align: left;
+  padding: 8px 4px 8px 8px;
+}
+
+.buy-cont-right {
+  float: right;
+  width: 48%;
+  text-align: left;
+  padding: 8px 8px 8px 4px;
+}
+
+.buy-title {
+  font-size: 28px;
+  text-align: center;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 1.0);
+  color: rgba(0, 0, 0, 1.0);
+}
+
+.buy-text {
+  font-size: 18px;
+  height: 150px;
+  overflow: hidden;
+}
+
+.buy-price {
+  cursor: pointer;
+  font-size: 20px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.buy-price:hover {
+  background-color: rgba(255, 255, 255, 1.0);
+  color: rgba(0, 0, 0, 1.0);
+}
+
+.buy-sub-cont {
+  display: block;
+  text-align: center;
+}
+
+.buy-btn {
+  cursor: pointer;
+  display: inline-block;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 3px 6px 0px 6px;
+  width: 150px;
+}
+
+.buy-btn:hover {
+  background-color: rgba(255, 255, 255, 1.0);
+  color: rgba(0, 0, 0, 1.0);
+}

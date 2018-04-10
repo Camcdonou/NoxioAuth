@@ -11,6 +11,8 @@ OnlineState.prototype.handlePacket = function(packet) {
     case "o04" : { main.menu.unlock.loadUnlockList(packet.unlocks); return true; }
     case "o08" : { this.unlockSuccess(); return true; }
     case "o09" : { this.unlockFail(packet.message); return true; }
+    case "o21" : { this.requestPaymentRedirect(packet.redirect); return true; }
+    case "o22" : { this.requestPaymentFail(packet.message); return true; }
     default : { return false; }
   }
 };
@@ -47,6 +49,21 @@ OnlineState.prototype.unlockSuccess = function() {
 OnlineState.prototype.unlockFail = function(message) {
   main.menu.warning.show(message);
   main.menu.unlock.show();
+};
+
+OnlineState.prototype.requestPayment = function(item) {
+  this.send({type: "o20", item: item});
+  main.menu.connect.show("Creating transaction", 0);
+};
+
+OnlineState.prototype.requestPaymentRedirect = function(redirect) {
+  window.open(redirect);
+  main.menu.online.show();
+};
+
+OnlineState.prototype.requestPaymentFail = function(message) {
+  main.menu.warning.show(message);
+  main.menu.online.show();
 };
 
 OnlineState.prototype.send = function(data) {

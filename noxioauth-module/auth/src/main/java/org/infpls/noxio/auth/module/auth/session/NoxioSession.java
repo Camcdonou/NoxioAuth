@@ -5,6 +5,7 @@ import com.google.gson.*;
 import org.springframework.web.socket.*;
 
 import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
+import org.infpls.noxio.auth.module.auth.dao.pay.PaymentDao;
 import org.infpls.noxio.auth.module.auth.dao.user.*;
 import org.infpls.noxio.auth.module.auth.session.authenticate.Authenticate;
 import org.infpls.noxio.auth.module.auth.session.error.*;
@@ -96,6 +97,17 @@ public class NoxioSession {
     return null;
   }
   
+  public String doPayment(final PaymentDao.Item item) throws IOException {
+    if(item == null) { return null; }
+    switch(item) {
+      case SPEC : { if(User.Type.SPEC.level <= user.getType().level) { return null; } break; }
+      case FULL : { if(User.Type.FULL.level <= user.getType().level) { return null; } break; }
+      default : { throw new IOException("Invalid Item ENUM -> NoxioSession::doPayment()"); }
+    }
+
+    return dao.getPaymentDao().doPayment(user, item);
+  }
+  
   public void recordStats(final PacketH01.Stats nuStats) {
     stats = stats.add(nuStats);
     try { saveStats(); }
@@ -171,7 +183,7 @@ public class NoxioSession {
   public class UserData {
     public final String uid;                   // Unique ID for user
     public final String name, display;         // User is always lower case
-    public final boolean premium;              // Payed user
+    public final User.Type type;               // Payed/Unpayed user table (see User.java)
 
     public final UserSettings settings;
     public final UserUnlocks unlocks;
@@ -179,7 +191,7 @@ public class NoxioSession {
     public UserData(final User user, final UserSettings settings, final UserUnlocks unlocks) {
       uid = user.uid;
       name = user.name; display = user.display;
-      premium = user.premium;
+      type = user.getType();
       this.settings = settings; this.unlocks = unlocks;
     }
   }

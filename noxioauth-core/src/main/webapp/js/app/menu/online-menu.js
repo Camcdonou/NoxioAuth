@@ -77,6 +77,13 @@ function OnlineMenu() {
         document.getElementById("online-setting-4")
       ]
     },
+    premium: {
+      element: document.getElementById("online-premium"),
+      hide: hide,
+      show: show,
+      onEnter: function() { main.menu.buy.show(); },
+      items: []
+    },
     logout: {
       element: document.getElementById("online-logout"),
       hide: hide,

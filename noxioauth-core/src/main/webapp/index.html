@@ -8,6 +8,7 @@
         <link rel="stylesheet" type="text/css" href="css/error.css">
         <link rel="stylesheet" type="text/css" href="css/info.css">
         <link rel="stylesheet" type="text/css" href="css/footer.css">
+        <link rel="stylesheet" type="text/css" href="css/buy.css">
         <link rel="stylesheet" type="text/css" href="css/gauss.css">
     </head>
     
@@ -114,6 +115,7 @@
           <div id="online-setting-2" class="menu sub btn" onclick="">Controls</div>
           <div id="online-setting-3" class="menu sub btn" onclick="">Graphics</div>
           <div id="online-setting-4" class="menu sub btn" onclick="main.menu.setgame.show()">Game</div>
+        <div id="online-member" class="menu cat" onclick="main.menu.online.items.premium.onEnter()">Do$h</div>
         <div id="online-logout" class="menu cat" onclick="main.menu.online.items.logout.onEnter()">Logout</div>
       </div>
       
@@ -193,6 +195,29 @@
       </div>
       <div id="setgame-modal" class="setgame-modal" style="display: none">
           <div id="setgame-modal-cont" class='setgame-modal-cont'>...</div>
+      </div>
+      
+      <!-- Buy Menu -->
+      <div id="buy" class="menu-container" style="display: none">
+        <div class="buy-cont">
+          <div class="buy-cont-left">
+            <div class="buy-title">Full Membership</div>
+            <div class="buy-text">Unlocks <b>everything.</b><br/><br/>
+              You also gain a &icon& next to your name to show your support for 20xx!<br/>
+            </div>
+            <div class="buy-price" onclick="main.menu.buy.buyFull()">$5 single payment</div>
+          </div>
+          <div class="buy-cont-right">
+            <div class="buy-title">Lite Membership</div>
+            <div class="buy-text">Unlocks all special features, customization options, and basic characters.<br/><br/>
+              You also gain a &icon& next to your name to show your support for 20xx!<br/>
+            </div>
+            <div class="buy-price" onclick="main.menu.buy.buyLite()">$3 single payment</div>
+          </div>
+        </div>
+        <div class="buy-sub-cont">
+          <div id="buy-back" class="buy-btn" onclick="main.menu.buy.back()">Back</div>
+        </div>
       </div>
       
       <!-- Game Server Lobby -->
@@ -291,6 +316,7 @@
       <script src="js/app/menu/unlock-menu.js"></script>
       <script src="js/app/menu/stat-menu.js"></script>
       <script src="js/app/menu/setting-game-menu.js"></script>
+      <script src="js/app/menu/buy-menu.js"></script>
       <script src="js/app/menu/lobby-menu.js"></script>
       <script src="js/app/menu/game-menu.js"></script>
       <script src="js/app/menu/menu.js"></script>

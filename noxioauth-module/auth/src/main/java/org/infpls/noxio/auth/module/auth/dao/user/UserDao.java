@@ -34,8 +34,8 @@ public class UserDao {
     final UserSettings us = new UserSettings(uid);
     try {
       dao.jdbc.update(
-        "INSERT into USERS ( UID, NAME, DISPLAY, EMAIL, HASH, PREMIUM, CREATED, UPDATED, LASTLOGIN ) VALUES ( ?, ?, ?, ?, ?, 0, NOW(), NOW(), NOW() )",
-              uid, user, user, email, sash
+        "INSERT into USERS ( UID, NAME, DISPLAY, EMAIL, HASH, TYPE, CREATED, UPDATED, LASTLOGIN ) VALUES ( ?, ?, ?, ?, ?, ?, NOW(), NOW(), NOW() )",
+              uid, user, user, email, sash, User.Type.FREE.name()
       );
       dao.jdbc.update(
         "INSERT into SETTINGS ( " +
@@ -142,7 +142,6 @@ public class UserDao {
     return null;
   }
   
-  /* Flags a given unlock */
   public void changeUserPassword(final User usr, final String hash) throws IOException {
     final String sash = Hash.bcrypt(hash);
     try {
@@ -156,7 +155,24 @@ public class UserDao {
     catch(DataAccessException ex) {
       System.err.println("UserDao::changeUserPassword() - SQL Error!");
       ex.printStackTrace();
-      throw new IOException("SQL Error during user unlock.");
+      throw new IOException("SQL Error during password change.");
+    }
+  }
+  
+  /* Changes a users account type */
+  public void setUserType(final String uid, final User.Type type) throws IOException {
+    try {
+      dao.jdbc.update(
+        "UPDATE USERS SET " +
+        "UPDATED = NOW(), TYPE = ?" +
+        "WHERE UID=?",
+              type.name(), uid
+      );
+    }
+    catch(DataAccessException ex) {
+      System.err.println("UserDao::setUserType() - SQL Error!");
+      ex.printStackTrace();
+      throw new IOException("SQL Error during account type change.");
     }
   }
   
