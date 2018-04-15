@@ -7,8 +7,9 @@ function Network () {
   this.game = new Game();
   
   this.user = undefined;
-  this.sid = undefined;
-  this.guest = undefined;
+  this.sid = undefined;    // Session ID
+  this.type = undefined;   // The type of account, list of types in org.infpls.noxio.auth.module.auth.dao.user.User
+  this.guest = undefined;  // Boolean flag for if the account is a guest or a normal account.
 };
 
 /* Opens connection to noxioauth on normal user socket */

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
 import org.infpls.noxio.auth.module.auth.dao.pay.PaymentDao;
 import org.infpls.noxio.auth.module.auth.dao.user.User;
+import org.infpls.noxio.auth.module.auth.session.NoxioSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,10 @@ public class PaymentController {
           case FULL : { dao.getUserDao().setUserType(nt.uid, User.Type.FULL); break; }
           default : { throw new IOException("Item ENUM missing function case -> PaymentController::process()"); }
         }
+        final User user = dao.getUserDao().getUserByUid(nt.uid);
+        if(user == null) { throw new IOException("Account does not exist."); }
+        final NoxioSession session = dao.getUserDao().getSessionByUser(user.name);
+        if(session != null) { session.postPayment(); }
         return new ResponseEntity(HttpStatus.OK);
       }
     }

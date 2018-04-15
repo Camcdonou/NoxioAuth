@@ -119,6 +119,29 @@ public class UserDao {
     return null;
   }
   
+  public User getUserByUid(final String uid) throws IOException {
+    try {
+      final List<Map<String,Object>> results = dao.jdbc.queryForList(
+        "SELECT * FROM USERS WHERE UID=?",
+        uid
+      );
+      if(results.size() > 0) {
+        return new User(results.get(0));
+      }
+    }
+    catch(DataAccessException ex) {
+      System.err.println("UserDao::getUserByUid() - SQL Error!");
+      ex.printStackTrace();
+      throw new IOException("SQL Error during user lookup.");
+    }
+    catch(ClassCastException | NullPointerException ex) {
+      System.err.println("UserDao::getUserByUid() - SQL Data Mapping Error!");
+      ex.printStackTrace();
+      throw new IOException("SQL Error during user lookup.");
+    }
+    return null;
+  }
+  
   public User getUserByEmail(final String email) throws IOException {
     try {
       final List<Map<String,Object>> results = dao.jdbc.queryForList(
@@ -276,7 +299,7 @@ public class UserDao {
   public UserUnlocks getUserUnlocks(final String uid) throws IOException {
     try {
       final List<Map<String,Object>> results = dao.jdbc.queryForList(
-        "SELECT * FROM UNLOCKS WHERE UID=?",
+        "SELECT UNLOCKS.*, USERS.TYPE FROM UNLOCKS JOIN USERS ON UNLOCKS.UID=USERS.UID WHERE UNLOCKS.UID=?",
         uid
       );
       if(results.size() > 0) {

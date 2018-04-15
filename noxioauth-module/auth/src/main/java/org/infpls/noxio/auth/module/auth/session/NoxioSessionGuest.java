@@ -38,7 +38,7 @@ public class NoxioSessionGuest extends NoxioSession {
     stats = new UserStats();
     unlocks = new UserUnlocks();
     if(user == null || settings == null || stats == null || unlocks == null) { close("Fatal error during login. Please contact support."); return; }
-    sendPacket(new PacketS01(user.name, sid, user.display, isGuest(), settings, stats, unlocks));
+    sendPacket(new PacketS01(user.name, sid, user.display, user.getType(), isGuest(), settings, stats, unlocks));
     sessionState = new Online(this, dao.getInfoDao());
   }
   
@@ -67,6 +67,11 @@ public class NoxioSessionGuest extends NoxioSession {
   @Override
   public String doPayment(final PaymentDao.Item item) throws IOException {
     throw new IOException("Guest Session called invalid function :: doPayment()");
+  }
+  
+  @Override
+  public void postPayment() throws IOException {
+    throw new IOException("Guest Session called invalid function :: postPayment()");
   }
   
   @Override

@@ -70,7 +70,7 @@ public class NoxioSession {
     stats = dao.getUserDao().getUserStats(user.uid);
     unlocks = dao.getUserDao().getUserUnlocks(user.uid);
     if(user == null || settings == null || stats == null || unlocks == null) { close("Fatal error during login. Please contact support."); return; }
-    sendPacket(new PacketS01(user.name, sid, user.display, isGuest(), settings, stats, unlocks));
+    sendPacket(new PacketS01(user.name, sid, user.display, user.getType(), isGuest(), settings, stats, unlocks));
     changeState(1);
   }
   
@@ -106,6 +106,13 @@ public class NoxioSession {
     }
 
     return dao.getPaymentDao().doPayment(user, item);
+  }
+  
+  /* Called by PaymentController once a payment is complete. This method retrieves new account info and pushes chahnges to the client */
+  public void postPayment() throws IOException {
+    user = dao.getUserDao().getUserByName(user.name);
+    unlocks = dao.getUserDao().getUserUnlocks(user.uid);
+    sendPacket(new PacketS06(user.name, sid, user.display, user.getType(), unlocks));
   }
   
   public void recordStats(final PacketH01.Stats nuStats) {

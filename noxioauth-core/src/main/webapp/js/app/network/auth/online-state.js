@@ -8,7 +8,7 @@ function OnlineState() {
 OnlineState.prototype.handlePacket = function(packet) {
   switch(packet.type) {
     case "o01" : { main.menu.online.items.server.showServerInfo(packet.servers); return true; }
-    case "o04" : { main.menu.unlock.loadUnlockList(packet.unlocks); return true; }
+    case "o04" : { main.unlocks.loadList(packet.unlocks); return true; }
     case "o08" : { this.unlockSuccess(); return true; }
     case "o09" : { this.unlockFail(packet.message); return true; }
     case "o21" : { this.requestPaymentRedirect(packet.redirect); return true; }

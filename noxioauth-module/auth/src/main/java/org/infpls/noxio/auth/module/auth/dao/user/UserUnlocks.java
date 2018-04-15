@@ -6,6 +6,7 @@ import java.util.Map;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import org.infpls.noxio.auth.module.auth.dao.pay.PaymentDao;
 
 public class UserUnlocks { 
   public static enum Key {
@@ -19,22 +20,23 @@ public class UserUnlocks {
   }
   
   private static final List<Unlock> UNLOCKS = Arrays.asList(
-    new Unlock(Key.CHAR_BOX, "Box", "So good that he even has a 60/40 matchup against himself.", Type.CHARACTER, 250, false),
-    new Unlock(Key.CHAR_CRATE, "Crate", "Prefers the air.", Type.CHARACTER, 250, false),
-    new Unlock(Key.CHAR_VOXEL, "Voxel", "Telefragging the competition.", Type.CHARACTER, 250, false),
-    new Unlock(Key.CHAR_CARGO, "Cargo", "Punch.", Type.CHARACTER, 250, false),
-    new Unlock(Key.CHAR_QUAD, "Quad", "Geometric concepts with swords.", Type.CHARACTER, 250, false),
-    new Unlock(Key.CHAR_INFERNO, "InfernoPlus", "Unsubscribed.", Type.CHARACTER, 123456789, false),
+    new Unlock(Key.CHAR_BOX, "Box", "So good that he even has a 60/40 matchup against himself.", Type.CHARACTER, 250, User.Type.SPEC, false),
+    new Unlock(Key.CHAR_CRATE, "Crate", "Prefers the air.", Type.CHARACTER, 250, User.Type.SPEC, false),
+    new Unlock(Key.CHAR_VOXEL, "Voxel", "Telefragging the competition.", Type.CHARACTER, 250, User.Type.SPEC, false),
+    new Unlock(Key.CHAR_BLOCK, "Block", "In critical need of a good nights sleep.", Type.CHARACTER, 250, User.Type.SPEC, false),
+    new Unlock(Key.CHAR_CARGO, "Cargo", "Punch.", Type.CHARACTER, 250, User.Type.SPEC, false),
+    new Unlock(Key.CHAR_QUAD, "Quad", "Geometric concepts with swords.", Type.CHARACTER, 250, User.Type.SPEC, false),
+    new Unlock(Key.CHAR_INFERNO, "InfernoPlus", "Unsubscribed.", Type.CHARACTER, 123456789, User.Type.ADMIN, false),
     
-    new Unlock(Key.ALT_BOXGOLD, "Golden Box", "Solid gold means you are always #1.", Type.ALTERNATE, 100000, false),
-    new Unlock(Key.ALT_BOXRED, "Red Box", "Same old blip, shiney new color.", Type.ALTERNATE, 25000, false),
-    new Unlock(Key.ALT_CRATEORANGE, "Orange Crate", "Same old blip, shiney new color.", Type.ALTERNATE, 25000, false),
-    new Unlock(Key.ALT_VOXELGREEN, "Green Voxel", "Same old blip, shiney new color.", Type.ALTERNATE, 25000, false),
-    new Unlock(Key.ALT_BLOCKROUND, "Curvy Block", "At least 7 polygons probably.", Type.ALTERNATE, 50000, false),
-    new Unlock(Key.ALT_QUADFIRE, "Bad Quad", "Exactly the same character but really bad.", Type.ALTERNATE, 50000, false),
+    new Unlock(Key.ALT_BOXGOLD, "Golden Box", "Solid gold means you are always #1.", Type.ALTERNATE, 100000, User.Type.FULL, false),
+    new Unlock(Key.ALT_BOXRED, "Red Box", "Same old blip, shiney new color.", Type.ALTERNATE, 25000, User.Type.FULL, false),
+    new Unlock(Key.ALT_CRATEORANGE, "Orange Crate", "Same old blip, shiney new color.", Type.ALTERNATE, 25000, User.Type.FULL, false),
+    new Unlock(Key.ALT_VOXELGREEN, "Green Voxel", "Same old blip, shiney new color.", Type.ALTERNATE, 25000, User.Type.FULL, false),
+    new Unlock(Key.ALT_BLOCKROUND, "Curvy Block", "At least 7 polygons probably.", Type.ALTERNATE, 50000, User.Type.FULL, false),
+    new Unlock(Key.ALT_QUADFIRE, "Bad Quad", "Exactly the same character but really bad.", Type.ALTERNATE, 50000, User.Type.FULL, false),
           
-    new Unlock(Key.FT_COLOR, "Custom Colors", "Allows you to change the color of your character. Also allows you to create phasing colors.", Type.FEATURE, 50000, false),
-    new Unlock(Key.FT_SOUND, "Custom Sounds", "Allows you to upload and and use a custom sound effect. Plays when you come in 1st place.", Type.FEATURE, 99999999, false)
+    new Unlock(Key.FT_COLOR, "Custom Colors", "Allows you to change the color of your character. Also allows you to create phasing colors.", Type.FEATURE, 50000, User.Type.SPEC, false),
+    new Unlock(Key.FT_SOUND, "Custom Sounds", "Allows you to upload and and use a custom sound effect. Plays when you come in 1st place.", Type.FEATURE, 99999999, User.Type.SPEC, false)
   );
   
   public static List<Unlock> getUnlockList() {
@@ -53,17 +55,20 @@ public class UserUnlocks {
     public final Key key;
     public final String name, description;
     public final Type type;
+    public final int auto; /* Account level that this is automatically considered 'unlocked' */
     public final int price;
     public final boolean hidden;
-    public Unlock(Key key, String name, String description, Type type, int price, boolean hidden) {
+    public Unlock(Key key, String name, String description, Type type, int price, User.Type userType, boolean hidden) {
       this.key = key;
       this.name = name; this.description = description; this.type = type;
+      this.auto = userType.level;
       this.price = price;
       this.hidden = hidden;
     }
   }
   
   public final String uid;
+  public final User.Type type; /* This is joined from the USERS table. */
   public final Timestamp updated;
   private final Map<Key, Boolean> unlocks;
   
@@ -73,6 +78,19 @@ public class UserUnlocks {
     uid = (String)data.remove("uid");
     updated = (Timestamp)data.remove("updated");
    
+    User.Type tmp = null;
+    try {
+      final String typ = (String)data.get("TYPE");
+      final Field en = User.Type.class.getField(typ);
+      tmp = ((User.Type)en.get(null));
+    }
+    catch(NoSuchFieldException | IllegalAccessException ex) {
+      System.err.println("UserUnlocks::new - Error parsing account type from database.");
+      ex.printStackTrace();
+    }
+    
+    type = tmp;
+    
     /* Uses reflection to map SQL databse names to enums that identify the unlocks */
     try {
       final String[] ks = data.keySet().toArray(new String[0]);
@@ -92,6 +110,7 @@ public class UserUnlocks {
     unlocks = new HashMap();
     uid = null;
     updated = null;
+    type = User.Type.FREE;
    
     /* Uses reflection to map SQL databse names to enums that identify the unlocks */
     unlocks.put(Key.CHAR_BOX, true);
@@ -99,6 +118,8 @@ public class UserUnlocks {
   }
   
   public boolean has(Key key) {
+    final Unlock u = UserUnlocks.getUnlock(key);
+    if(u.auto <= type.level) { return true; }
     final Boolean r = unlocks.get(key);
     return r != null ? r : false;
   }

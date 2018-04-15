@@ -3,7 +3,10 @@
 
 function OnlineMenu() {  
   this.element = document.getElementById("online");
+  this.nameElm = document.getElementById("online-user");
+  this.ebeg = document.getElementById("online-ebeg");
   this.motd = true; /* Shows motd when you first login */
+  this.visible = false;
   
   /* Prototype functions for sub menus to use */
   var hide = function() {
@@ -77,8 +80,8 @@ function OnlineMenu() {
         document.getElementById("online-setting-4")
       ]
     },
-    premium: {
-      element: document.getElementById("online-premium"),
+    buy: {
+      element: document.getElementById("online-buy"),
       hide: hide,
       show: show,
       onEnter: function() { main.menu.buy.show(); },
@@ -94,6 +97,7 @@ function OnlineMenu() {
   };
 };
 
+/* @TODO set this up to show a server retrieved login message for general use */
 OnlineMenu.prototype.showMotd = function() {
   if(!this.motd) { return; }
   if(!main.net.guest) { /*main.menu.info.show("","");*/ }
@@ -101,21 +105,50 @@ OnlineMenu.prototype.showMotd = function() {
   this.motd = false;
 };
 
+/* Animates the fade in on the ebeg text */
+OnlineMenu.prototype.showEbeg = function() {
+  if(main.net.type > 0 || main.net.guest) { return; }
+  var parent = this;
+  var fade = function(tran) {
+    if(!parent.visible || tran >= 1.0) { return; }
+    parent.ebeg.style.color = "rgba(255, 255, 255, " + tran + ")";
+    parent.ebeg.style.textShadow = "0px 0px 7px rgba(255, 255, 255, " + tran*0.45 + ")";
+    setTimeout(function() { fade(tran+0.0075); }, 16);
+  };
+  setTimeout(function() { fade(0); }, 2000);
+  this.ebeg.style.display = "block";
+};
+
+OnlineMenu.prototype.hideEbeg = function() {
+  this.ebeg.style.color = "rgba(255, 255, 255, 0)";
+  this.ebeg.style.textShadow = "0px 0px 7px rgba(255, 255, 255, 0)";
+  this.ebeg.style.display = "none";
+};
+
+/* Hides the buy menu if user is a guest. */
+OnlineMenu.prototype.showBuy = function() {
+  this.items.buy.element.style.display = main.net.guest ? "none" : "block";
+};
 
 /* Shows this menu */
 OnlineMenu.prototype.show = function() {
   main.menu.hideAll();
   this.hideAll();
-  document.getElementById("online-user").innerHTML = main.net.display;
+  this.nameElm.innerHTML = main.net.display;
   this.showMotd();
   this.items.server.show();
   main.menu.credit.show();
   main.menu.rank.show();
+  this.visible = true;
+  this.showBuy();
+  this.showEbeg();
   this.element.style.display = "block";
 };
 
 /* Hide this menu */
 OnlineMenu.prototype.hide = function() {
+  this.visible = false;
+  this.hideEbeg();
   this.element.style.display = "none";
 };
 

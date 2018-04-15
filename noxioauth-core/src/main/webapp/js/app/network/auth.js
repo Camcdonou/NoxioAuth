@@ -82,6 +82,7 @@ Auth.prototype.handlePacket = function(packet) {
     case "s02" : { break; } /* Keep alive packet */
     case "s04" : { main.setStats(packet.stats); break; } /* User Stats Update */
     case "s05" : { main.unlocks.load(packet.unlocks); break; } /* User Unlocks Update */
+    case "s06" : { this.accountUpdate(packet); break; } /* Account info update */
     case "x00" : { main.menu.error.showError("Connection Error", packet.message); main.close(); break; }
     case "x01" : { main.menu.error.showErrorException("Server Exception", packet.message, packet.trace); main.close(); break; }
     default : { main.menu.error.showErrorException("Connection Error", "Recieved invalid packet type: " + packet.type, JSON.stringify(packet)); main.close(); break; }
@@ -106,10 +107,22 @@ Auth.prototype.login = function(packet) {
   main.net.user = packet.user;
   main.net.sid = packet.sid;
   main.net.display = packet.display;
+  main.net.type = packet.userType;
   main.net.guest = packet.guest;
   main.settings.load(packet.settings);
   main.setStats(packet.stats);
   main.unlocks.load(packet.unlocks);
+};
+
+Auth.prototype.accountUpdate = function(packet) {
+  main.net.user = packet.user;
+  main.net.sid = packet.sid;
+  main.net.display = packet.display;
+  main.net.type = packet.userType;
+  main.unlocks.load(packet.unlocks);
+  
+  main.menu.info.show("Thanks", "Thanks for contributing to 20xx.io!</br>I sincerly appreciate the support and I hope you continue to enjoy the game.</br></br>Have a great day!");
+  main.menu.buy.updateButtons(); /* Slightly hacky, nothing awful tho */
 };
 
 Auth.prototype.send = function(packet){
