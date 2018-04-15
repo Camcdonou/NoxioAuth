@@ -3,6 +3,7 @@
 
 function AuthMenu() {
   this.element = document.getElementById("auth");
+  this.link = document.getElementById("auth-link");
   
   /* Prototype functions for sub menus to use */
   var hide = function() {
@@ -90,12 +91,14 @@ AuthMenu.prototype.show = function() {
   main.menu.hideAll();
   this.hideAll();
   this.element.style.display = "block";
+  this.link.style.display = "block";
   main.menu.footer.show();
 };
 
 /* Hide this menu */
 AuthMenu.prototype.hide = function() {
   this.element.style.display = "none";
+  this.link.style.display = "none";
 };
 
 /* Hides all sub menus in this menu */

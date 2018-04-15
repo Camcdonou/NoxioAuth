@@ -86,7 +86,7 @@ public class NoxioSession {
   public String doUnlock(final UserUnlocks.Unlock unlock) throws IOException {
     /* Checks */
     if(unlocks.has(unlock.key)) { return "You already have this unlocked."; }
-    if(stats.getCredits() <= unlock.price) { return "You do not have enough credits."; }
+    if(stats.getCredits() < unlock.price) { return "You do not have enough credits."; }
     
     /* Unlock */
     unlocks.unlock(unlock.key);
