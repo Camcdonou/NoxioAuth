@@ -13,7 +13,7 @@ LoginState.prototype.handlePacket = function(packet) {
 };
 
 LoginState.prototype.serverInfo = function(packet) {
-  main.net.game.info = {name: packet.name, location: packet.location, description: packet.description};
+  main.net.game.info = {name: packet.info.name, location: packet.info.location, description: packet.info.description};
 };
 
 LoginState.prototype.ready = function() {

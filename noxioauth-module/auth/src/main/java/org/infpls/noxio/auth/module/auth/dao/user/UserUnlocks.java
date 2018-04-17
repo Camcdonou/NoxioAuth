@@ -6,7 +6,7 @@ import java.util.Map;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.HashMap;
-import org.infpls.noxio.auth.module.auth.dao.pay.PaymentDao;
+import org.infpls.noxio.auth.module.auth.util.Oak;
 
 public class UserUnlocks { 
   public static enum Key {
@@ -75,18 +75,17 @@ public class UserUnlocks {
   /* SQL Database Constructor */
   public UserUnlocks(final Map<String, Object> data) {
     unlocks = new HashMap();
-    uid = (String)data.remove("uid");
-    updated = (Timestamp)data.remove("updated");
+    uid = (String)data.remove("UID");
+    updated = (Timestamp)data.remove("UPDATED");
    
     User.Type tmp = null;
     try {
-      final String typ = (String)data.get("TYPE");
+      final String typ = (String)data.remove("TYPE");
       final Field en = User.Type.class.getField(typ);
       tmp = ((User.Type)en.get(null));
     }
     catch(NoSuchFieldException | IllegalAccessException ex) {
-      System.err.println("UserUnlocks::new - Error parsing account type from database.");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "Error parsing account type from database.", ex);
     }
     
     type = tmp;
@@ -100,8 +99,7 @@ public class UserUnlocks {
       }
     }
     catch(NoSuchFieldException | IllegalAccessException ex) {
-      System.err.println("UserUnlocks::new - Error parsing unlock data from database.");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "Error parsing unlock data from database.", ex);
     }
   }
   

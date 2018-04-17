@@ -1,12 +1,12 @@
 package org.infpls.noxio.auth.module.auth.websocket;
 
 import com.google.gson.*;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
 import org.infpls.noxio.auth.module.auth.dao.file.FileDao;
 import org.infpls.noxio.auth.module.auth.dao.user.UserUnlocks;
 import org.infpls.noxio.auth.module.auth.session.NoxioSession;
+import org.infpls.noxio.auth.module.auth.util.Oak;
 import org.infpls.noxio.auth.module.auth.util.WavFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -68,9 +68,9 @@ public class FileController {
     session.getSettings().game.setCustomSoundFile(filename);
     try { session.saveSettings(); }
     catch(IOException ex) {
+      Oak.log(Oak.Level.ERR, "Error while saving settings.", ex);
       try { session.close(ex); }
-      catch(IOException ex2) { ex2.printStackTrace(); }
-      ex.printStackTrace();
+      catch(IOException ex2) { Oak.log(Oak.Level.ERR, "Error while closing user connection.", ex2); }
       return new ResponseEntity("Unknown error while saving settings.", HttpStatus.NOT_ACCEPTABLE);
     }
     

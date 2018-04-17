@@ -3,6 +3,7 @@ package org.infpls.noxio.auth.module.auth.dao.user;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.Map;
+import org.infpls.noxio.auth.module.auth.util.Oak;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class User {
@@ -37,8 +38,7 @@ public class User {
         type = ((Type)en.get(null));
       }
       catch(NoSuchFieldException | IllegalAccessException ex) {
-        System.err.println("User::new - Error parsing transaction data from database.");
-        ex.printStackTrace();
+        Oak.log(Oak.Level.CRIT, "Error parsing user data from database.", ex);
       }
   }
   

@@ -22,13 +22,13 @@ OnlineState.prototype.getServerInfo = function() {
 };
 
 /* Checks the status of game servers via AJAX */
-OnlineState.prototype.checkServerStatus = function(id, address, port, info) {
+OnlineState.prototype.checkServerStatus = function(ind, info) {
   $.ajax({
-    url: "http://" + info.address + ":" + info.port + "/noxiogame/info",
+    url: "http://" + info.domain + ":" + info.port + "/noxiogame/info",
     type: 'GET',
     timeout: 5000,
-    success: function(data) { main.menu.online.items.server.updateServerInfo(id, address, port, data); },
-    error: function() { main.menu.online.items.server.updateServerInfo(id, address, port, undefined); }
+    success: function(data) { main.menu.online.items.server.updateServerInfo(ind, info, data); },
+    error: function() { main.menu.online.items.server.updateServerInfo(ind, info); }
   });
 };
 

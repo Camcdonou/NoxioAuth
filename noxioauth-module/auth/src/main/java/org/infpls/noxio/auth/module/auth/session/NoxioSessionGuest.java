@@ -39,7 +39,7 @@ public class NoxioSessionGuest extends NoxioSession {
     unlocks = new UserUnlocks();
     if(user == null || settings == null || stats == null || unlocks == null) { close("Fatal error during login. Please contact support."); return; }
     sendPacket(new PacketS01(user.name, sid, user.display, user.getType(), isGuest(), settings, stats, unlocks));
-    sessionState = new Online(this, dao.getInfoDao());
+    sessionState = new Online(this);
   }
   
   @Override

@@ -8,7 +8,7 @@ function AuthState() {
 AuthState.prototype.handlePacket = function(packet) {
   switch(packet.type) {
     case "a03" : { main.menu.warning.show(packet.message); return true; }
-    case "a05" : { main.menu.warning.show(packet.message); return true; }
+    case "a05" : { this.loginError(packet); return true; }
     case "a06" : { this.createSuccess(); return true; }
     case "a07" : { /* Old salty packet. Deprecated. */ return true; }
     case "a11" : { this.sendEmail(); return true; }
@@ -28,6 +28,12 @@ AuthState.prototype.handlePacket = function(packet) {
 
 AuthState.prototype.login = function(username, password) {
   this.send({type: "a01", user: username, hash: sha256("20"+password+"xx")});
+  main.menu.connect.show("Logging In", 0);
+};
+
+AuthState.prototype.loginError = function(packet) {
+  main.menu.warning.show(packet.message);
+  main.menu.auth.show();
 };
 
 AuthState.prototype.create = function(username, email, password) {

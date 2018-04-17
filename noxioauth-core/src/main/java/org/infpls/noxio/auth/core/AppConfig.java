@@ -3,7 +3,7 @@ package org.infpls.noxio.auth.core;
 import org.springframework.context.annotation.*;
 import org.springframework.web.servlet.config.annotation.*;
 import org.apache.tomcat.jdbc.pool.DataSource;
-import org.springframework.beans.factory.annotation.Value;
+import org.infpls.noxio.auth.module.auth.util.Settable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -11,17 +11,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "org.infpls.noxio.auth")
-@PropertySource("classpath:noxio.properties")
 public class AppConfig extends WebMvcConfigurerAdapter {
-  
-  @Value("${sql.driver}")
-  private String driver;
-  @Value("${sql.url}")
-  private String url;
-  @Value("${sql.user}")
-  private String user;
-  @Value("${sql.pass}")
-  private String pass;
 
   @Override
   public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
@@ -30,11 +20,12 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 
   @Bean
   public DataSource noxio_datasource() {
+      Settable.update();                   // This call to Settable.update() ensures all properties are loaded before we start using them.
       DataSource ds = new DataSource();
-      ds.setDriverClassName(driver);
-      ds.setUrl(url);
-      ds.setUsername(user);
-      ds.setPassword(pass);
+      ds.setDriverClassName(Settable.getSqlDriver());
+      ds.setUrl(Settable.getSqlUrl());
+      ds.setUsername(Settable.getSqlUser());
+      ds.setPassword(Settable.getSqlPass());
       return ds;
   }
 

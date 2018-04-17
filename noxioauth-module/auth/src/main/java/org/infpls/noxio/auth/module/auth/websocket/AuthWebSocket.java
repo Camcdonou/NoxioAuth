@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
 import org.infpls.noxio.auth.module.auth.session.NoxioSession;
+import org.infpls.noxio.auth.module.auth.util.Oak;
 
 
 public class AuthWebSocket extends TextWebSocketHandler {
@@ -20,9 +21,8 @@ public class AuthWebSocket extends TextWebSocketHandler {
         final NoxioSession session = dao.getUserDao().createSession(webSocket, dao);
         webSocket.getAttributes().put("session", session);
       }
-      catch(Exception e) {
-        System.err.println("Exception thrown in " + this.toString() + ":::afterConnectionEstablished");
-        e.printStackTrace();
+      catch(Exception ex) {
+        Oak.log(Oak.Level.ERR, "Exception thrown at Websocket top level.", ex);
       }
     }
 
@@ -32,11 +32,10 @@ public class AuthWebSocket extends TextWebSocketHandler {
         final NoxioSession session = (NoxioSession)(webSocket.getAttributes().get("session"));
         session.handlePacket(data.getPayload());
       }
-      catch(Exception e) {
-        System.err.println("Exception thrown in " + this.toString() + ":::handleTextMessage");
-        e.printStackTrace();
-        try { ((NoxioSession)(webSocket.getAttributes().get("session"))).close(e); }
-        catch(IOException ex) { ex.printStackTrace(); }
+      catch(Exception ex) {
+        Oak.log(Oak.Level.ERR, "Exception thrown at Websocket top level.", ex);
+        try { ((NoxioSession)(webSocket.getAttributes().get("session"))).close(ex); }
+        catch(IOException ioex) { Oak.log(Oak.Level.CRIT, "Failed to close session after exception.", ioex); }
       }
     }
   
@@ -46,8 +45,7 @@ public class AuthWebSocket extends TextWebSocketHandler {
         dao.getUserDao().destroySession(webSocket);
       }
       catch(Exception ex) {
-        System.err.println("Exception thrown in " + this.toString() + ":::afterConnectionClosed");
-        ex.printStackTrace();
+        Oak.log(Oak.Level.ERR, "Exception thrown at Websocket top level.", ex);
       }
     }
 }

@@ -9,6 +9,7 @@ import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
 import org.infpls.noxio.auth.module.auth.util.Hash;
 import org.infpls.noxio.auth.module.auth.session.PacketS02;
 import org.infpls.noxio.auth.module.auth.util.ID;
+import org.infpls.noxio.auth.module.auth.util.Oak;
 import org.springframework.dao.DataAccessException;
 
 /* UserDao handles both user info and logged in user NoxioSessions.
@@ -75,8 +76,7 @@ public class UserDao {
       /* @TODO: unlocks will be difficult to add to in the future so it may be worthwhile to stream line it in some form. */
     }
     catch(DataAccessException ex) {
-      System.err.println("UserDao::createuser() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during account creation.");
     }
     
@@ -107,13 +107,11 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      System.err.println("UserDao::getUserByName() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user lookup.");
     }
     catch(ClassCastException | NullPointerException ex) {
-      System.err.println("UserDao::getUserByName() - SQL Data Mapping Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
       throw new IOException("SQL Error during user lookup.");
     }
     return null;
@@ -130,13 +128,11 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      System.err.println("UserDao::getUserByUid() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user lookup.");
     }
     catch(ClassCastException | NullPointerException ex) {
-      System.err.println("UserDao::getUserByUid() - SQL Data Mapping Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
       throw new IOException("SQL Error during user lookup.");
     }
     return null;
@@ -153,13 +149,11 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      System.err.println("UserDao::getUserByEmail() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user lookup.");
     }
     catch(ClassCastException | NullPointerException ex) {
-      System.err.println("UserDao::getUserByEmail() - SQL Data Mapping Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
       throw new IOException("SQL Error during user lookup.");
     }
     return null;
@@ -176,8 +170,7 @@ public class UserDao {
       );
     }
     catch(DataAccessException ex) {
-      System.err.println("UserDao::changeUserPassword() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during password change.");
     }
   }
@@ -193,8 +186,7 @@ public class UserDao {
       );
     }
     catch(DataAccessException ex) {
-      System.err.println("UserDao::setUserType() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during account type change.");
     }
   }
@@ -210,13 +202,11 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      System.err.println("UserDao::getUserSettings() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user settings retrieval.");
     }
     catch(ClassCastException | NullPointerException ex) {
-      System.err.println("UserDao::getUserSettings() - SQL Data Mapping Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
       throw new IOException("SQL Error during user settings retrieval.");
     }
     return null;
@@ -242,8 +232,7 @@ public class UserDao {
       );
     }
     catch(DataAccessException ex) {
-      System.err.println("UserDao::saveUserSettings() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user settings save.");
     }
   }
@@ -259,13 +248,11 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      System.err.println("UserDao::getUserStats() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user stats retrieval.");
     }
     catch(ClassCastException | NullPointerException ex) {
-      System.err.println("UserDao::getUserStats() - SQL Data Mapping Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
       throw new IOException("SQL Error during user stats retrieval.");
     }
     return null;
@@ -290,8 +277,7 @@ public class UserDao {
       );
     }
     catch(DataAccessException ex) {
-      System.err.println("UserDao::saveUserStats() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user stats save.");
     }
   }
@@ -307,13 +293,11 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      System.err.println("UserDao::getUserUnlocks() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user unlocks retrieval.");
     }
     catch(ClassCastException | NullPointerException ex) {
-      System.err.println("UserDao::getUserUnlocks() - SQL Data Mapping Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
       throw new IOException("SQL Error during user unlocks retrieval.");
     }
     return null;
@@ -330,8 +314,7 @@ public class UserDao {
       );
     }
     catch(DataAccessException ex) {
-      System.err.println("UserDao::doUserUnlock() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user unlock.");
     }
   }
@@ -362,7 +345,7 @@ public class UserDao {
     for(int i=0;i<sessions.size();i++) {
       if(sessions.get(i).loggedIn()) {
         if(sessions.get(i).getUser().equals(user)) {
-          try { sessions.get(i).sendPacket(new PacketS02()); } catch(IOException ex) { ex.printStackTrace(); }  // @TODO: This is a jank fix that heartbeats a session when someone trys to log in on it while its already logged in.
+          try { sessions.get(i).sendPacket(new PacketS02()); } catch(IOException ex) { Oak.log(Oak.Level.ERR, "Failed to send hearbeat.", ex); }  // @TODO: This is a jank fix that heartbeats a session when someone trys to log in on it while its already logged in.
           return sessions.get(i);
         }
       }

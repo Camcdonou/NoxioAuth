@@ -1,15 +1,15 @@
 package org.infpls.noxio.auth.module.auth.session.online;
 
 import java.util.List;
-import org.infpls.noxio.auth.module.auth.dao.server.ServerInfo;
 import org.infpls.noxio.auth.module.auth.session.Packet;
+import org.infpls.noxio.auth.module.auth.util.Settable;
 
 public class PacketO01 extends Packet {
-  private final List<ServerInfo> servers;
-  public PacketO01(final List<ServerInfo> servers) {
+  private final List<Settable.ServerInfo> servers;
+  public PacketO01(final List<Settable.ServerInfo> servers) {
     super("o01");
     this.servers = servers;
   }
   
-  public List<ServerInfo> getServers() { return servers; }
+  public List<Settable.ServerInfo> getServers() { return servers; }
 }

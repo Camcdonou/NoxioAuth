@@ -21,7 +21,7 @@ public class Hash {
         }
         catch(NoSuchAlgorithmException ex) {
           /* If this ever actually happens I'll be really upset */
-          ex.printStackTrace();
+          Oak.log(Oak.Level.CRIT, "Thinking Emoji", ex);
         }
         return null;
   }

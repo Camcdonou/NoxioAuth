@@ -11,6 +11,7 @@ import org.infpls.noxio.auth.module.auth.session.authenticate.Authenticate;
 import org.infpls.noxio.auth.module.auth.session.error.*;
 import org.infpls.noxio.auth.module.auth.session.online.Online;
 import org.infpls.noxio.auth.module.auth.util.ID;
+import org.infpls.noxio.auth.module.auth.util.Oak;
 
 public class NoxioSession {
   private final WebSocketSession webSocket;
@@ -57,7 +58,7 @@ public class NoxioSession {
   public void changeState(final int s) throws IOException { /* Not a huge fan of how this works. */
     sessionState.destroy();
     switch(s) {
-      case 1 : { sessionState = new Online(this, dao.getInfoDao()); break; }
+      case 1 : { sessionState = new Online(this); break; }
       default : { close(); break; } //NO.
     }
   }
@@ -119,7 +120,7 @@ public class NoxioSession {
     stats = stats.add(nuStats);
     try { saveStats(); }
     catch(IOException ex) {
-      ex.printStackTrace();
+      Oak.log(Oak.Level.ERR, "Error while writing stats to database.", ex);
     }
   }
   
@@ -174,12 +175,14 @@ public class NoxioSession {
   
   /* Error connection close */
   public void close(final String message) throws IOException {
+    Oak.log(Oak.Level.WARN, "Connection closed for user: '" + (loggedIn()?(isGuest()?"Guest":getUser()):"Not Logged In") + "' with message: " + message);
     sendPacket(new PacketX00(message));
     webSocket.close(CloseStatus.NOT_ACCEPTABLE);
   }
   
   /* Exception connection close */
   public void close(final Exception ex) throws IOException {
+    Oak.log(Oak.Level.WARN, "Connection closed for user: '" + (loggedIn()?(isGuest()?"Guest":getUser()):"Not Logged In") + "' with Exception: ", ex);
     StringWriter sw = new StringWriter();
     PrintWriter pw = new PrintWriter(sw);
     ex.printStackTrace(pw);

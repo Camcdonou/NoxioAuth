@@ -11,6 +11,8 @@ import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
 import org.infpls.noxio.auth.module.auth.dao.user.*;
 import org.infpls.noxio.auth.module.auth.session.NoxioSession;
 import org.infpls.noxio.auth.module.auth.session.PacketH01;
+import org.infpls.noxio.auth.module.auth.util.Oak;
+import org.infpls.noxio.auth.module.auth.util.Settable;
 
 @Controller
 public class GameServerComController {
@@ -26,8 +28,8 @@ public class GameServerComController {
   @RequestMapping(value = "/validate/{user}/{sid}", method = RequestMethod.GET, produces = "application/json")
   public @ResponseBody ResponseEntity userStatus(HttpServletRequest request, @PathVariable(value="user") final String user, @PathVariable(value="sid") final String sid) {
     /* Validate that this request is made from a white listed game server */
-    if(!dao.getInfoDao().isWhiteListed(request.getRemoteAddr())) {
-      System.err.println("GameServerComController::userStatus() - Unknown address made request :" + request.getRemoteAddr());
+    if(!Settable.isWhiteListed(request.getRemoteAddr())) {
+      Oak.log(Oak.Level.WARN, "Unknown address made request :" + request.getRemoteAddr());
       return new ResponseEntity("{\"type\":\"l03\", \"message\":\"Invalid request.\"}", HttpStatus.FORBIDDEN);
     }
     
@@ -50,8 +52,8 @@ public class GameServerComController {
   @RequestMapping(value = "/report", method = RequestMethod.POST, produces = "application/json")
   public @ResponseBody ResponseEntity reportStats(HttpServletRequest request, @RequestBody final String data) {
     /* Validate that this request is made from a white listed game server */
-    if(!dao.getInfoDao().isWhiteListed(request.getRemoteAddr())) {
-      System.err.println("GameServerComController::reportStats() - Unknown address made request :" + request.getRemoteAddr() + " ... " + data);
+    if(!Settable.isWhiteListed(request.getRemoteAddr())) {
+      Oak.log(Oak.Level.WARN, "GameServerComController::reportStats() - Unknown address made request :" + request.getRemoteAddr() + " ... " + data);
       return new ResponseEntity("{\"type\":\"h09\", \"message\":\"Invalid request.\"}", HttpStatus.FORBIDDEN);
     }
     
@@ -76,7 +78,7 @@ public class GameServerComController {
       return new ResponseEntity("{\"type\":\"h00\"}", HttpStatus.OK);
     }
     catch(Exception ex) {
-      ex.printStackTrace();
+      Oak.log(Oak.Level.ERR, "Error during handling of reported stats.", ex);
     }
     return new ResponseEntity("{\"type\":\"h09\", \"message\":\"Failed to parse data.\"}", HttpStatus.OK);
   }

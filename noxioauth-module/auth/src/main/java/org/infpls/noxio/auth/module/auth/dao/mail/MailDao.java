@@ -1,33 +1,19 @@
 package org.infpls.noxio.auth.module.auth.dao.mail;
 
 import java.util.Properties;
-import javax.annotation.PostConstruct;
 import javax.mail.*;
 import javax.mail.internet.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.infpls.noxio.auth.module.auth.util.Oak;
+import org.infpls.noxio.auth.module.auth.util.Settable;
 
-@Component
 public class MailDao {
-  @Value("${mail.host}")
-  private String host;
-  @Value("${mail.port}")
-  private String port;
-  @Value("${mail.user}")
-  private String user;
-  @Value("${mail.pass}")
-  private String pass;
   
   private final Properties properties;
   public MailDao() {
     properties = System.getProperties();
-  }
-  
-  @PostConstruct
-  public void init() {
     properties.put("mail.transport.protocol", "smtp");
-    properties.put("mail.smtp.host", host);  /* Security concern @TODO: make this ssl */
-    properties.put("mail.smtp.port", port);
+    properties.put("mail.smtp.host", Settable.getMailHost());  /* Security concern @TODO: make this ssl */
+    properties.put("mail.smtp.port", Settable.getMailPort());
     properties.put("mail.smtp.auth", "true");
   }
   
@@ -36,7 +22,7 @@ public class MailDao {
     Authenticator authenticator = new Authenticator() {
         @Override
         protected PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(user, pass); /* Security concern @TODO: change password or only allow local login */
+            return new PasswordAuthentication(Settable.getMailUser(), Settable.getMailPass()); /* Security concern @TODO: change password or only allow local login */
         }
     };
     
@@ -44,7 +30,7 @@ public class MailDao {
 
     try {
       final MimeMessage message = new MimeMessage(session);
-      message.setFrom(new InternetAddress(user));
+      message.setFrom(new InternetAddress(Settable.getMailUser()));
       message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
       message.setSubject(subject);
       message.setContent(content, "text/html; charset=utf-8");
@@ -52,8 +38,7 @@ public class MailDao {
       Transport.send(message);
       return true;
     } catch (MessagingException mex) {
-      System.err.println("Failed to send email to: " + to);
-      mex.printStackTrace();
+      Oak.log(Oak.Level.WARN, "Failed to send email to: " + to, mex);
       return false;
     }
   }

@@ -12,13 +12,13 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Map;
+import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
 import org.infpls.noxio.auth.module.auth.dao.user.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.infpls.noxio.auth.module.auth.util.Oak;
+import org.infpls.noxio.auth.module.auth.util.Settable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 
-@Component
 public class PaymentDao {
   
   public static enum Item {
@@ -33,22 +33,15 @@ public class PaymentDao {
     }
   }
   
-  /* @TODO: properties files */
-  private final static String CLIENT_ID = "ATbnMRGYZ47hMEp6yQXWmJp_uI0U2cnwzcpEWTSl6E5vveUzBSggIp4y73gsoTuXAVw-TYRGl-G7lTsu";
-  private final static String CLIENT_SECRET = "EPiz38XWeTBXWkZFweoWFMg5VYgGs0W6mdCiWZipBUTUf-58xw7FMeXqnuWBcO-ODFplzKEChRp_IBQD";
-  private final static String CANCEL_URL = "http://localhost:7001/noxioauth/transaction/cancel.html";
-  private final static String PROCESS_URL = "http://localhost:7001/noxioauth/transaction/process.html";
-  
   private final static float TAX_RATE = 0.09f; /* cancer */
   private final static String CURRENCY = "USD", INTENT = "sale";
-  
-  @Autowired
-  public JdbcTemplate jdbc;
 
+  private final DaoContainer dao;
   private final APIContext context;
   
-  public PaymentDao() {
-    context = new APIContext(CLIENT_ID, CLIENT_SECRET, "sandbox");
+  public PaymentDao(final DaoContainer dao) {
+    this.dao = dao;
+    context = new APIContext(Settable.getPayPalId(), Settable.getPayPalSecret(), "sandbox");
   }
   
   public String doPayment(final User user, final Item item) throws IOException {
@@ -58,8 +51,8 @@ public class PaymentDao {
 
     // Set redirect URLs
     RedirectUrls redirectUrls = new RedirectUrls();
-    redirectUrls.setCancelUrl(CANCEL_URL);
-    redirectUrls.setReturnUrl(PROCESS_URL);
+    redirectUrls.setCancelUrl(Settable.getPayPalCancel());
+    redirectUrls.setReturnUrl(Settable.getPayPalProcess());
 
     // Set payment details
     Details details = new Details();
@@ -103,9 +96,8 @@ public class PaymentDao {
           return link.getHref();
         }
       }
-    } catch (PayPalRESTException e) {
-        System.err.println(e.getDetails());
-        e.printStackTrace();
+    } catch (PayPalRESTException ex) {
+      Oak.log(Oak.Level.ERR, "Failed to created payment.", ex);
     }
     return null;
   }
@@ -138,35 +130,33 @@ public class PaymentDao {
   
   private void createTransaction(String tid, User user, Item item) throws IOException {
     try {
-      jdbc.update(
+      dao.jdbc.update(
         "INSERT into TRANSACTIONS ( TID, UID, ITEM, CREATED, UPDATED, COMPLETE ) VALUES ( ?, ?, ?, NOW(), NOW(), false )",
               tid, user.uid, item.name()
       );
     }
     catch(DataAccessException ex) {
-      System.err.println("PaymentDao::createTransaction() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during transaction creation.");
     }
   }
   
   private void completeTransaction(String tid) throws IOException {
     try {
-      jdbc.update(
+      dao.jdbc.update(
         "UPDATE TRANSACTIONS SET COMPLETE=true, UPDATED=NOW() WHERE TID=?",
               tid
       );
     }
     catch(DataAccessException ex) {
-      System.err.println("PaymentDao::completeTransaction() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during transaction update.");
     }
   }
   
   private NoxioTransaction getTransaction(String tid) throws IOException {
     try {
-      final List<Map<String,Object>> results = jdbc.queryForList(
+      final List<Map<String,Object>> results = dao.jdbc.queryForList(
         "SELECT * FROM TRANSACTIONS WHERE TID=?",
         tid
       );
@@ -175,13 +165,11 @@ public class PaymentDao {
       }
     }
     catch(DataAccessException ex) {
-      System.err.println("PaymentDao::getTransaction() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during transaction retrieval.");
     }
     catch(ClassCastException | NullPointerException ex) {
-      System.err.println("PaymentDao::getTransaction() - SQL Data Mapping Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
       throw new IOException("SQL Error during transaction retrieval.");
     }
     return null;
@@ -189,14 +177,13 @@ public class PaymentDao {
   
   private void deleteTransaction(String tid) throws IOException {
     try {
-      jdbc.update(
+      dao.jdbc.update(
         "DELETE FROM TRANSACTIONS WHERE TID=?",
               tid
       );
     }
     catch(DataAccessException ex) {
-      System.err.println("PaymentDao::deleteTransaction() - SQL Error!");
-      ex.printStackTrace();
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during transaction deletion.");
     }
   }
@@ -220,8 +207,7 @@ public class PaymentDao {
         item = ((Item)en.get(null));
       }
       catch(NoSuchFieldException | IllegalAccessException ex) {
-        System.err.println("PaymentDao::new - Error parsing transaction data from database.");
-        ex.printStackTrace();
+        Oak.log(Oak.Level.CRIT, "Error parsing transaction data from database.", ex);
       }
     }
     

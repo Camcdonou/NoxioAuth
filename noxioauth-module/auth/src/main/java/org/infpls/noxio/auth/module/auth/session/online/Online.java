@@ -3,18 +3,14 @@ package org.infpls.noxio.auth.module.auth.session.online;
 import com.google.gson.*;
 import java.io.IOException;
 import org.infpls.noxio.auth.module.auth.dao.pay.PaymentDao;
-
-import org.infpls.noxio.auth.module.auth.dao.server.InfoDao;
 import org.infpls.noxio.auth.module.auth.dao.user.UserUnlocks;
 import org.infpls.noxio.auth.module.auth.session.*;
+import org.infpls.noxio.auth.module.auth.util.Settable;
 
 public class Online extends SessionState {
   
-  private final InfoDao infoDao;
-  
-  public Online(final NoxioSession session, final InfoDao infoDao) throws IOException {
+  public Online(final NoxioSession session) throws IOException {
     super(session);
-   this.infoDao = infoDao;
     
     sendPacket(new PacketS00('o'));
   }
@@ -53,7 +49,7 @@ public class Online extends SessionState {
   }
   
   private void serverInfo(final PacketO02 p) throws IOException {
-    sendPacket(new PacketO01(infoDao.getServerList()));
+    sendPacket(new PacketO01(Settable.getGameServerInfo()));
   }
   
   private void stateReady(final PacketO03 p) throws IOException {
