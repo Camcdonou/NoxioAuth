@@ -7,8 +7,7 @@
 /* global ParticleStun */
 /* global ParticleSmoke */
 /* global ParticleMark */
-/* global ParticleAirJump */
-/* global ParticleBloodSplat */
+/* global ParticleBlip */
 /* global Decal */
 
 /* Define PlayerShiek Class */
@@ -20,28 +19,33 @@ function PlayerShiek(game, oid, pos, team, color) {
   this.icon = this.game.display.getMaterial("character.shiek.ui.iconlarge");
   
   /* Constants */
-  this.FLASH_CHARGE_LENGTH = 10;
-  this.BANG_COOLDOWN_LENGTH = 20; this.BANG_POWER_USE = 15; this.BANG_POWER_MAX = 80;
+  this.FLASH_CHARGE_LENGTH = 5;
+  this.BLIP_POWER_MAX = 30;
+  this.BLIP_COLOR_A = util.vec4.make(0.6666, 0.9058, 1.0, 1.0);
+  this.BLIP_COLOR_B = util.vec4.make(0.4, 0.5450, 1.0, 1.0);
   
   /* Settings */
-  this.radius = 0.5; this.weight = 1.0; this.friction = 0.755;
-  this.moveSpeed = 0.0385; this.jumpHeight = 0.175; this.cullRadius = 1.0;
+  this.radius = 0.5; this.weight = 1.0; this.friction = 0.735;
+  this.moveSpeed = 0.0380; this.jumpHeight = 0.175; this.cullRadius = 1.0;
   
   /* State */
   this.markLocation = undefined;
 
   /* Timers */
   this.chargeTimer = 0;
-  this.bangPower = this.BANG_POWER_MAX;
+  this.blipCooldown = 0;
 
   /* Effects */
-  this.attackEffect = {
+  this.blipEffect = {
     effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/shiek/grenade0.wav", 0.5], update: function(snd){}, attachment: true, delay: 0, length: 33}
+      {type: "light", class: PointLight, params: ["<vec3 pos>", this.BLIP_COLOR_A, 3.0], update: function(lit){}, attachment: true, delay: 0, length: 3},
+      {type: "light", class: PointLight, params: ["<vec3 pos>", this.BLIP_COLOR_B, 3.0], update: function(lit){lit.color.w -= 1.0/12.0; lit.rad += 0.1; }, attachment: true, delay: 3, length: 12},
+      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/attack0.wav", 0.35], update: function(snd){}, attachment: true, delay: 0, length: 33},
+      {type: "particle", class: ParticleBlip, params: [this.game, "<vec3 pos>", "<vec3 vel>", this.BLIP_COLOR_A, this.BLIP_COLOR_B], update: function(prt){}, attachment: true, delay: 0, length: 33}
     ], false),
-    offset: util.vec3.make(0,0,0.25),
+    offset: util.vec3.make(0,0,0.5),
     trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.attackEffect);
+  this.effects.push(this.blipEffect);
   
   this.markEffect = {
     effect: new Effect([
@@ -127,7 +131,7 @@ function PlayerShiek(game, oid, pos, team, color) {
 
   /* UI */
   this.uiMeters = [
-    {type: "bar", iconMat: this.game.display.getMaterial("character.player.ui.meterstub"), length: 16, scalar: 1.0},
+    {type: "bar", iconMat: this.game.display.getMaterial("character.shiek.ui.meterblip"), length: 12, scalar: 1.0},
     {type: "bar", iconMat: this.game.display.getMaterial("character.player.ui.meterstub"), length: 8, scalar: 0.0}
   ];
 };
@@ -139,7 +143,7 @@ PlayerShiek.prototype.effectSwitch = function(e) {
   switch(e) {
     case "air" : { this.air(); break; } 
     case "jmp" : { this.jump(); break; }
-    case "atk" : { this.attack(); break; }
+    case "atk" : { this.blip(); break; }
     case "chr" : { this.charge(); break; }
     case "fsh" : { this.flash(); break; }
     case "mrk" : { this.mark(); break; }
@@ -154,11 +158,11 @@ PlayerShiek.prototype.effectSwitch = function(e) {
 PlayerShiek.prototype.timers = function() {
   if(this.chargeTimer > 0) { this.chargeTimer--; this.glow = 1-(this.chargeTimer/this.FLASH_CHARGE_LENGTH); }
   else { this.glow = 0; }
-  if(this.bangPower < this.BANG_POWER_MAX) { this.bangPower++; }
+  if(this.blipCooldown > 0) { this.blipCooldown--; }
 };
 
 PlayerShiek.prototype.ui = function() {
-  this.uiMeters[0].scalar = (this.bangPower/this.BANG_POWER_MAX);
+  this.uiMeters[0].scalar = 1.0-(this.blipCooldown/this.BLIP_POWER_MAX);
   this.uiMeters[1].scalar = this.markLocation?1:0;
 };
 
@@ -170,11 +174,9 @@ PlayerShiek.prototype.stun = function() {
   this.chargeTimer = 0;
 };
 
-PlayerShiek.prototype.attack = function() {
-  this.attackEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
-  var count = Math.max(Math.min(3, this.bangPower / this.BANG_POWER_USE), 1);
-  this.bangPower -= Math.max(count*this.BANG_POWER_USE, this.BANG_POWER_USE);
-  if(this.bangPower < 0) { this.bangPower = 0; }
+PlayerShiek.prototype.blip = function() {
+  this.blipEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+  this.blipCooldown = this.BLIP_POWER_MAX;
 };
 
 PlayerShiek.prototype.charge = function() {

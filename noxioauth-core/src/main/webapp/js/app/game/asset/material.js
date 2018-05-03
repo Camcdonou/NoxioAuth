@@ -451,6 +451,14 @@ Asset.prototype.material.character.shiek.ui.iconlarge = {
   texture0: "character/shiek/ui/icon_lg",
 };
 
+/* Source File: meterblip.mat */
+Asset.prototype.material.character.shiek.ui.meterblip = {
+  name: "character.shiek.ui.meterblip",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "character/shiek/ui/meterblip",
+};
+
 /* Source File: shiek.mat */
 Asset.prototype.material.character.shiek.shiek = {
   name: "character.shiek.shiek",
