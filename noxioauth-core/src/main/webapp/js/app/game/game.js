@@ -38,6 +38,7 @@ function NoxioGame(name, settings, map) {
   this.display.camera.setPos(util.vec2.toVec3(util.vec2.inverse(cdef), 0.0));
   this.display.camera.immediate();
   
+  this.forceSpawn = false;
   this.respawnTimer = 0;
   
   this.gameOver = false;
@@ -319,7 +320,7 @@ NoxioGame.prototype.doInput = function() {
     }
     else {
       /* Spectate State Input */
-      if(this.input.mouse.rmb) { inputs.push("02;"+this.charSelect); }
+      if(this.input.mouse.rmb || this.forceSpawn) { this.forceSpawn = false; inputs.push("02;"+this.charSelect); }
       inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y);
     }
   }

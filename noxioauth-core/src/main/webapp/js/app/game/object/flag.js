@@ -44,17 +44,16 @@ FlagObject.prototype.setHeight = GameObject.prototype.setHeight;
 FlagObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
   var exbounds = util.matrix.expandPolygon(bounds, this.cullRadius);
   if(util.intersection.pointPoly(this.pos, exbounds)) {
-    var color;
-    switch(this.team) {
-      case  0 : { color = util.vec3.make(0.7539, 0.2421, 0.2421); break; }
-      case  1 : { color = util.vec3.make(0.2421, 0.2421, 0.7539); break; }
-      default : { color = util.vec3.make(0.5, 0.5, 0.5); break; }
+    var colors, color, dcolor;
+    colors = util.kalide.getColorsAuto(this.color, this.team);
+    if(colors.length > 1) {
+      var ind = Math.floor(this.game.frame/128)%(colors.length);
+      color = util.vec3.lerp(colors[ind], colors[ind+1<colors.length?ind+1:0], (this.game.frame%128)/128);
     }
-    switch(this.team) {
-      case 0  : { this.targetCircle.setColor(util.vec4.make(0.7539, 0.2421, 0.2421, 1)); break; }
-      case 1  : { this.targetCircle.setColor(util.vec4.make(0.2421, 0.2421, 0.7539, 1)); break; }
-      default : { this.targetCircle.setColor(util.vec4.make(1,1,1,1)); break; }
-    }
+    else { color = colors[0]; }
+    dcolor = this.team === -1 && this.color === 0 ? util.vec3.make(1, 1, 1) : color; // Make decal white for default boys.
+    
+    this.targetCircle.setColor(util.vec3.toVec4(dcolor, 1));
     
     var flagUniformData = [
       {name: "transform", data: [this.pos.x, this.pos.y, this.height]},

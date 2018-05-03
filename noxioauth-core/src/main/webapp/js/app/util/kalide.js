@@ -31,7 +31,7 @@ util.kalide.COLORS = [
 
 /* Max size of this array is 255 */
 util.kalide.REDS = [
-  util.kalide.rgb255vec3(255, 0, 0), /* Considered a 'no color' slot. Uses default red color or is unused. */
+  util.kalide.rgb255vec3(192, 62, 62), /* Considered a 'no color' slot. Uses default red color or is unused. */
   util.kalide.rgb255vec3(255, 0, 0),
   util.kalide.rgb255vec3(255, 76, 76),
   util.kalide.rgb255vec3(223, 31, 31),
@@ -40,7 +40,7 @@ util.kalide.REDS = [
 
 /* Max size of this array is 255 */
 util.kalide.BLUES = [
-  util.kalide.rgb255vec3(0, 0, 255), /* Considered a 'no color' slot. Uses default blue color or is unused. */
+  util.kalide.rgb255vec3(62, 62, 192), /* Considered a 'no color' slot. Uses default blue color or is unused. */
   util.kalide.rgb255vec3(0, 0, 255),
   util.kalide.rgb255vec3(76, 76, 255),
   util.kalide.rgb255vec3(31, 31, 223),

@@ -32,8 +32,6 @@ ObjectiveUI.prototype.generate = function() {
   var fontName = "Calibri";                                           // Name of this font for text rendering
   
   var black  = util.vec4.make(0.0, 0.0, 0.0, 0.5);
-  var sred   = util.vec4.make(1.0, 0.0, 0.0, 1.0);
-  var sblue  = util.vec4.make(0.0, 0.0, 1.0, 1.0);
   var swhite = util.vec4.make(1.0, 1.0, 1.0, 1.0);
   
   var container = new UIContainer({x: '+', y: '+'});
@@ -67,7 +65,7 @@ ObjectiveUI.prototype.generate = function() {
     var y = (Math.min(0.9, Math.max(0.1, ((screenCoord.y*0.5)+0.5))) * this.game.display.window.height) - (v) + objectives[i].offset;
     
     var bclr = util.vec4.copy(black); bclr.w *= objectives[i].fade;
-    var fclr = util.vec4.copy(objectives[i].team===0?sred:(objectives[i].team===1?sblue:swhite)); fclr.w *= objectives[i].fade;
+    var fclr = util.vec4.copy(objectives[i].team===-1?swhite:util.kalide.getColorAuto(0, objectives[i].team)); fclr.w *= objectives[i].fade;
     container.add({
       neutral: {
         block: [

@@ -51,12 +51,12 @@ ScoreUI.prototype.generate = function() {
   var clear  = util.vec4.make(0.0, 0.0, 0.0, 0.0);
   var black  = util.vec4.make(0.0, 0.0, 0.0, 0.5);
   var white  = util.vec4.make(1.0, 1.0, 1.0, 0.5);
-  var blue = util.vec4.make(0.2421, 0.2421, 0.7539, 0.75);
-  var red = util.vec4.make(0.7539, 0.2421, 0.2421, 0.75);
+  var blue = util.vec3.toVec4(util.kalide.getBlue(0), 0.75);
+  var red = util.vec3.toVec4(util.kalide.getRed(0), 0.75);
   var swhite = util.vec4.make(1.0, 1.0, 1.0, 1.0);
   var sblack = util.vec4.make(0.0, 0.0, 0.0, 1.0);
-  var sblue = util.vec4.make(0.2421, 0.2421, 0.7539, 1.0);
-  var sred = util.vec4.make(0.7539, 0.2421, 0.2421, 1.0);
+  var sblue = util.vec3.toVec4(util.kalide.getBlue(0), 1.0);
+  var sred = util.vec3.toVec4(util.kalide.getRed(0), 1.0);
 
   var container = new UIContainer({x: '=', y: '='});
   

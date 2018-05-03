@@ -135,7 +135,7 @@ PlayerPuff.prototype.effectSwitch = function(e) {
     case "htb" : { this.poundHit(); break; }
     case "tnt" : { this.taunt(); break; }
     case "stn" : { this.stun(); break; }
-    case "ult" : { this.ultimate = true; break; }
+    case "obj" : { this.objective = true; this.color = util.kalide.compressColors(2, 4, 5, 6, 8); break; }
     default : { main.menu.warning.show("Invalid effect value: '" + e + "' @ Puff.js :: effectSwitch()"); break; }
   }
 };

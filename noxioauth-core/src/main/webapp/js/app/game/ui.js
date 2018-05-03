@@ -88,7 +88,7 @@ GameUI.prototype.step = function(imp, state, window) {
     this.announce.setVisible(this.flags.announce);
     this.score.setVisible(this.flags.score||ded||gam);
     this.debug.setVisible(this.flags.debug);
-    this.respawn.setVisible(this.flags.respawn||ded);
+    this.respawn.setVisible(this.flags.respawn||(ded&&!gam));
     this.end.setVisible(this.flags.end||gam);
   }
   

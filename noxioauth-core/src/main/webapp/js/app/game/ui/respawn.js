@@ -8,7 +8,16 @@
 /* Define Game UI Respawn Menu Class */
 function RespawnUI(game, ui, name) {
   GenericUI.call(this, game, ui, name);
+  this.roundInfo = undefined;
 }
+
+RespawnUI.prototype.setRound = function(text) {
+  this.roundInfo = text;
+};
+
+RespawnUI.prototype.clearRound = function() {
+  this.roundInfo = undefined;
+};
 
 RespawnUI.prototype.setVisible = GenericUI.prototype.setVisible;
 RespawnUI.prototype.show = GenericUI.prototype.show;
@@ -24,7 +33,10 @@ RespawnUI.prototype.refresh = function() {
   var s = 32;
   var v = s*0.15;
   
-  var TEXT        = this.game.respawnTimer<=0?"Press [Right Mouse] to respawn!":"Respawn in " + (this.game.respawnTimer/30).toFixed(1) + " seconds!";
+  var TEXT;
+  if(!this.roundInfo) { TEXT = this.game.respawnTimer<=0?"Press [Right Mouse] to respawn!":"Respawn in " + (this.game.respawnTimer/30).toFixed(1) + " seconds!"; }
+  else { TEXT = this.roundInfo; }
+  
   var TEXT_LENGTH = util.font.textLength(TEXT, fontName, s);
   var o = (w*0.5)-(TEXT_LENGTH*0.5);
   
