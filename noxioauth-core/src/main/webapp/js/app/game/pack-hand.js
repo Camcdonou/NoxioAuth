@@ -21,6 +21,7 @@ PackHand.prototype.gameDataUpdate = function(packet) {
       case "scr" : { this.scores(data); break; }
       case "msg" : { this.message(data); break; }
       case "snd" : { this.loadCustomSoundFile(data); break; }
+      case "tim" : { this.setTimer(data); break; }
       case "end" : { this.gameOver(data); break; }
       case "tck" : { this.tick(data); break; }
       case "anc" : { this.announce(data); break; }
@@ -67,6 +68,7 @@ PackHand.prototype.createObject = function(data) {
     /* Gameplay Object Classes :: These do not use permutation dictionaries */
     case "flg" : { this.game.objects.push(new FlagObject(this.game, oid, pos, permutation, team, color)); break; }
     case "hil" : { this.game.objects.push(new HillObject(this.game, oid, pos, permutation, team, color)); break; }
+    case "zon" : { this.game.objects.push(new ZoneObject(this.game, oid, pos, permutation, team, color)); break; }
     case "bmb" : { this.game.objects.push(new BombObject(this.game, oid, pos, permutation, team, color)); break; }
     default : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for '" + type + "' which does not exist.", JSON.stringify(data)); main.close(); break; }
   }
@@ -110,6 +112,15 @@ PackHand.prototype.message = function(data) {
 PackHand.prototype.loadCustomSoundFile = function(data) {
   var sound = data.shift();
   if(sound) { this.game.sound.createCustomSound(sound); }
+};
+
+/* SYS::TIMER | tim */
+PackHand.prototype.setTimer = function(data) {
+  var title = data.shift();
+  var time = parseInt(data.shift());
+  
+  if(time < 0) { this.game.ui.objective.clearTimer(); }
+  else { this.game.ui.objective.setTimer(title, time); }
 };
 
 /* SYS::GAMEOVER | end */

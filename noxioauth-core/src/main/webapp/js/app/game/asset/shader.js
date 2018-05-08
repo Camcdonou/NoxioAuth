@@ -25,6 +25,28 @@ Asset.prototype.shader.orb = {
   fragment: "precision mediump float;\nprecision mediump int;\n#define PI 3.1415926535897932384626433832795\n\n/* Texture Samples */\nuniform sampler2D texture0;      // Multi Diff\n\nuniform int frame;\n\n/* General */\nvarying vec2 sCenter;\nvarying vec2 sPos;\nvarying vec2 vUV;\n\nvoid main(void) {\n  /* Texture Samples */\n  float ff = float(frame);\n  float multiR     = texture2D(texture0, (vUV+vec2(ff*0.00113, ff*0.00097))).r;\n  float multiG     = texture2D(texture0, (vUV+vec2(-ff*0.00013, ff*0.00267))).g;\n  float multiB     = texture2D(texture0, (vUV+vec2(ff*0.00211, -ff*0.00143))).b;\n  float multiA     = texture2D(texture0, (vUV+vec2(-ff*0.00171, -ff*0.00123))*-1.).r; /* Yeah I know... remind me to add an A channel to it */\n\n  float sum = multiR + multiG + multiB + multiA;\n  float plasGlow = pow(1.-(sin(sum*PI)*(1.-sin(sum*(PI/2.))*1.-sin(sum*(PI/3.)))), 16.);\n\n  vec4 colorA = vec4(0.0, 0.0, 0.0, 1.0);\n  vec4 colorB = vec4(1.0, 1.0, 1.0, 1.0 + min(1., max(0.0001, plasGlow)));\n  vec4 colorC = vec4(1.0, 1.0, 1.0, 0.0);\n\n  float scalarA;\n  float scalarB;\n  float dist = distance(sCenter, sPos);\n  if(dist < 0.7) {\n    scalarA = 0.;\n    scalarB = 0.;\n  }\n  else {\n    if(dist < .75) {\n      scalarA = (dist-.7)/.05;\n      scalarB = 0.;\n    }\n    else {\n      scalarA = 1.;\n      scalarB = pow((dist-.75)/.25, .25);\n    }\n  }\n  /* Finalize */\n  gl_FragColor = mix(colorA, mix(colorB, colorC, scalarB), scalarA);\n}\n",
 };
 
+/* Source File: zoneg */
+Asset.prototype.shader.zone = {
+  name: "zone",
+  attributes: [
+    {type: "vec3", name: "position"},
+    {type: "vec3", name: "texcoord"},
+  ],
+  uniforms: [
+    {type: "mat4", name: "Pmatrix"},
+    {type: "mat4", name: "Vmatrix"},
+    {type: "mat4", name: "Mmatrix"},
+    {type: "vec3", name: "transform"},
+    {type: "vec3", name: "scale"},
+    {type: "sampler2D", name: "texture0"},
+    {type: "sampler2D", name: "texture1"},
+    {type: "int", name: "frame"},
+    {type: "vec3", name: "color"},
+  ],
+  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\nuniform vec3 scale; /* Change to size */\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4((position*scale)+transform, 1.);\n  vUV=texcoord*vec3(scale.x, -1., 1.);\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n\n/* Texture Samples */\nuniform sampler2D texture0;\nuniform sampler2D texture1;\n\n/* General */\nuniform int  frame;\nuniform vec3 color;\nvarying vec3 vUV;\n\nvoid main(void) {\n\n  float ff = float(frame);\n  vec4 diffuse = texture2D(texture0, vUV.st+vec2(ff*0.0067, 0.0));\n  vec4 gradient = texture2D(texture1, vUV.st);\n\n  gl_FragColor = vec4(gradient.rgb+(diffuse.rgb*.25), gradient.a)*vec4(color, 1.);\n}\n",
+};
+
 /* Source File: ting */
 Asset.prototype.shader.tin = {
   name: "tin",
@@ -409,28 +431,6 @@ Asset.prototype.shader.decal_glow = {
   ],
   vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\nattribute vec3 normal;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\nuniform float rotation;\nuniform float scale;\n\nvarying vec3 vPos;\n\nvec3 rotateZ(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.y * sinDegrees);\n    float y = (a.x * -sinDegrees) + (a.y * cosDegrees);\n\n    return vec3(x, y, a.z);\n}\n\n\nvoid main(void) {\n  vPos = (rotateZ(position, rotation)*scale)+transform;\n  vec4 cPos = vec4(vPos, 1.0);\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
   fragment: "precision mediump float;\n\nuniform sampler2D texture0;\n\nvarying vec3 vPos;\n\nuniform vec3 dPos;\nuniform vec3 dNormal;\nuniform float dSize;\nuniform float dAngle;\n\nuniform vec4 color;\n\nvec3 rotateZ(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.y * sinDegrees);\n    float y = (a.x * -sinDegrees) + (a.y * cosDegrees);\n\n    return vec3(x, y, a.z);\n}\n\n\nvoid main(void) {\n  vec3 rPos = dPos-vPos;\n  rPos = rotateZ(rPos, -dAngle);\n  vec3 dUVW = (rPos+vec3(0.5/dSize))*dSize;\n\n  vec4 tex=vec4(texture2D(texture0, dUVW.st));\n\n  if(dUVW.s > 0.0 && dUVW.s < 1.0 && dUVW.t > 0.0 && dUVW.t < 1.0 && dUVW.p > 0.0 && dUVW.p < 1.0) { gl_FragColor = tex*color; }\n  else { discard; }\n}\n",
-};
-
-/* Source File: hillg */
-Asset.prototype.shader.hill = {
-  name: "hill",
-  attributes: [
-    {type: "vec3", name: "position"},
-    {type: "vec3", name: "texcoord"},
-  ],
-  uniforms: [
-    {type: "mat4", name: "Pmatrix"},
-    {type: "mat4", name: "Vmatrix"},
-    {type: "mat4", name: "Mmatrix"},
-    {type: "vec3", name: "transform"},
-    {type: "vec3", name: "scale"},
-    {type: "sampler2D", name: "texture0"},
-    {type: "sampler2D", name: "texture1"},
-    {type: "int", name: "frame"},
-    {type: "vec4", name: "color"},
-  ],
-  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\nuniform vec3 scale; /* Change to size */\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4((position*scale)+transform, 1.);\n  vUV=texcoord*vec3(scale.x, -1., 1.);\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
-  fragment: "precision mediump float;\n\n/* Texture Samples */\nuniform sampler2D texture0;\nuniform sampler2D texture1;\n\n/* General */\nuniform int  frame;\nuniform vec4 color;\nvarying vec3 vUV;\n\nvoid main(void) {\n\n  float ff = float(frame);\n  vec4 diffuse = texture2D(texture0, vUV.st+vec2(ff*0.0067, 0.0));\n  vec4 gradient = texture2D(texture1, vUV.st);\n\n  gl_FragColor = vec4(gradient.rgb+(diffuse.rgb*.25), gradient.a)*color;\n}\n",
 };
 
 /* Source File: defaultg */

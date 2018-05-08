@@ -88,6 +88,7 @@ PlayerInferno.prototype.effectSwitch = function(e) {
     case "tnt" : { this.taunt(); break; }
     case "stn" : { this.stun(); break; }
     case "obj" : { this.objective = true; this.color = util.kalide.compressColors(2, 4, 5, 6, 8); break; }
+    case "jbo" : { this.objective = false; this.color = 0; break; }
     default : { main.menu.warning.show("Invalid effect value: '" + e + "' @ Inferno.js :: effectSwitch()"); break; }
   }
 };
