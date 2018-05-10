@@ -42,6 +42,8 @@ Asset.prototype.material.sky.final = {};
 Asset.prototype.material.map = {};
 Asset.prototype.material.map.tin = {};
 Asset.prototype.material.map.copper = {};
+Asset.prototype.material.map.gold = {};
+Asset.prototype.material.map.iron = {};
 
 /* Source File: zone.mat */
 Asset.prototype.material.object.zone.zone = {
@@ -751,6 +753,317 @@ Asset.prototype.material.map.copper.metal_light = {
   texture0: "map/copper/metal",
   texture1: "map/copper/flat_normal",
   texture2: "map/copper/edge_color",
+  texture3: "multi/multi_dif",
+};
+
+/* Source File: rose.mat */
+Asset.prototype.material.map.gold.rose = {
+  name: "map.gold.rose",
+  shader: "goldmask",
+  shadow: false,
+  texture0: "map/gold/flower_rose",
+};
+
+/* Source File: log.mat */
+Asset.prototype.material.map.gold.log = {
+  name: "map.gold.log",
+  shader: "gold2x",
+  shadow: true,
+  texture0: "map/gold/log",
+};
+
+/* Source File: dirt.mat */
+Asset.prototype.material.map.gold.dirt = {
+  name: "map.gold.dirt",
+  shader: "gold",
+  shadow: true,
+  texture0: "map/gold/dirt",
+};
+
+/* Source File: fern.mat */
+Asset.prototype.material.map.gold.fern = {
+  name: "map.gold.fern",
+  shader: "goldmask",
+  shadow: false,
+  texture0: "map/gold/fern",
+};
+
+/* Source File: cobble.mat */
+Asset.prototype.material.map.gold.cobble = {
+  name: "map.gold.cobble",
+  shader: "gold",
+  shadow: true,
+  texture0: "map/gold/cobblestone",
+};
+
+/* Source File: tallGrass.mat */
+Asset.prototype.material.map.gold.tallGrass = {
+  name: "map.gold.tallGrass",
+  shader: "goldmask",
+  shadow: false,
+  texture0: "map/gold/tallgrass",
+};
+
+/* Source File: water.mat */
+Asset.prototype.material.map.gold.water = {
+  name: "map.gold.water",
+  shader: "goldwater",
+  shadow: false,
+  texture0: "map/gold/water",
+};
+
+/* Source File: book.mat */
+Asset.prototype.material.map.gold.book = {
+  name: "map.gold.book",
+  shader: "gold2x",
+  shadow: true,
+  texture0: "map/gold/book",
+};
+
+/* Source File: brick.mat */
+Asset.prototype.material.map.gold.brick = {
+  name: "map.gold.brick",
+  shader: "gold",
+  shadow: true,
+  texture0: "map/gold/stonebrick",
+};
+
+/* Source File: gravel.mat */
+Asset.prototype.material.map.gold.gravel = {
+  name: "map.gold.gravel",
+  shader: "gold",
+  shadow: true,
+  texture0: "map/gold/gravel",
+};
+
+/* Source File: dandelion.mat */
+Asset.prototype.material.map.gold.dandelion = {
+  name: "map.gold.dandelion",
+  shader: "goldmask",
+  shadow: false,
+  texture0: "map/gold/flower_dandelion",
+};
+
+/* Source File: bedrock.mat */
+Asset.prototype.material.map.gold.bedrock = {
+  name: "map.gold.bedrock",
+  shader: "gold",
+  shadow: true,
+  texture0: "map/gold/bedrock",
+};
+
+/* Source File: wood.mat */
+Asset.prototype.material.map.gold.wood = {
+  name: "map.gold.wood",
+  shader: "gold",
+  shadow: true,
+  texture0: "map/gold/planks_oak",
+};
+
+/* Source File: slab.mat */
+Asset.prototype.material.map.gold.slab = {
+  name: "map.gold.slab",
+  shader: "gold2x",
+  shadow: true,
+  texture0: "map/gold/slab",
+};
+
+/* Source File: sand.mat */
+Asset.prototype.material.map.gold.sand = {
+  name: "map.gold.sand",
+  shader: "gold",
+  shadow: true,
+  texture0: "map/gold/sand",
+};
+
+/* Source File: sapling.mat */
+Asset.prototype.material.map.gold.sapling = {
+  name: "map.gold.sapling",
+  shader: "goldmask",
+  shadow: false,
+  texture0: "map/gold/sapling_oak",
+};
+
+/* Source File: grass.mat */
+Asset.prototype.material.map.gold.grass = {
+  name: "map.gold.grass",
+  shader: "gold2x",
+  shadow: true,
+  texture0: "map/gold/grass",
+};
+
+/* Source File: reed.mat */
+Asset.prototype.material.map.gold.reed = {
+  name: "map.gold.reed",
+  shader: "goldmask",
+  shadow: false,
+  texture0: "map/gold/reeds",
+};
+
+/* Source File: leaves.mat */
+Asset.prototype.material.map.gold.leaves = {
+  name: "map.gold.leaves",
+  shader: "goldmask",
+  shadow: true,
+  texture0: "map/gold/leaves",
+};
+
+/* Source File: lily.mat */
+Asset.prototype.material.map.gold.lily = {
+  name: "map.gold.lily",
+  shader: "goldmask",
+  shadow: true,
+  texture0: "map/gold/lily",
+};
+
+/* Source File: lamp.mat */
+Asset.prototype.material.map.gold.lamp = {
+  name: "map.gold.lamp",
+  shader: "gold",
+  shadow: true,
+  texture0: "map/gold/redstone_lamp_on",
+};
+
+/* Source File: farm.mat */
+Asset.prototype.material.map.gold.farm = {
+  name: "map.gold.farm",
+  shader: "gold2x",
+  shadow: true,
+  texture0: "map/gold/farm",
+};
+
+/* Source File: wheat.mat */
+Asset.prototype.material.map.gold.wheat = {
+  name: "map.gold.wheat",
+  shader: "goldmask",
+  shadow: false,
+  texture0: "map/gold/wheat_stage_7",
+};
+
+/* Source File: gold.mat */
+Asset.prototype.material.map.gold.gold = {
+  name: "map.gold.gold",
+  shader: "gold",
+  shadow: true,
+  texture0: "map/gold/gold_ore",
+};
+
+/* Source File: lava.mat */
+Asset.prototype.material.map.gold.lava = {
+  name: "map.gold.lava",
+  shader: "goldlava",
+  shadow: false,
+  texture0: "map/gold/lava",
+};
+
+/* Source File: path.mat */
+Asset.prototype.material.map.gold.path = {
+  name: "map.gold.path",
+  shader: "gold2x",
+  shadow: true,
+  texture0: "map/gold/path",
+};
+
+/* Source File: coal.mat */
+Asset.prototype.material.map.gold.coal = {
+  name: "map.gold.coal",
+  shader: "gold",
+  shadow: true,
+  texture0: "map/gold/coal_ore",
+};
+
+/* Source File: iron.mat */
+Asset.prototype.material.map.gold.iron = {
+  name: "map.gold.iron",
+  shader: "gold",
+  shadow: true,
+  texture0: "map/gold/iron_ore",
+};
+
+/* Source File: carved.mat */
+Asset.prototype.material.map.gold.carved = {
+  name: "map.gold.carved",
+  shader: "gold",
+  shadow: true,
+  texture0: "map/gold/stonebrick_carved",
+};
+
+/* Source File: stone.mat */
+Asset.prototype.material.map.gold.stone = {
+  name: "map.gold.stone",
+  shader: "gold",
+  shadow: true,
+  texture0: "map/gold/stone",
+};
+
+/* Source File: metal_rough.mat */
+Asset.prototype.material.map.iron.metal_rough = {
+  name: "map.iron.metal_rough",
+  shader: "tin",
+  shadow: true,
+  texture0: "map/iron/metal_rough",
+  texture1: "map/iron/metal_rough_normal",
+  texture2: "map/iron/edge_color",
+  texture3: "multi/multi_dif",
+};
+
+/* Source File: grid.mat */
+Asset.prototype.material.map.iron.grid = {
+  name: "map.iron.grid",
+  shader: "tin_grid",
+  shadow: true,
+  texture0: "map/iron/grid",
+  texture1: "map/iron/flat_normal",
+  texture2: "map/iron/edge_color",
+  texture3: "multi/multi_dif",
+  texture4: "map/iron/grid_multi",
+};
+
+/* Source File: light.mat */
+Asset.prototype.material.map.iron.light = {
+  name: "map.iron.light",
+  shader: "glow",
+  shadow: true,
+  texture0: "map/iron/light",
+};
+
+/* Source File: metal_dark.mat */
+Asset.prototype.material.map.iron.metal_dark = {
+  name: "map.iron.metal_dark",
+  shader: "tin",
+  shadow: true,
+  texture0: "map/iron/metal_dark",
+  texture1: "map/iron/flat_normal",
+  texture2: "map/iron/edge_color",
+  texture3: "multi/multi_dif",
+};
+
+/* Source File: plasma.mat */
+Asset.prototype.material.map.iron.plasma = {
+  name: "map.iron.plasma",
+  shader: "ironplasma",
+  shadow: false,
+  texture0: "map/iron/edge_color",
+  texture1: "multi/multi_dif",
+  texture2: "map/iron/plasma_mask",
+};
+
+/* Source File: orb.mat */
+Asset.prototype.material.map.iron.orb = {
+  name: "map.iron.orb",
+  shader: "orb",
+  shadow: false,
+  texture0: "multi/multi_dif",
+};
+
+/* Source File: metal_light.mat */
+Asset.prototype.material.map.iron.metal_light = {
+  name: "map.iron.metal_light",
+  shader: "tin",
+  shadow: true,
+  texture0: "map/iron/metal",
+  texture1: "map/iron/flat_normal",
+  texture2: "map/iron/edge_color",
   texture3: "multi/multi_dif",
 };
 
