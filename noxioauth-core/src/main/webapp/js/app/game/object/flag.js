@@ -17,7 +17,7 @@ function FlagObject(game, oid, pos, permutation, team, color) {
   /* State */
   this.onBase = 1;                 // 1 -> Flag is on flagstand | 0 -> Flag is not on the flag stand and should draw on hud
 
-  this.targetCircle = new ColorDecal(this.game, this.game.display.getMaterial("object.object.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.4, 0.0, util.vec4.make(1,1,1,1));
+  this.targetCircle = new ColorDecal(this.game, this.game.display.getMaterial("object.target.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.4, 0.0, util.vec4.make(1,1,1,1));
 };
 
 FlagObject.prototype.update = function(data) {
