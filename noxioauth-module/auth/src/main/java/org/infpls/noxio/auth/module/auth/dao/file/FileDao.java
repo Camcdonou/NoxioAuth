@@ -18,7 +18,7 @@ public class FileDao {
   private ResourceLoader resourceLoader;
   
   public static enum Type {
-    SOUND("/sound/", ".wav");
+    SOUND("/sound", ".wav");
     
     public final String path, ext;
     Type(String path, String ext) {
@@ -46,7 +46,7 @@ public class FileDao {
   public String putFile(Type t, MultipartFile f) {
     final String filename = ID.generate16();
     try {
-      final File file = new File(Settable.getFilePath() + t.path + filename + t.ext);
+      final File file = new File(Settable.getFilePath() + t.path + "/" + filename + t.ext);
       if(file.exists()) { throw new IOException("File unexpectedly exists. Abort!"); }
       file.createNewFile();
       f.transferTo(file);
