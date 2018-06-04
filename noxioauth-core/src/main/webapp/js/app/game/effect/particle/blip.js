@@ -64,3 +64,8 @@ ParticleBlip.prototype.getDraw = function(geometry, decals, lights, bounds) {
     geometry.push({model: part.model, material: part.material, uniforms: partUniformData});
   }
 };
+
+ParticleBlip.prototype.active = Particle.prototype.active;
+
+/* Used by EffectDefinition.js */
+ParticleBlip.fxId = "particle";

@@ -59,7 +59,9 @@ GameObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
 
 /* Called directly before deleting an object. */
 GameObject.prototype.destroy = function() {
-  
+  for(var i=0;i<this.effects.length;i++) {
+    this.effects[i].destroy();
+  }
 };
 
 GameObject.prototype.type = function() { return "nul"; };

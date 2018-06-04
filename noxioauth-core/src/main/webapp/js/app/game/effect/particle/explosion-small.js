@@ -41,3 +41,8 @@ ParticleExplosionSmall.prototype.getDraw = function(geometry, decals, lights, bo
     geometry.push({model: part.model, material: part.material, uniforms: partUniformData});
   }
 };
+
+ParticleExplosionSmall.prototype.active = Particle.prototype.active;
+
+/* Used by EffectDefinition.js */
+ParticleExplosionSmall.fxId = "particle";

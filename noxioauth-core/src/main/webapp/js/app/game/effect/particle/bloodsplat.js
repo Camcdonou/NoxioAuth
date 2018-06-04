@@ -72,3 +72,8 @@ ParticleBloodSplat.prototype.getDraw = function(geometry, decals, lights, bounds
     this.decals[i].getDraw(decals, bounds);
   }
 };
+
+ParticleBloodSplat.prototype.active = Particle.prototype.active;
+
+/* Used by EffectDefinition.js */
+ParticleBloodSplat.fxId = "particle";

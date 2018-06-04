@@ -2,6 +2,7 @@
 /* global main */
 /* global util */
 /* global GameObject */
+/* global NxFx */
 
 /* Define Flag Object Class */
 function FlagObject(game, oid, pos, permutation, team, color) {
@@ -17,7 +18,7 @@ function FlagObject(game, oid, pos, permutation, team, color) {
   /* State */
   this.onBase = 1;                 // 1 -> Flag is on flagstand | 0 -> Flag is not on the flag stand and should draw on hud
 
-  this.targetCircle = new ColorDecal(this.game, this.game.display.getMaterial("object.target.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.4, 0.0, util.vec4.make(1,1,1,1));
+  this.targetCircle = new Decal(this.game, "object.target.targetcircle", util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.4, 0.0, util.vec4.make(1,1,1,1), 15, 0, 0);
 };
 
 FlagObject.prototype.update = function(data) {
@@ -32,9 +33,55 @@ FlagObject.prototype.update = function(data) {
   this.setVel(vel);
   this.setHeight(height, vspeed);
   this.onBase = onBase;
+  for(var i=0;i<effects.length-1;i++) {
+    switch(effects[i]) {
+      case "lnd" : { this.land(); break; }
+      case "htg" : { this.stunGeneric(); return true; }
+      case "hts" : { this.stunSlash(); return true; }
+      case "hte" : { this.stunElectric(); return true; }
+      case "htf" : { this.stunFire(); return true; }
+      case "crt" : { this.criticalHit(); return true; }
+      default : { main.menu.warning.show("Invalid effect value: '" + effects[i] + "' @ Bomb.js :: update()"); break; }
+    }
+  }
   
   /* Step Effects */
-  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 0.4, 0.0);
+  this.targetCircle.step(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 0.4, 0.0);
+  for(var i=0;i<this.effects.length;i++) {
+    this.effects[i].effect.step(util.vec3.add(this.effects[i].offset, util.vec2.toVec3(this.pos, this.height)), util.vec2.toVec3(this.vel, this.vspeed));
+  }
+};
+
+FlagObject.prototype.land = function() {
+  this.effects.push(NxFx.player.land.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+
+FlagObject.prototype.stun = function() {
+  
+};
+
+FlagObject.prototype.stunGeneric = function() {
+  this.effects.push(NxFx.hit.generic.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.stun();
+};
+
+FlagObject.prototype.stunSlash = function() {
+  this.effects.push(NxFx.hit.slash.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.stun();
+};
+
+FlagObject.prototype.stunElectric = function() {
+  this.effects.push(NxFx.hit.electric.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.stun();
+};
+
+FlagObject.prototype.stunFire = function() {
+  this.effects.push(NxFx.hit.fire.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.stun();
+};
+
+FlagObject.prototype.criticalHit = function() {
+  this.effects.push(NxFx.hit.critical.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
 FlagObject.prototype.setPos = GameObject.prototype.setPos;

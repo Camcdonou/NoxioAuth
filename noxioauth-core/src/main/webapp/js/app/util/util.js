@@ -255,8 +255,30 @@ util.vec4.copy = function(a) {
   return {x: a.x, y: a.y, z: a.z, w: a.w};
 };
 
+util.vec4.copy3 = function(a, w) {
+  // Copies xyz but sets w to the value specified.
+  return {x: a.x, y: a.y, z: a.z, w: w};
+};
+
+util.vec4.add = function(a, b) {
+  return {x: a.x + b.x, y: a.y + b.y, z: a.z + b.z, w: a.w + b.w};
+};
+
+util.vec4.subtract = function(a, b) {
+  return {x: a.x - b.x, y: a.y - b.y, z: a.z - b.z, w: a.w - b.w};
+};
+
+util.vec4.scale = function(a, b) {
+  return {x: a.x*b, y: a.y*b, z: a.z*b, w: a.w*b};
+};
+
 util.vec4.multiply = function(a, b) {
   return {x: a.x*b.x, y: a.y*b.y, z: a.z*b.z, w: a.w*b.w};
+};
+
+/* Linear interpolation from a@(i=0.0) to b@(i=1.0) */
+util.vec4.lerp = function(a, b, i) {
+  return util.vec4.add(util.vec4.scale(a, 1.0-i), util.vec4.scale(b, i));
 };
 
 util.vec4.toArray = function(a) {

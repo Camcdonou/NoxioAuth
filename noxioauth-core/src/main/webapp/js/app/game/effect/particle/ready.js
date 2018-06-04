@@ -43,3 +43,8 @@ ParticleReady.prototype.getDraw = function(geometry, decals, lights, bounds) {
     geometry.push({model: part.model, material: part.material, uniforms: partUniformData});
   }
 };
+
+ParticleReady.prototype.active = Particle.prototype.active;
+
+/* Used by EffectDefinition.js */
+ParticleReady.fxId = "particle";

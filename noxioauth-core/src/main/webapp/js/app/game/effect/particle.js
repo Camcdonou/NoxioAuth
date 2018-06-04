@@ -57,3 +57,10 @@ Particle.prototype.step = function(pos, vel) {
 Particle.prototype.getDraw = function(geometry, decals, lights, bounds) {
     /* NO. */
 };
+
+Particle.prototype.active = function() {
+  return this.particles.length > 0 || this.delayed.length > 0;
+};
+
+/* Used by EffectDefinition.js */
+Particle.fxId = "particle";

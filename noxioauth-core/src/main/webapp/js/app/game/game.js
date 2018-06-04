@@ -352,15 +352,16 @@ NoxioGame.prototype.deleteObject = function(oid) {
   for(var i=0;i<this.objects.length;i++) {
     if(this.objects[i].oid === oid) {
       this.objects[i].destroy();
-      for(var j=0;this.objects[i].effects&&j<this.objects[i].effects.length;j++) {
-        if(this.objects[i].effects[j].effect.active()) {
-          this.effects.push({pos: util.vec3.add(util.vec2.toVec3(this.objects[i].pos, this.objects[i].height), this.objects[i].effects[j].offset), vel: util.vec2.toVec3(this.objects[i].vel, this.objects[i].vspeed), radius: this.objects[i].cullRadius, effect: this.objects[i].effects[j].effect}); }
-      }
       this.objects.splice(i, 1);
       return true;
     }
   }
   return false;
+};
+
+/* Places an effect in the world, this effect is updated and rendered until it no longer active. */
+NoxioGame.prototype.putEffect = function(effect) {
+  this.effects.add(effect);
 };
 
 NoxioGame.prototype.draw = function() {

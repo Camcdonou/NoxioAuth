@@ -3,8 +3,7 @@
 /* global util */
 /* global GameObject */
 /* global PlayerObject */
-/* global PointLight */
-/* global ParticleExplosionSmall */
+/* global NxFx */
 
 /* Define Bomb Object Class */
 function BombObject(game, oid, pos, permutation, team, color) {
@@ -22,32 +21,8 @@ function BombObject(game, oid, pos, permutation, team, color) {
   this.armed = false;
   this.timer = 0;
   
-  /* Effects */
-  this.impactEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["object/bomb/impact0.wav", 0.2], update: function(snd){}, attachment: true, delay: 0, length: 33}
-    ], false),
-    offset: util.vec3.make(0,0,0.05),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.impactEffect);
-  
-  this.armEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["object/bomb/arm0.wav", 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33}
-    ], false),
-    offset: util.vec3.make(0,0,0.05),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.armEffect);
-  
-  this.detonateEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["object/bomb/detonate0.wav", 0.6], update: function(snd){}, attachment: false, delay: 0, length: 33},
-      {type: "light", class: PointLight, params: ["<vec3 pos>", util.vec4.make(0.972, 0.820, 0.523, 0.95), 1.05], update: function(lit){lit.color.w -= 0.95/7.0; lit.rad += 0.065;}, attachment: false, delay: 0, length: 7},
-      {type: "particle", class: ParticleExplosionSmall, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: false, delay: 0, length: 7}
-    ], false),
-    offset: util.vec3.make(0,0,0.05),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.detonateEffect);
+  /* Decal */
+  this.targetCircle = new Decal(this.game, "object.target.targetcircle", util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.4, 0.0, util.vec4.make(1,1,1,1), 15, 0, 0);
 };
 
 BombObject.prototype.update = function(data) {
@@ -68,6 +43,12 @@ BombObject.prototype.update = function(data) {
   this.timer = this.armed?detTimer:0;
   for(var i=0;i<effects.length-1;i++) {
     switch(effects[i]) {
+      case "lnd" : { this.land(); break; }
+      case "htg" : { this.stunGeneric(); return true; }
+      case "hts" : { this.stunSlash(); return true; }
+      case "hte" : { this.stunElectric(); return true; }
+      case "htf" : { this.stunFire(); return true; }
+      case "crt" : { this.criticalHit(); return true; }
       case "imp" : { this.impact(); break; }
       case "arm" : { this.arm(); break; }
       case "det" : { this.detonate(); break; }
@@ -78,9 +59,42 @@ BombObject.prototype.update = function(data) {
   /* Timers */
   
   /* Step Effects */
+  this.targetCircle.step(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 0.4, 0.0);
   for(var i=0;i<this.effects.length;i++) {
     this.effects[i].effect.step(util.vec3.add(this.effects[i].offset, util.vec2.toVec3(this.pos, this.height)), util.vec2.toVec3(this.vel, this.vspeed));
   }
+};
+
+BombObject.prototype.land = function() {
+  this.effects.push(NxFx.player.land.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+
+BombObject.prototype.stun = function() {
+  
+};
+
+BombObject.prototype.stunGeneric = function() {
+  this.effects.push(NxFx.hit.generic.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.stun();
+};
+
+BombObject.prototype.stunSlash = function() {
+  this.effects.push(NxFx.hit.slash.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.stun();
+};
+
+BombObject.prototype.stunElectric = function() {
+  this.effects.push(NxFx.hit.electric.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.stun();
+};
+
+BombObject.prototype.stunFire = function() {
+  this.effects.push(NxFx.hit.fire.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.stun();
+};
+
+BombObject.prototype.criticalHit = function() {
+  this.effects.push(NxFx.hit.critical.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
 BombObject.prototype.setPos = GameObject.prototype.setPos;
@@ -88,26 +102,29 @@ BombObject.prototype.setVel = GameObject.prototype.setVel;
 BombObject.prototype.setHeight = GameObject.prototype.setHeight;
 
 BombObject.prototype.impact = function() {
-  this.impactEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+
 };
 
 BombObject.prototype.arm = function() {
-  this.armEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+
 };
 
 BombObject.prototype.detonate = function() {
-  this.detonateEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+
 };
 
 BombObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
   var exbounds = util.matrix.expandPolygon(bounds, this.cullRadius);
   if(util.intersection.pointPoly(this.pos, exbounds)) {
-    var color;
+    var color, dcolor;
     switch(this.team) {
       case  0 : { color = util.vec3.make(0.7539, 0.2421, 0.2421); break; }
       case  1 : { color = util.vec3.make(0.2421, 0.2421, 0.7539); break; }
       default : { color = util.vec3.make(0.5, 0.5, 0.5); break; }
     }
+    dcolor = this.team === -1 && this.color === 0 ? util.vec3.make(1, 1, 1) : color; // Make decal white for default boys.
+    
+    this.targetCircle.setColor(util.vec3.toVec4(dcolor, 1));
     
     var bombUniformData = [
       {name: "transform", data: [this.pos.x, this.pos.y, this.height]},
@@ -119,6 +136,7 @@ BombObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
     for(var i=0;i<this.effects.length;i++) {
       this.effects[i].effect.getDraw(geometry, decals, lights, bounds);
     }
+    this.targetCircle.getDraw(decals, bounds);
   }
 };
 

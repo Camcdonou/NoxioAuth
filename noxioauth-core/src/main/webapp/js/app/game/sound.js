@@ -5,7 +5,6 @@
 /* Define Game Sound Class */
 function Sound(game) {
   this.game = game;
-  this.volume;
   
   if(!this.initWebAudio()) { this.initFallback(); }
 }
@@ -23,11 +22,31 @@ Sound.prototype.initWebAudio = function() {
   
   /* @FIXME Settings integration for volume/individual sound settings etc */
   
-  this.volume = this.context.createGain();
-  this.volume.gain.value = 1.0;
-  this.volume.connect(this.context.destination); // Global Volume -> Speakers
+  this.masterVolume = this.context.createGain();
+  this.masterVolume.gain.value = 1.0;
+  this.masterVolume.connect(this.context.destination); // Global Volume -> Speakers
   
-  this.setVolume(main.settings.volume.master);
+  this.effectVolume = this.context.createGain();
+  this.effectVolume.gain.value = 1.0;
+  this.effectVolume.connect(this.masterVolume); // Effect Volume -> Master Volume
+  
+  this.voiceVolume = this.context.createGain();
+  this.voiceVolume.gain.value = 1.0;
+  this.voiceVolume.connect(this.masterVolume); // Voice Volume -> Master Volume
+  
+  this.announcerVolume = this.context.createGain();
+  this.announcerVolume.gain.value = 1.0;
+  this.announcerVolume.connect(this.masterVolume); // Anouncer Volume -> Master Volume
+  
+  this.uiVolume = this.context.createGain();
+  this.uiVolume.gain.value = 1.0;
+  this.uiVolume.connect(this.masterVolume); // Ui Volume -> Master Volume
+  
+  this.musicVolume = this.context.createGain();
+  this.musicVolume.gain.value = 1.0;
+  this.musicVolume.connect(this.masterVolume); // Music Volume -> Master Volume
+  
+  this.updateVolume();
   
   this.sounds = [];
 
@@ -43,7 +62,7 @@ Sound.prototype.initFallback = function() {
 
 /* Updates position of audio context for 3d sound */
 Sound.prototype.update = function() {
-  this.setVolume(main.settings.volume.master);
+  this.updateVolume();
   var pos = {x: -this.game.display.camera.pos.x, y: -this.game.display.camera.pos.y, z: 2.0};
   if(this.context.listener.positionX) {
     this.context.listener.positionX.value = pos.x;
@@ -66,9 +85,14 @@ Sound.prototype.update = function() {
 };
 
 /* Set Master Volume */
-Sound.prototype.setVolume = function(v) { this.volume.gain.value = v; };
-/* Get Master Volume */
-Sound.prototype.getVolume = function() { return this.volume.gain.value; };
+Sound.prototype.updateVolume = function() {
+  this.masterVolume.gain.value = main.settings.volume.master;
+  this.effectVolume.gain.value = main.settings.volume.fx;
+  this.voiceVolume.gain.value = main.settings.volume.voice;
+  this.announcerVolume.gain.value = main.settings.volume.announcer;
+  this.uiVolume.gain.value = main.settings.volume.ui;
+  this.musicVolume.gain.value = main.settings.volume.music;
+};
 
 Sound.prototype.setMusic = function(sound, loop) {
   if(this.music) { 
@@ -99,10 +123,19 @@ Sound.prototype.createCustomSound = function(name) {
 };
 
 /* Gets the sound at the path given. If it's not already loaded it loads it. If file not found returns default sound. */
-Sound.prototype.getSound = function(path, gain) {
+Sound.prototype.getSound = function(path, gain, shift, type) {
+  var volume;
+  switch(type) {
+    case "voice" : { volume = this.voiceVolume; break; }
+    case "announcer" : { volume = this.announcerVolume; break; }
+    case "ui" : { volume = this.uiVolume; break; }
+    case "music" : { volume = this.musicVolume; break; }
+    default : { volume = this.effectVolume; break; }
+  }
+  
   for(var i=0;i<this.sounds.length;i++) {
     if(this.sounds[i].path === path) {
-      return new SoundInstance(this.context, path, this.sounds[i], gain, this.volume);
+      return new SoundInstance(this.context, path, this.sounds[i], gain, shift, volume);
     }
   }
   
@@ -113,10 +146,19 @@ Sound.prototype.getSound = function(path, gain) {
 };
 
 /* Gets the sound at the path given. If it's not already loaded it loads it. If file not found returns default sound. */
-Sound.prototype.getSpatialSound = function(path, gain) {
+Sound.prototype.getSpatialSound = function(path, gain, shift, type) {
+  var volume;
+  switch(type) {
+    case "voice" : { volume = this.voiceVolume; break; }
+    case "announcer" : { volume = this.announcerVolume; break; }
+    case "ui" : { volume = this.uiVolume; break; }
+    case "music" : { volume = this.musicVolume; break; }
+    default : { volume = this.effectVolume; break; }
+  }
+  
   for(var i=0;i<this.sounds.length;i++) {
     if(this.sounds[i].path === path) {
-      return new SpatialSoundInstance(this.context, path, this.sounds[i], gain, this.volume);
+      return new SpatialSoundInstance(this.context, path, this.sounds[i], gain, shift, volume);
     }
   }
   

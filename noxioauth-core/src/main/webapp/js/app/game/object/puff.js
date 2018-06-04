@@ -3,10 +3,7 @@
 /* global util */
 /* global GameObject */
 /* global PlayerObject */
-/* global PointLight */
-/* global ParticleStun */
-/* global ParticleSleep */
-/* global Decal */
+/* global NxFx */
 
 /* Define PlayerPuff Class */
 function PlayerPuff(game, oid, pos, team, color) {
@@ -15,13 +12,6 @@ function PlayerPuff(game, oid, pos, team, color) {
   this.model = this.game.display.getModel("character.player.player");
   this.material = this.game.display.getMaterial("character.puff.puff");
   this.icon = this.game.display.getMaterial("character.puff.ui.iconlarge");
-  
-  /* Constants */
-  this.REST_SLEEP_LENGTH = 99;
-  this.POUND_COOLDOWN_LENGTH = 30;
-  
-  this.POUND_RADIUS = 0.45;
-  this.POUND_OFFSET = 0.33;
   
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.725;
@@ -34,82 +24,6 @@ function PlayerPuff(game, oid, pos, team, color) {
   this.restCooldown = 0;
   this.poundCooldown = 0;
 
-  /* Effects */
-  this.restEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/puff/rest0.wav", 0.5], update: function(snd){}, attachment: true, delay: 0, length: 33},
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/puff/rest1.wav", 0.5], update: function(snd){}, attachment: true, delay: 99, length: 33},
-      {type: "particle", class: ParticleSleep, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 100}
-    ], false),
-    offset: util.vec3.make(0.1,-0.2,0.55),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.restEffect);
-  
-  this.restHitEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/puff/rest2.wav", 1.0], update: function(snd){}, attachment: true, delay: 0, length: 33}
-    ], false),
-    offset: util.vec3.make(0,0,0.25),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.restHitEffect);
-  
-  this.poundEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/puff/pound0.wav", 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33}
-    ], false),
-    offset: util.vec3.make(0,0,0.25),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.poundEffect);
-  
-  this.poundHitEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/puff/pound1.wav", 0.75], update: function(snd){}, attachment: true, delay: 0, length: 33}
-    ], false),
-    offset: util.vec3.make(0,0,0.25),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.poundHitEffect);
-  
-  this.tauntEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/puff/taunt0.wav", "character/puff/taunt1.wav"], 0.4], update: function(snd){}, attachment: true, delay: 0, length: 33}
-    ], false),
-    offset: util.vec3.make(0,0,0.25),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.tauntEffect);
-  
-  this.jumpEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/puff/jump0.wav", 0.15], update: function(snd){}, attachment: true, delay: 0, length: 33}
-    ], false),
-    offset: util.vec3.make(0,0,0.25),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.jumpEffect);
-  
-  this.stunEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/puff/hit0.wav", "character/puff/hit1.wav"], 0.45], update: function(snd){}, attachment: true, delay: 0, length: 33},
-      {type: "particle", class: ParticleStun, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 45}
-    ], false),
-    offset: util.vec3.make(0,0,0.5),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.stunEffect);
-  
-  this.impactDeathEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/puff/death0.wav", 0.5], update: function(snd){}, attachment: true, delay: 0, length: 60}
-    ], false),
-    offset: util.vec3.make(0,0,0.25),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.impactDeathEffect);
-  
-  this.fallDeathEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/puff/death1.wav", 0.5], update: function(snd){}, attachment: true, delay: 0, length: 99}
-    ], false),
-    offset: util.vec3.make(0,0,0.25),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.fallDeathEffect);
-  
   /* UI */
   this.uiMeters = [
     {type: "bar", iconMat: this.game.display.getMaterial("character.puff.ui.meterrest"), length: 16, scalar: 1.0},
@@ -120,24 +34,25 @@ function PlayerPuff(game, oid, pos, team, color) {
   this.hitboxModel = this.game.display.getModel("multi.hitbox.circle");
 };
 
+/* Constants */
+PlayerPuff.REST_SLEEP_LENGTH = 99;
+PlayerPuff.POUND_COOLDOWN_LENGTH = 30;
+PlayerPuff.POUND_RADIUS = 0.45;
+PlayerPuff.POUND_OFFSET = 0.33;
+PlayerPuff.REST_LIGHT = util.vec4.make(1.0, 1.0, 1.0, 0.25);
+
 PlayerPuff.prototype.update = PlayerObject.prototype.update;
 PlayerPuff.prototype.parseUpd = PlayerObject.prototype.parseUpd;
 
 PlayerPuff.prototype.effectSwitch = function(e) {
   switch(e) {
-    case "air" : { this.air(); break; } 
-    case "jmp" : { this.jump(); break; }
     case "atk" : { this.rest(); break; }
-    case "hta" : { this.restHit(); break; }
+    case "wak" : { this.wake(); break; }
     case "mov" : { this.poundChannel(); break; }
     case "pnd" : { this.poundDash(); break; }
     case "pnh" : { this.pound(); break; }
-    case "htb" : { this.poundHit(); break; }
-    case "tnt" : { this.taunt(); break; }
-    case "stn" : { this.stun(); break; }
-    case "obj" : { this.objective = true; this.color = util.kalide.compressColors(2, 4, 5, 6, 8); break; }
-    case "jbo" : { this.objective = false; this.color = 0; break; }
-    default : { main.menu.warning.show("Invalid effect value: '" + e + "' @ Puff.js :: effectSwitch()"); break; }
+    case "slp" : { this.poundHit(); break; }
+    default : { return PlayerObject.prototype.effectSwitch.call(this, e); }
   }
 };
 
@@ -147,21 +62,31 @@ PlayerPuff.prototype.timers = function() {
 };
 
 PlayerPuff.prototype.ui = function() {
-  this.uiMeters[0].scalar = 1.0-(this.restCooldown/this.REST_SLEEP_LENGTH);
-  this.uiMeters[1].scalar = 1.0-(this.poundCooldown/this.POUND_COOLDOWN_LENGTH);
+  this.uiMeters[0].scalar = 1.0-(this.restCooldown/PlayerPuff.REST_SLEEP_LENGTH);
+  this.uiMeters[1].scalar = 1.0-(this.poundCooldown/PlayerPuff.POUND_COOLDOWN_LENGTH);
 };
 
 PlayerPuff.prototype.air  = PlayerObject.prototype.air;
 PlayerPuff.prototype.jump = PlayerObject.prototype.jump;
+PlayerPuff.prototype.land = PlayerObject.prototype.land;
+
 PlayerPuff.prototype.stun = function() {
   PlayerObject.prototype.stun.call(this);
-  this.restEffect.effect.destroy();
+  if(this.chargeEffect) { this.chargeEffect.destroy(); this.chargeEffect = undefined; }
+  if(this.restEfefct) { this.restEffect.destroy(); this.restEffect = undefined; }
   this.restCooldown = 0;
 };
 
+PlayerPuff.prototype.stunGeneric = PlayerObject.prototype.stunGeneric;
+PlayerPuff.prototype.stunSlash = PlayerObject.prototype.stunSlash;
+PlayerPuff.prototype.stunElectric = PlayerObject.prototype.stunElectric;
+PlayerPuff.prototype.stunFire = PlayerObject.prototype.stunFire;
+PlayerPuff.prototype.criticalHit = PlayerObject.prototype.criticalHit;
+
 PlayerPuff.prototype.rest = function() {
-  this.restEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
-  this.restCooldown = this.REST_SLEEP_LENGTH;
+  this.restEffect = NxFx.puff.rest.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+  this.effects.push(this.restEffect);
+  this.restCooldown = PlayerPuff.REST_SLEEP_LENGTH;
   this.hitboxPos = this.pos;
   this.hitboxColor = util.vec4.make(1, 0, 0, 0.5);
   this.hitboxScale = this.radius;
@@ -169,33 +94,35 @@ PlayerPuff.prototype.rest = function() {
   this.drawHitbox = this.hitboxModel;
 };
 
-PlayerPuff.prototype.restHit = function() {
-  this.restHitEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+PlayerPuff.prototype.wake = function() {
+  this.effects.push(NxFx.puff.wake.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
 PlayerPuff.prototype.poundChannel = function() {
-  this.poundCooldown = this.POUND_COOLDOWN_LENGTH;
+  this.poundCooldown = PlayerPuff.POUND_COOLDOWN_LENGTH;
+  this.chargeEffect = NxFx.puff.charge.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+  this.effects.push(this.chargeEffect);
 };
 
 PlayerPuff.prototype.poundDash = function() {
-  this.poundEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+  this.effects.push(NxFx.puff.dash.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
   this.poundDirection = this.look;
 };
 
 PlayerPuff.prototype.pound = function() {
-  this.hitboxPos = util.vec2.add(this.pos, util.vec2.scale(this.poundDirection, this.POUND_OFFSET));
+  this.hitboxPos = util.vec2.add(this.pos, util.vec2.scale(this.poundDirection, PlayerPuff.POUND_OFFSET));
   this.hitboxColor = util.vec4.make(1, 0, 0, 0.85);
-  this.hitboxScale = this.POUND_RADIUS;
+  this.hitboxScale = PlayerPuff.POUND_RADIUS;
   this.hitBoxAngle = 0;
   this.drawHitbox = this.hitboxModel;
 };
 
 PlayerPuff.prototype.poundHit = function() {
-  this.poundHitEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+  this.effects.push(NxFx.puff.slap.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
 PlayerPuff.prototype.taunt = function() {
-  this.tauntEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+
 };
 
 PlayerPuff.prototype.setPos = PlayerObject.prototype.setPos;

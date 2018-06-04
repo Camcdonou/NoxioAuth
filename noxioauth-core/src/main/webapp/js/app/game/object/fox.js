@@ -3,12 +3,8 @@
 /* global util */
 /* global GameObject */
 /* global PlayerObject */
-/* global PointLight */
-/* global ParticleBlip */
-/* global ParticleDash */
-/* global ParticleStun */
-/* global Decal */
 /* global PlayerFoxRed */
+/* global NxFx */
 
 /* Define PlayerFox Class */
 function PlayerFox(game, oid, pos, team, color) {
@@ -17,14 +13,6 @@ function PlayerFox(game, oid, pos, team, color) {
   this.model = this.game.display.getModel("character.player.player");
   this.material = this.game.display.getMaterial("character.fox.fox");
   this.icon = this.game.display.getMaterial("character.fox.ui.iconlarge");
-  
-  /* Constants */
-  this.BLIP_POWER_MAX = 30;
-  this.DASH_POWER_ADD = 30;
-  this.DASH_POWER_MAX = 60;
-  this.BLIP_COLOR_A = util.vec4.make(0.6666, 0.9058, 1.0, 1.0);
-  this.BLIP_COLOR_B = util.vec4.make(0.4, 0.5450, 1.0, 1.0);
-  this.DASH_LIGHT_COLOR = util.vec4.make(0.6666, 0.9058, 1.0, 0.75);
   
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.725;
@@ -35,69 +23,6 @@ function PlayerFox(game, oid, pos, team, color) {
   /* Timers */
   this.blipCooldown = 0;
   this.dashCooldown = 0;
-
-  /* Effects */
-  this.blipEffect = {
-    effect: new Effect([
-      {type: "light", class: PointLight, params: ["<vec3 pos>", this.BLIP_COLOR_A, 3.0], update: function(lit){}, attachment: true, delay: 0, length: 3},
-      {type: "light", class: PointLight, params: ["<vec3 pos>", this.BLIP_COLOR_B, 3.0], update: function(lit){lit.color.w -= 1.0/12.0; lit.rad += 0.1; }, attachment: true, delay: 3, length: 12},
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/attack0.wav", 0.35], update: function(snd){}, attachment: true, delay: 0, length: 33},
-      {type: "particle", class: ParticleBlip, params: [this.game, "<vec3 pos>", "<vec3 vel>", this.BLIP_COLOR_A, this.BLIP_COLOR_B], update: function(prt){}, attachment: true, delay: 0, length: 33}
-    ], false),
-    offset: util.vec3.make(0,0,0.5),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.blipEffect);
-  
-  this.dashEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/dash0.wav", 0.65], update: function(snd){}, attachment: true, delay: 0, length: 33},
-      {type: "light", class: PointLight, params: ["<vec3 pos>", this.DASH_LIGHT_COLOR, 2.5], update: function(lit){lit.color.w -= 1.0/45.0; lit.rad += 0.05; }, attachment: false, delay: 0, length: 30},
-      {type: "particle", class: ParticleDash, params: [this.game, "<vec3 pos>", "<vec3 vel>", this.BLIP_COLOR_A, this.BLIP_COLOR_B], update: function(prt){}, attachment: true, delay: 0, length: 60}
-    ], false),
-    offset: util.vec3.make(0,0,0.25),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.dashEffect);
-  
-  this.tauntEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: [["character/fox/taunt0.wav", "character/fox/taunt1.wav"], 0.5], update: function(snd){}, attachment: true, delay: 0, length: 33}
-    ], false),
-    offset: util.vec3.make(0,0,0.25),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.tauntEffect);
-  
-  this.jumpEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/jump0.wav", 0.35], update: function(snd){}, attachment: true, delay: 0, length: 33}
-    ], false),
-    offset: util.vec3.make(0,0,0.25),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.jumpEffect);
-  
-  this.stunEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/hit0.wav", 0.6], update: function(snd){}, attachment: true, delay: 0, length: 33},
-      {type: "particle", class: ParticleStun, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: true, delay: 0, length: 45}
-    ], false),
-    offset: util.vec3.make(0,0,0.5),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.stunEffect);
-  
-  this.impactDeathEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/death0.wav", 0.7], update: function(snd){}, attachment: true, delay: 0, length: 60}
-    ], false),
-    offset: util.vec3.make(0,0,0.25),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.impactDeathEffect);
-  
-  this.fallDeathEffect = {
-    effect: new Effect([
-      {type: "sound", class: this.game.sound, func: this.game.sound.getSpatialSound, params: ["character/fox/death1.wav", 0.7], update: function(snd){}, attachment: true, delay: 0, length: 99}
-    ], false),
-    offset: util.vec3.make(0,0,0.25),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.fallDeathEffect);
   
   /* UI */
   this.uiMeters = [
@@ -106,20 +31,21 @@ function PlayerFox(game, oid, pos, team, color) {
   ];
 };
 
+/* Constants */
+PlayerFox.BLIP_POWER_MAX = 30;
+PlayerFox.DASH_POWER_ADD = 30;
+PlayerFox.DASH_POWER_MAX = 60;
+PlayerFox.BLIP_COLOR_A = util.vec4.make(0.6666, 0.9058, 1.0, 1.0);
+PlayerFox.BLIP_COLOR_B = util.vec4.make(0.4, 0.5450, 1.0, 1.0);
+
 PlayerFox.prototype.update = PlayerObject.prototype.update;
 PlayerFox.prototype.parseUpd = PlayerObject.prototype.parseUpd;
 
 PlayerFox.prototype.effectSwitch = function(e) {
   switch(e) {
-    case "jmp" : { this.jump(); break; }
-    case "air" : { this.air(); break; } 
-    case "atk" : { this.blip(); break; }
-    case "mov" : { this.dash(); break; }
-    case "tnt" : { this.taunt(); break; }
-    case "stn" : { this.stun(); break; }
-    case "obj" : { this.objective = true; this.color = util.kalide.compressColors(2, 4, 5, 6, 8); break; }
-    case "jbo" : { this.objective = false; this.color = 0; break; }
-    default : { main.menu.warning.show("Invalid effect value: '" + e + "' @ Fox.js :: effectSwitch()"); break; }
+    case "atk" : { this.blip(); return true; }
+    case "mov" : { this.dash(); return true; }
+    default : { return PlayerObject.prototype.effectSwitch.call(this, e); }
   }
 };
 
@@ -129,26 +55,33 @@ PlayerFox.prototype.timers = function() {
 };
 
 PlayerFox.prototype.ui = function() {
-  this.uiMeters[0].scalar = 1.0-(this.blipCooldown/this.BLIP_POWER_MAX);
-  this.uiMeters[1].scalar = Math.max(0, 1.0-(this.dashCooldown/this.DASH_POWER_MAX));
+  this.uiMeters[0].scalar = 1.0-(this.blipCooldown/PlayerFox.BLIP_POWER_MAX);
+  this.uiMeters[1].scalar = Math.max(0, 1.0-(this.dashCooldown/PlayerFox.DASH_POWER_MAX));
 };
 
 PlayerFox.prototype.air  = PlayerObject.prototype.air;
 PlayerFox.prototype.jump = PlayerObject.prototype.jump;
+PlayerFox.prototype.land = PlayerObject.prototype.land;
+
 PlayerFox.prototype.stun = PlayerObject.prototype.stun;
+PlayerFox.prototype.stunGeneric = PlayerObject.prototype.stunGeneric;
+PlayerFox.prototype.stunSlash = PlayerObject.prototype.stunSlash;
+PlayerFox.prototype.stunElectric = PlayerObject.prototype.stunElectric;
+PlayerFox.prototype.stunFire = PlayerObject.prototype.stunFire;
+PlayerFox.prototype.criticalHit = PlayerObject.prototype.criticalHit;
 
 PlayerFox.prototype.blip = function() {
-  this.blipEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
-  this.blipCooldown = this.BLIP_POWER_MAX;
+  this.effects.push(NxFx.fox.blip.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.blipCooldown = PlayerFox.BLIP_POWER_MAX;
 };
 
 PlayerFox.prototype.dash = function() {
-  this.dashEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
-  this.dashCooldown += this.DASH_POWER_ADD;
+  this.effects.push(NxFx.fox.dash.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.dashCooldown += PlayerFox.DASH_POWER_ADD;
 };
 
 PlayerFox.prototype.taunt = function() {
-  this.tauntEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+  
 };
 
 PlayerFox.prototype.setPos = PlayerObject.prototype.setPos;

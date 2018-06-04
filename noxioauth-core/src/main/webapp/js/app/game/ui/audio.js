@@ -65,7 +65,7 @@ AudioUI.prototype.generate = function() {
   var ww = 512;
   var LINE_WIDTH = 2;
   var h = 0;
-  var hh = 150;
+  var hh = 225;
   var s = 24;
   var a = 8;
   var v = s*0.15;
@@ -134,29 +134,6 @@ AudioUI.prototype.generate = function() {
   });
   h += s+s;
   
-  var FX        = "FX Volume";
-  var FX_LENGTH = util.font.textLength(FX, fontName, s);
-  var o = w-FX_LENGTH-a;
-  
-  var slid = sliw*SPEC_SETTINGS.volume.fx;
-  
-  menuContainer.add({
-    neutral: {
-      block: [
-        new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), clear, colorMat),
-        new GenericUIBlock(util.vec2.make(slio,h+sliv), util.vec2.make(sliw,slih), white, colorMat),
-        new GenericUIBlock(util.vec2.make(slio,h+sliv), util.vec2.make(slid,slih), swhite, colorMat)
-      ],
-      text:  [new GenericUIText(util.vec2.make(o,h+v), s, swhite, fontName, fontMat, FX)]
-    },
-    step: protoSlider,
-    onSlider: function(val) { SPEC_SETTINGS.volume.fx = val; },
-    setting: "fx",
-    dragging: false,
-    isHovered: false
-  });
-  h += s;
-  
   var MUSIC        = "Music Volume";
   var MUSIC_LENGTH = util.font.textLength(MUSIC, fontName, s);
   var o = w-MUSIC_LENGTH-a;
@@ -175,6 +152,98 @@ AudioUI.prototype.generate = function() {
     step: protoSlider,
     onSlider: function(val) { SPEC_SETTINGS.volume.music = val; },
     setting: "music",
+    dragging: false,
+    isHovered: false
+  });
+  h += s;
+  
+  var ANNOUNCER        = "Announcer Volume";
+  var ANNOUNCER_LENGTH = util.font.textLength(ANNOUNCER, fontName, s);
+  var o = w-ANNOUNCER_LENGTH-a;
+  
+  var slid = sliw*SPEC_SETTINGS.volume.announcer;
+  
+  menuContainer.add({
+    neutral: {
+      block: [
+        new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), clear, colorMat),
+        new GenericUIBlock(util.vec2.make(slio,h+sliv), util.vec2.make(sliw,slih), white, colorMat),
+        new GenericUIBlock(util.vec2.make(slio,h+sliv), util.vec2.make(slid,slih), swhite, colorMat)
+      ],
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, swhite, fontName, fontMat, ANNOUNCER)]
+    },
+    step: protoSlider,
+    onSlider: function(val) { SPEC_SETTINGS.volume.announcer = val; },
+    setting: "announcer",
+    dragging: false,
+    isHovered: false
+  });
+  h += s;
+  
+  var UI        = "UI Volume";
+  var UI_LENGTH = util.font.textLength(UI, fontName, s);
+  var o = w-UI_LENGTH-a;
+  
+  var slid = sliw*SPEC_SETTINGS.volume.ui;
+  
+  menuContainer.add({
+    neutral: {
+      block: [
+        new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), clear, colorMat),
+        new GenericUIBlock(util.vec2.make(slio,h+sliv), util.vec2.make(sliw,slih), white, colorMat),
+        new GenericUIBlock(util.vec2.make(slio,h+sliv), util.vec2.make(slid,slih), swhite, colorMat)
+      ],
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, swhite, fontName, fontMat, UI)]
+    },
+    step: protoSlider,
+    onSlider: function(val) { SPEC_SETTINGS.volume.ui = val; },
+    setting: "ui",
+    dragging: false,
+    isHovered: false
+  });
+  h += s;
+  
+  var VOICE        = "Voice Volume";
+  var VOICE_LENGTH = util.font.textLength(VOICE, fontName, s);
+  var o = w-VOICE_LENGTH-a;
+  
+  var slid = sliw*SPEC_SETTINGS.volume.voice;
+  
+  menuContainer.add({
+    neutral: {
+      block: [
+        new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), clear, colorMat),
+        new GenericUIBlock(util.vec2.make(slio,h+sliv), util.vec2.make(sliw,slih), white, colorMat),
+        new GenericUIBlock(util.vec2.make(slio,h+sliv), util.vec2.make(slid,slih), swhite, colorMat)
+      ],
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, swhite, fontName, fontMat, VOICE)]
+    },
+    step: protoSlider,
+    onSlider: function(val) { SPEC_SETTINGS.volume.voice = val; },
+    setting: "voice",
+    dragging: false,
+    isHovered: false
+  });
+  h += s;
+  
+  var FX        = "FX Volume";
+  var FX_LENGTH = util.font.textLength(FX, fontName, s);
+  var o = w-FX_LENGTH-a;
+  
+  var slid = sliw*SPEC_SETTINGS.volume.fx;
+  
+  menuContainer.add({
+    neutral: {
+      block: [
+        new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), clear, colorMat),
+        new GenericUIBlock(util.vec2.make(slio,h+sliv), util.vec2.make(sliw,slih), white, colorMat),
+        new GenericUIBlock(util.vec2.make(slio,h+sliv), util.vec2.make(slid,slih), swhite, colorMat)
+      ],
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, swhite, fontName, fontMat, FX)]
+    },
+    step: protoSlider,
+    onSlider: function(val) { SPEC_SETTINGS.volume.fx = val; },
+    setting: "fx",
     dragging: false,
     isHovered: false
   });

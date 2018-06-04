@@ -57,3 +57,8 @@ ParticleSlash.prototype.getDraw = function(geometry, decals, lights, bounds) {
     geometry.push({model: part.model, material: part.material, uniforms: partUniformData});
   }
 };
+
+ParticleSlash.prototype.active = Particle.prototype.active;
+
+/* Used by EffectDefinition.js */
+ParticleSlash.fxId = "particle";

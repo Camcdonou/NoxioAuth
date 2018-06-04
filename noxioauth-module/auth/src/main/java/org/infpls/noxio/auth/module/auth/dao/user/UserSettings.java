@@ -16,7 +16,7 @@ public class UserSettings {
   /* This constructor creates a usersettings with all default values. */
   public UserSettings(final String uid) {
     this.uid = uid;
-    volume = new Volume(.9f, .5f, .75f, .75f, .75f);
+    volume = new Volume(.9f, .5f, .75f, .75f, .75f, .75f);
     graphics = new Graphics(1f, 1f, 1f, 2048, false);
     control = new Control(false, 70, 68, 32, 84, 83, 192);
     game = new Game(0, 0, 0, false, null);
@@ -31,6 +31,7 @@ public class UserSettings {
       ((BigDecimal)data.get("VOLMUSIC")).floatValue(),
       ((BigDecimal)data.get("VOLVOICE")).floatValue(),
       ((BigDecimal)data.get("VOLANNOUNCER")).floatValue(),
+            0.75f,
       ((BigDecimal)data.get("VOLFX")).floatValue()
     );
     graphics = new Graphics(
@@ -67,7 +68,7 @@ public class UserSettings {
   /* Some fields are purposefully ignored such as uid, or customSoundFile */
   public UserSettings(final UserSettings source, final UserSettings edited) {
     this.uid = source.uid;
-    volume = new Volume(edited.volume.master, edited.volume.music, edited.volume.voice, edited.volume.announcer, edited.volume.fx);
+    volume = new Volume(edited.volume.master, edited.volume.music, edited.volume.voice, edited.volume.announcer, edited.volume.ui, edited.volume.fx);
     graphics = new Graphics(edited.graphics.upGame, edited.graphics.upUi, edited.graphics.upSky, edited.graphics.shadowSize, edited.graphics.safeMode);
     control = new Control(edited.control.enableGamepad, edited.control.actionA, edited.control.actionB, edited.control.jump, edited.control.taunt, edited.control.toss, edited.control.scoreboard);
     game = new Game(edited.game.color, edited.game.redColor, edited.game.blueColor, edited.game.useCustomSound, source.game.customSoundFile);
@@ -75,12 +76,13 @@ public class UserSettings {
   }
   
   public class Volume {
-    public final float master, music, voice, announcer, fx;
-    public Volume(float ma, float mu, float vo, float an, float f) {
+    public final float master, music, voice, announcer, ui, fx;
+    public Volume(float ma, float mu, float vo, float an, float u, float f) {
       master = Math.min(1f, Math.max(0f, ma));
       music = Math.min(1f, Math.max(0f, mu));
       voice = Math.min(1f, Math.max(0f, vo));
       announcer = Math.min(1f, Math.max(0f, an));
+      ui = Math.min(1f, Math.max(0f, u));
       fx = Math.min(1f, Math.max(0f, f));
     }
   }

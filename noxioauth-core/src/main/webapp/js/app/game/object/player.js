@@ -4,8 +4,7 @@
 /* global GameObject */
 /* global Decal */
 /* global ColorDecal */
-/* global ParticleAirJump */
-/* global ParticleBloodSplat */
+/* global NxFx */
 
 /* Define PlayerObject class */
 /* PlayerObject is an abstract class and should never actually be created. 
@@ -33,27 +32,10 @@ function PlayerObject(game, oid, pos, permutation, team, color) {
   this.objective = false;   // If this is flagged then this played is considered a gametype "objective" and will be globally visible and marked.
 
   /* Timers */
-
-  /* Effects */
-  this.airEffect = {
-    effect: new Effect([
-      {type: "particle", class: ParticleAirJump, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: false, delay: 0, length: 30}
-    ], false),
-    offset: util.vec3.make(0,0,0),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.airEffect);
   
-  this.bloodEffect = {
-    effect: new Effect([
-      {type: "particle", class: ParticleBloodSplat, params: [this.game, "<vec3 pos>", "<vec3 vel>"], update: function(prt){}, attachment: false, delay: 0, length: 300},
-      {type: "decal", class: Decal, params: [this.game, this.game.display.getMaterial("character.player.decal.bloodsplat"), "<vec3 pos>", util.vec3.make(0.0, 0.0, 1.0), 1.5, Math.random()*6.28319], update: function(dcl){}, attachment: false, delay: 0, length: 300}
-    ], false),
-    offset: util.vec3.make(0,0,0.25),
-    trigger: PlayerObject.prototype.effectTrigger};
-  this.effects.push(this.bloodEffect);
-  
+  /* Decal */
   var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
-  this.targetCircle = new ColorDecal(this.game, this.game.display.getMaterial("character.player.decal.targetcircle"), util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), util.vec3.make(0.0, 0.0, 1.0), 1.1, angle, util.vec4.make(1,1,1,1));
+  this.targetCircle = new Decal(this.game, "character.player.decal.targetcircle", util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), util.vec3.make(0.0, 0.0, 1.0), 1.1, angle, util.vec4.make(1,1,1,1), 15, 0, 0);
 
   /* Visual Hitboxes */
   this.hitboxMat = this.game.display.getMaterial("multi.hitbox.hitbox");
@@ -62,10 +44,6 @@ function PlayerObject(game, oid, pos, permutation, team, color) {
   this.hitboxScale = 1;
   this.hitBoxAngle = 0;
   this.drawHitbox = undefined;
-};
-
-PlayerObject.prototype.effectTrigger = function(pos, vel) {
-  this.effect.trigger(util.vec3.add(this.offset, pos), vel);
 };
 
 PlayerObject.prototype.update = function(data) {
@@ -77,9 +55,9 @@ PlayerObject.prototype.update = function(data) {
   
   /* Step Effects */
   var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
-  this.targetCircle.move(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1, angle);
+  this.targetCircle.step(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1, angle);
   for(var i=0;i<this.effects.length;i++) {
-    this.effects[i].effect.step(util.vec3.add(this.effects[i].offset, util.vec2.toVec3(this.pos, this.height)), util.vec2.toVec3(this.vel, this.vspeed));
+    this.effects[i].step(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
   }
   
   /* UI */
@@ -109,12 +87,19 @@ PlayerObject.prototype.parseUpd = function(data) {
 
 PlayerObject.prototype.effectSwitch = function(e) {
   switch(e) {
-    case "air" : { this.air(); break; }
-    case "jmp" : { this.jump(); break; }
-    case "stn" : { this.stun(); break; }
-    case "obj" : { this.objective = true; this.color = util.kalide.compressColors(2, 4, 5, 6, 8); break; }
-    case "jbo" : { this.objective = false; this.color = 0; break; }
-    default : { main.menu.warning.show("Invalid effect value: '" + e + "' @ Player.js :: effectSwitch()"); break; }
+    case "htg" : { this.stunGeneric(); return true; }
+    case "hts" : { this.stunSlash(); return true; }
+    case "hte" : { this.stunElectric(); return true; }
+    case "htf" : { this.stunFire(); return true; }
+    case "crt" : { this.criticalHit(); return true; }
+    case "air" : { this.air(); return true; }
+    case "jmp" : { this.jump(); return true; }
+    case "lnd" : { this.land(); return true; }
+    case "stn" : { this.stun(); return true; }
+    case "tnt" : { this.taunt(); return true; }
+    case "obj" : { this.objective = true; this.color = util.kalide.compressColors(2, 4, 5, 6, 8); return true; }
+    case "jbo" : { this.objective = false; this.color = 0; return true; }
+    default : { main.menu.warning.show("Invalid effect value: '" + e + "' @ Player.js :: effectSwitch()"); return false; }
   }
 };
 
@@ -122,15 +107,47 @@ PlayerObject.prototype.timers = function() { /* Override me daddy~ */ };
 PlayerObject.prototype.ui = function() { /* Me too daddy~ */ };
 
 PlayerObject.prototype.air = function() {
-  this.airEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+  this.effects.push(NxFx.player.airJump.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
 PlayerObject.prototype.jump = function() {
-  this.jumpEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+  this.effects.push(NxFx.player.jump.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+
+PlayerObject.prototype.land = function() {
+  this.effects.push(NxFx.player.land.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
 PlayerObject.prototype.stun = function() {
-  this.stunEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+  
+};
+
+PlayerObject.prototype.stunGeneric = function() {
+  this.effects.push(NxFx.hit.generic.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.stun();
+};
+
+PlayerObject.prototype.stunSlash = function() {
+  this.effects.push(NxFx.hit.slash.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.stun();
+};
+
+PlayerObject.prototype.stunElectric = function() {
+  this.effects.push(NxFx.hit.electric.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.stun();
+};
+
+PlayerObject.prototype.stunFire = function() {
+  this.effects.push(NxFx.hit.fire.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.stun();
+};
+
+PlayerObject.prototype.criticalHit = function() {
+  this.effects.push(NxFx.hit.critical.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+
+PlayerObject.prototype.taunt = function() {
+  
 };
 
 PlayerObject.prototype.setPos = GameObject.prototype.setPos;
@@ -168,7 +185,7 @@ PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
     ];
     geometry.push({model: this.model, material: this.material, uniforms: playerUniformData});
     for(var i=0;i<this.effects.length;i++) {
-      this.effects[i].effect.getDraw(geometry, decals, lights, bounds);
+      this.effects[i].getDraw(geometry, decals, lights, bounds);
     }
     this.targetCircle.getDraw(decals, bounds);
     if(this.drawHitbox && this.height > -0.5) {
@@ -186,13 +203,8 @@ PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
 
 PlayerObject.prototype.destroy = function() {
   for(var i=0;i<this.effects.length;i++) {
-    this.effects[i].effect.destroy();
+    this.effects[i].destroy();
   }
-  if(this.height > -1.0) {
-    this.bloodEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
-    this.impactDeathEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
-  }
-  else { this.fallDeathEffect.trigger(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)); }
 };
 
 PlayerObject.prototype.type = function() { return "nul"; };

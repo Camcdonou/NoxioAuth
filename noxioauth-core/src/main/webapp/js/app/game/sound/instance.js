@@ -2,7 +2,7 @@
 /* global main */
 
 /* Define Sound Instance Classes */
-function SoundInstance(context, path, soundData, gain, volume) {
+function SoundInstance(context, path, soundData, gain, shift, volume) {
   this.context = context;
   this.path = path;
   this.data = soundData;
@@ -15,17 +15,17 @@ function SoundInstance(context, path, soundData, gain, volume) {
     return;
   }
   
-  this.create(volume);
-  if(gain) { this.volume(gain); }
+  this.create(gain, shift, volume);
 }
 
-SoundInstance.prototype.create = function(volume) {
+SoundInstance.prototype.create = function(gain, shift, volume) {
   var parent = this;
   this.source = this.context.createBufferSource();      // Creates source
   this.source.buffer = this.data.buffer;                // Set source audio
   this.source.onended = function() { parent.playing = false; };
+  this.source.playbackRate.value = 1.+((shift*Math.random())-(shift*0.5));
   this.gain = this.context.createGain();
-  this.gain.gain.value = 1.0;
+  this.gain.gain.value = gain;
   this.source.connect(this.gain);                       // Source -> Gain
   this.gain.connect(volume);                            // Gain -> Global Volume
   this.ready = true;
@@ -53,17 +53,18 @@ SoundInstance.prototype.loop = function(loop) {
 };
 
 /* Define Spatial Sound Instance Classes */
-function SpatialSoundInstance(context, path, soundData, gain, volume) {
-  SoundInstance.call(this, context, path, soundData, gain, volume);
+function SpatialSoundInstance(context, path, soundData, gain, shift, volume) {
+  SoundInstance.call(this, context, path, soundData, gain, shift, volume);
 }
 
-SpatialSoundInstance.prototype.create = function(volume) {
+SpatialSoundInstance.prototype.create = function(gain, shift, volume) {
   var parent = this;
   this.source = this.context.createBufferSource();      // Creates source
   this.source.buffer = this.data.buffer;                // Set sourcea audio
   this.source.onended = function() { parent.playing = false; };
+  this.source.playbackRate.value = 1.+((shift*Math.random())-(shift*0.5));
   this.gain = this.context.createGain();
-  this.gain.gain.value = 1.0;
+  this.gain.gain.value = gain;
   this.panner = this.context.createPanner();
   this.panner.panningModel = 'HRTF';
   this.panner.distanceModel = 'linear';
@@ -112,3 +113,7 @@ SpatialSoundInstance.prototype.play = function(pos) {
 };
 SpatialSoundInstance.prototype.stop = SoundInstance.prototype.stop;
 SpatialSoundInstance.prototype.loop = SoundInstance.prototype.loop;
+
+/* Used by EffectDefinition.js */
+SoundInstance.fxId = "sound";
+SpatialSoundInstance.fxId = "sound";

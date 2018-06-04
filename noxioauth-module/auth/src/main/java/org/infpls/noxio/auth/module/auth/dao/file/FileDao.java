@@ -65,7 +65,7 @@ public class FileDao {
   }
   
   public Resource getFile(Type t, String fn) {
-    Resource rsc = resourceLoader.getResource("file:" + Settable.getFilePath() + t.path + fn + t.ext);
+    Resource rsc = resourceLoader.getResource("file:" + Settable.getFilePath() + t.path + "/" + fn + t.ext);
     return rsc.exists() ? rsc : null;
   }
 }
