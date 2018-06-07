@@ -38,6 +38,7 @@ ParticleDash.prototype.create = function() {
         this.properties.speed *= 0.91;
         this.properties.pos = util.vec3.add(this.properties.pos, util.vec3.scale(this.properties.vel, this.properties.speed));
         this.properties.color.w -= 1.0/18.0;
+        this.properties.tone.w -= 1.0/18.0;
       },
       properties: {pos: util.vec3.add(util.vec3.add(this.pos, util.vec3.scale(norm, i/6)),util.vec3.scale(rand, 0.75)), vel: reverse, scale: 0.55, speed: 0.15, color: colorA(), tone: colorB(), angle: -Math.atan(norm.y/norm.x)}
     });

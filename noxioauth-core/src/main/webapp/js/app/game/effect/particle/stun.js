@@ -12,7 +12,7 @@ ParticleStun.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   
   var shockwaveMat = this.game.display.getMaterial("character.fox.effect.shockwave");
-  var speedLineMat = this.game.display.getMaterial("character.player.effect.star");
+  var speedLineMat = this.game.display.getMaterial("character.generic.effect.star");
   
   var yellow = function() { return {x: 1.00, y: 0.96, z: 0.45, w: 1.0}; };
   

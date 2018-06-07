@@ -69,7 +69,7 @@ Map.prototype.getGeometryNear = function(pos, radius) {
 
 /* Collides a line segment starting at pos moving the magnitude of vel against the map collision and returns a result. */
 /* Primarily used for particle physics and decals. */
-/* Returns collision information object : {intersection: <vec3>, normal: <vec3>} or undefiend if there is no collision */
+/* Returns collision information object : {intersection: <vec3>, normal: <vec3>, reflect: <vec3>} or undefiend if there is no collision */
 Map.prototype.collideVec3 = function(pos, vel) {
   var to = util.vec3.add(pos, vel);
   
@@ -78,14 +78,17 @@ Map.prototype.collideVec3 = function(pos, vel) {
     hit = util.intersection.polygonLine({a: util.vec3.toVec2(pos), b: to}, this.collision.wall[i]);
   }
   if(hit) {
-    return {intersection: util.vec2.toVec3(hit.intersection, to.z), normal: util.vec2.toVec3(hit.normal, 0.0)}; // @TODO: height factor && normal is wrong
+    var ihd = util.vec2.normalize(util.vec2.inverse(util.vec2.subtract(hit.intersection, pos))); // Inverse Hit Directino
+    var dp = util.vec2.dot(hit.normal, ihd);
+    var ref = util.vec2.normalize(util.vec2.subtract(util.vec2.scale(hit.normal, 2*dp), ihd)); // Reflection normal
+    return {intersection: util.vec2.toVec3(hit.intersection, to.z), normal: util.vec2.toVec3(hit.normal, 0.0), reflect: util.vec2.toVec3(ref, vel.z)}; // @TODO: height factor && normal is wrong
   }
   
   var grounded = false;
   for(var i=0;i<this.collision.floor.length;i++) {
     if(util.intersection.pointPoly(to, this.collision.floor[i].v)) { grounded = true; break; } 
   }
-  if(to.z <= 0.0 && grounded) { return {intersection: {x: to.x, y: to.y, z: 0.0}, normal: {x: 0.0, y: 0.0, z: 1.0}}; }
+  if(to.z <= 0.0 && grounded) { return {intersection: {x: to.x, y: to.y, z: 0.0}, normal: {x: 0.0, y: 0.0, z: 1.0}, reflect: util.vec3.normalize(util.vec3.make(vel.x, vel.y, -vel.z))}; }
   
   return undefined;
 };

@@ -8,7 +8,7 @@
 function PlayerInferno(game, oid, pos, team, color) {
   PlayerObject.call(this, game, oid, pos, 0, team, color);
   
-  this.model = this.game.display.getModel("character.player.player");
+  this.model = this.game.display.getModel("character.inferno.inferno");
   this.material = this.game.display.getMaterial("character.inferno.inferno");
   this.icon = this.game.display.getMaterial("character.inferno.ui.iconlarge");
   
@@ -26,7 +26,7 @@ function PlayerInferno(game, oid, pos, team, color) {
 
   /* UI */
   this.uiMeters = [
-    {type: "bar", iconMat: this.game.display.getMaterial("character.player.ui.meterstub"), length: 16, scalar: 1.0}
+    {type: "bar", iconMat: this.game.display.getMaterial("character.generic.ui.meterstub"), length: 16, scalar: 1.0}
   ];
 };
 

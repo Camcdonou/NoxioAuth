@@ -13,6 +13,7 @@ function Particle(game, pos, vel) {
   this.game = game;
   this.pos = pos;
   this.vel = vel;
+  this.frame = 0;
   
   this.delayed = [];    // Particles waiting to be active
   this.particles = [];  // Active particles
@@ -34,6 +35,7 @@ Particle.prototype.pushPart = function(part) {
 /* Final. Inherit this. */
 /* if <vec3 pos> and <vec3 vel> are passed then they update the particle systems values. */
 Particle.prototype.step = function(pos, vel) {
+  this.frame++;
   /* Update position if passed */
   if(pos) { this.pos = pos; }
   if(vel) { this.vel = vel; }

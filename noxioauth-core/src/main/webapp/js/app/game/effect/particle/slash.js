@@ -6,7 +6,6 @@
 /* Define Blip Particle System Class */
 function ParticleSlash(game, pos, vel) {
   Particle.call(this, game, pos, vel);
-  this.frame = 0;
 }
 
 ParticleSlash.prototype.create = function() {
@@ -39,10 +38,7 @@ ParticleSlash.prototype.create = function() {
 
 ParticleSlash.prototype.pushPart = Particle.prototype.pushPart;
 
-ParticleSlash.prototype.step = function(pos, vel) {
-  Particle.prototype.step.call(this, pos, vel);
-  this.frame++;
-};
+ParticleSlash.prototype.step = Particle.prototype.step;
 
 ParticleSlash.prototype.getDraw = function(geometry, decals, lights, bounds) {
   for(var i=0;i<this.particles.length;i++) {

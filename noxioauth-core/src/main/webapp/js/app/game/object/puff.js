@@ -9,7 +9,7 @@
 function PlayerPuff(game, oid, pos, team, color) {
   PlayerObject.call(this, game, oid, pos, 0, team, color);
   
-  this.model = this.game.display.getModel("character.player.player");
+  this.model = this.game.display.getModel("character.generic.generic");
   this.material = this.game.display.getMaterial("character.puff.puff");
   this.icon = this.game.display.getMaterial("character.puff.ui.iconlarge");
   

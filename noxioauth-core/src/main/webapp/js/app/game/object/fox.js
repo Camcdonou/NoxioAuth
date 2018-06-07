@@ -10,7 +10,7 @@
 function PlayerFox(game, oid, pos, team, color) {
   PlayerObject.call(this, game, oid, pos, 0, team, color);
   
-  this.model = this.game.display.getModel("character.player.player");
+  this.model = this.game.display.getModel("character.fox.fox");
   this.material = this.game.display.getMaterial("character.fox.fox");
   this.icon = this.game.display.getMaterial("character.fox.ui.iconlarge");
   

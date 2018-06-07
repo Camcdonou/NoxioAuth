@@ -9,7 +9,7 @@
 function PlayerShiek(game, oid, pos, team, color) {
   PlayerObject.call(this, game, oid, pos, 0, team, color);
   
-  this.model = this.game.display.getModel("character.player.player");
+  this.model = this.game.display.getModel("character.shiek.shiek");
   this.material = this.game.display.getMaterial("character.shiek.shiek");
   this.icon = this.game.display.getMaterial("character.shiek.ui.iconlarge");
   
@@ -27,7 +27,7 @@ function PlayerShiek(game, oid, pos, team, color) {
   /* UI */
   this.uiMeters = [
     {type: "bar", iconMat: this.game.display.getMaterial("character.shiek.ui.meterblip"), length: 12, scalar: 1.0},
-    {type: "bar", iconMat: this.game.display.getMaterial("character.player.ui.meterstub"), length: 8, scalar: 0.0}
+    {type: "bar", iconMat: this.game.display.getMaterial("character.generic.ui.meterstub"), length: 8, scalar: 0.0}
   ];
 };
 

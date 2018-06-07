@@ -21,7 +21,7 @@ NameUI.prototype.refresh = function() {
   var fontMat  = this.game.display.getMaterial("ui.calibri");         // Font material
   var fontName = "Calibri";                                           // Name of this font for text rendering
   
-  var DEFAULTICON = this.game.display.getMaterial("character.player.ui.iconlarge");
+  var DEFAULTICON = this.game.display.getMaterial("character.generic.ui.iconlarge");
   
   var black  = util.vec4.make(0.0, 0.0, 0.0, 0.5);
   var white  = util.vec4.make(1.0, 1.0, 1.0, 0.9);

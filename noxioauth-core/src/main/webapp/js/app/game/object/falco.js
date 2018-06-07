@@ -9,7 +9,7 @@
 function PlayerFalco(game, oid, pos, team, color) {
   PlayerObject.call(this, game, oid, pos, 0, team, color);
   
-  this.model = this.game.display.getModel("character.player.player");
+  this.model = this.game.display.getModel("character.falco.falco");
   this.material = this.game.display.getMaterial("character.falco.falco");
   this.icon = this.game.display.getMaterial("character.falco.ui.iconlarge");
 

@@ -11,7 +11,7 @@ function ParticleAirJump(game, pos, vel) {
 ParticleAirJump.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   
-  var airmat = this.game.display.getMaterial("character.player.effect.airjump");
+  var airmat = this.game.display.getMaterial("character.generic.effect.airjump");
 
   var lightwhite = function(){ return {x: 1.0, y: 1.0, z: 1.0, w: 0.65}; };
   

@@ -8,7 +8,12 @@
 /* Effect definitions. EffectDefinition objects in this class are called ''''''statically'''''' to generate effects. */
 var NxFx = {};
 
+/* global PlayerFox */
 /* global ParticleStun */
+/* global ParticleZap */
+/* global ParticleSlashHit */
+/* global ParticleBurn */
+/* global ParticleCrit */
 NxFx.hit = {
   generic: new EffectDefinition(
     "Hit-Generic", util.vec3.make(0, 0, 0.25), 0, true,
@@ -19,24 +24,32 @@ NxFx.hit = {
   slash: new EffectDefinition(
     "Hit-Slash", util.vec3.make(0, 0, 0.25), 0, true,
     [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.make(1, 1, 1, 0.85), util.vec4.make(0.5, 0.5, 1, 0)], [1.5, 2.0], 15, "fast"], attachment: true, delay: 0},
+      {class: ParticleSlashHit, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", util.vec4.make(1, 1, 1, 1), util.vec4.make(0.5, 0.5, 1, 1)], attachment: true, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", ["multi/hit/slash0.wav", "multi/hit/slash1.wav", "multi/hit/slash2.wav"], 0.5, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   electric: new EffectDefinition(
     "Hit-Electric", util.vec3.make(0, 0, 0.25), 0, true,
     [
+      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerFox.BLIP_COLOR_A, util.vec4.copy3(PlayerFox.BLIP_COLOR_B, 0)], [1.75, 2.5], 24, "slow"], attachment: true, delay: 0},
+      {class: ParticleZap, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerFox.BLIP_COLOR_A, PlayerFox.BLIP_COLOR_B], attachment: true, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", ["multi/hit/electric0.wav", "multi/hit/electric1.wav", "multi/hit/electric2.wav"], 0.5, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   fire: new EffectDefinition(
     "Hit-Fire", util.vec3.make(0, 0, 0.25), 0, true,
     [
+      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerCaptain.FIRE_COLOR_B, util.vec4.copy3(PlayerCaptain.FIRE_COLOR_C, 0)], [1.75, 2.5], 30, "slow"], attachment: true, delay: 0},
+      {class: ParticleBurn, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCaptain.FIRE_COLOR_A, PlayerCaptain.FIRE_COLOR_C], attachment: true, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", ["multi/hit/fire0.wav", "multi/hit/fire1.wav", "multi/hit/fire2.wav"], 0.5, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   critical: new EffectDefinition(
     "Hit-Critical", util.vec3.make(0, 0, 0.25), 0, true,
     [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.make(1,1,1,1), util.vec4.make(1,1,1,0)], [1.75, 2.5], 30, "fast"], attachment: true, delay: 0},
+      {class: ParticleCrit, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", util.vec4.make(1,1,1,1)], attachment: true, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", ["multi/hit/critical0.wav"], 0.5, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
@@ -68,7 +81,7 @@ NxFx.player = {
     "Player-Splat", util.vec3.make(0, 0, 0.25), 0, false,
     [
       {class: ParticleBloodSplat, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: false, delay: 0},
-      {class: Decal, params: ["<game *>", "character.player.decal.bloodsplat", "<vec3 pos>", util.vec3.make(0.0, 0.0, 1.0), 1.5, Math.random()*6.28319 /* @TODO: fixed random */, util.vec4.make(1, 1, 1, 1), 2, 450, 150], attachment: false, delay: 0},
+      {class: Decal, params: ["<game *>", "character.generic.decal.bloodsplat", "<vec3 pos>", util.vec3.make(0.0, 0.0, 1.0), 1.5, Math.random()*6.28319 /* @TODO: fixed random */, util.vec4.make(1, 1, 1, 1), 2, 450, 150], attachment: false, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", ["multi/impact/impact0.wav", "multi/impact/impact1.wav", "multi/impact/impact2.wav"], 0.5, 0.0, "effect"], attachment: false, delay: 0}
     ]
   )

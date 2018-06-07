@@ -6,7 +6,6 @@
 /* Define Smoke Particle System Class */
 function ParticleSleep(game, pos, vel) {
   Particle.call(this, game, pos, vel);
-  this.frame = 0;
 }
 
 ParticleSleep.prototype.create = function() {
@@ -64,10 +63,7 @@ ParticleSleep.prototype.create = function() {
 
 ParticleSleep.prototype.pushPart = Particle.prototype.pushPart;
 
-ParticleSleep.prototype.step = function(pos, vel) {
-  Particle.prototype.step.call(this, pos, vel);
-  this.frame++;
-};
+ParticleSleep.prototype.step = Particle.prototype.step;
 
 ParticleSleep.prototype.getDraw = function(geometry, decals, lights, bounds) {
   for(var i=0;i<this.particles.length;i++) {

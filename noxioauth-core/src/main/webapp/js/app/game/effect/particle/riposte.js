@@ -6,7 +6,6 @@
 /* Define Blip Particle System Class */
 function ParticleRiposte(game, pos, vel) {
   Particle.call(this, game, pos, vel);
-  this.frame = 0;
 }
 
 ParticleRiposte.prototype.create = function() {
@@ -65,10 +64,7 @@ ParticleRiposte.prototype.create = function() {
 
 ParticleRiposte.prototype.pushPart = Particle.prototype.pushPart;
 
-ParticleRiposte.prototype.step = function(pos, vel) {
-  Particle.prototype.step.call(this, pos, vel);
-  this.frame++;
-};
+ParticleRiposte.prototype.step = Particle.prototype.step;
 
 ParticleRiposte.prototype.getDraw = function(geometry, decals, lights, bounds) {
   for(var i=0;i<this.particles.length;i++) {

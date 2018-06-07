@@ -6,7 +6,6 @@
 /* Define Blip Particle System Class */
 function ParticleExplosionSmall(game, pos, vel) {
   Particle.call(this, game, pos, vel);
-  this.frame = 0;
 }
 
 ParticleExplosionSmall.prototype.create = function() {
@@ -23,10 +22,7 @@ ParticleExplosionSmall.prototype.create = function() {
 
 ParticleExplosionSmall.prototype.pushPart = Particle.prototype.pushPart;
 
-ParticleExplosionSmall.prototype.step = function(pos, vel) {
-  Particle.prototype.step.call(this, pos, vel);
-  this.frame++;
-};
+ParticleExplosionSmall.prototype.step = Particle.prototype.step;
 
 ParticleExplosionSmall.prototype.getDraw = function(geometry, decals, lights, bounds) {
   for(var i=0;i<this.particles.length;i++) {

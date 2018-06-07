@@ -483,6 +483,32 @@ Asset.prototype.shader.post = {
   fragment: "precision mediump float;\n\nuniform sampler2D texture6;\nuniform sampler2D texture7;\n\nvarying vec2 vUVworld;\nvarying vec2 vUVui;\n\nvoid main(void) {\n  vec4 world = texture2D(texture6, vUVworld);\n  vec4 ui = texture2D(texture7, vUVui);\n  vec4 color = ((1.0 - ui.a) * world) + (ui * ui.a);\n  gl_FragColor = vec4(color.rgb, 1.0);\n}\n",
 };
 
+/* Source File: particlespriteg */
+Asset.prototype.shader.particlesprite = {
+  name: "particlesprite",
+  attributes: [
+    {type: "vec3", name: "position"},
+    {type: "vec3", name: "texcoord"},
+  ],
+  uniforms: [
+    {type: "mat4", name: "Pmatrix"},
+    {type: "mat4", name: "Vmatrix"},
+    {type: "mat4", name: "Mmatrix"},
+    {type: "mat4", name: "Dmatrix"},
+    {type: "vec3", name: "transform"},
+    {type: "float", name: "scale"},
+    {type: "float", name: "rotation"},
+    {type: "sampler2D", name: "texture0"},
+    {type: "int", name: "frame"},
+    {type: "int", name: "totalSprites"},
+    {type: "int", name: "usedSprites"},
+    {type: "vec4", name: "color"},
+    {type: "vec4", name: "tone"},
+  ],
+  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\nuniform mat4 Dmatrix;\n\nuniform vec3 transform;\nuniform float scale;\nuniform float rotation;\n\nvarying vec3 vPos;\nvarying vec3 vUV;\n\nvec3 rotate(vec3 v, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (v.x * cosDegrees) + (v.y * sinDegrees);\n    float y = (v.x * -sinDegrees) + (v.y * cosDegrees);\n\n    return vec3(x, y, v.z);\n}\n\nvoid main(void) {\n  vec4 cPos = vec4((vec4(rotate(position, rotation)*scale, 1.0)*Dmatrix).xyz+transform, 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\n\nuniform int frame;\nuniform int totalSprites;\nuniform int usedSprites;\n\nuniform vec4 color;\nuniform vec4 tone;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 tex = texture2D(texture0, vec2(vUV.x, (vUV.y/float(totalSprites)) + ((1./float(totalSprites)) * mod(float(frame), float(usedSprites)))));\n  vec4 colored = mix(tone, color, tex.r);\n  colored.a *= tex.a;\n  gl_FragColor = colored;\n}\n",
+};
+
 /* Source File: decalg */
 Asset.prototype.shader.decal = {
   name: "decal",
@@ -797,6 +823,29 @@ Asset.prototype.shader.ironplasma = {
   ],
   vertex: "precision mediump float;\n#define PI 3.1415926535897932384626433832795\n\nattribute vec3 position;\nattribute vec3 texcoord;\nattribute vec3 normal;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\nuniform float rotation;\nuniform float scale;\n\nvarying vec3 vPos;\nvarying vec2 wUV;\nvarying vec2 vUV;\nvarying vec3 vNormal;\n\nvec3 rotateX(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float y = (a.y * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.y * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(a.x, y, z);\n}\n\nvec3 rotateY(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.x * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(x, a.y, z);\n}\n\nvec3 rotateZ(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.y * sinDegrees);\n    float y = (a.x * -sinDegrees) + (a.y * cosDegrees);\n\n    return vec3(x, y, a.z);\n}\n\nvec3 axisAngle(vec3 a, float b) {\n  float x, y, z;\n\n  float s=sin(b);\n  float c=cos(b);\n  float t=1.-c;\n  if ((a.x*a.y*t + a.z*s) > 0.998) { // north pole singularity detected\n      x = 2.*atan(a.x*sin(b/2.),cos(b/2.));\n      y = PI/2.;\n      z = 0.;\n  }\n  else if ((a.x*a.y*t + a.z*s) < -0.998) { // south pole singularity detected\n      x = -2.*atan(a.x*sin(b/2.),cos(b/2.));\n      y = -PI/2.;\n      z = 0.;\n  }\n  else {\n    x = atan(a.y * s - a.x * a.z * t , 1. - (a.y*a.y+ a.z*a.z ) * t);\n    y = asin(a.x * a.y * t + a.z * s) ;\n    z = atan(a.x * s - a.y * a.z * t , 1. - (a.x*a.x + a.z*a.z) * t);\n  }\n  return vec3(x,y,z);\n}\n\n\nvoid main(void) {\n  /* Position */\n  vPos = (rotateZ(position, rotation)*scale)+transform;\n  vec4 cPos = vec4(vPos, 1.);\n\n  /* Geom Normal */\n  vNormal=normalize(rotateZ(normal, rotation));\n\n  /* Texture Coordinates */\n  vUV = texcoord.st;\n  vec3 up = vec3(0.,0.,1.);\n  vec3 axis = cross(up, vNormal);\n  float angle = acos(dot(up, vNormal));\n  vec3 axAng = axisAngle(axis, angle);\n  wUV = rotateX(rotateZ(rotateY(vPos, axAng.x), axAng.y), -axAng.z).st;\n\n  /* Final */\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
   fragment: "precision mediump float;\n#define PI 3.1415926535897932384626433832795\n\n/* Texture Samples */\nuniform sampler2D texture0;      // Edge\nuniform sampler2D texture1;      // Multi\nuniform sampler2D texture2;      // Mask\nuniform sampler2D texture5;      // Shadowmap Depth Texture\n\n/* General */\nuniform int  frame;\nvarying vec3 vPos;\nvarying vec2 wUV;\nvarying vec2 vUV;\nvarying vec3 vNormal;\n\nvec3 rotateX(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float y = (a.y * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.y * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(a.x, y, z);\n}\n\nvec3 rotateY(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.x * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(x, a.y, z);\n}\n\nvec3 rotateZ(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.y * sinDegrees);\n    float y = (a.x * -sinDegrees) + (a.y * cosDegrees);\n\n    return vec3(x, y, a.z);\n}\n\nvec3 axisAngle(vec3 a, float b) {\n  float x, y, z;\n\n  float s=sin(b);\n  float c=cos(b);\n  float t=1.-c;\n  if ((a.x*a.y*t + a.z*s) > 0.998) { // north pole singularity detected\n      x = 2.*atan(a.x*sin(b/2.),cos(b/2.));\n      y = PI/2.;\n      z = 0.;\n  }\n  else if ((a.x*a.y*t + a.z*s) < -0.998) { // south pole singularity detected\n      x = -2.*atan(a.x*sin(b/2.),cos(b/2.));\n      y = -PI/2.;\n      z = 0.;\n  }\n  else {\n    x = atan(a.y * s - a.x * a.z * t , 1. - (a.y*a.y+ a.z*a.z ) * t);\n    y = asin(a.x * a.y * t + a.z * s) ;\n    z = atan(a.x * s - a.y * a.z * t , 1. - (a.x*a.x + a.z*a.z) * t);\n  }\n  return vec3(x,y,z);\n}\n\n\nvoid main(void) {\n\n  /* Texture Samples */\n  float ff = float(frame);\n  vec2  gt = vec2(ff*0.00147, .5);\n  vec3 mask       = texture2D(texture2, -vUV).rgb;\n  float multiR     = texture2D(texture1, (wUV+vec2(ff*0.00113, ff*0.00097))*1.).r;\n  float multiG     = texture2D(texture1, (wUV+vec2(-ff*0.00013, ff*0.00267))*1.).g;\n  float multiB     = texture2D(texture1, (wUV+vec2(ff*0.00211, -ff*0.00143))*1.).b;\n  float multiA     = texture2D(texture1, (wUV+vec2(-ff*0.00171, -ff*0.00123)*1.)*-1.).r; /* @TODO: Yeah I know... remind me to add an A channel to it */\n  vec4  texGlowA   = vec4(texture2D(texture0, gt).rgb, .1);\n  vec4  texGlowB   = vec4(texture2D(texture0, gt+vec2(.5, 0.)).rgb, 1.);\n  vec4  texGlowC   = vec4(texture2D(texture0, gt).rgb, .2);\n\n  float sum = multiR + multiG + multiB + multiA;\n  float plasGlow = pow(1.-(sin(sum*PI)*(1.-sin(sum*(PI/2.))*1.-sin(sum*(PI/3.)))), 16.);\n  \n  float blend = min(max(0.0001, plasGlow), 1.);\n  vec4 glow = mix(mix(texGlowA, texGlowB, min(max(0.0001, blend*16.), 1.)), vec4((texGlowC.rgb+vec3(.15))*((sin(ff*.0127)*.25)+1.5), texGlowC.a), blend);\n  glow.a *= mask.r;\n\n  /* Finalize */\n  gl_FragColor = vec4(glow.rgb, min(1., glow.a+mask.g));\n}\n",
+};
+
+/* Source File: particlemodelg */
+Asset.prototype.shader.particlemodel = {
+  name: "particlemodel",
+  attributes: [
+    {type: "vec3", name: "position"},
+    {type: "vec3", name: "texcoord"},
+  ],
+  uniforms: [
+    {type: "mat4", name: "Pmatrix"},
+    {type: "mat4", name: "Vmatrix"},
+    {type: "mat4", name: "Mmatrix"},
+    {type: "mat4", name: "Dmatrix"},
+    {type: "vec3", name: "transform"},
+    {type: "float", name: "scale"},
+    {type: "vec3", name: "angle"},
+    {type: "sampler2D", name: "texture0"},
+    {type: "vec4", name: "color"},
+    {type: "vec4", name: "tone"},
+  ],
+  vertex: "precision mediump float;\n#define PI 3.1415926535897932384626433832795\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\nuniform mat4 Dmatrix;\n\nuniform vec3 transform;\nuniform float scale;\nuniform vec3 angle;\n\nvarying vec3 vPos;\nvarying vec3 vUV;\n\nvec3 rotateX(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float y = (a.y * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.y * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(a.x, y, z);\n}\n\nvec3 rotateY(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.x * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(x, a.y, z);\n}\n\nvec3 rotateZ(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.y * sinDegrees);\n    float y = (a.x * -sinDegrees) + (a.y * cosDegrees);\n\n    return vec3(x, y, a.z);\n}\n\n\nvoid main(void) {\n  vec3 hacky = rotateX(rotateZ(rotateY(position, angle.x), angle.y), -angle.z);\n\n  vec4 cPos = vec4((hacky*scale)+transform, 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\n\nuniform vec4 color;\nuniform vec4 tone;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 tex = texture2D(texture0, vUV.st);\n  vec4 colored = mix(tone, color, tex.r);\n  colored.a *= tex.a;\n  gl_FragColor = colored;\n}\n",
 };
 
 /* Source File: debugg */

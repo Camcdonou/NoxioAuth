@@ -162,6 +162,10 @@ util.vec3.dot = function(a, b) {
   return (a.x*b.x)+(a.y*b.y)+(a.z*b.z);
 };
 
+util.vec3.cross = function(a, b) {
+  return {x: (a.y*b.z)-(a.z*b.y), y: (a.z*b.x)-(a.x*b.z), z: (a.x*b.y)-(a.y*b.x)};
+};
+
 util.vec3.distance = function(a, b) {
   return util.vec3.magnitude(util.vec3.subtract(a, b));
 };
@@ -210,6 +214,36 @@ util.vec3.rotateZ = function(a, r) {
     var y = (a.x * -sinDegrees) + (a.y * cosDegrees);
 
     return {x: x, y: y, z: a.z};
+};
+
+util.vec3.angle = function(A, B) {
+  var An = util.vec3.normalize(A);
+  var Bn = util.vec3.normalize(B);
+  
+  var a = util.vec3.normalize(util.vec3.cross(An, Bn));     // Axis
+  var b = Math.acos(util.vec3.dot(An, Bn));                 // Angle
+  
+  var x, y, z;
+
+  var s=Math.sin(b);
+  var c=Math.cos(b);
+  var t=1.-c;
+  if ((a.x*a.y*t + a.z*s) > 0.998) { // north pole singularity detected
+      x = 2.*Math.atan2(a.x*Math.sin(b/2.),Math.cos(b/2.));
+      y = Math.PI/2.;
+      z = 0.;
+  }
+  else if ((a.x*a.y*t + a.z*s) < -0.998) { // south pole singularity detected
+      x = -2.*Math.atan2(a.x*Math.sin(b/2.),Math.cos(b/2.));
+      y = -Math.PI/2.;
+      z = 0.;
+  }
+  else {
+    x = Math.atan2(a.y * s - a.x * a.z * t , 1. - (a.y*a.y + a.z*a.z) * t); // rotateZ ry
+    y = Math.asin(a.x * a.y * t + a.z * s) ;                                // rotateX rz
+    z = Math.atan2(a.x * s - a.y * a.z * t , 1. - (a.x*a.x + a.z*a.z) * t); // rotateY rx
+  }
+  return util.vec3.make(x,y,z);
 };
 
 util.vec3.toQuat = function(a) {

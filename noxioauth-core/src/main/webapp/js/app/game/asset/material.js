@@ -12,17 +12,18 @@ Asset.prototype.material.object.target = {};
 Asset.prototype.material.ui = {};
 Asset.prototype.material.multi = {};
 Asset.prototype.material.multi.hitbox = {};
+Asset.prototype.material.multi.hit = {};
 Asset.prototype.material.character = {};
+Asset.prototype.material.character.generic = {};
+Asset.prototype.material.character.generic.ui = {};
+Asset.prototype.material.character.generic.decal = {};
+Asset.prototype.material.character.generic.effect = {};
 Asset.prototype.material.character.puff = {};
 Asset.prototype.material.character.puff.ui = {};
 Asset.prototype.material.character.puff.effect = {};
 Asset.prototype.material.character.falco = {};
 Asset.prototype.material.character.falco.ui = {};
 Asset.prototype.material.character.falco.effect = {};
-Asset.prototype.material.character.player = {};
-Asset.prototype.material.character.player.ui = {};
-Asset.prototype.material.character.player.decal = {};
-Asset.prototype.material.character.player.effect = {};
 Asset.prototype.material.character.marth = {};
 Asset.prototype.material.character.marth.ui = {};
 Asset.prototype.material.character.marth.effect = {};
@@ -169,6 +170,70 @@ Asset.prototype.material.multi.hitbox.hitbox = {
   texture0: "multi/hitbox/hitbox",
 };
 
+/* Source File: critflare.mat */
+Asset.prototype.material.multi.hit.critflare = {
+  name: "multi.hit.critflare",
+  shader: "particle",
+  shadow: false,
+  texture0: "multi/hit/critflare",
+};
+
+/* Source File: line.mat */
+Asset.prototype.material.multi.hit.line = {
+  name: "multi.hit.line",
+  shader: "particlemodel",
+  shadow: false,
+  texture0: "multi/hit/line",
+};
+
+/* Source File: critspark.mat */
+Asset.prototype.material.multi.hit.critspark = {
+  name: "multi.hit.critspark",
+  shader: "particle",
+  shadow: false,
+  texture0: "multi/hit/critspark",
+};
+
+/* Source File: burn.mat */
+Asset.prototype.material.multi.hit.burn = {
+  name: "multi.hit.burn",
+  shader: "particlesprite",
+  shadow: false,
+  texture0: "multi/hit/flame",
+};
+
+/* Source File: slash.mat */
+Asset.prototype.material.multi.hit.slash = {
+  name: "multi.hit.slash",
+  shader: "particlesprite",
+  shadow: false,
+  texture0: "multi/hit/slash",
+};
+
+/* Source File: spark.mat */
+Asset.prototype.material.multi.hit.spark = {
+  name: "multi.hit.spark",
+  shader: "particlemodel",
+  shadow: false,
+  texture0: "multi/hit/spark",
+};
+
+/* Source File: zap.mat */
+Asset.prototype.material.multi.hit.zap = {
+  name: "multi.hit.zap",
+  shader: "particlesprite",
+  shadow: false,
+  texture0: "multi/hit/zap",
+};
+
+/* Source File: smoke.mat */
+Asset.prototype.material.multi.hit.smoke = {
+  name: "multi.hit.smoke",
+  shader: "particlesprite",
+  shadow: false,
+  texture0: "multi/hit/smoke",
+};
+
 /* Source File: post_msaa.mat */
 Asset.prototype.material.multi.post_msaa = {
   name: "multi.post_msaa",
@@ -214,6 +279,80 @@ Asset.prototype.material.multi.debug = {
 };
 
 /* Source File: iconlarge.mat */
+Asset.prototype.material.character.generic.ui.iconlarge = {
+  name: "character.generic.ui.iconlarge",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "character/generic/ui/icon_lg",
+};
+
+/* Source File: meterstub.mat */
+Asset.prototype.material.character.generic.ui.meterstub = {
+  name: "character.generic.ui.meterstub",
+  shader: "simpletrans",
+  shadow: false,
+  texture0: "character/generic/ui/meterstub",
+};
+
+/* Source File: targetcircle.mat */
+Asset.prototype.material.character.generic.decal.targetcircle = {
+  name: "character.generic.decal.targetcircle",
+  shader: "decal_glow",
+  shadow: false,
+  texture0: "character/generic/decal/targetdecal",
+};
+
+/* Source File: bloodsplat.mat */
+Asset.prototype.material.character.generic.decal.bloodsplat = {
+  name: "character.generic.decal.bloodsplat",
+  shader: "decal",
+  shadow: false,
+  texture0: "character/generic/decal/bloodsplat",
+  texture1: "character/generic/decal/bloodsplatnormal",
+};
+
+/* Source File: bloodsplatsmall.mat */
+Asset.prototype.material.character.generic.decal.bloodsplatsmall = {
+  name: "character.generic.decal.bloodsplatsmall",
+  shader: "decal",
+  shadow: false,
+  texture0: "character/generic/decal/bloodsplatsmall",
+  texture1: "character/generic/decal/bloodsplatsmallnormal",
+};
+
+/* Source File: star.mat */
+Asset.prototype.material.character.generic.effect.star = {
+  name: "character.generic.effect.star",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/generic/effect/star",
+};
+
+/* Source File: bloodsplash.mat */
+Asset.prototype.material.character.generic.effect.bloodsplash = {
+  name: "character.generic.effect.bloodsplash",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/generic/effect/bloodsplash",
+};
+
+/* Source File: airjump.mat */
+Asset.prototype.material.character.generic.effect.airjump = {
+  name: "character.generic.effect.airjump",
+  shader: "effect",
+  shadow: false,
+  texture0: "character/generic/effect/airjump",
+};
+
+/* Source File: blooddrop.mat */
+Asset.prototype.material.character.generic.effect.blooddrop = {
+  name: "character.generic.effect.blooddrop",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/generic/effect/blooddrop",
+};
+
+/* Source File: iconlarge.mat */
 Asset.prototype.material.character.puff.ui.iconlarge = {
   name: "character.puff.ui.iconlarge",
   shader: "simpletrans",
@@ -242,8 +381,8 @@ Asset.prototype.material.character.puff.puff = {
   name: "character.puff.puff",
   shader: "player",
   shadow: true,
-  texture0: "multi/default",
-  texture1: "multi/normal",
+  texture0: "character/puff/puff",
+  texture1: "character/puff/puff_normal",
 };
 
 /* Source File: sleep.mat */
@@ -283,8 +422,8 @@ Asset.prototype.material.character.falco.falco = {
   name: "character.falco.falco",
   shader: "player",
   shadow: true,
-  texture0: "multi/default",
-  texture1: "multi/normal",
+  texture0: "character/falco/falco",
+  texture1: "character/falco/falco_normal",
 };
 
 /* Source File: charge.mat */
@@ -294,80 +433,6 @@ Asset.prototype.material.character.falco.effect.charge = {
   shadow: false,
   texture0: "character/falco/effect/chargemask",
   texture1: "character/falco/effect/firecolor",
-};
-
-/* Source File: iconlarge.mat */
-Asset.prototype.material.character.player.ui.iconlarge = {
-  name: "character.player.ui.iconlarge",
-  shader: "simpletrans",
-  shadow: false,
-  texture0: "character/player/ui/icon_lg",
-};
-
-/* Source File: meterstub.mat */
-Asset.prototype.material.character.player.ui.meterstub = {
-  name: "character.player.ui.meterstub",
-  shader: "simpletrans",
-  shadow: false,
-  texture0: "character/player/ui/meterstub",
-};
-
-/* Source File: targetcircle.mat */
-Asset.prototype.material.character.player.decal.targetcircle = {
-  name: "character.player.decal.targetcircle",
-  shader: "decal_glow",
-  shadow: false,
-  texture0: "character/player/decal/targetdecal",
-};
-
-/* Source File: bloodsplat.mat */
-Asset.prototype.material.character.player.decal.bloodsplat = {
-  name: "character.player.decal.bloodsplat",
-  shader: "decal",
-  shadow: false,
-  texture0: "character/player/decal/bloodsplat",
-  texture1: "character/player/decal/bloodsplatnormal",
-};
-
-/* Source File: bloodsplatsmall.mat */
-Asset.prototype.material.character.player.decal.bloodsplatsmall = {
-  name: "character.player.decal.bloodsplatsmall",
-  shader: "decal",
-  shadow: false,
-  texture0: "character/player/decal/bloodsplatsmall",
-  texture1: "character/player/decal/bloodsplatsmallnormal",
-};
-
-/* Source File: star.mat */
-Asset.prototype.material.character.player.effect.star = {
-  name: "character.player.effect.star",
-  shader: "particle",
-  shadow: false,
-  texture0: "character/player/effect/star",
-};
-
-/* Source File: bloodsplash.mat */
-Asset.prototype.material.character.player.effect.bloodsplash = {
-  name: "character.player.effect.bloodsplash",
-  shader: "particle",
-  shadow: false,
-  texture0: "character/player/effect/bloodsplash",
-};
-
-/* Source File: airjump.mat */
-Asset.prototype.material.character.player.effect.airjump = {
-  name: "character.player.effect.airjump",
-  shader: "effect",
-  shadow: false,
-  texture0: "character/player/effect/airjump",
-};
-
-/* Source File: blooddrop.mat */
-Asset.prototype.material.character.player.effect.blooddrop = {
-  name: "character.player.effect.blooddrop",
-  shader: "particle",
-  shadow: false,
-  texture0: "character/player/effect/blooddrop",
 };
 
 /* Source File: metercounter.mat */
@@ -399,8 +464,8 @@ Asset.prototype.material.character.marth.marth = {
   name: "character.marth.marth",
   shader: "player",
   shadow: true,
-  texture0: "multi/default",
-  texture1: "multi/normal",
+  texture0: "character/marth/marth",
+  texture1: "character/marth/marth_normal",
 };
 
 /* Source File: shockwave.mat */
@@ -466,8 +531,8 @@ Asset.prototype.material.character.captain.captain = {
   name: "character.captain.captain",
   shader: "player",
   shadow: true,
-  texture0: "multi/default",
-  texture1: "multi/normal",
+  texture0: "character/captain/captain",
+  texture1: "character/captain/captain_normal",
 };
 
 /* Source File: iconlarge.mat */
@@ -491,8 +556,8 @@ Asset.prototype.material.character.shiek.shiek = {
   name: "character.shiek.shiek",
   shader: "player",
   shadow: true,
-  texture0: "multi/default",
-  texture1: "multi/normal",
+  texture0: "character/shiek/shiek",
+  texture1: "character/shiek/shiek_normal",
 };
 
 /* Source File: explode.mat */
@@ -549,7 +614,7 @@ Asset.prototype.material.character.inferno.inferno = {
   shader: "player",
   shadow: true,
   texture0: "character/inferno/inferno",
-  texture1: "multi/normal",
+  texture1: "character/inferno/inferno_normal",
 };
 
 /* Source File: iconlarge.mat */
@@ -581,8 +646,8 @@ Asset.prototype.material.character.fox.fox = {
   name: "character.fox.fox",
   shader: "player",
   shadow: true,
-  texture0: "multi/default",
-  texture1: "multi/normal",
+  texture0: "character/fox/fox",
+  texture1: "character/fox/fox_normal",
 };
 
 /* Source File: shockwave.mat */
