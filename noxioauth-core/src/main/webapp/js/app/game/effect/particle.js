@@ -50,7 +50,7 @@ Particle.prototype.step = function(pos, vel) {
   for(var i=0;i<this.delayed.length;i++) {
     if(--this.delayed[i].delay <= 0) {
       this.particles.push(this.delayed[i]);
-      this.delayed.splice(i,1);
+      this.delayed.splice(i--,1);
     }
   }
 };

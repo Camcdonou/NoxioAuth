@@ -42,19 +42,25 @@ ParticleBloodSplat.prototype.create = function() {
         this.properties.pos = util.vec3.add(this.properties.pos, this.properties.vel);
         this.properties.color.w -= 1.0/60.0;
       },
-      properties: {pos: util.vec3.add(this.pos, util.vec3.scale(rand, 0.25)), scale: (Math.random()*0.5)+0.35, vel: util.vec3.scale(rand, speed), angle: Math.random()*6.28319, color: white()}
+      properties: {pos: util.vec3.add(this.pos, util.vec3.scale(rand, 0.25)), scale: (Math.random()*0.5)+0.35, vel: util.vec3.add(util.vec3.scale(this.vel, 0.45), util.vec3.scale(rand, speed)), angle: Math.random()*6.28319, color: white()}
     });
   }
 };
 
 ParticleBloodSplat.prototype.createBloodSplat = function(pos, normal) {
-  var decal = new Decal(this.game, this.game.display.getMaterial("character.generic.decal.bloodsplatsmall"), pos, normal, (Math.random()*0.5)+0.35, Math.random()*6.28319);
+  var decal = new Decal(this.game, "character.generic.decal.bloodsplatsmall", pos, normal, (Math.random()*0.5)+0.35, Math.random()*6.28319, util.vec4.make(1, 1, 1, 1), 2, 450, 150);
   this.decals.push(decal);
 };
 
 ParticleBloodSplat.prototype.pushPart = Particle.prototype.pushPart;
 
-ParticleBloodSplat.prototype.step = Particle.prototype.step;
+ParticleBloodSplat.prototype.step = function(pos, vel) {
+  Particle.prototype.step.call(this, pos, vel);
+  for(var i=0;i<this.decals.length;i++) {
+    if(this.decals[i].active()) { this.decals[i].step(); }
+    else { this.decals.splice(i--, 1); }
+  }
+};
 
 ParticleBloodSplat.prototype.getDraw = function(geometry, decals, lights, bounds) {
   var cameraZ = this.game.display.camera.rot.z;
@@ -73,7 +79,9 @@ ParticleBloodSplat.prototype.getDraw = function(geometry, decals, lights, bounds
   }
 };
 
-ParticleBloodSplat.prototype.active = Particle.prototype.active;
+ParticleBloodSplat.prototype.active = function() {
+  return this.particles.length > 0 || this.delayed.length > 0 || this.decals.length > 0;
+};
 
 /* Used by EffectDefinition.js */
 ParticleBloodSplat.fxId = "particle";

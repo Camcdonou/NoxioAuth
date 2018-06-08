@@ -69,6 +69,8 @@ PlayerFox.prototype.stunSlash = PlayerObject.prototype.stunSlash;
 PlayerFox.prototype.stunElectric = PlayerObject.prototype.stunElectric;
 PlayerFox.prototype.stunFire = PlayerObject.prototype.stunFire;
 PlayerFox.prototype.criticalHit = PlayerObject.prototype.criticalHit;
+PlayerFox.prototype.explode = PlayerObject.prototype.explode;
+PlayerFox.prototype.fall = PlayerObject.prototype.fall;
 
 PlayerFox.prototype.blip = function() {
   this.effects.push(NxFx.fox.blip.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));

@@ -81,6 +81,8 @@ PlayerFalco.prototype.stunSlash = PlayerObject.prototype.stunSlash;
 PlayerFalco.prototype.stunElectric = PlayerObject.prototype.stunElectric;
 PlayerFalco.prototype.stunFire = PlayerObject.prototype.stunFire;
 PlayerFalco.prototype.criticalHit = PlayerObject.prototype.criticalHit;
+PlayerFalco.prototype.explode = PlayerObject.prototype.explode;
+PlayerFalco.prototype.fall = PlayerObject.prototype.fall;
 
 PlayerFalco.prototype.blip = function() {
   this.effects.push(NxFx.falco.blip.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));

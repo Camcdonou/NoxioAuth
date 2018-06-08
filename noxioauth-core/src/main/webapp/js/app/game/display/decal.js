@@ -48,7 +48,7 @@ Decal.prototype.getDraw = function(decals, bounds) {
 };
 
 Decal.prototype.active = function() {
-  return this.age <= this.length || length === 0;
+  return this.age <= this.length || this.length === 0;
 };
 
 /* Used by EffectDefinition.js */

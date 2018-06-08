@@ -355,9 +355,9 @@ Display.prototype.draw = function() {
     if(!this.game.objects[i].hide) { this.game.objects[i].getDraw(objGeom, decals, lights, bounds); }
   }
   for(var i=0;i<this.game.effects.length;i++) {
-    var exbounds = util.matrix.expandPolygon(bounds, this.game.effects[i].radius);
+    var exbounds = util.matrix.expandPolygon(bounds, 1.0);  /* @TODO: fixed bounding radius for effects... */
     if(util.intersection.pointPoly(this.game.effects[i].pos, exbounds)) {
-      this.game.effects[i].effect.getDraw(objGeom, decals, lights, bounds);
+      this.game.effects[i].getDraw(objGeom, decals, lights, bounds);
     }
   }
   geometry = mapGeom.concat(objGeom);

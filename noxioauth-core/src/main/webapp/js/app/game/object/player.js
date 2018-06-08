@@ -57,7 +57,8 @@ PlayerObject.prototype.update = function(data) {
   var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
   this.targetCircle.step(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 1.1, angle);
   for(var i=0;i<this.effects.length;i++) {
-    this.effects[i].step(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+    if(this.effects[i].active()) { this.effects[i].step(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)); }
+    else { this.effects.splice(i--, 1); }
   }
   
   /* UI */
@@ -92,6 +93,8 @@ PlayerObject.prototype.effectSwitch = function(e) {
     case "hte" : { this.stunElectric(); return true; }
     case "htf" : { this.stunFire(); return true; }
     case "crt" : { this.criticalHit(); return true; }
+    case "xpl" : { this.explode(); return true; }
+    case "fal" : { this.fall(); return true; }
     case "air" : { this.air(); return true; }
     case "jmp" : { this.jump(); return true; }
     case "lnd" : { this.land(); return true; }
@@ -144,6 +147,14 @@ PlayerObject.prototype.stunFire = function() {
 
 PlayerObject.prototype.criticalHit = function() {
   this.effects.push(NxFx.hit.critical.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+
+PlayerObject.prototype.explode = function() {
+  this.game.putEffect(NxFx.player.explode.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+
+PlayerObject.prototype.fall = function() {
+  this.effects.push(NxFx.player.fall.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
 PlayerObject.prototype.taunt = function() {

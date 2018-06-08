@@ -65,6 +65,8 @@ PlayerInferno.prototype.stunSlash = PlayerObject.prototype.stunSlash;
 PlayerInferno.prototype.stunElectric = PlayerObject.prototype.stunElectric;
 PlayerInferno.prototype.stunFire = PlayerObject.prototype.stunFire;
 PlayerInferno.prototype.criticalHit = PlayerObject.prototype.criticalHit;
+PlayerInferno.prototype.explode = PlayerObject.prototype.explode;
+PlayerInferno.prototype.fall = PlayerObject.prototype.fall;
 
 PlayerInferno.prototype.setPos = PlayerObject.prototype.setPos;
 PlayerInferno.prototype.setVel = PlayerObject.prototype.setVel;

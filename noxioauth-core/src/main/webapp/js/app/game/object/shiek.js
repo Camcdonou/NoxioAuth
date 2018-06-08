@@ -77,6 +77,8 @@ PlayerShiek.prototype.stunSlash = PlayerObject.prototype.stunSlash;
 PlayerShiek.prototype.stunElectric = PlayerObject.prototype.stunElectric;
 PlayerShiek.prototype.stunFire = PlayerObject.prototype.stunFire;
 PlayerShiek.prototype.criticalHit = PlayerObject.prototype.criticalHit;
+PlayerShiek.prototype.explode = PlayerObject.prototype.explode;
+PlayerShiek.prototype.fall = PlayerObject.prototype.fall;
 
 PlayerShiek.prototype.blip = function() {
   this.effects.push(NxFx.shiek.blip.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));

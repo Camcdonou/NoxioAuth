@@ -84,6 +84,9 @@ FlagObject.prototype.criticalHit = function() {
   this.effects.push(NxFx.hit.critical.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
+FlagObject.prototype.explode = function() { };
+FlagObject.prototype.fall = function() { };
+
 FlagObject.prototype.setPos = GameObject.prototype.setPos;
 FlagObject.prototype.setVel = GameObject.prototype.setVel;
 FlagObject.prototype.setHeight = GameObject.prototype.setHeight;

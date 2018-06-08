@@ -82,6 +82,8 @@ PlayerPuff.prototype.stunSlash = PlayerObject.prototype.stunSlash;
 PlayerPuff.prototype.stunElectric = PlayerObject.prototype.stunElectric;
 PlayerPuff.prototype.stunFire = PlayerObject.prototype.stunFire;
 PlayerPuff.prototype.criticalHit = PlayerObject.prototype.criticalHit;
+PlayerPuff.prototype.explode = PlayerObject.prototype.explode;
+PlayerPuff.prototype.fall = PlayerObject.prototype.fall;
 
 PlayerPuff.prototype.rest = function() {
   this.restEffect = NxFx.puff.rest.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));

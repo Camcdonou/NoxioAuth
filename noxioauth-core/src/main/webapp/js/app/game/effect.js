@@ -89,7 +89,7 @@ EffectDefinition.prototype.trigger = function(game, pos, vel) {
           length: comp.length,
           comp: comp
         };
-        gen.obj.play(pos);
+        if(gen.delay < 1) { gen.obj.play(pos); }
         sounds.push(gen);
         break;
       }
@@ -127,7 +127,7 @@ Effect.prototype.step = function(pos, vel) {
   for(var i=0;i<this.lights.length;i++) {
     var l = this.lights[i];
     if(l.delay > 0) { l.delay--; continue; }
-    if(!l.obj.active()) { this.lights.splice(i--); continue; }
+    if(!l.obj.active()) { this.lights.splice(i--, 1); continue; }
     
     if(l.attachment) { l.obj.step(this.pos, this.vel); }
     else { l.obj.step(); }
@@ -136,7 +136,7 @@ Effect.prototype.step = function(pos, vel) {
   for(var i=0;i<this.particles.length;i++) {
     var p = this.particles[i];
     if(p.delay > 0) { p.delay--; continue; }
-    if(!p.obj.active()) { this.particles.splice(i--); continue; }
+    if(!p.obj.active()) { this.particles.splice(i--, 1); continue; }
     
     if(p.attachment) { p.obj.step(this.pos, this.vel); }
     else { p.obj.step(); }
@@ -145,7 +145,7 @@ Effect.prototype.step = function(pos, vel) {
   for(var i=0;i<this.decals.length;i++) {
     var d = this.decals[i];
     if(d.delay > 0) { d.delay--; continue; }
-    if(!d.obj.active()) { this.decals.splice(i--); continue; }
+    if(!d.obj.active()) { this.decals.splice(i--, 1); continue; }
     
     if(d.attachment) { d.obj.step(this.pos, this.vel); }
     else { d.obj.step(); }
@@ -155,10 +155,9 @@ Effect.prototype.step = function(pos, vel) {
     var s = this.sounds[i];
     if(s.delay > 0) { s.delay--; continue; }
     if(!s.obj.played) { s.obj.play(this.pos); }
-    if(!s.obj.playing && s.obj.played) { this.sounds.splice(i--); continue; }
+    if(!s.obj.playing && s.obj.played) { this.sounds.splice(i--, 1); continue; }
     
     if(s.attachment) { s.obj.position(this.pos); }
-    else { s.obj.step(); }
     s.update(s.obj);
   }
 };

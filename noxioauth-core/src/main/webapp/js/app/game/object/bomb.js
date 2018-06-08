@@ -97,6 +97,9 @@ BombObject.prototype.criticalHit = function() {
   this.effects.push(NxFx.hit.critical.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
+BombObject.prototype.explode = function() { };
+BombObject.prototype.fall = function() { };
+
 BombObject.prototype.setPos = GameObject.prototype.setPos;
 BombObject.prototype.setVel = GameObject.prototype.setVel;
 BombObject.prototype.setHeight = GameObject.prototype.setHeight;
@@ -141,9 +144,9 @@ BombObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
 };
 
 BombObject.prototype.destroy = function() {
-//  for(var i=0;i<this.effects.length;i++) {
-//    this.effects[i].effect.destroy();
-//  }
+  for(var i=0;i<this.effects.length;i++) {
+    this.effects[i].effect.destroy();
+  }
 };
 
 BombObject.prototype.type = function() { return "bmb"; };

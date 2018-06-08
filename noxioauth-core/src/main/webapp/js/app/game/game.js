@@ -186,7 +186,7 @@ NoxioGame.prototype.doUpdate = function(packet) {
   
   /* Step world effects */
   for(var i=0;i<this.effects.length;i++) {
-    if(this.effects[i].effect.active()) { this.effects[i].effect.step(this.effects[i].pos, this.effects[i].vel); }
+    if(this.effects[i].active()) { this.effects[i].step(); }
     else { this.effects.splice(i--, 1); }
   }
   
@@ -361,7 +361,7 @@ NoxioGame.prototype.deleteObject = function(oid) {
 
 /* Places an effect in the world, this effect is updated and rendered until it no longer active. */
 NoxioGame.prototype.putEffect = function(effect) {
-  this.effects.add(effect);
+  this.effects.push(effect);
 };
 
 NoxioGame.prototype.draw = function() {
