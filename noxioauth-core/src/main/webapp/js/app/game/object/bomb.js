@@ -44,6 +44,8 @@ BombObject.prototype.update = function(data) {
   for(var i=0;i<effects.length-1;i++) {
     switch(effects[i]) {
       case "lnd" : { this.land(); break; }
+      case "fal" : { this.fall(); break; }
+      case "xpl" : { this.explode(); break; }
       case "htg" : { this.stunGeneric(); return true; }
       case "hts" : { this.stunSlash(); return true; }
       case "hte" : { this.stunElectric(); return true; }

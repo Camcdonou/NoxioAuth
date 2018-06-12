@@ -35,7 +35,7 @@ function PlayerFalco(game, oid, pos, team, color) {
 PlayerFalco.BLIP_POWER_MAX = 30;
 PlayerFalco.DASH_COOLDOWN_LENGTH = 45;
 PlayerFalco.CHARGE_TIME_LENGTH = 20;
-PlayerFalco.BLIP_COLOR_A = util.vec4.make(0.6666, 0.9058, 1.0, 1.0);
+PlayerFalco.BLIP_COLOR_A = util.vec4.lerp(util.vec4.make(0.6666, 0.9058, 1.0, 1.0), util.vec4.make(1,1,1,1), 0.5);
 PlayerFalco.BLIP_COLOR_B = util.vec4.make(0.4, 0.5450, 1.0, 1.0);
 PlayerFalco.CHARGE_COLOR_A = util.vec4.make(0.8, 0.45, 0.25, 0.15);
 PlayerFalco.CHARGE_COLOR_B = util.vec4.make(0.85, 0.45, 0.25, 0.65);

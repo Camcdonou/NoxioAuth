@@ -75,6 +75,7 @@ AnnounceUI.prototype.generate = function() {
 AnnounceUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 
 AnnounceUI.prototype.step = GenericUI.prototype.step;
+AnnounceUI.prototype.play = GenericUI.prototype.play;
 AnnounceUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
 AnnounceUI.prototype.clear = GenericUI.prototype.clear;

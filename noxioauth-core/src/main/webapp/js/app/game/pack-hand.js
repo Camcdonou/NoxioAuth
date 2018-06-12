@@ -198,5 +198,7 @@ PackHand.prototype.whisper = function(data) {
 /* SYS::ADDCRED | crd */
 PackHand.prototype.credits = function(data) {
   var crds = parseInt(data.shift());
+  var ssfxid = parseInt(data.shift());
+  this.game.ui.credit.add(crds, ssfxid);
   main.stats.credits += crds;
 };

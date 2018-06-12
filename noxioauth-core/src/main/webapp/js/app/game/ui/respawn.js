@@ -95,7 +95,7 @@ RespawnUI.prototype.generate = function() {
       var align = container.makeAlign(window);
       var over = parent.pointInElement(imp.mouse[i].pos, this, window, align);
       if(imp.mouse[i].btn === 0) {
-        if(over) { this.onClick(); return true; }
+        if(over) { this.onClick(); parent.play("ui/button2.wav", 0.5, 0.0); return true; }
         else { this.offClick();    return false; }
       }
       else {
@@ -147,7 +147,8 @@ RespawnUI.prototype.generate = function() {
             new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), white, colorMat),
             new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), sblack, SPEC[i][0].mat)
           ],
-          text:  []
+          text:  [],
+          sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
         },
         step: protoOnClick,
         onClick: function() { parent.game.charSelect = this.charId; },
@@ -186,7 +187,8 @@ RespawnUI.prototype.generate = function() {
             new GenericUIBlock(util.vec2.make(o,hh), util.vec2.make(b,bh), white, colorMat),
             new GenericUIBlock(util.vec2.make(bho,hh), util.vec2.make(bh,bh), sblack, SPEC[i][j].mat)
           ],
-          text:  []
+          text:  [],
+          sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
         },
         step: protoOnClick,
         onClick: function() { parent.game.charSelect = this.charId; },
@@ -204,6 +206,7 @@ RespawnUI.prototype.generate = function() {
 RespawnUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 
 RespawnUI.prototype.step = GenericUI.prototype.step;
+RespawnUI.prototype.play = GenericUI.prototype.play;
 RespawnUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
 RespawnUI.prototype.clear = GenericUI.prototype.clear;

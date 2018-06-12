@@ -207,6 +207,7 @@ ScoreUI.prototype.generate = function() {
 ScoreUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 
 ScoreUI.prototype.step = GenericUI.prototype.step;
+ScoreUI.prototype.play = GenericUI.prototype.play;
 ScoreUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
 ScoreUI.prototype.clear = GenericUI.prototype.clear;

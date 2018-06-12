@@ -62,7 +62,7 @@ DebugUI.prototype.generate = function() {
       if(imp.mouse[i].btn === 0) {
         var align = container.makeAlign(window);
         var over = parent.pointInElement(imp.mouse[i].pos, this, window, align);
-        if(over) { this.onClick(); return true; }
+        if(over) { this.onClick(); parent.play("ui/button1.wav", 0.5, 0.0); return true; }
       }
     }
     return false;
@@ -113,7 +113,8 @@ DebugUI.prototype.generate = function() {
     },
     hover: {
       block: [new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(l,s), swhite, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(a+o,h+v), s, sblack, fontName, fontMat, GEN)]
+      text:  [new GenericUIText(util.vec2.make(a+o,h+v), s, sblack, fontName, fontMat, GEN)],
+      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.game.generateCache(); },
@@ -132,7 +133,8 @@ DebugUI.prototype.generate = function() {
     },
     hover: {
       block: [new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(l,s), swhite, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(a+o,h+v), s, sblack, fontName, fontMat, CHEAT)]
+      text:  [new GenericUIText(util.vec2.make(a+o,h+v), s, sblack, fontName, fontMat, CHEAT)],
+      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.game.sound.setMusic(parent.game.sound.getSound("music/roll.wav", 1.0, 0.0, "music"), true); },
@@ -151,7 +153,8 @@ DebugUI.prototype.generate = function() {
     },
     hover: {
       block: [new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(l,s), swhite, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(a+o,h+v), s, sblack, fontName, fontMat, CLOSE)]
+      text:  [new GenericUIText(util.vec2.make(a+o,h+v), s, sblack, fontName, fontMat, CLOSE)],
+      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.ui.flags.debug = false; },
@@ -176,6 +179,7 @@ DebugUI.prototype.generate = function() {
 DebugUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 
 DebugUI.prototype.step = GenericUI.prototype.step;
+DebugUI.prototype.play = GenericUI.prototype.play;
 DebugUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
 DebugUI.prototype.clear = GenericUI.prototype.clear;

@@ -34,7 +34,7 @@ EffectDefinition.prototype.trigger = function(game, pos, vel) {
     for(var j=0;j<comp.params.length;j++) {
       var param = comp.params[j];
       switch(param) {
-        case "<vec3 pos>" : { paramgen.push(pos); break; }
+        case "<vec3 pos>" : { paramgen.push(util.vec3.add(pos, this.offset)); break; }
         case "<vec3 vel>" : { paramgen.push(vel); break; }
         case "<sound *>" : { paramgen.push(game.sound); break; }
         case "<display *>" : { paramgen.push(game.display); break; }

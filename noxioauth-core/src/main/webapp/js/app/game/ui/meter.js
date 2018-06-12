@@ -140,6 +140,7 @@ MeterUI.prototype.generate = function() {
 MeterUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 
 MeterUI.prototype.step = GenericUI.prototype.step;
+MeterUI.prototype.play = GenericUI.prototype.play;
 MeterUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
 MeterUI.prototype.clear = GenericUI.prototype.clear;

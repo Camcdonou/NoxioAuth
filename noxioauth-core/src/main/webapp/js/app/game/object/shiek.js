@@ -34,7 +34,7 @@ function PlayerShiek(game, oid, pos, team, color) {
 /* Constants */
 PlayerShiek.FLASH_CHARGE_LENGTH = 5;
 PlayerShiek.BLIP_POWER_MAX = 30;
-PlayerShiek.BLIP_COLOR_A = util.vec4.make(0.6666, 0.9058, 1.0, 1.0);
+PlayerShiek.BLIP_COLOR_A = util.vec4.lerp(util.vec4.make(0.6666, 0.9058, 1.0, 1.0), util.vec4.make(1,1,1,1), 0.5);
 PlayerShiek.BLIP_COLOR_B = util.vec4.make(0.4, 0.5450, 1.0, 1.0);
 
 PlayerShiek.prototype.update = PlayerObject.prototype.update;

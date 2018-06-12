@@ -45,7 +45,7 @@ SettingUI.prototype.generate = function() {
       if(imp.mouse[i].btn === 0) {
         var align = menuContainer.makeAlign(window);
         var over = parent.pointInElement(imp.mouse[i].pos, this, window, align);
-        if(over) { this.onClick(); return true; }
+        if(over) { this.onClick(); parent.play("ui/button1.wav", 0.5, 0.0); return true; }
       }
     }
     return false;
@@ -66,7 +66,8 @@ SettingUI.prototype.generate = function() {
     },
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, BACK)]
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, BACK)],
+      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.ui.sub = "main"; },
@@ -85,7 +86,8 @@ SettingUI.prototype.generate = function() {
     },
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, CONTROL)]
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, CONTROL)],
+      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.ui.sub = "control"; },
@@ -104,7 +106,8 @@ SettingUI.prototype.generate = function() {
     },
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, AUDIO)]
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, AUDIO)],
+      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.ui.sub = "audio"; },
@@ -123,7 +126,8 @@ SettingUI.prototype.generate = function() {
     },
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, GRAPHIC)]
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, GRAPHIC)],
+      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.ui.sub = "graphic"; },
@@ -136,6 +140,7 @@ SettingUI.prototype.generate = function() {
 SettingUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 
 SettingUI.prototype.step = GenericUI.prototype.step;
+SettingUI.prototype.play = GenericUI.prototype.play;
 SettingUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
 SettingUI.prototype.clear = GenericUI.prototype.clear;

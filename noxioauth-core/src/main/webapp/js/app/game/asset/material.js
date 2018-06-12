@@ -385,6 +385,54 @@ Asset.prototype.material.character.puff.puff = {
   texture1: "character/puff/puff_normal",
 };
 
+/* Source File: shockwave.mat */
+Asset.prototype.material.character.puff.effect.shockwave = {
+  name: "character.puff.effect.shockwave",
+  shader: "effect",
+  shadow: false,
+  texture0: "character/puff/effect/shockwave",
+};
+
+/* Source File: line.mat */
+Asset.prototype.material.character.puff.effect.line = {
+  name: "character.puff.effect.line",
+  shader: "particlemodel",
+  shadow: false,
+  texture0: "multi/hit/line",
+};
+
+/* Source File: dash.mat */
+Asset.prototype.material.character.puff.effect.dash = {
+  name: "character.puff.effect.dash",
+  shader: "particlesprite",
+  shadow: false,
+  texture0: "character/puff/effect/dash",
+};
+
+/* Source File: restwave.mat */
+Asset.prototype.material.character.puff.effect.restwave = {
+  name: "character.puff.effect.restwave",
+  shader: "effect",
+  shadow: false,
+  texture0: "character/puff/effect/hitwave",
+};
+
+/* Source File: hit.mat */
+Asset.prototype.material.character.puff.effect.hit = {
+  name: "character.puff.effect.hit",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/puff/effect/hit",
+};
+
+/* Source File: hitwave.mat */
+Asset.prototype.material.character.puff.effect.hitwave = {
+  name: "character.puff.effect.hitwave",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/puff/effect/hitwave",
+};
+
 /* Source File: sleep.mat */
 Asset.prototype.material.character.puff.effect.sleep = {
   name: "character.puff.effect.sleep",
@@ -666,20 +714,20 @@ Asset.prototype.material.character.fox.effect.speedline = {
   texture0: "character/fox/effect/speedline",
 };
 
-/* Source File: blipBright.mat */
-Asset.prototype.material.character.fox.effect.blipBright = {
-  name: "character.fox.effect.blipBright",
-  shader: "particle2tone",
-  shadow: false,
-  texture0: "character/fox/effect/blip_bright",
-};
-
 /* Source File: spark.mat */
 Asset.prototype.material.character.fox.effect.spark = {
   name: "character.fox.effect.spark",
-  shader: "particle",
+  shader: "particle2tone",
   shadow: false,
   texture0: "character/fox/effect/spark",
+};
+
+/* Source File: blipInitial.mat */
+Asset.prototype.material.character.fox.effect.blipInitial = {
+  name: "character.fox.effect.blipInitial",
+  shader: "particle2tone",
+  shadow: false,
+  texture0: "character/fox/effect/blip_init",
 };
 
 /* Source File: blip.mat */
@@ -688,6 +736,14 @@ Asset.prototype.material.character.fox.effect.blip = {
   shader: "particle2tone",
   shadow: false,
   texture0: "character/fox/effect/blip",
+};
+
+/* Source File: blipFlash.mat */
+Asset.prototype.material.character.fox.effect.blipFlash = {
+  name: "character.fox.effect.blipFlash",
+  shader: "particle2tone",
+  shadow: false,
+  texture0: "character/fox/effect/flash",
 };
 
 /* Source File: sky.mat */

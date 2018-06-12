@@ -20,6 +20,7 @@ function LogUI(game, ui, name) {
 LogUI.prototype.addMessage = function(text) {
   this.log += text + "\n";
   this.textUpdated = true;
+  this.play("ui/chat0.wav", 0.5, 0.0);
 };
 
 LogUI.prototype.setVisible = GenericUI.prototype.setVisible;
@@ -84,7 +85,7 @@ LogUI.prototype.generate = function() {
       if(imp.mouse[i].btn === 0) {
         var align = container.makeAlign(window);
         var over = parent.pointInElement(imp.mouse[i].pos, this, window, align);
-        if(over) { this.onClick(); return true; }
+        if(over) { this.onClick(); parent.play("ui/button1.wav", 0.5, 0.0); return true; }
       }
     }
     return false;
@@ -145,7 +146,8 @@ LogUI.prototype.generate = function() {
         new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat),
         new GenericUIBlock(util.vec2.make(a,h+v), util.vec2.make(s*0.4,s*0.75), clear, colorMat)
       ],
-      text:  [new GenericUIText(util.vec2.make(a,h+v), s, sblack, fontName, fontMat, "")]
+      text:  [new GenericUIText(util.vec2.make(a,h+v), s, sblack, fontName, fontMat, "")],
+      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
     },
     step: protoFocusInput,
     onClick: function() { this.focus = true; },
@@ -191,6 +193,7 @@ LogUI.prototype.generate = function() {
 LogUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 
 LogUI.prototype.step = GenericUI.prototype.step;
+LogUI.prototype.play = GenericUI.prototype.play;
 LogUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
 LogUI.prototype.clear = GenericUI.prototype.clear;

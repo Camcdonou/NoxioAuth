@@ -10,6 +10,7 @@ function CreditUI(game, ui, name) {
   this.total = 0;
   this.addTotal = 0;
   this.adding = 0;
+  this.delay = 0;
   
   this.setTotal(main.stats.credits);
   GenericUI.call(this, game, ui, name);
@@ -20,10 +21,20 @@ CreditUI.prototype.setTotal = function(total) {
   this.last = main.stats.credits;
 };
 
-CreditUI.prototype.add = function(amount) {
+CreditUI.prototype.add = function(amount, ssfxId) {
+  this.delay = 60;
   this.adding += amount;
   this.addTotal += amount;
   this.last = main.stats.credits;
+  
+  switch(ssfxId) {
+    case -1 : { break; }
+    case 0 : { this.play("ui/score0.wav", 0.5, 0.0); break; }
+    case 1 : { this.play("ui/kill0.wav", 0.5, 0.0); break; }
+    case 2 : { this.play("ui/kill1.wav", 0.5, 0.0); break; }
+    case 3 : { this.play("ui/score1.wav", 0.5, 0.0); break; }
+    case 4 : { break; }
+  }
 };
 
 CreditUI.prototype.setVisible = GenericUI.prototype.setVisible;
@@ -31,12 +42,11 @@ CreditUI.prototype.show = GenericUI.prototype.show;
 CreditUI.prototype.hide = GenericUI.prototype.hide;
 
 CreditUI.prototype.refresh = function() {
-  var cc = main.stats.credits - this.last;
-  if(cc > 0) {
-    this.add(cc);
+  if(this.delay > 0) { this.delay--; }
+  else {
+    if(this.adding > 0) { this.adding--; this.total++; }
+    else { this.addTotal = 0; }
   }
-  if(this.adding > 0) { this.adding--; this.total++; }
-  else { this.addTotal = 0; }
   this.clear();
   this.generate();
 };
@@ -85,6 +95,7 @@ CreditUI.prototype.generate = function() {
 CreditUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 
 CreditUI.prototype.step = GenericUI.prototype.step;
+CreditUI.prototype.play = GenericUI.prototype.play;
 CreditUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
 CreditUI.prototype.clear = GenericUI.prototype.clear;

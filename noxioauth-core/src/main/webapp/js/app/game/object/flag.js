@@ -36,12 +36,14 @@ FlagObject.prototype.update = function(data) {
   for(var i=0;i<effects.length-1;i++) {
     switch(effects[i]) {
       case "lnd" : { this.land(); break; }
+      case "fal" : { this.fall(); break; }
+      case "xpl" : { this.explode(); break; }
       case "htg" : { this.stunGeneric(); return true; }
       case "hts" : { this.stunSlash(); return true; }
       case "hte" : { this.stunElectric(); return true; }
       case "htf" : { this.stunFire(); return true; }
       case "crt" : { this.criticalHit(); return true; }
-      default : { main.menu.warning.show("Invalid effect value: '" + effects[i] + "' @ Bomb.js :: update()"); break; }
+      default : { main.menu.warning.show("Invalid effect value: '" + effects[i] + "' @ Flag.js :: update()"); break; }
     }
   }
   

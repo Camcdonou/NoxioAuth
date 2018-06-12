@@ -79,6 +79,7 @@ NameUI.prototype.generate = function() {
 NameUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 
 NameUI.prototype.step = GenericUI.prototype.step;
+NameUI.prototype.play = GenericUI.prototype.play;
 NameUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
 NameUI.prototype.clear = GenericUI.prototype.clear;

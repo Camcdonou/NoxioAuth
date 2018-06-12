@@ -23,7 +23,7 @@ public class UserDao {
   
   public UserDao(final DaoContainer dao) {
     this.dao = dao;
-    sessions = new ArrayList();
+    sessions = Collections.synchronizedList(new ArrayList());
   }
   
   public synchronized boolean createUser(final String user, final String email, final String hash) throws IOException {

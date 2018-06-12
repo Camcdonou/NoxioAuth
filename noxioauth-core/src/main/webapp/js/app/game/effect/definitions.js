@@ -16,7 +16,7 @@ var NxFx = {};
 /* global ParticleCrit */
 NxFx.hit = {
   generic: new EffectDefinition(
-    "Hit-Generic", util.vec3.make(0, 0, 0.25), 0, true,
+    "Hit-Generic", util.vec3.make(0, 0, 0.55), 0, true,
     [
       {class: ParticleStun, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0}
     ]
@@ -97,7 +97,7 @@ NxFx.player = {
 /* global ParticleDash */
 NxFx.fox = {
   blip: new EffectDefinition(
-    "Fox-Blip", util.vec3.make(0, 0, 0.5), 0, true,
+    "Fox-Blip", util.vec3.make(0, 0, 0.6), 0, true,
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerFox.BLIP_COLOR_A, util.vec4.copy3(PlayerFox.BLIP_COLOR_B, 0.75), util.vec4.copy3(PlayerFox.BLIP_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleBlip, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerFox.BLIP_COLOR_A, PlayerFox.BLIP_COLOR_B], attachment: true, delay: 0},
@@ -119,7 +119,7 @@ NxFx.fox = {
 /* global ParticleCharge */
 NxFx.falco = {
   blip: new EffectDefinition(
-    "Falco-Blip", util.vec3.make(0, 0, 0.5), 0, true,
+    "Falco-Blip", util.vec3.make(0, 0, 0.6), 0, true,
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerFalco.BLIP_COLOR_A, util.vec4.copy3(PlayerFalco.BLIP_COLOR_B, 0.75), util.vec4.copy3(PlayerFalco.BLIP_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleBlip, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerFalco.BLIP_COLOR_A, PlayerFalco.BLIP_COLOR_B], attachment: true, delay: 0},
@@ -149,7 +149,7 @@ NxFx.falco = {
 /* global ParticleMark */
 NxFx.shiek = {
   blip: new EffectDefinition(
-    "Shiek-Blip", util.vec3.make(0, 0, 0.5), 0, true,
+    "Shiek-Blip", util.vec3.make(0, 0, 0.6), 0, true,
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerShiek.BLIP_COLOR_A, util.vec4.copy3(PlayerShiek.BLIP_COLOR_B, 0.75), util.vec4.copy3(PlayerShiek.BLIP_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleBlip, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerShiek.BLIP_COLOR_A, PlayerShiek.BLIP_COLOR_B], attachment: true, delay: 0},
@@ -191,7 +191,10 @@ NxFx.shiek = {
 
 /* global PlayerPuff */
 /* global ParticleSleep */
-/* global ParticleCharge */
+/* global ParticlePuffCharge */
+/* global ParticlePuffDash */
+/* global ParticlePuffSlap */
+/* global ParticlePuffWave */
 NxFx.puff = {
   rest: new EffectDefinition(
     "Puff-Rest", util.vec3.make(0.1, -0.2, 0.55), 0, true,
@@ -208,21 +211,33 @@ NxFx.puff = {
     ]
   ),
   charge: new EffectDefinition(
-    "Puff-Charge", util.vec3.make(0, 0, 0.25), 0, true,
+    "Puff-Charge", util.vec3.make(0, 0, 0), 0, true,
     [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerPuff.REST_LIGHT, 0.0), PlayerPuff.REST_LIGHT], [2.65, 1.55], 9, "slow"], attachment: true, delay: 0},
+      {class: ParticlePuffCharge, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerPuff.COLORA, PlayerPuff.COLORB], attachment: true, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/slap0.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   dash: new EffectDefinition(
     "Puff-Dash", util.vec3.make(0, 0, 0.25), 0, true,
     [
+      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerPuff.REST_LIGHT, util.vec4.copy3(PlayerPuff.REST_LIGHT, 0.65), util.vec4.copy3(PlayerPuff.REST_LIGHT, 0.0)], [1.55, 2.35], 9, "fast"], attachment: true, delay: 0},
+      {class: ParticlePuffDash, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerPuff.COLORA, PlayerPuff.COLORB], attachment: true, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/slap1.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   slap: new EffectDefinition(
     "Puff-Slap", util.vec3.make(0, 0, 0.25), 0, true,
     [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerPuff.REST_LIGHT, 0.7), util.vec4.copy3(PlayerPuff.REST_LIGHT, 0.0)], [1.5, 2.55], 15, "fast"], attachment: true, delay: 0},
+      {class: ParticlePuffSlap, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerPuff.COLORA, PlayerPuff.COLORB], attachment: true, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/slap2.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  wave: new EffectDefinition(
+    "Puff-Wave", util.vec3.make(0.0, 0.0, 0.0), 0, true,
+    [
+        {class: ParticlePuffWave, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0}
     ]
   )
 };

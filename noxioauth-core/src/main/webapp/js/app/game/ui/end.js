@@ -80,6 +80,7 @@ EndUI.prototype.generate = function() {
 EndUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 
 EndUI.prototype.step = GenericUI.prototype.step;
+EndUI.prototype.play = GenericUI.prototype.play;
 EndUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
 EndUI.prototype.clear = GenericUI.prototype.clear;

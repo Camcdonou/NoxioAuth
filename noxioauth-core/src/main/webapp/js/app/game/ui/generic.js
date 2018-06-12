@@ -9,6 +9,7 @@ function GenericUI(game, ui, name) {
   this.name = name;
   
   this.containers = [];
+  this.sounds = [];
   
   this.generate();
   
@@ -74,7 +75,12 @@ GenericUI.prototype.step = function(imp, state, window) {
     var align = this.containers[i].makeAlign(window);
     for(var j=0;j<elements.length;j++) {
       var hov = this.pointInElement(state.mouse.pos, elements[j], window, align);
-      if(elements[j].hover) { elements[j].isHovered = hov; }                    // Hover is an optional field so we check if it exists
+      if(elements[j].hover) {  // Hover is an optional field so we check if it exists
+        if(elements[j].hover.sound && !elements[j].isHovered && hov) {
+          this.play(elements[j].hover.sound.path, elements[j].hover.sound.gain, elements[j].hover.sound.shift);
+        }
+        elements[j].isHovered = hov;
+      }
     }
     for(var j=0;j<elements.length;j++) {
       if(elements[j].step(imp, state, window)) { hit = true; }
@@ -91,6 +97,12 @@ GenericUI.prototype.pointInElement = function(pos, element, window, align) {
     if(util.intersection.pointRectangle(coordAdjust, util.vec2.add(blok.pos, align), blok.size)) { return true; }
   }
   return false;
+};
+
+GenericUI.prototype.play = function(path, gain, shift) {
+  var snd = this.game.sound.getSound(path, gain, shift, "ui");
+  this.sounds.push(snd);
+  snd.play();
 };
 
 /* Window is a Vec2 of the size, in pixels, of the game window for this draw */
@@ -137,7 +149,11 @@ GenericUI.prototype.clear = function() {
 };
 
 /* -- ABSTRACT cleanup when closing game */
-GenericUI.prototype.destroy = function() { };
+GenericUI.prototype.destroy = function() {
+  for(var i=0;i<this.sounds.length;i++) {
+    this.sounds[i].stop();
+  }
+};
 
 /* Define UIContainer */
 /* The point of this class is to have an object to place elements in so I can align them as

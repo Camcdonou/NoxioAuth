@@ -39,18 +39,21 @@ Particle.prototype.step = function(pos, vel) {
   /* Update position if passed */
   if(pos) { this.pos = pos; }
   if(vel) { this.vel = vel; }
-  /* Update Particles */
-  for(var i=0;i<this.particles.length;i++) {
-    if(--this.particles[i].length <= 0) { this.particles.splice(i,1); }
-    else {
-      this.particles[i].update(this.pos, this.vel);
-    }
-  }
+  
   /* Spawn Delayed */
   for(var i=0;i<this.delayed.length;i++) {
-    if(--this.delayed[i].delay <= 0) {
-      this.particles.push(this.delayed[i]);
-      this.delayed.splice(i--,1);
+    if(this.delayed[i].delay-- <= 0) {
+      var de = this.delayed.splice(i--,1)[0];
+      if(de.spawn) { de.spawn(pos, vel); }
+      this.particles.push(de);
+    }
+  }
+  
+  /* Update Particles */
+  for(var i=0;i<this.particles.length;i++) {
+    if(this.particles[i].length-- <= 0) { this.particles.splice(i--,1); }
+    else {
+      this.particles[i].update(this.pos, this.vel);
     }
   }
 };

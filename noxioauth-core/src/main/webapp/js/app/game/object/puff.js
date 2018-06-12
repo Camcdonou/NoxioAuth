@@ -40,6 +40,8 @@ PlayerPuff.POUND_COOLDOWN_LENGTH = 30;
 PlayerPuff.POUND_RADIUS = 0.45;
 PlayerPuff.POUND_OFFSET = 0.33;
 PlayerPuff.REST_LIGHT = util.vec4.make(1.0, 1.0, 1.0, 0.25);
+PlayerPuff.COLORA = util.vec4.make(1.0, 1.0, 1.0, 1.0);
+PlayerPuff.COLORB = util.vec4.make(1.0, 1.0, 1.0, 0.75);
 
 PlayerPuff.prototype.update = PlayerObject.prototype.update;
 PlayerPuff.prototype.parseUpd = PlayerObject.prototype.parseUpd;
@@ -88,12 +90,13 @@ PlayerPuff.prototype.fall = PlayerObject.prototype.fall;
 PlayerPuff.prototype.rest = function() {
   this.restEffect = NxFx.puff.rest.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
   this.effects.push(this.restEffect);
+  this.effects.push(NxFx.puff.wave.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec3.make(0, 0, 0)));
   this.restCooldown = PlayerPuff.REST_SLEEP_LENGTH;
   this.hitboxPos = this.pos;
   this.hitboxColor = util.vec4.make(1, 0, 0, 0.5);
   this.hitboxScale = this.radius;
   this.hitBoxAngle = 0;
-  this.drawHitbox = this.hitboxModel;
+  //this.drawHitbox = this.hitboxModel;
 };
 
 PlayerPuff.prototype.wake = function() {
@@ -112,15 +115,16 @@ PlayerPuff.prototype.poundDash = function() {
 };
 
 PlayerPuff.prototype.pound = function() {
+  this.effects.push(NxFx.puff.wave.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(util.vec2.scale(this.poundDirection, PlayerPuff.POUND_OFFSET*2.), 0.1)));
   this.hitboxPos = util.vec2.add(this.pos, util.vec2.scale(this.poundDirection, PlayerPuff.POUND_OFFSET));
   this.hitboxColor = util.vec4.make(1, 0, 0, 0.85);
   this.hitboxScale = PlayerPuff.POUND_RADIUS;
   this.hitBoxAngle = 0;
-  this.drawHitbox = this.hitboxModel;
+  //this.drawHitbox = this.hitboxModel;
 };
 
 PlayerPuff.prototype.poundHit = function() {
-  this.effects.push(NxFx.puff.slap.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.effects.push(NxFx.puff.slap.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(util.vec2.scale(this.poundDirection, PlayerPuff.POUND_OFFSET*2.), 0.1)));
 };
 
 PlayerPuff.prototype.taunt = function() {

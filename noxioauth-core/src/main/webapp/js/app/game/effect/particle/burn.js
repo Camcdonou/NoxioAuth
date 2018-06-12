@@ -51,6 +51,15 @@ ParticleBurn.prototype.create = function() {
       material: sparkMat,
       delay: Math.floor(Math.random()*3),
       length: 5+Math.floor(Math.random()*65),
+      spawn: function(pos, vel) {
+        var rand = util.vec3.random();
+        var speed = (Math.random()*0.125)+0.105;
+        var cmbvel = util.vec3.add(util.vec3.scale(vel, 0.5), util.vec3.scale(rand, speed));
+        var axAng = util.vec3.angle(up, cmbvel);
+        this.properties.pos = util.vec3.add(pos, util.vec3.scale(rand, 0.25));
+        this.properties.vel = cmbvel;
+        this.properties.angle = axAng;
+      },
       update: function() {
         var collision = parent.game.map.collideVec3(this.properties.pos, this.properties.vel);
         if(collision) { this.properties.vel = util.vec3.scale(collision.reflect, util.vec3.magnitude(this.properties.vel)); }

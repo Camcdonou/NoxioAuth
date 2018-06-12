@@ -162,6 +162,7 @@ ObjectiveUI.prototype.generate = function() {
 ObjectiveUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 
 ObjectiveUI.prototype.step = GenericUI.prototype.step;
+ObjectiveUI.prototype.play = GenericUI.prototype.play;
 ObjectiveUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
 ObjectiveUI.prototype.clear = GenericUI.prototype.clear;

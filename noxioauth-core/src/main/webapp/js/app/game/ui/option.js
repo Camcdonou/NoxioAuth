@@ -45,7 +45,7 @@ OptionUI.prototype.generate = function() {
       if(imp.mouse[i].btn === 0) {
         var align = menuContainer.makeAlign(window);
         var over = parent.pointInElement(imp.mouse[i].pos, this, window, align);
-        if(over) { this.onClick(); return true; }
+        if(over) { this.onClick(); parent.play("ui/button1.wav", 0.5, 0.0); return true; }
       }
     }
     return false;
@@ -66,7 +66,8 @@ OptionUI.prototype.generate = function() {
     },
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, BACK)]
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, BACK)],
+      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.ui.sub = "main"; },
@@ -85,7 +86,8 @@ OptionUI.prototype.generate = function() {
     },
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, TEAM)]
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, TEAM)],
+      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { main.net.game.send({type: "i00", data: "07;"}); parent.ui.menuKey(); },
@@ -104,7 +106,8 @@ OptionUI.prototype.generate = function() {
     },
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, KICK)]
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, KICK)],
+      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { },
@@ -117,6 +120,7 @@ OptionUI.prototype.generate = function() {
 OptionUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
 
 OptionUI.prototype.step = GenericUI.prototype.step;
+OptionUI.prototype.play = GenericUI.prototype.play;
 OptionUI.prototype.getDraw = GenericUI.prototype.getDraw;
 
 OptionUI.prototype.clear = GenericUI.prototype.clear;
