@@ -67,7 +67,7 @@ OptionUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, BACK)],
-      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.ui.sub = "main"; },
@@ -87,7 +87,7 @@ OptionUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, TEAM)],
-      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { main.net.game.send({type: "i00", data: "07;"}); parent.ui.menuKey(); },
@@ -107,7 +107,7 @@ OptionUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, KICK)],
-      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { },

@@ -114,7 +114,7 @@ DebugUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(l,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(a+o,h+v), s, sblack, fontName, fontMat, GEN)],
-      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.game.generateCache(); },
@@ -134,7 +134,7 @@ DebugUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(l,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(a+o,h+v), s, sblack, fontName, fontMat, CHEAT)],
-      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.game.sound.setMusic(parent.game.sound.getSound("music/roll.wav", 1.0, 0.0, "music"), true); },
@@ -154,7 +154,7 @@ DebugUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(l,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(a+o,h+v), s, sblack, fontName, fontMat, CLOSE)],
-      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.ui.flags.debug = false; },

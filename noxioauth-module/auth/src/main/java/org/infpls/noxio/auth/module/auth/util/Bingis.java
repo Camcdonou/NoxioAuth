@@ -29,7 +29,25 @@ public class Bingis {
     "Lucatiel",
     "HowToBasic",
     "Dark Souls III",
-    "DROP TABLE USERS"
+    "DROP TABLE USERS",
+    "Dribble",
+    "Fuggle",
+    "Cunk",
+    "Ham",
+    "Food",
+    "Quaffer",
+    "Sazzlaphone",
+    "abs(unit)",
+    "Fonker",
+    "Egg",
+    "Teacup",
+    "Onion Smoothie",
+    "Dex",
+    "Binch",
+    "Biscuit",
+    "Triff",
+    "Dweebis",
+    "Kill Me Please"
   });
   
   public final static String get() {

@@ -34,7 +34,7 @@ NxFx.hit = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerFox.BLIP_COLOR_A, util.vec4.copy3(PlayerFox.BLIP_COLOR_B, 0)], [1.75, 2.5], 24, "slow"], attachment: true, delay: 0},
       {class: ParticleZap, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerFox.BLIP_COLOR_A, PlayerFox.BLIP_COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", ["multi/hit/electric0.wav", "multi/hit/electric1.wav", "multi/hit/electric2.wav"], 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["multi/hit/electric0.wav", "multi/hit/electric1.wav", "multi/hit/electric2.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   fire: new EffectDefinition(
@@ -42,7 +42,7 @@ NxFx.hit = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerCaptain.FIRE_COLOR_B, util.vec4.copy3(PlayerCaptain.FIRE_COLOR_C, 0)], [1.75, 2.5], 30, "slow"], attachment: true, delay: 0},
       {class: ParticleBurn, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCaptain.FIRE_COLOR_A, PlayerCaptain.FIRE_COLOR_C], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", ["multi/hit/fire0.wav", "multi/hit/fire1.wav", "multi/hit/fire2.wav"], 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["multi/hit/fire0.wav", "multi/hit/fire1.wav", "multi/hit/fire2.wav"], 0.6, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   critical: new EffectDefinition(
@@ -61,20 +61,20 @@ NxFx.player = {
   jump: new EffectDefinition(
     "Player-Jump", util.vec3.make(0, 0, 0), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/jump0.wav", "character/generic/jump1.wav", "character/generic/jump2.wav"], 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/jump0.wav", "character/generic/jump1.wav", "character/generic/jump2.wav"], 0.25, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   airJump: new EffectDefinition(
     "Player-AirJump", util.vec3.make(0, 0, 0.01), 0, true,
     [
       {class: ParticleAirJump, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: false, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/air0.wav", "character/generic/air1.wav", "character/generic/air2.wav"], 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/air0.wav", "character/generic/air1.wav", "character/generic/air2.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   land: new EffectDefinition(
     "Player-Land", util.vec3.make(0, 0, 0), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/land0.wav", "character/generic/land1.wav", "character/generic/land2.wav"], 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/land0.wav", "character/generic/land1.wav", "character/generic/land2.wav"], 0.25, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   explode: new EffectDefinition(
@@ -101,7 +101,7 @@ NxFx.fox = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerFox.BLIP_COLOR_A, util.vec4.copy3(PlayerFox.BLIP_COLOR_B, 0.75), util.vec4.copy3(PlayerFox.BLIP_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleBlip, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerFox.BLIP_COLOR_A, PlayerFox.BLIP_COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/fox/blip0.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/fox/blip0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   dash: new EffectDefinition(
@@ -109,7 +109,7 @@ NxFx.fox = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerFox.BLIP_COLOR_A, util.vec4.copy3(PlayerFox.BLIP_COLOR_B, 0.5), util.vec4.copy3(PlayerFox.BLIP_COLOR_B, 0)], [2.75, 4.0], 30, "fast"], attachment: false, delay: 0},
       {class: ParticleDash, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerFox.BLIP_COLOR_A, PlayerFox.BLIP_COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/fox/dash0.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/fox/dash0.wav", 0.45, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
 };
@@ -123,7 +123,7 @@ NxFx.falco = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerFalco.BLIP_COLOR_A, util.vec4.copy3(PlayerFalco.BLIP_COLOR_B, 0.75), util.vec4.copy3(PlayerFalco.BLIP_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleBlip, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerFalco.BLIP_COLOR_A, PlayerFalco.BLIP_COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/falco/blip0.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/falco/blip0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   charge: new EffectDefinition(
@@ -131,7 +131,7 @@ NxFx.falco = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerFalco.CHARGE_COLOR_A, PlayerFalco.CHARGE_COLOR_B], [1.25, 2.25], 30, "linear"], attachment: true, delay: 0},
       {class: ParticleCharge, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/falco/dash0.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/falco/dash0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   dash: new EffectDefinition(
@@ -139,7 +139,7 @@ NxFx.falco = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerFalco.BLIP_COLOR_A, util.vec4.copy3(PlayerFalco.BLIP_COLOR_B, 0.5), util.vec4.copy3(PlayerFalco.BLIP_COLOR_B, 0)], [2.75, 4.0], 30, "fast"], attachment: false, delay: 0},
       {class: ParticleDash, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerFalco.BLIP_COLOR_A, PlayerFalco.BLIP_COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/falco/dash1.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/falco/dash1.wav", 0.7, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
 };
@@ -153,7 +153,7 @@ NxFx.shiek = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerShiek.BLIP_COLOR_A, util.vec4.copy3(PlayerShiek.BLIP_COLOR_B, 0.75), util.vec4.copy3(PlayerShiek.BLIP_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleBlip, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerShiek.BLIP_COLOR_A, PlayerShiek.BLIP_COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/shiek/blip0.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/shiek/blip0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   mark: new EffectDefinition(
@@ -163,7 +163,7 @@ NxFx.shiek = {
     ]
   ),
   no: new EffectDefinition(
-    "Shiek-Mark", util.vec3.make(0, 0, 0.01), 0, true,
+    "Shiek-NoMark", util.vec3.make(0, 0, 0.01), 0, true,
     [
 //      {class: SpatialSoundInstance, params: ["<sound *>", "multi/hit/slash0.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
     ]
@@ -178,13 +178,13 @@ NxFx.shiek = {
   charge: new EffectDefinition(
     "Shiek-Charge", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/shiek/recall0.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/shiek/recall0.wav", 0.7, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   recall: new EffectDefinition(
     "Shiek-Recall", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/shiek/recall1.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/shiek/recall1.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
 };
@@ -201,13 +201,13 @@ NxFx.puff = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerPuff.REST_LIGHT, util.vec4.copy3(PlayerPuff.REST_LIGHT, 0.0)], [1.25, 2.15], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleSleep, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/rest0.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/rest0.wav", 0.8, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   wake: new EffectDefinition(
     "Puff-Wake", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/rest1.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/rest1.wav", 0.85, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   charge: new EffectDefinition(
@@ -215,7 +215,7 @@ NxFx.puff = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerPuff.REST_LIGHT, 0.0), PlayerPuff.REST_LIGHT], [2.65, 1.55], 9, "slow"], attachment: true, delay: 0},
       {class: ParticlePuffCharge, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerPuff.COLORA, PlayerPuff.COLORB], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/slap0.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/slap0.wav", 0.3, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   dash: new EffectDefinition(
@@ -223,7 +223,7 @@ NxFx.puff = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerPuff.REST_LIGHT, util.vec4.copy3(PlayerPuff.REST_LIGHT, 0.65), util.vec4.copy3(PlayerPuff.REST_LIGHT, 0.0)], [1.55, 2.35], 9, "fast"], attachment: true, delay: 0},
       {class: ParticlePuffDash, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerPuff.COLORA, PlayerPuff.COLORB], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/slap1.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/slap1.wav", 0.35, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   slap: new EffectDefinition(
@@ -231,7 +231,7 @@ NxFx.puff = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerPuff.REST_LIGHT, 0.7), util.vec4.copy3(PlayerPuff.REST_LIGHT, 0.0)], [1.5, 2.55], 15, "fast"], attachment: true, delay: 0},
       {class: ParticlePuffSlap, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerPuff.COLORA, PlayerPuff.COLORB], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/slap2.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/slap2.wav", 1.0, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   wave: new EffectDefinition(
@@ -247,19 +247,19 @@ NxFx.captain = {
   charge: new EffectDefinition(
     "Captain-Charge", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/punch0.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/punch0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   punch: new EffectDefinition(
     "Captain-Punch", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/punch1.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/punch1.wav", 0.7, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   kick: new EffectDefinition(
     "Captain-Punch", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/kick0.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/kick0.wav", 0.8, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
 };
@@ -281,7 +281,7 @@ NxFx.marth = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerMarth.COMBO_LIGHT, util.vec4.copy3(PlayerMarth.COMBO_LIGHT, 0.0)], [1.25, 2.15], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleReady, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/marth/combo0.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/marth/combo0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   heavy: new EffectDefinition(
@@ -289,13 +289,13 @@ NxFx.marth = {
     [
       {class: ParticleSlash, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0},
       {class: ParticleReady, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/heavy0.wav", "character/marth/heavy1.wav"], 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/heavy0.wav", "character/marth/heavy1.wav"], 0.7, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   counter: new EffectDefinition(
     "Marth-Counter", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/marth/counter0.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/marth/counter0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   riposte: new EffectDefinition(
@@ -303,7 +303,7 @@ NxFx.marth = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerMarth.RIPOSTE_LIGHT, util.vec4.copy3(PlayerMarth.RIPOSTE_LIGHT, 0.0)], [1.25, 2.15], 25, "fast"], attachment: true, delay: 0},
       {class: ParticleRiposte, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/marth/counter1.wav", 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/marth/counter1.wav", 0.7, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
 };

@@ -119,7 +119,7 @@ ControlUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, BACK)],
-      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.ui.sub = "setting"; },
@@ -159,7 +159,7 @@ ControlUI.prototype.generate = function() {
           new GenericUIText(util.vec2.make(o,h+v), s, swhite, fontName, fontMat, NAME),
           new GenericUIText(util.vec2.make(oc+a,h+v), s, sblack, fontName, fontMat, CONTROL)
         ],
-        sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+        sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
       },
       step: protoOnFocus,
       field: SPEC[i].fld,

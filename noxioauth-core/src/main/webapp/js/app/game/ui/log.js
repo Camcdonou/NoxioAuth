@@ -147,7 +147,7 @@ LogUI.prototype.generate = function() {
         new GenericUIBlock(util.vec2.make(a,h+v), util.vec2.make(s*0.4,s*0.75), clear, colorMat)
       ],
       text:  [new GenericUIText(util.vec2.make(a,h+v), s, sblack, fontName, fontMat, "")],
-      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
     },
     step: protoFocusInput,
     onClick: function() { this.focus = true; },

@@ -148,7 +148,7 @@ RespawnUI.prototype.generate = function() {
             new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), sblack, SPEC[i][0].mat)
           ],
           text:  [],
-          sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+          sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
         },
         step: protoOnClick,
         onClick: function() { parent.game.charSelect = this.charId; },
@@ -188,7 +188,7 @@ RespawnUI.prototype.generate = function() {
             new GenericUIBlock(util.vec2.make(bho,hh), util.vec2.make(bh,bh), sblack, SPEC[i][j].mat)
           ],
           text:  [],
-          sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+          sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
         },
         step: protoOnClick,
         onClick: function() { parent.game.charSelect = this.charId; },

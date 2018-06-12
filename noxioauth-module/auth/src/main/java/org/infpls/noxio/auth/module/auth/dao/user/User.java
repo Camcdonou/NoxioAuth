@@ -49,7 +49,7 @@ public class User {
     this.display = display;
     email = null;
     hash = null;
-    type = Type.FREE;
+    type = Type.SPEC; /* @TODO: for testing only! Change back to free later. */
     created = null;
     updated = null;
     lastLogin = null;

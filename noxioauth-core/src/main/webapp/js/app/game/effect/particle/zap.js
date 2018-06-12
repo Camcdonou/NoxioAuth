@@ -13,7 +13,7 @@ function ParticleZap(game, pos, vel, colorA, colorB) {
 
 ParticleZap.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
-  var part2x = this.game.display.getModel("multi.part2x");
+  var part2x = this.game.display.getModel("multi.fx.part2x");
   var zapMat = this.game.display.getMaterial("multi.hit.zap");
   var sparkMat = this.game.display.getMaterial("multi.hit.spark");
   

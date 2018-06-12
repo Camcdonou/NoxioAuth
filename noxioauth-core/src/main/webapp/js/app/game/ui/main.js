@@ -67,7 +67,7 @@ MainUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, QUIT)],
-      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.game.leave(); },
@@ -87,7 +87,7 @@ MainUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, SETTINGS)],
-      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.ui.sub = "setting"; },
@@ -107,7 +107,7 @@ MainUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, DEBUG)],
-      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.ui.flags.debug = !parent.ui.flags.debug; },
@@ -127,7 +127,7 @@ MainUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, GAME)],
-      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.ui.sub = "option"; },
@@ -147,7 +147,7 @@ MainUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, RESUME)],
-      sound: {path: "ui/button0.wav", gain: 0.5, shift: 0.0}
+      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.ui.menuKey(); },
