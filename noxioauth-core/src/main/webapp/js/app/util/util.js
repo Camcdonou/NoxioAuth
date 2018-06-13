@@ -25,6 +25,10 @@ util.vec2.create = function() {
   return {x: 0.0, y: 0.0};
 };
 
+util.vec2.random = function() {
+  return util.vec2.normalize({x: (Math.random()*2.0)-1.0, y: (Math.random()*2.0)-1.0});
+};
+
 util.vec2.make = function(x, y) {
   return {x: x, y: y};
 };

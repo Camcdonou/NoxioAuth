@@ -20,7 +20,6 @@ ParticlePuffWave.prototype.create = function() {
     delay: 0,
     length: 5,
     update: function(pos){
-      this.properties.pos = util.vec3.add(pos, util.vec3.make(0,0,0.05));
       this.properties.scale *= 1.25; this.properties.color.w -= 0.75/5;
     },
     properties: {offset: util.vec3.add(this.vel, util.vec3.make(0,0,0.05)), scale: 0.55, color: white(), angle: 0.0}

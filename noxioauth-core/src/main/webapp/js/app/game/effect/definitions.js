@@ -116,7 +116,8 @@ NxFx.fox = {
 
 /* global PlayerFalco */
 /* global ParticleBlip */
-/* global ParticleCharge */
+/* global ParticleFalcoCharge */
+/* global ParticleFalcoDash */
 NxFx.falco = {
   blip: new EffectDefinition(
     "Falco-Blip", util.vec3.make(0, 0, 0.6), 0, true,
@@ -127,18 +128,19 @@ NxFx.falco = {
     ]
   ),
   charge: new EffectDefinition(
-    "Falco-Charge", util.vec3.make(0, 0, 0.25), 0, true,
+    "Falco-Charge", util.vec3.make(0, 0, 0.0), 0, true,
     [
-      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerFalco.CHARGE_COLOR_A, PlayerFalco.CHARGE_COLOR_B], [1.25, 2.25], 30, "linear"], attachment: true, delay: 0},
-      {class: ParticleCharge, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0},
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerCaptain.FIRE_COLOR_B, 0), PlayerCaptain.FIRE_COLOR_C], [1.25, 2.45], 20, "fast"], attachment: true, delay: 0},
+      {class: ParticleFalcoCharge, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCaptain.FIRE_COLOR_A, PlayerCaptain.FIRE_COLOR_C], attachment: true, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", "character/falco/dash0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   dash: new EffectDefinition(
     "Falco-Dash", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerFalco.BLIP_COLOR_A, util.vec4.copy3(PlayerFalco.BLIP_COLOR_B, 0.5), util.vec4.copy3(PlayerFalco.BLIP_COLOR_B, 0)], [2.75, 4.0], 30, "fast"], attachment: false, delay: 0},
-      {class: ParticleDash, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerFalco.BLIP_COLOR_A, PlayerFalco.BLIP_COLOR_B], attachment: true, delay: 0},
+      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerCaptain.FIRE_COLOR_B, util.vec4.copy3(PlayerCaptain.FIRE_COLOR_C, 0)], [2.6, 3.45], 25, "slow"], attachment: true, delay: 0},
+      {class: ParticleFalcoDash, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCaptain.FIRE_COLOR_A, PlayerCaptain.FIRE_COLOR_C], attachment: true, delay: 0},
+      {class: ParticleBurn, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCaptain.FIRE_COLOR_A, PlayerCaptain.FIRE_COLOR_C], attachment: true, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", "character/falco/dash1.wav", 0.7, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )

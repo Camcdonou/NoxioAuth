@@ -865,3 +865,25 @@ Asset.prototype.shader.debug = {
   fragment: "precision mediump float;\n\nuniform vec3 color;\n\nvoid main(void) {\n  gl_FragColor = vec4(color, 1.0);\n}\n",
 };
 
+/* Source File: effect2toneg */
+Asset.prototype.shader.effect2tone = {
+  name: "effect2tone",
+  attributes: [
+    {type: "vec3", name: "position"},
+    {type: "vec3", name: "texcoord"},
+  ],
+  uniforms: [
+    {type: "mat4", name: "Pmatrix"},
+    {type: "mat4", name: "Vmatrix"},
+    {type: "mat4", name: "Mmatrix"},
+    {type: "vec3", name: "transform"},
+    {type: "float", name: "scale"},
+    {type: "float", name: "rotation"},
+    {type: "sampler2D", name: "texture0"},
+    {type: "vec4", name: "color"},
+    {type: "vec4", name: "tone"},
+  ],
+  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\nuniform float scale;\nuniform float rotation;\n\nvarying vec3 vPos;\nvarying vec3 vUV;\n\nvec3 rotate(vec3 v, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (v.x * cosDegrees) + (v.y * sinDegrees);\n    float y = (v.x * -sinDegrees) + (v.y * cosDegrees);\n\n    return vec3(x, y, v.z);\n}\n\nvoid main(void) {\n  vec4 cPos = vec4((rotate(position, rotation)*scale)+transform, 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\n\nuniform vec4 color;\nuniform vec4 tone;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 tex = texture2D(texture0, vUV.st);\n  vec4 colored = mix(tone, color, tex.r);\n  colored.a *= tex.a;\n  gl_FragColor = colored;\n}\n",
+};
+

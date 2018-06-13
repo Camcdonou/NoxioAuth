@@ -474,6 +474,14 @@ Asset.prototype.material.character.falco.falco = {
   texture1: "character/falco/falco_normal",
 };
 
+/* Source File: shockwave.mat */
+Asset.prototype.material.character.falco.effect.shockwave = {
+  name: "character.falco.effect.shockwave",
+  shader: "effect2tone",
+  shadow: false,
+  texture0: "character/falco/effect/shockwave",
+};
+
 /* Source File: charge.mat */
 Asset.prototype.material.character.falco.effect.charge = {
   name: "character.falco.effect.charge",
@@ -481,6 +489,22 @@ Asset.prototype.material.character.falco.effect.charge = {
   shadow: false,
   texture0: "character/falco/effect/chargemask",
   texture1: "character/falco/effect/firecolor",
+};
+
+/* Source File: blast.mat */
+Asset.prototype.material.character.falco.effect.blast = {
+  name: "character.falco.effect.blast",
+  shader: "particle2tone",
+  shadow: false,
+  texture0: "character/falco/effect/shockwave",
+};
+
+/* Source File: flash.mat */
+Asset.prototype.material.character.falco.effect.flash = {
+  name: "character.falco.effect.flash",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/falco/effect/flash",
 };
 
 /* Source File: metercounter.mat */

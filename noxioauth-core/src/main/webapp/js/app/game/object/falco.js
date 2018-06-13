@@ -90,7 +90,10 @@ PlayerFalco.prototype.blip = function() {
 };
 
 PlayerFalco.prototype.dash = function() {
-  this.effects.push(NxFx.falco.dash.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));};
+  this.effects.push(NxFx.falco.dash.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  if(this.chargeEffect && this.chargeEffect.particles[0]) { this.chargeEffect.particles[0].attachment = false; }
+};
+
 
 PlayerFalco.prototype.charge = function() {
   this.chargeEffect = NxFx.falco.charge.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
