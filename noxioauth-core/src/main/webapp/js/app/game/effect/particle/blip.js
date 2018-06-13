@@ -69,8 +69,8 @@ ParticleBlip.prototype.create = function() {
   this.pushPart(flash);
     
   for(var i=0;i<12;i++) {
-    var rand = util.vec3.random();
-    var l = 15 + Math.floor(Math.random() * 15);
+    var rand = util.vec3.scale(util.vec3.random(), 0.225);
+    var l = 14 + Math.floor(Math.random() * 13);
     this.pushPart({
       model: square,
       material: sparkMat,
@@ -78,18 +78,17 @@ ParticleBlip.prototype.create = function() {
       max: l,
       length: l,
       spawn: function(pos, vel) {
-        this.properties.pos = util.vec3.add(pos, util.vec3.scale(this.properties.pos, 0.2));
-        this.properties.vel = util.vec3.add(this.properties.vel, util.vec3.scale(vel, 0.5));
+        
       },
       update: function(pos) {
         this.properties.scale += 0.005;
-        this.properties.pos = util.vec3.add(this.properties.pos, this.properties.vel);
-        this.properties.vel = util.vec3.scale(this.properties.vel, 0.91);
+        this.properties.offset = util.vec3.add(this.properties.offset, this.properties.vel);
+        this.properties.vel = util.vec3.scale(this.properties.vel, 0.925);
         this.properties.color.w -= 1.0/this.max;
         this.properties.tone.w -= 1.0/this.max;
         this.properties.rotation += 0.01;
       },
-      properties: {pos: rand, vel: util.vec3.scale(rand, 0.075), scale: 0.175, rotation: Math.random()*6.4, color: colorA(), tone: colorB()}
+      properties: {offset: rand, vel: util.vec3.scale(rand, 0.185), scale: 0.145, rotation: Math.random()*6.4, color: colorA(), tone: colorB()}
     });
   }
 };
@@ -102,12 +101,13 @@ ParticleBlip.prototype.getDraw = function(geometry, decals, lights, bounds) {
   for(var i=0;i<this.particles.length;i++) {
     var part = this.particles[i];
     var partUniformData = [
-      {name: "transform", data: util.vec3.toArray(part.properties.pos)},
       {name: "scale", data: part.properties.scale},
       {name: "rotation", data: part.properties.rotation},
       {name: "color", data: util.vec4.toArray(part.properties.color)},
       {name: "tone", data: util.vec4.toArray(part.properties.tone)}
     ];
+    if(part.properties.pos) { partUniformData.push({name: "transform", data: util.vec3.toArray(part.properties.pos)}); }
+    if(part.properties.offset) { partUniformData.push({name: "transform", data: util.vec3.toArray(util.vec3.add(this.pos, part.properties.offset))}); }
     geometry.push({model: part.model, material: part.material, uniforms: partUniformData});
   }
 };

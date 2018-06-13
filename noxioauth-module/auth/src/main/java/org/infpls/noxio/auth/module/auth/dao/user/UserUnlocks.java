@@ -108,7 +108,7 @@ public class UserUnlocks {
     unlocks = new HashMap();
     uid = null;
     updated = null;
-    type = User.Type.FREE;
+    type = User.Type.SPEC; /* @TODO: for testing only! Change back to free later. */
    
     /* Uses reflection to map SQL databse names to enums that identify the unlocks */
     unlocks.put(Key.CHAR_BOX, true);

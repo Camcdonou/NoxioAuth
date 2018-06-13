@@ -107,7 +107,7 @@ NxFx.fox = {
   dash: new EffectDefinition(
     "Fox-Dash", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerFox.BLIP_COLOR_A, util.vec4.copy3(PlayerFox.BLIP_COLOR_B, 0.5), util.vec4.copy3(PlayerFox.BLIP_COLOR_B, 0)], [2.75, 4.0], 30, "fast"], attachment: false, delay: 0},
+      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerFox.BLIP_COLOR_A, PlayerFox.BLIP_COLOR_B, util.vec4.copy3(PlayerFox.BLIP_COLOR_B, 0)], [1.25, 4.0], 30, "fast"], attachment: false, delay: 0},
       {class: ParticleDash, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerFox.BLIP_COLOR_A, PlayerFox.BLIP_COLOR_B], attachment: true, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", "character/fox/dash0.wav", 0.45, 0.0, "effect"], attachment: true, delay: 0}
     ]

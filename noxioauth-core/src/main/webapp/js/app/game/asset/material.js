@@ -725,7 +725,7 @@ Asset.prototype.material.character.fox.fox = {
 /* Source File: shockwave.mat */
 Asset.prototype.material.character.fox.effect.shockwave = {
   name: "character.fox.effect.shockwave",
-  shader: "particle",
+  shader: "effect2tone",
   shadow: false,
   texture0: "character/fox/effect/shockwave",
 };

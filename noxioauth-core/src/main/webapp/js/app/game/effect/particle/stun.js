@@ -11,20 +11,16 @@ function ParticleStun(game, pos, vel) {
 ParticleStun.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   
-  var shockwaveMat = this.game.display.getMaterial("character.fox.effect.shockwave");
-  var speedLineMat = this.game.display.getMaterial("character.generic.effect.star");
+  var starMat = this.game.display.getMaterial("character.generic.effect.star");
   
   var yellow = function() { return {x: 1.00, y: 0.96, z: 0.45, w: 1.0}; };
-  
-  var shockwave  = {model: square, material: shockwaveMat, delay: 0, length: 7, update: function(){ this.properties.scale *= 1.15; this.properties.color.w -= 1.0/6.0;}, properties: {pos: this.pos, scale: 0.5, color: yellow()}};
-  this.pushPart(shockwave);
   
   for(var i=0;i<6;i++) {
     var rand = 6.28319*(i/6);
     var speed = (0.03*Math.random()) + 0.06;
     this.pushPart({
       model: square,
-      material: speedLineMat,
+      material: starMat,
       delay: 0,
       length: 45,
       update: function(pos) {

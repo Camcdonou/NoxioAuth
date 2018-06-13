@@ -84,7 +84,7 @@ ParticleZap.prototype.getDraw = function(geometry, decals, lights, bounds) {
       {name: "totalSprites", data: 8},
       {name: "usedSprites", data: 8},
       {name: "color", data: util.vec4.toArray(part.properties.color)},
-      {name: "tone", data: util.vec4.toArray(part.properties.tone)},
+      {name: "tone", data: util.vec4.toArray(part.properties.tone)}
     ];
     if(part.properties.offset) { partUniformData.push({name: "transform", data: util.vec3.toArray(util.vec3.add(this.pos, part.properties.offset))}); }
     if(part.properties.pos) { partUniformData.push({name: "transform", data: util.vec3.toArray(part.properties.pos)}); }
