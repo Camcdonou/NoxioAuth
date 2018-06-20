@@ -63,7 +63,8 @@ BombObject.prototype.update = function(data) {
   /* Step Effects */
   this.targetCircle.step(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 0.4, 0.0);
   for(var i=0;i<this.effects.length;i++) {
-    this.effects[i].effect.step(util.vec3.add(this.effects[i].offset, util.vec2.toVec3(this.pos, this.height)), util.vec2.toVec3(this.vel, this.vspeed));
+    if(this.effects[i].active()) { this.effects[i].step(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)); }
+    else { this.effects.splice(i--, 1); }
   }
 };
 
@@ -139,7 +140,7 @@ BombObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
     ];
     geometry.push({model: this.model, material: this.material, uniforms: bombUniformData});
     for(var i=0;i<this.effects.length;i++) {
-      this.effects[i].effect.getDraw(geometry, decals, lights, bounds);
+      this.effects[i].getDraw(geometry, decals, lights, bounds);
     }
     this.targetCircle.getDraw(decals, bounds);
   }

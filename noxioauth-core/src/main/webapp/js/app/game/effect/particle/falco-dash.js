@@ -36,7 +36,7 @@ ParticleFalcoDash.prototype.create = function() {
       this.properties.color.w -= 1.0/this.max;
       this.properties.tone.w -= 1.0/this.max;
     },
-    properties: {pos: util.vec3.add(this.pos, util.vec3.make(0,0,-0.25)), scale: 0.55, color: colorB(), tone: colorA(), angle: 0.0}
+    properties: {pos: util.vec3.add(this.pos, util.vec3.make(0,0,-0.25)), scale: 0.55, color: colorB(), tone: colorA(), rotation: 0.0}
   });
   
   this.pushPart({
@@ -46,11 +46,11 @@ ParticleFalcoDash.prototype.create = function() {
     max: 17,
     length: 17,
     update: function(){
-      this.properties.scale *= 1.125;
+      this.properties.scale *= 1.115;
       this.properties.color.w -= 1.0/this.max;
       this.properties.tone.w -= 1.0/this.max;
     },
-    properties: {pos: util.vec3.add(this.pos, util.vec3.make(0,0,0.15)), scale: 0.35, color: colorB(), tone: colorA(), angle: 0.0}
+    properties: {pos: util.vec3.add(this.pos, util.vec3.make(0,0,0.15)), scale: 0.35, color: colorB(), tone: colorA(), rotation: 0.0}
   });
     
   this.pushPart({
@@ -63,7 +63,7 @@ ParticleFalcoDash.prototype.create = function() {
       this.properties.scale *= 1.115;
       this.properties.color.w -= 1.0/this.max;
     },
-    properties: {offset: util.vec3.make(0,0,0.3), scale: 0.6, color: colorA(), angle: 0.0}
+    properties: {offset: util.vec3.make(0,0,0.3), scale: 0.6, color: colorA(), rotation: 0.0}
   });
   
   

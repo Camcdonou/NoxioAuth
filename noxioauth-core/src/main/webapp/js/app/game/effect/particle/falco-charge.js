@@ -35,7 +35,7 @@ ParticleFalcoCharge.prototype.create = function() {
         this.properties.color.w -= 0.7/this.max;
         this.properties.tone.w -= 0.7/this.max;
       },
-      properties: {offset: util.vec3.make(0,0,0.05), scale: 0.5, color: util.vec4.copy3(colorB(), 0.7), tone: util.vec4.copy3(colorA(), 0.7), angle: 0.0}
+      properties: {offset: util.vec3.make(0,0,0.05), scale: 0.5, color: util.vec4.copy3(colorB(), 0.7), tone: util.vec4.copy3(colorA(), 0.7), rotation: 0.0}
     });
   }
   

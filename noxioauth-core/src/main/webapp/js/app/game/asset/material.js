@@ -648,6 +648,22 @@ Asset.prototype.material.character.shiek.effect.shockwave = {
   texture0: "character/shiek/effect/shockwave",
 };
 
+/* Source File: line.mat */
+Asset.prototype.material.character.shiek.effect.line = {
+  name: "character.shiek.effect.line",
+  shader: "particlemodel",
+  shadow: false,
+  texture0: "character/shiek/effect/line",
+};
+
+/* Source File: markwave.mat */
+Asset.prototype.material.character.shiek.effect.markwave = {
+  name: "character.shiek.effect.markwave",
+  shader: "effect2tone",
+  shadow: false,
+  texture0: "character/shiek/effect/markwave",
+};
+
 /* Source File: smoke.mat */
 Asset.prototype.material.character.shiek.effect.smoke = {
   name: "character.shiek.effect.smoke",

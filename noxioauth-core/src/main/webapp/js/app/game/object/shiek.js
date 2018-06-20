@@ -19,6 +19,7 @@ function PlayerShiek(game, oid, pos, team, color) {
   
   /* State */
   this.markLocation = undefined;
+  this.lastLocation = this.pos;
 
   /* Timers */
   this.chargeTimer = 0;
@@ -32,12 +33,17 @@ function PlayerShiek(game, oid, pos, team, color) {
 };
 
 /* Constants */
-PlayerShiek.FLASH_CHARGE_LENGTH = 5;
+PlayerShiek.FLASH_CHARGE_LENGTH = 7;
 PlayerShiek.BLIP_POWER_MAX = 30;
 PlayerShiek.BLIP_COLOR_A = util.vec4.lerp(util.vec4.make(0.6666, 0.9058, 1.0, 1.0), util.vec4.make(1,1,1,1), 0.5);
 PlayerShiek.BLIP_COLOR_B = util.vec4.make(0.4, 0.5450, 1.0, 1.0);
 
-PlayerShiek.prototype.update = PlayerObject.prototype.update;
+PlayerShiek.prototype.update = function(data) {
+  PlayerObject.prototype.update.call(this, data);
+  
+  this.lastLocation = this.pos;
+};
+
 PlayerShiek.prototype.parseUpd = PlayerObject.prototype.parseUpd;
 
 PlayerShiek.prototype.effectSwitch = function(e) {
@@ -93,6 +99,7 @@ PlayerShiek.prototype.charge = function() {
 
 PlayerShiek.prototype.recall = function() {
   this.effects.push(NxFx.shiek.recall.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.effects.push(NxFx.shiek.vanish.trigger(this.game, util.vec2.toVec3(this.lastLocation, 0), util.vec3.create()));
   this.markLocation = undefined;
   if(this.locationEffect) { this.locationEffect.destroy(); this.locationEffect = undefined; }
 };
