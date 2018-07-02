@@ -20,19 +20,27 @@ Sound.prototype.initWebAudio = function() {
     return false;
   }
   
-  /* @FIXME Settings integration for volume/individual sound settings etc */
+  this.sounds = [];
+  
+  if(!this.createSound("multi/default.wav")) { return false; }
+  if(!this.createSound("multi/reverb.wav")) { return false; }
+  this.reverbData = this.sounds[this.sounds.length-1];
   
   this.masterVolume = this.context.createGain();
   this.masterVolume.gain.value = 1.0;
   this.masterVolume.connect(this.context.destination); // Global Volume -> Speakers
   
+  this.reverb = this.context.createConvolver();
+  //this.reverb.buffer = this.reverbData.buffer;
+  this.reverb.connect(this.masterVolume);  // Reverb -> Global Volume
+  
   this.effectVolume = this.context.createGain();
   this.effectVolume.gain.value = 1.0;
-  this.effectVolume.connect(this.masterVolume); // Effect Volume -> Master Volume
+  this.effectVolume.connect(this.reverb); // Effect Volume -> Reverb
   
   this.voiceVolume = this.context.createGain();
   this.voiceVolume.gain.value = 1.0;
-  this.voiceVolume.connect(this.masterVolume); // Voice Volume -> Master Volume
+  this.voiceVolume.connect(this.reverb); // Voice Volume -> Reverb
   
   this.announcerVolume = this.context.createGain();
   this.announcerVolume.gain.value = 1.0;
@@ -48,10 +56,6 @@ Sound.prototype.initWebAudio = function() {
   
   this.updateVolume();
   
-  this.sounds = [];
-
-  if(!this.createSound("multi/default.wav")) { return false; }
-  
   return true;
 };
 
@@ -62,6 +66,10 @@ Sound.prototype.initFallback = function() {
 
 /* Updates position of audio context for 3d sound */
 Sound.prototype.update = function() {
+  if(this.reverbData.buffer !== undefined && this.oof !== true) { /* @TODO: Hacky but functional */
+    this.reverb.buffer = this.reverbData.buffer;
+    this.oof = true;
+  }
   this.updateVolume();
   var pos = {x: -this.game.display.camera.pos.x, y: -this.game.display.camera.pos.y, z: 2.0};
   if(this.context.listener.positionX) {

@@ -26,9 +26,18 @@ PlayerFoxRed.prototype.timers = PlayerFox.prototype.timers;
 
 PlayerFoxRed.prototype.ui = PlayerFox.prototype.ui;
 
-PlayerFoxRed.prototype.air  = PlayerFox.prototype.air;
-PlayerFoxRed.prototype.jump = PlayerFox.prototype.jump;
-PlayerFoxRed.prototype.stun = PlayerFox.prototype.stun;
+PlayerFoxRed.prototype.air  = PlayerObject.prototype.air;
+PlayerFoxRed.prototype.jump = PlayerObject.prototype.jump;
+PlayerFoxRed.prototype.land = PlayerObject.prototype.land;
+
+PlayerFoxRed.prototype.stun = PlayerObject.prototype.stun;
+PlayerFoxRed.prototype.stunGeneric = PlayerObject.prototype.stunGeneric;
+PlayerFoxRed.prototype.stunSlash = PlayerObject.prototype.stunSlash;
+PlayerFoxRed.prototype.stunElectric = PlayerObject.prototype.stunElectric;
+PlayerFoxRed.prototype.stunFire = PlayerObject.prototype.stunFire;
+PlayerFoxRed.prototype.criticalHit = PlayerObject.prototype.criticalHit;
+PlayerFoxRed.prototype.explode = PlayerObject.prototype.explode;
+PlayerFoxRed.prototype.fall = PlayerObject.prototype.fall;
 
 PlayerFoxRed.prototype.blip = PlayerFox.prototype.blip;
 

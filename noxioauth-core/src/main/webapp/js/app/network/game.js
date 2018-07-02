@@ -22,6 +22,10 @@ Game.prototype.isConnected = function () {
 };
 
 Game.prototype.connect = function(address, port) {
+  
+  this.address = address;
+  this.port = port;
+  
   if(this.isConnected()) {
     main.menu.error.showError("Connection Error", "Attempting to open multiple connections.");
     main.close();
@@ -94,6 +98,8 @@ Game.prototype.send = function(packet){
 Game.prototype.close = function(){
   if(this.webSocket !== undefined) {
     this.webSocket.close();
+    this.address = undefined;
+    this.port = undefined;
   }
 };
 

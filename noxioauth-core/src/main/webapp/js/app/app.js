@@ -26,9 +26,20 @@ Main.prototype.setStats = function(stats) {
 };
 
 Main.prototype.startGame = function(name, settings, map) {
-  if(!this.inGame()) {
-    this.game = new NoxioGame(name, settings, map);
-    this.menu.game.show();
+  if(!this.inGame() && main.net.game.address) {
+    this.menu.connect.show("Downloading map file...", 0);
+    $.ajax({
+      url: "http://" + main.net.game.address + ":" + main.net.game.port + "/noxiogame/map/" + map,
+      type: 'GET',
+      timeout: 3000,
+      success: function(data) {
+        main.game = new NoxioGame(name, settings, data);
+        main.menu.game.show();
+      },
+      error: function() {
+        main.menu.error.show("Map Error", "Server returned FNF(404) for map: " + map);
+      }
+    });
   }
   else { this.menu.error.showError("State Error", "Attempted to start a game while a game was running."); this.close(); }
 };
