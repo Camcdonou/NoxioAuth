@@ -27,10 +27,9 @@ function PlayerCaptain(game, oid, pos, team, color) {
   this.punchCooldown = 0;
   this.kickActive = 0;
   this.kickCooldown = 0;
-    
-  /* Visual Hitboxes */
-  this.hitboxModelA = this.game.display.getModel("multi.hitbox.eqtriY");
-  this.hitboxModelB = this.game.display.getModel("multi.hitbox.circle");
+  
+  /* Decal */
+  this.indicator = new Decal(this.game, "character.captain.decal.indicator", util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), util.vec3.make(0.0, 0.0, 1.0), 1.1, 0, util.vec4.make(1,1,1,1), 0, 0, 0);
   
   /* UI */
   this.uiMeters = [
@@ -46,13 +45,24 @@ function PlayerCaptain(game, oid, pos, team, color) {
   PlayerCaptain.KICK_LENGTH = 7;
   PlayerCaptain.KICK_RADIUS = 0.55;
   PlayerCaptain.KICK_OFFSET = 0.05;
-  PlayerCaptain.PUNCH_HITBOX_SIZE = 0.75;
+  PlayerCaptain.PUNCH_HITBOX_SIZE = 0.65;
   PlayerCaptain.PUNCH_HITBOX_OFFSET = 0.5;
   PlayerCaptain.FIRE_COLOR_A = util.vec4.make(1.0, 0.956, 0.490, 1.0);
   PlayerCaptain.FIRE_COLOR_B = util.vec4.make(1.0, 0.654, 0.286, 1.0);
   PlayerCaptain.FIRE_COLOR_C = util.vec4.make(1.0, 0.462, 0.223, 1.0);
 
-PlayerCaptain.prototype.update = PlayerObject.prototype.update;
+PlayerCaptain.prototype.update = function(data) {
+  PlayerObject.prototype.update.call(this, data);
+  
+  /* Step Effects */
+  if(this.chargeTimer>0) {
+    var angle = (util.vec2.angle(util.vec2.make(1, 0), this.punchDirection)*(this.punchDirection.y>0?-1:1))+(Math.PI*0.5);
+    this.indicator.step(util.vec2.toVec3(util.vec2.add(this.pos, util.vec2.scale(this.punchDirection, PlayerCaptain.PUNCH_HITBOX_OFFSET*1.13)), Math.min(this.height, 0.0)), 1.1, angle);
+    if(Math.floor(this.chargeTimer/5)%2) { this.indicator.setColor(util.vec4.make(1, 1, 1, 1)); }
+    else { this.indicator.setColor(util.vec4.make(1, 0, 0, 1)); }
+  }
+};
+
 PlayerCaptain.prototype.parseUpd = PlayerObject.prototype.parseUpd;
 
 PlayerCaptain.prototype.effectSwitch = function(e) {
@@ -70,13 +80,7 @@ PlayerCaptain.prototype.timers = function() {
   if(this.kickCooldown > 0) { this.kickCooldown--; }
   if(this.chargeTimer > 0) { this.chargeTimer--; }
   if(this.punchCooldown > 0) { this.punchCooldown--; }
-  if(this.charging) {
-    this.hitboxPos = util.vec2.add(this.pos, util.vec2.scale(this.punchDirection, PlayerCaptain.PUNCH_HITBOX_OFFSET));
-    this.hitboxColor = util.vec4.make(0, 1, 0, 0.5);
-    this.hitboxScale = PlayerCaptain.PUNCH_HITBOX_SIZE;
-    this.hitBoxAngle = (util.vec2.angle(util.vec2.make(1, 0), this.punchDirection)*(this.punchDirection.y>0?-1:1))+(Math.PI*0.5);
-    this.drawHitbox = this.hitboxModelA;
-  }
+  this.glow = this.chargeTimer>0?1-(this.chargeTimer/PlayerCaptain.PUNCH_CHARGE_LENGTH):this.punchCooldown/(PlayerCaptain.PUNCH_COOLDOWN_LENGTH-PlayerCaptain.PUNCH_CHARGE_LENGTH);
 };
 
 PlayerCaptain.prototype.ui = function() {
@@ -117,13 +121,8 @@ PlayerCaptain.prototype.charge = function() {
 };
 
 PlayerCaptain.prototype.punch = function() {
-  this.effects.push(NxFx.captain.punch.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.effects.push(NxFx.captain.punch.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.punchDirection, 0.0)));
   this.charging = false;
-  this.hitboxPos = util.vec2.add(this.pos, util.vec2.scale(this.punchDirection, PlayerCaptain.PUNCH_HITBOX_OFFSET));
-  this.hitboxColor = util.vec4.make(1, 0, 0, 0.5);
-  this.hitboxScale = PlayerCaptain.PUNCH_HITBOX_SIZE;
-  this.hitBoxAngle = (util.vec2.angle(util.vec2.make(1, 0), this.punchDirection)*(this.punchDirection.y>0?-1:1))+(Math.PI*0.5);
-  this.drawHitbox = this.hitboxModelA;
 };
 
 PlayerCaptain.prototype.kick = function() {
@@ -135,11 +134,7 @@ PlayerCaptain.prototype.kick = function() {
 };
 
 PlayerCaptain.prototype.kicking = function() {
-  this.hitboxPos = util.vec2.add(this.pos, util.vec2.scale(this.kickDirection, PlayerCaptain.KICK_OFFSET));
-  this.hitboxColor = util.vec4.make(1, 0, 0, 0.5);
-  this.hitboxScale = PlayerCaptain.KICK_RADIUS;
-  this.hitBoxAngle = 0;
-  this.drawHitbox = this.hitboxModelB;
+
 };
 
 PlayerCaptain.prototype.taunt = function() {
@@ -152,7 +147,12 @@ PlayerCaptain.prototype.setHeight = PlayerObject.prototype.setHeight;
 
 PlayerCaptain.prototype.setLook = PlayerObject.prototype.setLook;
 PlayerCaptain.prototype.setSpeed = PlayerObject.prototype.setSpeed;
-PlayerCaptain.prototype.getDraw = PlayerObject.prototype.getDraw;
+PlayerCaptain.prototype.getDraw = function(geometry, decals, lights, bounds) {
+  PlayerObject.prototype.getDraw.call(this, geometry, decals, lights, bounds);
+  if(this.chargeTimer>0 && !this.hide) {
+    this.indicator.getDraw(decals, bounds);
+  }
+};
 
 PlayerCaptain.prototype.destroy = PlayerObject.prototype.destroy;
 

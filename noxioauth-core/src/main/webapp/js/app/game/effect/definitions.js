@@ -262,22 +262,32 @@ NxFx.puff = {
 };
 
 /* global PlayerCaptain */
+/* global ParticleCaptainCharge */
+/* global ParticleCaptainPunch */
+/* global ParticleCaptainKick */
 NxFx.captain = {
   charge: new EffectDefinition(
-    "Captain-Charge", util.vec3.make(0, 0, 0.25), 0, true,
+    "Captain-Charge", util.vec3.make(0, 0, 0.0), 0, true,
     [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerCaptain.FIRE_COLOR_B, 0), PlayerCaptain.FIRE_COLOR_C], [1.25, 2.45], 35, "slow"], attachment: true, delay: 0},
+      {class: ParticleCaptainCharge, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCaptain.FIRE_COLOR_A, PlayerCaptain.FIRE_COLOR_C], attachment: true, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/punch0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   punch: new EffectDefinition(
     "Captain-Punch", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/punch1.wav", 0.7, 0.0, "effect"], attachment: true, delay: 0}
+      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerCaptain.FIRE_COLOR_B, util.vec4.copy3(PlayerCaptain.FIRE_COLOR_C, 0)], [2.6, 3.45], 25, "slow"], attachment: true, delay: 0},
+      {class: ParticleCaptainPunch, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCaptain.FIRE_COLOR_A, PlayerCaptain.FIRE_COLOR_C], attachment: true, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/punch1.wav", 0.75, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   kick: new EffectDefinition(
-    "Captain-Punch", util.vec3.make(0, 0, 0.25), 0, true,
+    "Captain-Kick", util.vec3.make(0, 0, 0.25), 0, true,
     [
+      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerCaptain.FIRE_COLOR_B, util.vec4.copy3(PlayerCaptain.FIRE_COLOR_C, 0)], [2.6, 3.45], 25, "slow"], attachment: true, delay: 0},
+      {class: ParticleCaptainKick, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCaptain.FIRE_COLOR_A, PlayerCaptain.FIRE_COLOR_C], attachment: true, delay: 0},
+      {class: ParticleBurn, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCaptain.FIRE_COLOR_A, PlayerCaptain.FIRE_COLOR_C], attachment: true, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/kick0.wav", 0.8, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )

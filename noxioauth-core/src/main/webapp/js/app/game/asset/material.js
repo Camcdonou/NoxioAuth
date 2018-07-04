@@ -29,6 +29,8 @@ Asset.prototype.material.character.marth.ui = {};
 Asset.prototype.material.character.marth.effect = {};
 Asset.prototype.material.character.captain = {};
 Asset.prototype.material.character.captain.ui = {};
+Asset.prototype.material.character.captain.decal = {};
+Asset.prototype.material.character.captain.effect = {};
 Asset.prototype.material.character.shiek = {};
 Asset.prototype.material.character.shiek.ui = {};
 Asset.prototype.material.character.shiek.effect = {};
@@ -598,6 +600,14 @@ Asset.prototype.material.character.captain.ui.meterpunch = {
   texture0: "character/captain/ui/meterpunch",
 };
 
+/* Source File: indicator.mat */
+Asset.prototype.material.character.captain.decal.indicator = {
+  name: "character.captain.decal.indicator",
+  shader: "decal_glow",
+  shadow: false,
+  texture0: "character/captain/decal/indicator",
+};
+
 /* Source File: captain.mat */
 Asset.prototype.material.character.captain.captain = {
   name: "character.captain.captain",
@@ -605,6 +615,38 @@ Asset.prototype.material.character.captain.captain = {
   shadow: true,
   texture0: "character/captain/captain",
   texture1: "character/captain/captain_normal",
+};
+
+/* Source File: shockwave.mat */
+Asset.prototype.material.character.captain.effect.shockwave = {
+  name: "character.captain.effect.shockwave",
+  shader: "effect2tone",
+  shadow: false,
+  texture0: "character/captain/effect/shockwave",
+};
+
+/* Source File: ray.mat */
+Asset.prototype.material.character.captain.effect.ray = {
+  name: "character.captain.effect.ray",
+  shader: "particlemodel",
+  shadow: false,
+  texture0: "character/captain/effect/ray",
+};
+
+/* Source File: blast.mat */
+Asset.prototype.material.character.captain.effect.blast = {
+  name: "character.captain.effect.blast",
+  shader: "particle2tone",
+  shadow: false,
+  texture0: "character/captain/effect/shockwave",
+};
+
+/* Source File: flash.mat */
+Asset.prototype.material.character.captain.effect.flash = {
+  name: "character.captain.effect.flash",
+  shader: "particle",
+  shadow: false,
+  texture0: "character/captain/effect/flash",
 };
 
 /* Source File: iconlarge.mat */

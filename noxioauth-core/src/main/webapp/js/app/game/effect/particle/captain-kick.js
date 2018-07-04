@@ -2,24 +2,24 @@
 /* global main */
 /* global util */
 /* global Particle */
+/* global PlayerCaptain*/
 
-/* Define Dash Particle System Class */
-function ParticleFalcoDash(game, pos, vel, colorA, colorB) {
+/* Define Captain Kick Particle System Class */
+function ParticleCaptainKick(game, pos, vel, colorA, colorB) {
   /* Colors to use for particles */
   this.colorA = colorA;
   this.colorB = colorB;
   Particle.call(this, game, pos, vel);
 }
 
-ParticleFalcoDash.prototype.create = function() {
+ParticleCaptainKick.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   var part2x = this.game.display.getModel("multi.fx.part2x");
   
   var fireMat = this.game.display.getMaterial("multi.hit.burn");
-  var shockwaveMat = this.game.display.getMaterial("character.falco.effect.shockwave");
-  var flashMat = this.game.display.getMaterial("character.falco.effect.flash");
   var sparkMat = this.game.display.getMaterial("multi.hit.spark");
-  var blastMat = this.game.display.getMaterial("character.falco.effect.blast");
+  var flashMat = this.game.display.getMaterial("character.captain.effect.flash");
+  var blastMat = this.game.display.getMaterial("character.captain.effect.blast");
   
   var parent = this;
   var colorA = function() { return util.vec4.copy(parent.colorA); };
@@ -27,54 +27,40 @@ ParticleFalcoDash.prototype.create = function() {
   
   this.pushPart({
     model: square,
-    material: shockwaveMat,
-    delay: 0,
-    max: 18,
-    length: 18,
-    update: function(){
-      this.properties.scale *= 1.115;
-      this.properties.color.w -= 1.0/this.max;
-      this.properties.tone.w -= 1.0/this.max;
-    },
-    properties: {pos: util.vec3.add(this.pos, util.vec3.make(0,0,-0.245)), scale: 0.55, color: colorB(), tone: colorA(), rotation: 0.0}
-  });
-  
-  this.pushPart({
-    model: square,
     material: blastMat,
     delay: 0,
-    max: 17,
-    length: 17,
+    max: 14,
+    length: 14,
     update: function(){
-      this.properties.scale *= 1.115;
+      this.properties.scale *= 1.155;
       this.properties.color.w -= 1.0/this.max;
       this.properties.tone.w -= 1.0/this.max;
     },
-    properties: {pos: util.vec3.add(this.pos, util.vec3.make(0,0,0.15)), scale: 0.35, color: colorB(), tone: colorA(), rotation: 0.0}
+    properties: {offset: util.vec3.make(0,0,0.15), scale: 0.45, color: colorB(), tone: colorA(), rotation: 0.0}
   });
     
   this.pushPart({
     model: square,
     material: flashMat,
     delay: 0,
-    max: 18,
-    length: 18,
+    max: 12,
+    length: 12,
     update: function(){
-      this.properties.scale *= 1.115;
-      this.properties.color.w -= 1.0/this.max;
+      this.properties.scale *= 1.175;
+      this.properties.color.w -= this.length<=(this.max*0.5)?0.25/this.max:0.75/this.max;
     },
-    properties: {offset: util.vec3.make(0,0,0.3), scale: 0.6, color: colorA(), rotation: 0.0}
+    properties: {offset: util.vec3.make(0,0,0.15), scale: 0.7, color: colorA(), rotation: 0.0}
   });
   
-  
-  for(var i=0;i<45;i++) {
+  var off = util.vec2.toVec3(util.vec2.scale(util.vec2.normalize(this.vel), 0.3), 0);
+  for(var i=0;i<65;i++) {
     this.pushPart({
       model: square,
       material: fireMat,
       delay: Math.floor(Math.random()*10),
-      length: 10+Math.floor(Math.random()*15),
+      length: 6+Math.floor(Math.random()*12),
       spawn: function(pos, vel) {
-        this.properties.pos = util.vec3.add(pos, util.vec3.scale(util.vec3.random(), 0.15));
+        this.properties.pos = util.vec3.add(util.vec3.add(pos, util.vec3.scale(util.vec3.random(), 0.2)), off);
         var veldir = util.vec3.normalize(util.vec3.add(util.vec3.scale(util.vec3.random(), 0.25), util.vec3.inverse(util.vec3.normalize(vel))));
         this.properties.vel = util.vec3.scale(veldir, 0.05+(Math.random()*0.025));
       },
@@ -88,7 +74,7 @@ ParticleFalcoDash.prototype.create = function() {
         this.properties.color.w = Math.min(1, this.properties.opacity);
         this.properties.tone.w = Math.min(1, this.properties.opacity);
       },
-      properties: {pos: util.vec3.add(this.pos, util.vec3.scale(util.vec3.random(), 0.15)), vel: util.vec3.scale(util.vec3.inverse(util.vec3.normalize(this.vel)), 0.05+(Math.random()*0.025)), scale: 0.45, rotation: Math.random()*6.28, color: colorA(), tone: colorB(), frame: Math.floor(Math.random()*32), opacity: 2}
+      properties: {pos: util.vec3.add(util.vec3.add(this.pos, util.vec3.scale(util.vec3.random(), 0.2)), off), vel: util.vec3.scale(util.vec3.inverse(util.vec3.normalize(this.vel)), 0.05+(Math.random()*0.025)), scale: 0.475, rotation: Math.random()*6.28, color: colorA(), tone: colorB(), frame: Math.floor(Math.random()*32), opacity: 2}
     });
   }
   
@@ -130,11 +116,11 @@ ParticleFalcoDash.prototype.create = function() {
   
 };
 
-ParticleFalcoDash.prototype.pushPart = Particle.prototype.pushPart;
+ParticleCaptainKick.prototype.pushPart = Particle.prototype.pushPart;
 
-ParticleFalcoDash.prototype.step = Particle.prototype.step;
+ParticleCaptainKick.prototype.step = Particle.prototype.step;
 
-ParticleFalcoDash.prototype.getDraw = function(geometry, decals, lights, bounds) {
+ParticleCaptainKick.prototype.getDraw = function(geometry, decals, lights, bounds) {
   var cameraZ = this.game.display.camera.rot.z;
   for(var i=0;i<this.particles.length;i++) {
     var part = this.particles[i];
@@ -154,7 +140,7 @@ ParticleFalcoDash.prototype.getDraw = function(geometry, decals, lights, bounds)
   }
 };
 
-ParticleFalcoDash.prototype.active = Particle.prototype.active;
+ParticleCaptainKick.prototype.active = Particle.prototype.active;
 
 /* Used by EffectDefinition.js */
-ParticleFalcoDash.fxId = "particle";
+ParticleCaptainKick.fxId = "particle";

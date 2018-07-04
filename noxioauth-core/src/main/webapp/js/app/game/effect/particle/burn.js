@@ -31,8 +31,8 @@ ParticleBurn.prototype.create = function() {
         this.properties.scale += 0.005;
         this.properties.rotation += 0.0095;
         this.properties.opacity -= 2/this.length;
-        this.properties.color.w = this.properties.opacity;
-        this.properties.tone.w = this.properties.opacity;
+        this.properties.color.w = Math.min(1, this.properties.opacity);
+        this.properties.tone.w = Math.min(1, this.properties.opacity);
       },
       properties: {offset: util.vec3.scale(util.vec3.random(), 0.4), scale: 0.4, rotation: Math.random()*6.28, color: colorA(), tone: colorB(), frame: Math.floor(Math.random()*32), opacity: 2}
     });

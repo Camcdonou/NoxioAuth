@@ -3,63 +3,73 @@
 /* global util */
 /* global Particle */
 
-/* Define Dash Particle System Class */
-function ParticleFalcoCharge(game, pos, vel, colorA, colorB) {
+/* Define Captain Punch Charge Particle System Class */
+function ParticleCaptainCharge(game, pos, vel, colorA, colorB) {
   /* Colors to use for particles */
   this.colorA = colorA;
   this.colorB = colorB;
   Particle.call(this, game, pos, vel);
 }
 
-ParticleFalcoCharge.prototype.create = function() {
+ParticleCaptainCharge.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   var part2x = this.game.display.getModel("multi.fx.part2x");
   
   var fireMat = this.game.display.getMaterial("multi.hit.burn");
-  var shockwaveMat = this.game.display.getMaterial("character.falco.effect.shockwave");
+  var shockwaveMat = this.game.display.getMaterial("character.captain.effect.shockwave");
+  var rayMat = this.game.display.getMaterial("character.captain.effect.ray");
   var sparkMat = this.game.display.getMaterial("multi.hit.spark");
   
   var parent = this;
   var colorA = function() { return util.vec4.copy(parent.colorA); };
   var colorB = function() { return util.vec4.copy(parent.colorB); };
+  var tl = 35; /* Effect total length */
   
-  for(var i=0;i<3;i++) {
+  this.pushPart({
+    model: square,
+    material: shockwaveMat,
+    delay: 1,
+    max: tl-1,
+    length: tl-1,
+    update: function(){
+      this.properties.scale -= 0.0525;
+      this.properties.color.w += 0.7/this.max;
+      this.properties.tone.w += 0.7/this.max;
+      this.properties.rotation += 0.003;
+    },
+    properties: {offset: util.vec3.make(0,0,0.05), scale: 2.5, color: util.vec4.copy3(colorB(), 0.0), tone: util.vec4.copy3(colorA(), 0.0), rotation: 0.0}
+  });
+  
+  var upness = util.vec3.make(0,0,0.25);
+  var up = util.vec3.make(0.,0.,1.);
+  for(var i=0;i<45;i++) {
+    var r = util.vec3.random();
+    var d = 1+Math.floor(Math.random()*28);
+    var l = 8+Math.floor(Math.random()*3);
     this.pushPart({
-      model: square,
-      material: shockwaveMat,
-      delay: i*5,
-      max: 15,
-      length: 15,
-      update: function(){
-        this.properties.scale += 0.125;
-        this.properties.color.w -= 0.7/this.max;
-        this.properties.tone.w -= 0.7/this.max;
+      model: part2x,
+      material: rayMat,
+      delay: d,
+      max: l,
+      length: l,
+      spawn: function(p, v) {
+        this.properties.offset = util.vec3.add(upness, util.vec3.scale(this.properties.dir, this.properties.dist));
+        this.properties.angle = util.vec3.angle(up, this.properties.dir);
       },
-      properties: {offset: util.vec3.make(0,0,0.05), scale: 0.5, color: util.vec4.copy3(colorB(), 0.7), tone: util.vec4.copy3(colorA(), 0.7), rotation: 0.0}
-    });
-  }
-  
-  for(var i=0;i<55;i++) {
-    this.pushPart({
-      model: square,
-      material: fireMat,
-      delay: Math.floor(Math.random()*18),
-      length: 15+Math.floor(Math.random()*24),
       update: function() {
-        this.properties.offset = util.vec2.toVec3(util.vec2.add(this.properties.offset, util.vec2.scale(this.properties.offset, 0.06)), 0.1);
-        
-        this.properties.scale += 0.015;
-        this.properties.rotation += 0.0095;
-        this.properties.opacity -= 2/this.length;
-        this.properties.color.w = Math.min(1, this.properties.opacity);
-        this.properties.tone.w = Math.min(1, this.properties.opacity);
+        this.properties.offset = util.vec3.add(upness, util.vec3.scale(this.properties.dir, this.properties.dist));
+        this.properties.angle = util.vec3.angle(up, this.properties.dir);
+        this.properties.scale += 0.0125;
+        this.properties.dist -= 1.15/this.max;
+        this.properties.color.w = Math.min(1, this.properties.color.w + ((this.max*0.15)-this.length<=0?0.075:-0.3));
+        this.properties.tone.w = this.properties.color.w;
       },
-      properties: {offset: util.vec2.toVec3(util.vec2.scale(util.vec2.random(), 0.3), 0.1), scale: 0.3, rotation: Math.random()*6.28, color: colorA(), tone: colorB(), frame: Math.floor(Math.random()*32), opacity: 2}
+      properties: {offset: util.vec3.create(), dir: r, dist: 1.25, scale: 0.355, angle: util.vec3.create(), color: util.vec4.copy3(colorA(), 0.15), tone: util.vec4.copy3(colorB(), 0.15)}
     });
   }
   
   var up = util.vec3.make(0.,0.,1.);
-  for(var i=0;i<45;i++) {
+  for(var i=0;i<26;i++) {
     var rand = util.vec3.normalize(util.vec2.toVec3(util.vec2.random(), Math.abs(Math.random()*0.125) + 0.05));
     var speed = (Math.random()*0.125)+0.105;
     var cmbvel = util.vec3.add(util.vec3.scale(this.vel, 0.5), util.vec3.scale(rand, speed));
@@ -68,8 +78,8 @@ ParticleFalcoCharge.prototype.create = function() {
     this.pushPart({
       model: part2x,
       material: sparkMat,
-      delay: Math.floor(Math.random()*20),
-      length: 5+Math.floor(Math.random()*65),
+      delay: Math.floor(Math.random()*tl),
+      length: 25+Math.floor(Math.random()*35),
       spawn: function(p, v) {
         var pos = p?p:parent.pos;
         var vel = v?v:parent.vel;
@@ -77,7 +87,7 @@ ParticleFalcoCharge.prototype.create = function() {
         var speed = (Math.random()*0.125)+0.105;
         var cmbvel = util.vec3.add(util.vec3.scale(vel, 0.5), util.vec3.scale(rand, speed));
         var axAng = util.vec3.angle(up, cmbvel);
-        this.properties.pos = util.vec3.add(pos, util.vec3.scale(rand, 0.25));
+        this.properties.pos = util.vec3.add(util.vec3.add(pos, util.vec3.scale(rand, 0.25)), upness);
         this.properties.vel = cmbvel;
         this.properties.angle = axAng;
       },
@@ -92,17 +102,17 @@ ParticleFalcoCharge.prototype.create = function() {
         this.properties.color.w -= 1/this.length;
         this.properties.tone.w -= 1/this.length;
       },
-      properties: {pos: util.vec3.add(this.pos, util.vec3.scale(rand, 0.25)), scale: 0.165, vel: cmbvel, angle: axAng, color: colorA(), tone: colorB()}
+      properties: {pos: util.vec3.add(util.vec3.add(this.pos, util.vec3.scale(rand, 0.25)), upness), scale: 0.165, vel: cmbvel, angle: axAng, color: colorA(), tone: colorB()}
     });
   }
   
 };
 
-ParticleFalcoCharge.prototype.pushPart = Particle.prototype.pushPart;
+ParticleCaptainCharge.prototype.pushPart = Particle.prototype.pushPart;
 
-ParticleFalcoCharge.prototype.step = Particle.prototype.step;
+ParticleCaptainCharge.prototype.step = Particle.prototype.step;
 
-ParticleFalcoCharge.prototype.getDraw = function(geometry, decals, lights, bounds) {
+ParticleCaptainCharge.prototype.getDraw = function(geometry, decals, lights, bounds) {
   var cameraZ = this.game.display.camera.rot.z;
   for(var i=0;i<this.particles.length;i++) {
     var part = this.particles[i];
@@ -122,7 +132,7 @@ ParticleFalcoCharge.prototype.getDraw = function(geometry, decals, lights, bound
   }
 };
 
-ParticleFalcoCharge.prototype.active = Particle.prototype.active;
+ParticleCaptainCharge.prototype.active = Particle.prototype.active;
 
 /* Used by EffectDefinition.js */
-ParticleFalcoCharge.fxId = "particle";
+ParticleCaptainCharge.fxId = "particle";
