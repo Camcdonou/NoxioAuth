@@ -50,7 +50,7 @@ ObjectiveUI.prototype.generate = function() {
   var sblack  = util.vec4.make(0.0, 0.0, 0.0, 1.0);
   var swhite = util.vec4.make(1.0, 1.0, 1.0, 1.0);
   
-  var container = new UIContainer({x: '+', y: '+'});
+  var container = new UIContainer({x: '/', y: '/'});
   var timerContainer = new UIContainer({x: '=', y: '-'});
     
   var objectives = [];

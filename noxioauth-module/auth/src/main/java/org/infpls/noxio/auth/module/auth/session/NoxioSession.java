@@ -193,7 +193,8 @@ public class NoxioSession {
   public class UserData {
     public final String uid;                   // Unique ID for user
     public final String name, display;         // User is always lower case
-    public final User.Type type;               // Payed/Unpayed user table (see User.java)
+    public final User.Type type;                    // User type (see table in noxioauth User.java)
+    public final boolean supporter;            // Outside supporter flag
 
     public final UserSettings settings;
     public final UserUnlocks unlocks;
@@ -202,6 +203,7 @@ public class NoxioSession {
       uid = user.uid;
       name = user.name; display = user.display;
       type = user.getType();
+      supporter = user.supporter;
       this.settings = settings; this.unlocks = unlocks;
     }
   }

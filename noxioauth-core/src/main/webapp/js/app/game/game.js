@@ -11,7 +11,7 @@ function NoxioGame(name, settings, map) {
   this.container = document.getElementById("canvas-container");
   
   this.SERVER_TICK_RATE = 33;               // Number of milliseconds per server tick
-  this.FDLC_TARGET = 1; this.FDLC_MAX = 3;  // FDLC range constants
+  this.FDLC_TARGET = main.settings.game.lagComp; this.FDLC_MAX = main.settings.game.lagComp+2;  // FDLC range constants
   this.packetFDLC = [{data:""},{data:""}];  // ~~~MAGIC~~~
   this.deltaFDLC = util.time.now();
   

@@ -28,6 +28,13 @@ function SettingGameMenu() {
     }
   };
   
+  this.message = {
+    a: document.getElementById("setgame-message-a"),
+    b: document.getElementById("setgame-message-b"),
+    va: undefined,
+    vb: undefined
+  };
+  
   this.sound = {
     tog: document.getElementById("setgame-usesound"),
     file: document.getElementById("setgame-snd-file"),
@@ -57,6 +64,11 @@ function SettingGameMenu() {
     }
   ];
   
+  this.lagComp = {
+    element: document.getElementById("setgame-lagcomp"),
+    name: ["Immediate", "Normal", "Aggressive", "Very Aggressive"]
+  };
+  
   window.onclick = function(event) {
     if (event.target === parent.modal) {
       main.menu.setgame.hideColorModal();
@@ -69,6 +81,21 @@ SettingGameMenu.prototype.update = function() {
   this.generateColorBtns(this.colorValues.redColor, util.kalide.getRedsNoTruncate(main.settings.game.redColor));
   this.generateColorBtns(this.colorValues.blueColor, util.kalide.getBluesNoTruncate(main.settings.game.blueColor));
   this.sound.data.innerHTML = main.settings.game.customSoundFile ? main.settings.game.customSoundFile : "";
+  
+  if(this.message.a.value && this.message.a.value !== this.message.va) { main.settings.game.customMessageA = this.message.a.value; this.changed = true; }
+  if(this.message.b.value && this.message.b.value !== this.message.vb) { main.settings.game.customMessageB = this.message.b.value; this.changed = true; }
+  this.message.a.value = main.settings.game.customMessageA?main.settings.game.customMessageA:"";
+  this.message.b.value = main.settings.game.customMessageB?main.settings.game.customMessageB:"";
+  this.message.va = this.message.a.value;
+  this.message.vb = this.message.b.value;
+  if(main.unlocks.has("FT_MESSAGE")) {
+    this.message.a.removeAttribute("disabled");
+    this.message.b.removeAttribute("disabled");
+  }
+  else {
+    this.message.a.setAttribute("disabled", "disabled");
+    this.message.b.setAttribute("disabled", "disabled");
+  }
   
   if(main.unlocks.has("FT_SOUND")) {
     var tmp = this;
@@ -88,6 +115,8 @@ SettingGameMenu.prototype.update = function() {
   }
   
   this.updateToggles();
+  
+  this.lagComp.element.innerHTML = this.lagComp.name[main.settings.game.lagComp];
 };
 
 /* Builds the color display and editor things. */
@@ -189,7 +218,13 @@ SettingGameMenu.prototype.hideColorModal = function() {
   this.modal.style.display = "none";
 };
 
+SettingGameMenu.prototype.lagCompBtn = function() {
+  main.settings.game.lagComp = main.settings.game.lagComp+1>=this.lagComp.name.length?0:main.settings.game.lagComp+1;
+  this.update();
+};
+
 SettingGameMenu.prototype.back = function() {
+  this.update();
   if(this.changed) { main.settings.save(); this.changed = false; }
   main.menu.online.show();
 };

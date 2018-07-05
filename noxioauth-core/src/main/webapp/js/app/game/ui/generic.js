@@ -175,10 +175,10 @@ UIContainer.prototype.makeAlign = function(window) {
   for(var i=0;i<this.elements.length;i++) {
     for(var j=0;j<this.elements[i].neutral.block.length;j++) {
       var block = this.elements[i].neutral.block[j];
-      if(!x || block.pos.x < x) { x = block.pos.x; }
-      if(!y || block.pos.y < y) { y = block.pos.y; }
-      if(!w || block.pos.x+block.size.x > w) { w = block.pos.x+block.size.x; }
-      if(!h || block.pos.y+block.size.y > h) { h = block.pos.y+block.size.y; }
+      if(x === undefined || block.pos.x < x) { x = block.pos.x; }
+      if(y === undefined || block.pos.y < y) { y = block.pos.y; }
+      if(w === undefined || block.pos.x+block.size.x > w) { w = block.pos.x+block.size.x; }
+      if(h === undefined || block.pos.y+block.size.y > h) { h = block.pos.y+block.size.y; }
     }
   }
   
@@ -186,11 +186,13 @@ UIContainer.prototype.makeAlign = function(window) {
   switch(this.align.x) {
     case "-" : { a = window.x-w; break; }
     case "=" : { a = (window.x-w)*0.5; break; }
+    case "+" : { a = -x; break; }
     default  : { a = 0; break; }
   }
   switch(this.align.y) {
     case "-" : { b = window.y-h; break; }
     case "=" : { b = (window.y-h)*0.5; break; }
+    case "+" : { b = -y; break; }
     default  : { b = 0; break; }
   }
   return util.vec2.make(a,b);

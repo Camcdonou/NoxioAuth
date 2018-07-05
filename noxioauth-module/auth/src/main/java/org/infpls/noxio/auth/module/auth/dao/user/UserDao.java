@@ -35,24 +35,24 @@ public class UserDao {
     final UserSettings us = new UserSettings(uid);
     try {
       dao.jdbc.update(
-        "INSERT into USERS ( UID, NAME, DISPLAY, EMAIL, HASH, TYPE, CREATED, UPDATED, LASTLOGIN ) VALUES ( ?, ?, ?, ?, ?, ?, NOW(), NOW(), NOW() )",
-              uid, user, user, email, sash, User.Type.FREE.name()
+        "INSERT into USERS ( UID, NAME, DISPLAY, EMAIL, HASH, TYPE, SUPPORTER, CREATED, UPDATED, LASTLOGIN ) VALUES ( ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), NOW() )",
+              uid, user, user, email, sash, User.Type.FREE.name(), false
       );
       dao.jdbc.update(
         "INSERT into SETTINGS ( " +
         "UID, UPDATED, " +
-        "VOLMASTER, VOLMUSIC, VOLVOICE, VOLANNOUNCER, VOLFX, " +
+        "VOLMASTER, VOLMUSIC, VOLVOICE, VOLANNOUNCER, VOLUI, VOLFX, " +
         "GFXUPGAME, GFXUPUI, GFXUPSKY, GFXSHADOWSIZE, GFXSAFEMODE, " +
         "CONENABLEGAMEPAD, CONACTIONA, CONACTIONB, CONJUMP, CONTAUNT, CONTOSS, CONSCOREBOARD, " +
-        "GAMCOLOR, GAMREDCOLOR, GAMBLUECOLOR, GAMUSECUSTOMSOUND, GAMCUSTOMSOUNDFILE, " +
-        "TOGDISABLEALTS, TOGDISABLECUSTOMSOUND, TOGDISABLECOLOR " +
-        ") VALUES ( ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+        "GAMCOLOR, GAMREDCOLOR, GAMBLUECOLOR, GAMCUSTOMMESSAGEA, GAMCUSTOMMESSAGEB, GAMUSECUSTOMSOUND, GAMCUSTOMSOUNDFILE, GAMLAGCOMP, " +
+        "TOGDISABLEALTS, TOGDISABLECUSTOMSOUND, TOGDISABLECOLOR, TOGDISABLELOG, TOGDISABLEMETER " +
+        ") VALUES ( ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
               uid, 
-              us.volume.master, us.volume.music, us.volume.voice, us.volume.announcer, us.volume.fx,
+              us.volume.master, us.volume.music, us.volume.voice, us.volume.announcer, us.volume.ui, us.volume.fx,
               us.graphics.upGame, us.graphics.upUi, us.graphics.upSky, us.graphics.shadowSize, us.graphics.safeMode,
               us.control.enableGamepad, us.control.actionA, us.control.actionB, us.control.jump, us.control.taunt, us.control.toss, us.control.scoreboard,
-              us.game.color, us.game.redColor, us.game.blueColor, us.game.useCustomSound, us.game.getCustomSoundFile(),
-              us.toggle.disableAlts, us.toggle.disableCustomSound, us.toggle.disableColor
+              us.game.color, us.game.redColor, us.game.blueColor, us.game.customMessageA, us.game.customMessageB, us.game.useCustomSound, us.game.getCustomSoundFile(), us.game.lagComp,
+              us.toggle.disableAlts, us.toggle.disableCustomSound, us.toggle.disableColor, us.toggle.disableLog, us.toggle.disableMeter
       );
       dao.jdbc.update(
         "INSERT into STATS ( " +
@@ -67,13 +67,10 @@ public class UserDao {
       dao.jdbc.update(
         "INSERT into UNLOCKS ( " +
         "UID, UPDATED, " +
-        "CHAR_BOX, CHAR_CRATE, CHAR_VOXEL, CHAR_CARGO, CHAR_BLOCK, CHAR_QUAD, CHAR_INFERNO, " +
-        "ALT_BOXGOLD, ALT_QUADFIRE, ALT_BOXRED, ALT_CRATEORANGE, ALT_VOXELGREEN, ALT_BLOCKROUND, " +
-        "FT_COLOR, FT_SOUND " +
-        ") VALUES ( ?, NOW(), true, false, false, false, false, false, false, false, false, false, false, false, false, false, false )",
+        "CHAR_BOX, CHAR_CRATE " +
+        ") VALUES ( ?, NOW(), true, true )",
               uid
       );
-      /* @TODO: unlocks will be difficult to add to in the future so it may be worthwhile to stream line it in some form. */
     }
     catch(DataAccessException ex) {
       Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
@@ -217,17 +214,17 @@ public class UserDao {
       dao.jdbc.update(
         "UPDATE SETTINGS SET " +
         "UPDATED=NOW(), " +
-        "VOLMASTER=?, VOLMUSIC=?, VOLVOICE=?, VOLANNOUNCER=?, VOLFX=?, " +
+        "VOLMASTER=?, VOLMUSIC=?, VOLVOICE=?, VOLANNOUNCER=?, VOLUI=?, VOLFX=?, " +
         "GFXUPGAME=?, GFXUPUI=?, GFXUPSKY=?, GFXSHADOWSIZE=?, GFXSAFEMODE=?, " +
         "CONENABLEGAMEPAD=?, CONACTIONA=?, CONACTIONB=?, CONJUMP=?, CONTAUNT=?, CONTOSS=?, CONSCOREBOARD=?, " +
-        "GAMCOLOR=?, GAMREDCOLOR=?, GAMBLUECOLOR=?, GAMUSECUSTOMSOUND=?, GAMCUSTOMSOUNDFILE=?, " +
-        "TOGDISABLEALTS=?, TOGDISABLECUSTOMSOUND=?, TOGDISABLECOLOR=? " +
+        "GAMCOLOR=?, GAMREDCOLOR=?, GAMBLUECOLOR=?, GAMCUSTOMMESSAGEA=?, GAMCUSTOMMESSAGEB=?, GAMUSECUSTOMSOUND=?, GAMCUSTOMSOUNDFILE=?, GAMLAGCOMP=?, " +
+        "TOGDISABLEALTS=?, TOGDISABLECUSTOMSOUND=?, TOGDISABLECOLOR=? , TOGDISABLELOG=?, TOGDISABLEMETER=? " +
         "WHERE UID=?",
-              us.volume.master, us.volume.music, us.volume.voice, us.volume.announcer, us.volume.fx,
+              us.volume.master, us.volume.music, us.volume.voice, us.volume.announcer, us.volume.ui, us.volume.fx,
               us.graphics.upGame, us.graphics.upUi, us.graphics.upSky, us.graphics.shadowSize, us.graphics.safeMode,
               us.control.enableGamepad, us.control.actionA, us.control.actionB, us.control.jump, us.control.taunt, us.control.toss, us.control.scoreboard,
-              us.game.color, us.game.redColor, us.game.blueColor, us.game.useCustomSound, us.game.getCustomSoundFile(),
-              us.toggle.disableAlts, us.toggle.disableCustomSound, us.toggle.disableColor,
+              us.game.color, us.game.redColor, us.game.blueColor, us.game.customMessageA, us.game.customMessageB, us.game.useCustomSound, us.game.getCustomSoundFile(), us.game.lagComp,
+              us.toggle.disableAlts, us.toggle.disableCustomSound, us.toggle.disableColor, us.toggle.disableLog, us.toggle.disableMeter,
               us.uid
       );
     }

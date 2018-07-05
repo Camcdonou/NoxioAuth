@@ -37,7 +37,7 @@ Main.prototype.startGame = function(name, settings, map) {
         main.menu.game.show();
       },
       error: function() {
-        main.menu.error.show("Map Error", "Server returned FNF(404) for map: " + map);
+        main.menu.error.showError("Map Error", "Server returned FNF(404) for map: " + map);
       }
     });
   }

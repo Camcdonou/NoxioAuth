@@ -3,6 +3,7 @@ package org.infpls.noxio.auth.module.auth.dao.user;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import org.infpls.noxio.auth.module.auth.util.Validation;
 
 public class UserSettings {
   public final String uid;                   // Unique ID linking this to the user
@@ -19,8 +20,8 @@ public class UserSettings {
     volume = new Volume(.9f, .5f, .75f, .75f, .75f, .75f);
     graphics = new Graphics(1f, 1f, 1f, 2048, false);
     control = new Control(false, 70, 68, 32, 84, 83, 192);
-    game = new Game(0, 0, 0, false, null);
-    toggle = new Toggle(false, false, false);
+    game = new Game(0, 0, 0, null, null, false, null, 1);
+    toggle = new Toggle(false, false, false, false, false);
   }
   
   /* This constructor creates a usersettings with the values from a SQL querys Map<String, Object> */
@@ -31,7 +32,7 @@ public class UserSettings {
       ((BigDecimal)data.get("VOLMUSIC")).floatValue(),
       ((BigDecimal)data.get("VOLVOICE")).floatValue(),
       ((BigDecimal)data.get("VOLANNOUNCER")).floatValue(),
-            0.75f,
+      ((BigDecimal)data.get("VOLUI")).floatValue(),
       ((BigDecimal)data.get("VOLFX")).floatValue()
     );
     graphics = new Graphics(
@@ -54,13 +55,18 @@ public class UserSettings {
       (int)data.get("GAMCOLOR"),
       (int)data.get("GAMREDCOLOR"),
       (int)data.get("GAMBLUECOLOR"),
+      (String)data.get("GAMCUSTOMMESSAGEA"),
+      (String)data.get("GAMCUSTOMMESSAGEB"),
       (boolean)data.get("GAMUSECUSTOMSOUND"),
-      (String)data.get("GAMCUSTOMSOUNDFILE")
+      (String)data.get("GAMCUSTOMSOUNDFILE"),
+      (int)data.get("GAMLAGCOMP")
     );
     toggle = new Toggle(
       (boolean)data.get("TOGDISABLEALTS"),
       (boolean)data.get("TOGDISABLECUSTOMSOUND"),
-      (boolean)data.get("TOGDISABLECOLOR")
+      (boolean)data.get("TOGDISABLECOLOR"),
+      (boolean)data.get("TOGDISABLELOG"),
+      (boolean)data.get("TOGDISABLEMETER")
     );
   }
   
@@ -71,8 +77,8 @@ public class UserSettings {
     volume = new Volume(edited.volume.master, edited.volume.music, edited.volume.voice, edited.volume.announcer, edited.volume.ui, edited.volume.fx);
     graphics = new Graphics(edited.graphics.upGame, edited.graphics.upUi, edited.graphics.upSky, edited.graphics.shadowSize, edited.graphics.safeMode);
     control = new Control(edited.control.enableGamepad, edited.control.actionA, edited.control.actionB, edited.control.jump, edited.control.taunt, edited.control.toss, edited.control.scoreboard);
-    game = new Game(edited.game.color, edited.game.redColor, edited.game.blueColor, edited.game.useCustomSound, source.game.customSoundFile);
-    toggle = new Toggle(edited.toggle.disableAlts, edited.toggle.disableCustomSound, edited.toggle.disableColor);
+    game = new Game(edited.game.color, edited.game.redColor, edited.game.blueColor, edited.game.customMessageA, edited.game.customMessageB, edited.game.useCustomSound, source.game.customSoundFile, edited.game.lagComp);
+    toggle = new Toggle(edited.toggle.disableAlts, edited.toggle.disableCustomSound, edited.toggle.disableColor, edited.toggle.disableLog, edited.toggle.disableMeter);
   }
   
   public class Volume {
@@ -116,25 +122,32 @@ public class UserSettings {
   
   public class Game {
     public final int color, redColor, blueColor;
+    public final String customMessageA, customMessageB;
     public final boolean useCustomSound;
     private String customSoundFile;
-    public Game(int c, int rc, int bc, boolean ucs, String csf) {
+    public final int lagComp;
+    public Game(int c, int rc, int bc, String cma, String cmb, boolean ucs, String csf, int lc) {
       color = c;
       redColor = rc;
       blueColor = bc;
+      customMessageA = cma!=null?Validation.makeAlphaNumeric(cma.substring(0, Math.min(64, cma.length()))):null;
+      customMessageB = cmb!=null?Validation.makeAlphaNumeric(cmb.substring(0, Math.min(64, cmb.length()))):null;
       useCustomSound = ucs;
       customSoundFile = csf;
+      lagComp = Math.min(4, Math.max(0, lc));
     }
     public void setCustomSoundFile(String fn) { customSoundFile = fn; }
     public String getCustomSoundFile() { return customSoundFile; }
   }
   
   public class Toggle {
-    public final boolean disableAlts, disableCustomSound, disableColor;
-    public Toggle(boolean da, boolean dcs, boolean dc) {
+    public final boolean disableAlts, disableCustomSound, disableColor, disableLog, disableMeter;
+    public Toggle(boolean da, boolean dcs, boolean dc, boolean dl, boolean dm) {
       disableAlts = da;
       disableCustomSound = dcs;
       disableColor = dc;
+      disableLog = dl;
+      disableMeter = dm;
     }
   }
 }

@@ -127,7 +127,9 @@
       <!-- Unlock Menu -->
       <div id="unlock" class="menu-container" style="display: none">
         <div id="unlock-head" class="unl-head">User</div>
-        <div id="unlock-container" class="unl-cont">...</div>
+        <div class="unl-scroll">
+          <div id="unlock-container" class="unl-cont">...</div>
+        </div>
         <div class="unl-cont"><div id="unlock-back" class="unl-back" onclick="main.menu.online.show()">Back</div></div>
       </div>
       <div id="unlock-info" class="unl-info" style="display: none">
@@ -170,6 +172,9 @@
             <div class='setgame-name'>Red Team Color</div>
             <div class='setgame-name'>Blue Team Color</div>
             <div class='setgame-spc'></div>
+            <div class='setgame-name'>Win Message</div>
+            <div class='setgame-name'>MVP Message</div>
+            <div class='setgame-spc'></div>
             <div class='setgame-name'>Use Custom Sound</div>
             <div class='setgame-name'>Upload Custom Sound</div>
             <div class='setgame-spc'></div>
@@ -178,11 +183,16 @@
             <div class='setgame-name'>Hide Custom Sounds</div>
             <div class='setgame-name'>Hide Game Chat</div>
             <div class='setgame-name'>Hide Game Meters</div>
+            <div class='setgame-spc'></div>
+            <div class='setgame-name'>Lag Compensation Mode</div>
           </div>
           <div id="setgame-right" class="setgame-cont-right">
             <div class='setgame-val' id="setgame-color"></div>
             <div class='setgame-val' id="setgame-redcolor"></div>
             <div class='setgame-val' id="setgame-bluecolor"></div>
+            <div class='setgame-spc'></div>
+            <div class='setgame-val'><input class='setgame-inp' type="text" id="setgame-message-a" placeholder="I am the winnest."/></div>
+            <div class='setgame-val'><input class='setgame-inp' type="text" id="setgame-message-b" placeholder="I am most goodest."/></div>
             <div class='setgame-spc'></div>
             <div class='setgame-tog' id='setgame-usesound'></div>
             <div class='setgame-upl'><input type="file" name="file" accept=".wav" id="setgame-snd-file" onchange="main.menu.setgame.uploadSound()"/><span id="setgame-snd-data" class="setgame-snd-fn">...</span></div>
@@ -192,6 +202,8 @@
             <div class='setgame-tog' id='setgame-hidesound' onclick='main.menu.setgame.toggle(2)'></div>
             <div class='setgame-tog' id='setgame-hidechat' onclick='main.menu.setgame.toggle(3)'></div>
             <div class='setgame-tog' id='setgame-hidemeter' onclick='main.menu.setgame.toggle(4)'></div>
+            <div class='setgame-spc'></div>
+            <div class='setgame-tog' id='setgame-lagcomp' onclick='main.menu.setgame.lagCompBtn()'></div>
           </div>
         </div>
         <div class="setgame-sub-cont">

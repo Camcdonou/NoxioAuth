@@ -183,6 +183,9 @@ util.font.fonts.push({
     "{":{"x":27,"y":0,"width":12,"height":38,"originX":0,"originY":31,"advance":13},
     "|":{"x":21,"y":0,"width":6,"height":39,"originX":-6,"originY":31,"advance":18},
     "}":{"x":39,"y":0,"width":12,"height":38,"originX":-1,"originY":31,"advance":13},
-    "~":{"x":155,"y":96,"width":20,"height":9,"originX":0,"originY":16,"advance":20}
+    "~":{"x":155,"y":96,"width":20,"height":9,"originX":0,"originY":16,"advance":20},
+    "α":{"x":435,"y":102,"width":24,"height":24,"originX":-2,"originY":27,"advance":26},
+    "β":{"x":460,"y":100,"width":26,"height":28,"originX":-2,"originY":27,"advance":28},
+    "γ":{"x":487,"y":100,"width":26,"height":28,"originX":-2,"originY":27,"advance":28}
   }
 });

@@ -18,7 +18,8 @@ public class User {
   public final String name, display, email;  // User is always lower case
   private final String hash;                 // Pwd hash and pwd salt
   
-  private Type type;      
+  private Type type;
+  public final boolean supporter;            // Outside supporter flag
   public final Timestamp created, updated, lastLogin;
   
   /* SQL Database Constructor */
@@ -28,6 +29,7 @@ public class User {
     display = (String)data.get("DISPLAY");
     email = (String)data.get("EMAIL");
     hash = (String)data.get("HASH");
+    supporter = (boolean)data.get("SUPPORTER");
     created = (Timestamp)data.get("CREATED");
     updated = (Timestamp)data.get("UPDATED");
     lastLogin = (Timestamp)data.get("LASTLOGIN");
@@ -50,6 +52,7 @@ public class User {
     email = null;
     hash = null;
     type = Type.SPEC; /* @TODO: for testing only! Change back to free later. */
+    supporter = false;
     created = null;
     updated = null;
     lastLogin = null;

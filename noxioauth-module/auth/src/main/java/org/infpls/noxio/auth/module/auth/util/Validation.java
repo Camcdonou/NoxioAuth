@@ -31,4 +31,8 @@ public class Validation {
   public static boolean isAlphaNumeric(final String in) {
     return in.matches("[a-zA-Z0-9]*");
   }
+  
+  public static String makeAlphaNumeric(final String in) {
+    return in.replaceAll("[^A-Za-z0-9 ]", "");
+  }
 }

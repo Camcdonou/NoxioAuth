@@ -41,6 +41,9 @@ RespawnUI.prototype.refresh = function() {
   var o = (w*0.5)-(TEXT_LENGTH*0.5);
   
  this.respawnTimer.neutral.text[0] = new GenericUIText(util.vec2.make(o,h+v), s, swhite, fontName, fontMat, TEXT);
+ 
+ var spch = (this.game.display.window.height*0.5)+128;
+ this.spacer.neutral.block[0].size.y = spch;
 };
 
 RespawnUI.prototype.generate = function() {
@@ -57,27 +60,57 @@ RespawnUI.prototype.generate = function() {
     ],
     [
       {id: "box_n", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("CHAR_BOX")},
+      {id: "box_vo", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXVO")},
       {id: "box_red", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXRED")},
-      {id: "box_gld", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXGOLD")}
+      {id: "box_rb", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXRAINBOW")},
+      {id: "box_gld", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXGOLD")},
+      {id: "box_hit", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXHIT")},
+      {id: "box_for", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXFOUR")},
+      {id: "box_bld", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXBLOOD")},
+      {id: "box_lt", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXLOOT")}
     ],
     [
       {id: "crt_n", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("CHAR_CRATE")},
-      {id: "crt_orn", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEORANGE")}
-    ],
-    [
-      {id: "qua_n", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("CHAR_QUAD")},
-      {id: "qua_fir", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADFIRE")}
+      {id: "crt_vo", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEVO")},
+      {id: "crt_orn", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEORANGE")},
+      {id: "crt_rb", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATERAINBOW")},
+      {id: "crt_gld", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEGOLD")},
+      {id: "crt_fir", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEFIRE")},
+      {id: "crt_blk", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEBLACK")},
+      {id: "crt_lt", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATELOOT")}
     ],
     [
       {id: "vox_n", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("CHAR_VOXEL")},
-      {id: "vox_grn", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXELGREEN")}
+      {id: "vox_vo", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXVO")},
+      {id: "vox_grn", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXGREEN")},
+      {id: "vox_rw", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXRAINBOW")},
+      {id: "vox_gld", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXGOLD")},
+      {id: "vox_blk", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXBLACK")},
+      {id: "vox_lt", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXLOOT")}
+    ],
+    [
+      {id: "qua_n", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("CHAR_QUAD")},
+      {id: "qua_vo", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADVO")},
+      {id: "qua_fir", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADFIRE")},
+      {id: "qua_lgn", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADLEGEND")},
+      {id: "qua_rs", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADRUNE")}
     ],
     [
       {id: "blk_n", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("CHAR_BLOCK")},
-      {id: "blk_rnd", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKROUND")}
+      {id: "blk_vo", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKVO")},
+      {id: "blk_rnd", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKROUND")},
+      {id: "blk_win", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKWIN")},
+      {id: "blk_fir", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKFIRE")},
+      {id: "blk_ro", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKRO")},
+      {id: "blk_lt", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKLOOT")}
     ],
     [
-      {id: "crg_n", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("CHAR_CARGO")}
+      {id: "crg_n", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("CHAR_CARGO")},
+      {id: "crg_vo", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGOVO")},
+      {id: "crg_pl", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGOPLUS")},
+      {id: "crg_gld", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGOGOLD")},
+      {id: "crg_mc", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGOMINE")},
+      {id: "crg_ret", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGORETRO")}
     ]
   ];
   
@@ -86,7 +119,7 @@ RespawnUI.prototype.generate = function() {
   var swhite = util.vec4.make(1.0, 1.0, 1.0, 1.0);
   var sblack = util.vec4.make(0.0, 0.0, 0.0, 1.0);
   
-  var container = new UIContainer({x: '=', y: '='});
+  var container = new UIContainer({x: '=', y: '-'});
   
   /* Reuseable 'checks if clicked then calls an onclick function' */
   var protoOnClick = function(imp, state, window) {
@@ -105,6 +138,18 @@ RespawnUI.prototype.generate = function() {
     }
     return false;
   };
+  
+  //Invisible spacer to push bottom of this element to the dead middle of the screen
+  var spch = (this.game.display.window.height*0.5)+128;
+  this.spacer = {
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(0,0), util.vec2.make(32,spch), util.vec4.make(0.0, 0.0, 0.0, 0.0), colorMat)],
+      text:  []
+    },
+    step: function(imp, state, window) { },
+    isHovered: false
+  };
+  container.add(this.spacer);
   
   var w = 2048;
   var h = 0;

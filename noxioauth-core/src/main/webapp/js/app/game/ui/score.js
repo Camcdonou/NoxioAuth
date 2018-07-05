@@ -22,7 +22,11 @@ ScoreUI.prototype.setScores = function(teamScs, scs) {
 ScoreUI.prototype.setVisible = GenericUI.prototype.setVisible;
 ScoreUI.prototype.show = GenericUI.prototype.show;
 ScoreUI.prototype.hide = GenericUI.prototype.hide;
-ScoreUI.prototype.refresh = GenericUI.prototype.refresh;
+ScoreUI.prototype.refresh = function() {
+ var spch = Math.min(0, this.height-((this.game.display.window.height*0.5))+128+16);
+ this.spacer.neutral.block[0].pos.y = spch;
+ this.spacer.neutral.block[0].size.y = Math.abs(spch);
+};
 
 ScoreUI.prototype.generate = function() {
   /*var SPEC_HEAD = {
@@ -58,7 +62,7 @@ ScoreUI.prototype.generate = function() {
   var sblue = util.vec3.toVec4(util.kalide.getBlue(0), 1.0);
   var sred = util.vec3.toVec4(util.kalide.getRed(0), 1.0);
 
-  var container = new UIContainer({x: '=', y: '='});
+  var container = new UIContainer({x: '=', y: '+'});
   
   var w = 512;
   var sa = 32;
@@ -188,18 +192,18 @@ ScoreUI.prototype.generate = function() {
   }
   container.add(this.header);
   
-  // Invisible spacer block.
-  var o = 325;
-  container.add({
+  //Invisible spacer to push bottom of this element to the dead middle of the screen
+  this.height = h+sa;
+  var spch = Math.min(0, this.height-((this.game.display.window.height*0.5))+128+16);
+  this.spacer = {
     neutral: {
-      block: [
-        new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,o), clear, colorMat)
-      ],
+      block: [new GenericUIBlock(util.vec2.make(0,spch), util.vec2.make(32,Math.abs(spch)), util.vec4.make(0.0, 0.0, 0.0, 0.0), colorMat)],
       text:  []
     },
-    step: function(imp, state, window) { return false; },
+    step: function(imp, state, window) { },
     isHovered: false
-  });
+  };
+  container.add(this.spacer);
 
   this.containers.push(container);
 };
