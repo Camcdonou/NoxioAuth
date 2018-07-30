@@ -3,26 +3,20 @@
 /* global util */
 /* global Particle */
 
-/* Define Blip Particle System Class */
-function ParticleBlip(game, pos, vel, colorA, colorB) {
-  /* Colors to use for particles */
-  this.colorA = colorA;
-  this.colorB = colorB;
+/* Define Blip Rainbow Particle System Class */
+function ParticleBlipRainbow(game, pos, vel) {
   Particle.call(this, game, pos, vel);
 }
 
-ParticleBlip.prototype.create = function() {
+ParticleBlipRainbow.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   
-  var flashMat = this.game.display.getMaterial("character.fox.effect.flash");
-  var initMat = this.game.display.getMaterial("character.fox.effect.initial");
-  var blipMat = this.game.display.getMaterial("character.fox.effect.blip");
-  var sparkMat = this.game.display.getMaterial("character.fox.effect.spark");
+  var flashMat = this.game.display.getMaterial("character.fox.effect.flashRB");
+  var initMat = this.game.display.getMaterial("character.fox.effect.initialRB");
+  var blipMat = this.game.display.getMaterial("character.fox.effect.blipRB");
+  var sparkMat = this.game.display.getMaterial("character.fox.effect.sparkRB");
   
   var parent = this;
-  var colorA = function() { return util.vec4.copy(parent.colorA); };
-  var colorB = function() { return util.vec4.copy(parent.colorB); };
-  var colorC = function() { return util.vec4.lerp(parent.colorA, util.vec4.make(1,1,1,1), 0.25); };
   
   var flash = {
     model: square,
@@ -33,10 +27,10 @@ ParticleBlip.prototype.create = function() {
     update: function(pos){
       this.properties.pos = pos;
       this.properties.scale += 0.15;
-      this.properties.color.w *= 0.85;
-      this.properties.tone.w *= 0.8;
+      this.properties.alpha.x *= 0.85;
+      this.properties.alpha.y *= 0.8;
     },
-    properties: {pos: this.pos, scale: 2.05, rotation: 0, color: colorC(), tone: colorB()}
+    properties: {pos: this.pos, scale: 2.05, rotation: 0, alpha: util.vec2.make(1, 1)}
   };
   
   var blipInit = {
@@ -47,9 +41,9 @@ ParticleBlip.prototype.create = function() {
     update: function(pos){
       this.properties.pos = pos;
       this.properties.scale += 0.15;
-      if(this.length <= 1) { this.properties.color.w = 0.5; this.properties.tone.w = 0.5; }
+      if(this.length <= 1) { this.properties.alpha.x = 0.5; this.properties.alpha.y = 0.5; }
     },
-    properties: {pos: this.pos, scale: 1.0, rotation: 0, color: colorC(), tone: colorB()}
+    properties: {pos: this.pos, scale: 1.0, rotation: 0, alpha: util.vec2.make(1, 1)}
   };
   
   var blip = {
@@ -60,8 +54,8 @@ ParticleBlip.prototype.create = function() {
     update: function(pos){
       this.properties.pos = pos;
       this.properties.scale += 0.175;
-      this.properties.color.w = 1.0; this.properties.tone.w = 1.0;
-    }, properties: {pos: this.pos, scale: 0.95, rotation: 0, color: colorA(), tone: colorB()}
+      this.properties.alpha.x = 1.0; this.properties.alpha.y = 1.0;
+    }, properties: {pos: this.pos, scale: 0.95, rotation: 0, alpha: util.vec2.make(1, 1)}
   };
   
   this.pushPart(blip);
@@ -84,27 +78,27 @@ ParticleBlip.prototype.create = function() {
         this.properties.scale += 0.005;
         this.properties.offset = util.vec3.add(this.properties.offset, this.properties.vel);
         this.properties.vel = util.vec3.scale(this.properties.vel, 0.925);
-        this.properties.color.w -= 1.0/this.max;
-        this.properties.tone.w -= 1.0/this.max;
+        this.properties.alpha.x -= 1.0/this.max;
+        this.properties.alpha.y -= 1.0/this.max;
         this.properties.rotation += 0.01;
       },
-      properties: {offset: rand, vel: util.vec3.scale(rand, 0.185), scale: 0.145, rotation: Math.random()*6.4, color: colorA(), tone: colorB()}
+      properties: {offset: rand, vel: util.vec3.scale(rand, 0.185), scale: 0.145, rotation: Math.random()*6.4, alpha: util.vec2.make(1, 1), frame: parseInt(Math.random()*256)}
     });
   }
 };
 
-ParticleBlip.prototype.pushPart = Particle.prototype.pushPart;
+ParticleBlipRainbow.prototype.pushPart = Particle.prototype.pushPart;
 
-ParticleBlip.prototype.step = Particle.prototype.step;
+ParticleBlipRainbow.prototype.step = Particle.prototype.step;
 
-ParticleBlip.prototype.getDraw = function(geometry, decals, lights, bounds) {
+ParticleBlipRainbow.prototype.getDraw = function(geometry, decals, lights, bounds) {
   for(var i=0;i<this.particles.length;i++) {
     var part = this.particles[i];
     var partUniformData = [
       {name: "scale", data: part.properties.scale},
       {name: "rotation", data: part.properties.rotation},
-      {name: "color", data: util.vec4.toArray(part.properties.color)},
-      {name: "tone", data: util.vec4.toArray(part.properties.tone)}
+      {name: "alpha", data: util.vec2.toArray(part.properties.alpha)},
+      {name: "frame", data: this.game.frame + (part.properties.frame?part.properties.frame:0)}
     ];
     if(part.properties.pos) { partUniformData.push({name: "transform", data: util.vec3.toArray(part.properties.pos)}); }
     if(part.properties.offset) { partUniformData.push({name: "transform", data: util.vec3.toArray(util.vec3.add(this.pos, part.properties.offset))}); }
@@ -112,7 +106,7 @@ ParticleBlip.prototype.getDraw = function(geometry, decals, lights, bounds) {
   }
 };
 
-ParticleBlip.prototype.active = Particle.prototype.active;
+ParticleBlipRainbow.prototype.active = Particle.prototype.active;
 
 /* Used by EffectDefinition.js */
-ParticleBlip.fxId = "particle";
+ParticleBlipRainbow.fxId = "particle";

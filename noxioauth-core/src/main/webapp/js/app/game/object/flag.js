@@ -2,6 +2,7 @@
 /* global main */
 /* global util */
 /* global GameObject */
+/* global PlayerObject */
 /* global NxFx */
 
 /* Define Flag Object Class */
@@ -38,10 +39,20 @@ FlagObject.prototype.update = function(data) {
       case "lnd" : { this.land(); break; }
       case "fal" : { this.fall(); break; }
       case "xpl" : { this.explode(); break; }
-      case "htg" : { this.stunGeneric(); return true; }
-      case "hts" : { this.stunSlash(); return true; }
-      case "hte" : { this.stunElectric(); return true; }
-      case "htf" : { this.stunFire(); return true; }
+      case "hg" : { this.stunGeneric(); return true; }
+      case "hs" : { this.stunSlash(); return true; }
+      case "he" : { this.stunElectric(); return true; }
+      case "hexr" : { this.stunElectric("red"); return true; }
+      case "hexo" : { this.stunElectric("orange"); return true; }
+      case "hexg" : { this.stunElectric("green"); return true; }
+      case "hexp" : { this.stunElectric("purple"); return true; }
+      case "hexb" : { this.stunElectric("black"); return true; }
+      case "hexrb" : { this.stunElectric("rainbow"); return true; }
+      case "hf" : { this.stunFire(); return true; }
+      case "hfxp" : { this.stunFire("purple"); return true; }
+      case "hfxb" : { this.stunFire("black"); return true; }
+      case "hfxrb" : { this.stunFire("rainbow"); return true; }
+      case "hfxrt" : { this.stunFire("retro"); return true; }
       case "crt" : { this.criticalHit(); return true; }
       default : { main.menu.warning.show("Invalid effect value: '" + effects[i] + "' @ Flag.js :: update()"); break; }
     }
@@ -63,29 +74,11 @@ FlagObject.prototype.stun = function() {
   
 };
 
-FlagObject.prototype.stunGeneric = function() {
-  this.effects.push(NxFx.hit.generic.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
-  this.stun();
-};
-
-FlagObject.prototype.stunSlash = function() {
-  this.effects.push(NxFx.hit.slash.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
-  this.stun();
-};
-
-FlagObject.prototype.stunElectric = function() {
-  this.effects.push(NxFx.hit.electric.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
-  this.stun();
-};
-
-FlagObject.prototype.stunFire = function() {
-  this.effects.push(NxFx.hit.fire.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
-  this.stun();
-};
-
-FlagObject.prototype.criticalHit = function() {
-  this.effects.push(NxFx.hit.critical.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
-};
+FlagObject.prototype.stunGeneric = PlayerObject.prototype.stunGeneric;
+FlagObject.prototype.stunSlash = PlayerObject.prototype.stunSlash;
+FlagObject.prototype.stunElectric = PlayerObject.prototype.stunElectric;
+FlagObject.prototype.stunFire = PlayerObject.prototype.stunFire;
+FlagObject.prototype.criticalHit = PlayerObject.prototype.criticalHit;
 
 FlagObject.prototype.explode = function() { };
 FlagObject.prototype.fall = function() { };

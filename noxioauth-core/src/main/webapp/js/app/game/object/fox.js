@@ -3,7 +3,6 @@
 /* global util */
 /* global GameObject */
 /* global PlayerObject */
-/* global PlayerFoxRed */
 /* global NxFx */
 
 /* Define PlayerFox Class */
@@ -99,9 +98,15 @@ PlayerFox.prototype.destroy = PlayerObject.prototype.destroy;
 PlayerFox.prototype.type = function() { return "box"; };
 
 /* Permutation dictionary */
+
+/* global PlayerFoxRed */
+/* global PlayerFoxRainbow */
+/* global PlayerFoxGold */
 PlayerFox.classByPermutation = function(perm) {
   switch(perm) {
-    case 1 : { return PlayerFoxRed; }
+    case 2 : { return PlayerFoxRed; }
+    case 3 : { return PlayerFoxRainbow; }
+    case 4 : { return PlayerFoxGold; }
     default : { return PlayerFox; }
   }
 };

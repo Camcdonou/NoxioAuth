@@ -3,27 +3,21 @@
 /* global util */
 /* global Particle */
 
-/* Define Blip Particle System Class */
-function ParticleShiekRecall(game, pos, vel, colorA, colorB) {
-  /* Colors to use for particles */
-  this.colorA = colorA;
-  this.colorB = colorB;
+/* Define Shiek Recall Rainbow Particle System Class */
+function ParticleShiekRecallRainbow(game, pos, vel) {
   Particle.call(this, game, pos, vel);
 }
 
-ParticleShiekRecall.prototype.create = function() {
+ParticleShiekRecallRainbow.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   var part2x = this.game.display.getModel("multi.fx.part2x");
   
-  var flashMat = this.game.display.getMaterial("character.fox.effect.flash");
-  var sparkMat = this.game.display.getMaterial("multi.hit.spark");
-  var zapMat = this.game.display.getMaterial("multi.hit.zap");
-  var markMat = this.game.display.getMaterial("character.shiek.effect.markwave");
+  var flashMat = this.game.display.getMaterial("character.fox.effect.flashRB");
+  var sparkMat = this.game.display.getMaterial("multi.hit.sparkRB");
+  var zapMat = this.game.display.getMaterial("multi.hit.zapRB");
+  var markMat = this.game.display.getMaterial("character.shiek.effect.markwaveRB");
   
   var parent = this;
-  var colorA = function() { return util.vec4.copy(parent.colorA); };
-  var colorB = function() { return util.vec4.copy(parent.colorB); };
-  var colorC = function() { return util.vec4.lerp(parent.colorA, util.vec4.make(1,1,1,1), 0.45); };
   
   var flash = {
     model: square,
@@ -33,10 +27,10 @@ ParticleShiekRecall.prototype.create = function() {
     update: function(pos){
       this.properties.pos = pos;
       this.properties.scale += 0.155;
-      this.properties.color.w *= 0.875;
-      this.properties.tone.w *= 0.825;
+      this.properties.alpha.x *= 0.875;
+      this.properties.alpha.y *= 0.825;
     },
-    properties: {offset: util.vec3.make(0,0,0), scale: 1.15, rotation: 0, color: colorC(), tone: colorB()}
+    properties: {offset: util.vec3.make(0,0,0), scale: 1.15, rotation: 0, alpha: util.vec2.make(0.45,1), frame: Math.floor(Math.random()*256)}
   };
   
   this.pushPart(flash);
@@ -50,10 +44,10 @@ ParticleShiekRecall.prototype.create = function() {
     update: function(pos){
       this.properties.scale += 0.175;
       this.properties.rotation += 0.055;
-      this.properties.color.w -= 0.75/this.length;
-      this.properties.tone.w -= 0.75/this.length;
+      this.properties.alpha.x -= 0.75/this.length;
+      this.properties.alpha.y -= 0.75/this.length;
     },
-    properties: {offset: util.vec3.make(0,0,-0.45), scale: 1.1, color: util.vec4.copy3(colorA(), 0.65), tone: util.vec4.copy3(colorB(), 0.85), rotation: Math.random()*6.4}
+    properties: {offset: util.vec3.make(0,0,-0.45), scale: 1.1, alpha: util.vec2.make(1,1), frame: Math.floor(Math.random()*256), rotation: Math.random()*6.4}
   };
   
   this.pushPart(waveA);
@@ -74,10 +68,10 @@ ParticleShiekRecall.prototype.create = function() {
         this.properties.rotation += 0.0125;
         this.properties.pos = util.vec3.add(this.properties.pos, this.properties.vel);
         this.properties.vel = util.vec3.scale(this.properties.vel, 0.975);
-        this.properties.color.w -= 1.0/this.max;
-        this.properties.tone.w = this.properties.color.w;
+        this.properties.alpha.x -= 1.0/this.max;
+        this.properties.alpha.y = this.properties.alpha.x;
       },
-      properties: {pos: util.vec3.add(util.vec3.add(this.pos, rand), util.vec3.make(0, 0, -0.45)), vel: util.vec3.scale(util.vec3.normalize(util.vec3.make(rand.x, rand.y, 0)), 0.0085), scale: 0.265, rotation: Math.random()*6.28, color: colorA(), tone: colorB(), frame: Math.floor(Math.random()*32)}
+      properties: {pos: util.vec3.add(util.vec3.add(this.pos, rand), util.vec3.make(0, 0, -0.45)), vel: util.vec3.scale(util.vec3.normalize(util.vec3.make(rand.x, rand.y, 0)), 0.0085), scale: 0.265, rotation: Math.random()*6.28, alpha: util.vec2.make(1,1), rbFrame: Math.floor(Math.random()*256), frame: Math.floor(Math.random()*32)}
     });
   }
   
@@ -111,38 +105,41 @@ ParticleShiekRecall.prototype.create = function() {
         this.properties.vel = util.vec3.scale(util.vec3.add(this.properties.vel, {x: 0.0, y: 0.0, z: -0.0075}), 0.935);
         this.properties.pos = util.vec3.add(this.properties.pos, this.properties.vel);
         this.properties.angle = util.vec3.angle(up, this.properties.vel);
-        this.properties.color.w -= 1/this.max;
-        this.properties.tone.w -= 1/this.max;
+        this.properties.alpha.x -= 1/this.max;
+        this.properties.alpha.y -= 1/this.max;
       },
-      properties: {pos: util.vec3.add(this.pos, util.vec3.scale(rand, 0.25)), scale: 0.175, vel: cmbvel, angle: axAng, color: colorA(), tone: colorB()}
+      properties: {pos: util.vec3.add(this.pos, util.vec3.scale(rand, 0.25)), scale: 0.175, vel: cmbvel, angle: axAng, alpha: util.vec2.make(1,1), frame: Math.floor(Math.random()*256)}
     });
   }
 };
 
-ParticleShiekRecall.prototype.pushPart = Particle.prototype.pushPart;
+ParticleShiekRecallRainbow.prototype.pushPart = Particle.prototype.pushPart;
 
-ParticleShiekRecall.prototype.step = Particle.prototype.step;
+ParticleShiekRecallRainbow.prototype.step = Particle.prototype.step;
 
-ParticleShiekRecall.prototype.getDraw = function(geometry, decals, lights, bounds) {
+ParticleShiekRecallRainbow.prototype.getDraw = function(geometry, decals, lights, bounds) {
   for(var i=0;i<this.particles.length;i++) {
     var part = this.particles[i];
     var partUniformData = [
       {name: "scale", data: part.properties.scale},
-      {name: "color", data: util.vec4.toArray(part.properties.color)},
-      {name: "tone", data: util.vec4.toArray(part.properties.tone)},
       {name: "totalSprites", data: 8},
-      {name: "usedSprites", data: 8}
+      {name: "usedSprites", data: 8},
+      {name: "alpha", data: util.vec2.toArray(part.properties.alpha)}
     ];
     if(part.properties.pos) { partUniformData.push({name: "transform", data: util.vec3.toArray(part.properties.pos)}); }
     if(part.properties.offset) { partUniformData.push({name: "transform", data: util.vec3.toArray(util.vec3.add(this.pos, part.properties.offset))}); }
     if(part.properties.rotation) { partUniformData.push({name: "rotation", data: part.properties.rotation}); }
     if(part.properties.angle) { partUniformData.push({name: "angle", data: util.vec3.toArray(part.properties.angle)}); }
-    if(part.properties.frame) { partUniformData.push({name: "frame", data: Math.floor((part.properties.frame + this.frame) * 0.35)}); }
+    if(part.properties.rbFrame === undefined) { partUniformData.push({name: "frame", data: this.game.frame + (part.properties.frame?part.properties.frame:0)}); }
+    else {
+      partUniformData.push({name: "frame", data: Math.floor((part.properties.frame + this.frame) * 0.35)});
+      partUniformData.push({name: "rbFrame", data: this.game.frame + part.properties.rbFrame});
+    }
     geometry.push({model: part.model, material: part.material, uniforms: partUniformData});
   }
 };
 
-ParticleShiekRecall.prototype.active = Particle.prototype.active;
+ParticleShiekRecallRainbow.prototype.active = Particle.prototype.active;
 
 /* Used by EffectDefinition.js */
-ParticleShiekRecall.fxId = "particle";
+ParticleShiekRecallRainbow.fxId = "particle";

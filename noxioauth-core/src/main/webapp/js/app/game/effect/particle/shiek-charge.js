@@ -13,17 +13,13 @@ function ParticleShiekCharge(game, pos, vel, colorA, colorB) {
 
 ParticleShiekCharge.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
-  var part2x = this.game.display.getModel("multi.fx.part2x");
   
-  var flashMat = this.game.display.getMaterial("character.fox.effect.blipFlash");
-  var sparkMat = this.game.display.getMaterial("multi.hit.spark");
   var zapMat = this.game.display.getMaterial("multi.hit.zap");
   var markMat = this.game.display.getMaterial("character.shiek.effect.markwave");
   
   var parent = this;
   var colorA = function() { return util.vec4.copy(parent.colorA); };
   var colorB = function() { return util.vec4.copy(parent.colorB); };
-  var colorC = function() { return util.vec4.lerp(parent.colorA, util.vec4.make(1,1,1,1), 0.45); };
   
   var waveA  = {
     model: square,

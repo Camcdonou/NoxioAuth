@@ -3,24 +3,19 @@
 /* global util */
 /* global Particle */
 
-/* Define Blip Particle System Class */
-function ParticleShiekVanish(game, pos, vel, colorA, colorB) {
-  /* Colors to use for particles */
-  this.colorA = colorA;
-  this.colorB = colorB;
+/* Define Shiek Vanish Rainbow Particle System Class */
+function ParticleShiekVanishRainbow(game, pos, vel) {
   Particle.call(this, game, pos, vel);
 }
 
-ParticleShiekVanish.prototype.create = function() {
+ParticleShiekVanishRainbow.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   var part2x = this.game.display.getModel("multi.fx.part2x");
   
-  var sparkMat = this.game.display.getMaterial("multi.hit.spark");
-  var markMat = this.game.display.getMaterial("character.shiek.effect.markwave");
+  var sparkMat = this.game.display.getMaterial("multi.hit.sparkRB");
+  var markMat = this.game.display.getMaterial("character.shiek.effect.markwaveRB");
   
   var parent = this;
-  var colorA = function() { return util.vec4.copy(parent.colorA); };
-  var colorB = function() { return util.vec4.copy(parent.colorB); };
   
   var waveA  = {
     model: square,
@@ -31,10 +26,10 @@ ParticleShiekVanish.prototype.create = function() {
     update: function(pos){
       this.properties.scale *= 0.91;
       this.properties.rotation += 0.055;
-      this.properties.color.w += (this.max*0.5)-this.length<=0?0.15:-0.15;
-      this.properties.tone.w += (this.max*0.5)-this.length<=0?0.15:-0.15;
+      this.properties.alpha.x += (this.max*0.5)-this.length<=0?0.15:-0.15;
+      this.properties.alpha.y += (this.max*0.5)-this.length<=0?0.15:-0.15;
     },
-    properties: {offset: util.vec3.make(0,0,-0.2), scale: 2.0, color: util.vec4.copy3(colorA(), 0.05), tone: util.vec4.copy3(colorB(), 0.25), rotation: Math.random()*6.4}
+    properties: {offset: util.vec3.make(0,0,-0.2), scale: 2.0, alpha: util.vec2.make(0.05,0.25), frame: Math.floor(Math.random()*256), rotation: Math.random()*6.4}
   };
   
   this.pushPart(waveA);
@@ -69,38 +64,35 @@ ParticleShiekVanish.prototype.create = function() {
         this.properties.vel = util.vec3.scale(util.vec3.add(this.properties.vel, {x: 0.0, y: 0.0, z: -0.0075}), 0.935);
         this.properties.pos = util.vec3.add(this.properties.pos, this.properties.vel);
         this.properties.angle = util.vec3.angle(up, this.properties.vel);
-        this.properties.color.w -= 1/this.max;
-        this.properties.tone.w -= 1/this.max;
+        this.properties.alpha.x -= 1/this.max;
+        this.properties.alpha.y -= 1/this.max;
       },
-      properties: {pos: util.vec3.add(this.pos, util.vec3.scale(rand, 0.25)), scale: 0.175, vel: cmbvel, angle: axAng, color: colorA(), tone: colorB()}
+      properties: {pos: util.vec3.add(this.pos, util.vec3.scale(rand, 0.25)), scale: 0.175, vel: cmbvel, angle: axAng, alpha: util.vec2.make(1,1), frame: Math.floor(Math.random()*256)}
     });
   }
 };
 
-ParticleShiekVanish.prototype.pushPart = Particle.prototype.pushPart;
+ParticleShiekVanishRainbow.prototype.pushPart = Particle.prototype.pushPart;
 
-ParticleShiekVanish.prototype.step = Particle.prototype.step;
+ParticleShiekVanishRainbow.prototype.step = Particle.prototype.step;
 
-ParticleShiekVanish.prototype.getDraw = function(geometry, decals, lights, bounds) {
+ParticleShiekVanishRainbow.prototype.getDraw = function(geometry, decals, lights, bounds) {
   for(var i=0;i<this.particles.length;i++) {
     var part = this.particles[i];
     var partUniformData = [
       {name: "scale", data: part.properties.scale},
-      {name: "color", data: util.vec4.toArray(part.properties.color)},
-      {name: "tone", data: util.vec4.toArray(part.properties.tone)},
-      {name: "totalSprites", data: 8},
-      {name: "usedSprites", data: 8}
+      {name: "frame", data: this.game.frame + (part.properties.frame?part.properties.frame:0)},
+      {name: "alpha", data: util.vec2.toArray(part.properties.alpha)}
     ];
     if(part.properties.pos) { partUniformData.push({name: "transform", data: util.vec3.toArray(part.properties.pos)}); }
     if(part.properties.offset) { partUniformData.push({name: "transform", data: util.vec3.toArray(util.vec3.add(this.pos, part.properties.offset))}); }
     if(part.properties.rotation) { partUniformData.push({name: "rotation", data: part.properties.rotation}); }
     if(part.properties.angle) { partUniformData.push({name: "angle", data: util.vec3.toArray(part.properties.angle)}); }
-    if(part.properties.frame) { partUniformData.push({name: "frame", data: Math.floor((part.properties.frame + this.frame) * 0.35)}); }
     geometry.push({model: part.model, material: part.material, uniforms: partUniformData});
   }
 };
 
-ParticleShiekVanish.prototype.active = Particle.prototype.active;
+ParticleShiekVanishRainbow.prototype.active = Particle.prototype.active;
 
 /* Used by EffectDefinition.js */
-ParticleShiekVanish.fxId = "particle";
+ParticleShiekVanishRainbow.fxId = "particle";

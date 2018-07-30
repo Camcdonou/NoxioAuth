@@ -47,9 +47,6 @@ function PlayerCaptain(game, oid, pos, team, color) {
   PlayerCaptain.KICK_OFFSET = 0.05;
   PlayerCaptain.PUNCH_HITBOX_SIZE = 0.65;
   PlayerCaptain.PUNCH_HITBOX_OFFSET = 0.5;
-  PlayerCaptain.FIRE_COLOR_A = util.vec4.make(1.0, 0.956, 0.490, 1.0);
-  PlayerCaptain.FIRE_COLOR_B = util.vec4.make(1.0, 0.654, 0.286, 1.0);
-  PlayerCaptain.FIRE_COLOR_C = util.vec4.make(1.0, 0.462, 0.223, 1.0);
 
 PlayerCaptain.prototype.update = function(data) {
   PlayerObject.prototype.update.call(this, data);

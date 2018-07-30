@@ -35,8 +35,6 @@ function PlayerShiek(game, oid, pos, team, color) {
 /* Constants */
 PlayerShiek.FLASH_CHARGE_LENGTH = 7;
 PlayerShiek.BLIP_POWER_MAX = 30;
-PlayerShiek.BLIP_COLOR_A = util.vec4.lerp(util.vec4.make(0.6666, 0.9058, 1.0, 1.0), util.vec4.make(1,1,1,1), 0.5);
-PlayerShiek.BLIP_COLOR_B = util.vec4.make(0.4, 0.5450, 1.0, 1.0);
 
 PlayerShiek.prototype.update = function(data) {
   PlayerObject.prototype.update.call(this, data);
@@ -87,7 +85,7 @@ PlayerShiek.prototype.explode = PlayerObject.prototype.explode;
 PlayerShiek.prototype.fall = PlayerObject.prototype.fall;
 
 PlayerShiek.prototype.blip = function() {
-  this.effects.push(NxFx.shiek.blip.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.effects.push(NxFx.fox.blip.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
   this.blipCooldown = PlayerShiek.BLIP_POWER_MAX;
 };
 
@@ -132,8 +130,17 @@ PlayerShiek.prototype.destroy = PlayerObject.prototype.destroy;
 PlayerShiek.prototype.type = function() { return "vox"; };
 
 /* Permutation dictionary */
+
+/* global PlayerShiekRainbow */
+/* global PlayerShiekGold */
+/* global PlayerShiekGreen */
+/* global PlayerShiekBlack */
 PlayerShiek.classByPermutation = function(perm) {
   switch(perm) {
+    case 2 : { return PlayerShiekGreen; }
+    case 3 : { return PlayerShiekRainbow; }
+    case 4 : { return PlayerShiekGold; }
+    case 5 : { return PlayerShiekBlack; }
     default : { return PlayerShiek; }
   }
 };

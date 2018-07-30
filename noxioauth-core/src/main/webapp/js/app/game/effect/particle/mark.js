@@ -4,7 +4,10 @@
 /* global Particle */
 
 /* Define Blip Particle System Class */
-function ParticleMark(game, pos, vel) {
+function ParticleMark(game, pos, vel, colorA, colorB) {
+  /* Colors to use for particles */
+  this.colorA = colorA;
+  this.colorB = colorB;
   Particle.call(this, game, pos, vel);
 }
 
@@ -13,11 +16,10 @@ ParticleMark.prototype.create = function() {
   
   var markMat = this.game.display.getMaterial("character.shiek.effect.mark");
 
-  var lightwhite = function(){ return {x: 0.65, y: 0.75, z: 1.0, w: 0.5}; };
+  var parent = this;
+  var colorA = function() { return util.vec4.copy3(parent.colorA, 0.5); };
   
-  var norm = util.vec3.normalize(this.vel);
-  
-  var mark  = {model: square, material: markMat, delay: 0, length: 25, update: function(pos){ this.properties.pos = util.vec3.add(pos, util.vec3.make(0,0,0.05)); this.properties.scale *= 1.05; this.properties.color.w -= 0.5/25; this.properties.angle += 0.001; }, properties: {pos: util.vec3.add(this.pos, util.vec3.make(0,0,0.05)), scale: 0.25, color: lightwhite(), angle: 0.0}};
+  var mark  = {model: square, material: markMat, delay: 0, length: 25, update: function(pos){ this.properties.pos = util.vec3.add(pos, util.vec3.make(0,0,0.05)); this.properties.scale *= 1.05; this.properties.color.w -= 0.5/25; this.properties.angle += 0.001; }, properties: {pos: util.vec3.add(this.pos, util.vec3.make(0,0,0.05)), scale: 0.25, color: colorA(), angle: 0.0}};
 
   this.pushPart(mark);
 };

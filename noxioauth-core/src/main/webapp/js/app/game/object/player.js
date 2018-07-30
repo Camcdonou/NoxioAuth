@@ -88,10 +88,20 @@ PlayerObject.prototype.parseUpd = function(data) {
 
 PlayerObject.prototype.effectSwitch = function(e) {
   switch(e) {
-    case "htg" : { this.stunGeneric(); return true; }
-    case "hts" : { this.stunSlash(); return true; }
-    case "hte" : { this.stunElectric(); return true; }
-    case "htf" : { this.stunFire(); return true; }
+    case "hg" : { this.stunGeneric(); return true; }
+    case "hs" : { this.stunSlash(); return true; }
+    case "he" : { this.stunElectric(); return true; }
+    case "hexr" : { this.stunElectric("red"); return true; }
+    case "hexo" : { this.stunElectric("orange"); return true; }
+    case "hexg" : { this.stunElectric("green"); return true; }
+    case "hexp" : { this.stunElectric("purple"); return true; }
+    case "hexb" : { this.stunElectric("black"); return true; }
+    case "hexrb" : { this.stunElectric("rainbow"); return true; }
+    case "hf" : { this.stunFire(); return true; }
+    case "hfxp" : { this.stunFire("purple"); return true; }
+    case "hfxb" : { this.stunFire("black"); return true; }
+    case "hfxrb" : { this.stunFire("rainbow"); return true; }
+    case "hfxrt" : { this.stunFire("retro"); return true; }
     case "crt" : { this.criticalHit(); return true; }
     case "xpl" : { this.explode(); return true; }
     case "fal" : { this.fall(); return true; }
@@ -125,23 +135,49 @@ PlayerObject.prototype.stun = function() {
   
 };
 
-PlayerObject.prototype.stunGeneric = function() {
-  this.effects.push(NxFx.hit.generic.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+PlayerObject.prototype.stunGeneric = function(perm) {
+  var p = util.vec2.toVec3(this.pos, this.height);
+  var v = util.vec2.toVec3(this.vel, this.vspeed);
+  switch(perm) {
+    default : { this.effects.push(NxFx.hit.generic.trigger(this.game, p, v)); break; }
+  }
   this.stun();
 };
 
-PlayerObject.prototype.stunSlash = function() {
-  this.effects.push(NxFx.hit.slash.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+PlayerObject.prototype.stunSlash = function(perm) {
+  var p = util.vec2.toVec3(this.pos, this.height);
+  var v = util.vec2.toVec3(this.vel, this.vspeed);
+  switch(perm) {
+    default : { this.effects.push(NxFx.hit.slash.trigger(this.game, p, v)); break; }
+  }
   this.stun();
 };
 
-PlayerObject.prototype.stunElectric = function() {
-  this.effects.push(NxFx.hit.electric.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+PlayerObject.prototype.stunElectric = function(perm) {
+  var p = util.vec2.toVec3(this.pos, this.height);
+  var v = util.vec2.toVec3(this.vel, this.vspeed);
+  switch(perm) {
+    case "red" : { this.effects.push(NxFx.hit.alt.electric.red.trigger(this.game, p, v)); break; }
+    case "orange" : { this.effects.push(NxFx.hit.alt.electric.orange.trigger(this.game, p, v)); break; }
+    case "green" : { this.effects.push(NxFx.hit.alt.electric.green.trigger(this.game, p, v)); break; }
+    case "purple" : { this.effects.push(NxFx.hit.alt.electric.purple.trigger(this.game, p, v)); break; }
+    case "black" : { this.effects.push(NxFx.hit.alt.electric.black.trigger(this.game, p, v)); break; }
+    case "rainbow" : { this.effects.push(NxFx.hit.alt.electric.rainbow.trigger(this.game, p, v)); break; }
+    default : { this.effects.push(NxFx.hit.electric.trigger(this.game, p, v)); break; }
+  }
   this.stun();
 };
 
-PlayerObject.prototype.stunFire = function() {
-  this.effects.push(NxFx.hit.fire.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+PlayerObject.prototype.stunFire = function(perm) {
+  var p = util.vec2.toVec3(this.pos, this.height);
+  var v = util.vec2.toVec3(this.vel, this.vspeed);
+  switch(perm) {
+    case "purple" : { this.effects.push(NxFx.hit.alt.fire.purple.trigger(this.game, p, v)); break; }
+    case "black" : { this.effects.push(NxFx.hit.alt.fire.black.trigger(this.game, p, v)); break; }
+    case "rainbow" : { this.effects.push(NxFx.hit.alt.fire.rainbow.trigger(this.game, p, v)); break; }
+    case "retro" : { break; }
+    default : { this.effects.push(NxFx.hit.fire.trigger(this.game, p, v)); break; }
+  }
   this.stun();
 };
 

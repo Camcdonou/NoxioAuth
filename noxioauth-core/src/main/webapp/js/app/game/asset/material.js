@@ -172,6 +172,16 @@ Asset.prototype.material.multi.hitbox.hitbox = {
   texture0: "multi/hitbox/hitbox",
 };
 
+/* Source File: sparkRB.mat */
+Asset.prototype.material.multi.hit.sparkRB = {
+  name: "multi.hit.sparkRB",
+  shader: "particlemodelRB",
+  shadow: false,
+  texture0: "multi/hit/spark",
+  texture1: "multi/red_low",
+  texture2: "multi/red_high",
+};
+
 /* Source File: critflare.mat */
 Asset.prototype.material.multi.hit.critflare = {
   name: "multi.hit.critflare",
@@ -186,6 +196,16 @@ Asset.prototype.material.multi.hit.line = {
   shader: "particlemodel",
   shadow: false,
   texture0: "multi/hit/line",
+};
+
+/* Source File: zapRB.mat */
+Asset.prototype.material.multi.hit.zapRB = {
+  name: "multi.hit.zapRB",
+  shader: "particlespriteRB",
+  shadow: false,
+  texture0: "multi/hit/zap",
+  texture1: "multi/red_low",
+  texture2: "multi/white",
 };
 
 /* Source File: critspark.mat */
@@ -226,6 +246,16 @@ Asset.prototype.material.multi.hit.zap = {
   shader: "particlesprite",
   shadow: false,
   texture0: "multi/hit/zap",
+};
+
+/* Source File: burnRB.mat */
+Asset.prototype.material.multi.hit.burnRB = {
+  name: "multi.hit.burnRB",
+  shader: "particlespriteRB",
+  shadow: false,
+  texture0: "multi/hit/flame",
+  texture1: "multi/red_mid",
+  texture2: "multi/white",
 };
 
 /* Source File: smoke.mat */
@@ -484,13 +514,34 @@ Asset.prototype.material.character.falco.effect.shockwave = {
   texture0: "character/falco/effect/shockwave",
 };
 
-/* Source File: charge.mat */
-Asset.prototype.material.character.falco.effect.charge = {
-  name: "character.falco.effect.charge",
-  shader: "effect_fire_plane",
+/* Source File: blastRB.mat */
+Asset.prototype.material.character.falco.effect.blastRB = {
+  name: "character.falco.effect.blastRB",
+  shader: "particleRB",
   shadow: false,
-  texture0: "character/falco/effect/chargemask",
-  texture1: "character/falco/effect/firecolor",
+  texture0: "character/falco/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: shockwaveRB.mat */
+Asset.prototype.material.character.falco.effect.shockwaveRB = {
+  name: "character.falco.effect.shockwaveRB",
+  shader: "effectRB",
+  shadow: false,
+  texture0: "character/falco/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: flashRB.mat */
+Asset.prototype.material.character.falco.effect.flashRB = {
+  name: "character.falco.effect.flashRB",
+  shader: "particleRB",
+  shadow: false,
+  texture0: "character/falco/effect/flash",
+  texture1: "multi/red_low",
+  texture2: "multi/red_high",
 };
 
 /* Source File: blast.mat */
@@ -674,6 +725,16 @@ Asset.prototype.material.character.shiek.shiek = {
   texture1: "character/shiek/shiek_normal",
 };
 
+/* Source File: markwaveRB.mat */
+Asset.prototype.material.character.shiek.effect.markwaveRB = {
+  name: "character.shiek.effect.markwaveRB",
+  shader: "effectRB",
+  shadow: false,
+  texture0: "character/shiek/effect/markwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
 /* Source File: explode.mat */
 Asset.prototype.material.character.shiek.effect.explode = {
   name: "character.shiek.effect.explode",
@@ -704,6 +765,46 @@ Asset.prototype.material.character.shiek.effect.markwave = {
   shader: "effect2tone",
   shadow: false,
   texture0: "character/shiek/effect/markwave",
+};
+
+/* Source File: markRB.mat */
+Asset.prototype.material.character.shiek.effect.markRB = {
+  name: "character.shiek.effect.markRB",
+  shader: "effectRB",
+  shadow: false,
+  texture0: "character/shiek/effect/mark",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: shockwaveRB.mat */
+Asset.prototype.material.character.shiek.effect.shockwaveRB = {
+  name: "character.shiek.effect.shockwaveRB",
+  shader: "effectRB",
+  shadow: false,
+  texture0: "character/shiek/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: flashRB.mat */
+Asset.prototype.material.character.shiek.effect.flashRB = {
+  name: "character.shiek.effect.flashRB",
+  shader: "particleRB",
+  shadow: false,
+  texture0: "character/shiek/effect/flash",
+  texture1: "multi/red_low",
+  texture2: "multi/red_high",
+};
+
+/* Source File: lineRB.mat */
+Asset.prototype.material.character.shiek.effect.lineRB = {
+  name: "character.shiek.effect.lineRB",
+  shader: "particlemodelRB",
+  shadow: false,
+  texture0: "character/shiek/effect/line",
+  texture1: "multi/red_high",
+  texture2: "multi/white",
 };
 
 /* Source File: smoke.mat */
@@ -788,12 +889,32 @@ Asset.prototype.material.character.fox.effect.shockwave = {
   texture0: "character/fox/effect/shockwave",
 };
 
+/* Source File: sparkRB.mat */
+Asset.prototype.material.character.fox.effect.sparkRB = {
+  name: "character.fox.effect.sparkRB",
+  shader: "particleRB",
+  shadow: false,
+  texture0: "character/fox/effect/spark",
+  texture1: "multi/red_low",
+  texture2: "multi/red_high",
+};
+
 /* Source File: speedline.mat */
 Asset.prototype.material.character.fox.effect.speedline = {
   name: "character.fox.effect.speedline",
   shader: "particle2tone",
   shadow: false,
   texture0: "character/fox/effect/speedline",
+};
+
+/* Source File: initialRB.mat */
+Asset.prototype.material.character.fox.effect.initialRB = {
+  name: "character.fox.effect.initialRB",
+  shader: "particleRB",
+  shadow: false,
+  texture0: "character/fox/effect/blip_init",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
 };
 
 /* Source File: spark.mat */
@@ -804,12 +925,60 @@ Asset.prototype.material.character.fox.effect.spark = {
   texture0: "character/fox/effect/spark",
 };
 
-/* Source File: blipInitial.mat */
-Asset.prototype.material.character.fox.effect.blipInitial = {
-  name: "character.fox.effect.blipInitial",
+/* Source File: speedlineRB.mat */
+Asset.prototype.material.character.fox.effect.speedlineRB = {
+  name: "character.fox.effect.speedlineRB",
+  shader: "particleRB",
+  shadow: false,
+  texture0: "character/fox/effect/speedline",
+  texture1: "multi/red_low",
+  texture2: "multi/white",
+};
+
+/* Source File: shockwaveRB.mat */
+Asset.prototype.material.character.fox.effect.shockwaveRB = {
+  name: "character.fox.effect.shockwaveRB",
+  shader: "particleRB",
+  shadow: false,
+  texture0: "character/fox/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: flashRB.mat */
+Asset.prototype.material.character.fox.effect.flashRB = {
+  name: "character.fox.effect.flashRB",
+  shader: "particleRB",
+  shadow: false,
+  texture0: "character/fox/effect/flash",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: blipRB.mat */
+Asset.prototype.material.character.fox.effect.blipRB = {
+  name: "character.fox.effect.blipRB",
+  shader: "particleRB",
+  shadow: false,
+  texture0: "character/fox/effect/blip",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: initial.mat */
+Asset.prototype.material.character.fox.effect.initial = {
+  name: "character.fox.effect.initial",
   shader: "particle2tone",
   shadow: false,
   texture0: "character/fox/effect/blip_init",
+};
+
+/* Source File: flash.mat */
+Asset.prototype.material.character.fox.effect.flash = {
+  name: "character.fox.effect.flash",
+  shader: "particle2tone",
+  shadow: false,
+  texture0: "character/fox/effect/flash",
 };
 
 /* Source File: blip.mat */
@@ -818,14 +987,6 @@ Asset.prototype.material.character.fox.effect.blip = {
   shader: "particle2tone",
   shadow: false,
   texture0: "character/fox/effect/blip",
-};
-
-/* Source File: blipFlash.mat */
-Asset.prototype.material.character.fox.effect.blipFlash = {
-  name: "character.fox.effect.blipFlash",
-  shader: "particle2tone",
-  shadow: false,
-  texture0: "character/fox/effect/flash",
 };
 
 /* Source File: sky.mat */

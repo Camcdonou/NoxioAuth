@@ -35,11 +35,9 @@ function PlayerFalco(game, oid, pos, team, color) {
 PlayerFalco.BLIP_POWER_MAX = 30;
 PlayerFalco.DASH_COOLDOWN_LENGTH = 45;
 PlayerFalco.CHARGE_TIME_LENGTH = 20;
-PlayerFalco.BLIP_COLOR_A = util.vec4.lerp(util.vec4.make(0.6666, 0.9058, 1.0, 1.0), util.vec4.make(1,1,1,1), 0.5);
-PlayerFalco.BLIP_COLOR_B = util.vec4.make(0.4, 0.5450, 1.0, 1.0);
-PlayerFalco.CHARGE_COLOR_A = util.vec4.make(0.8, 0.45, 0.25, 0.15);
-PlayerFalco.CHARGE_COLOR_B = util.vec4.make(0.85, 0.45, 0.25, 0.65);
-PlayerFalco.DASH_COLOR = util.vec4.make(0.85, 0.45, 0.25, 0.95);
+PlayerFalco.FIRE_COLOR_A = util.vec4.make(1.0, 0.956, 0.490, 1.0);
+PlayerFalco.FIRE_COLOR_B = util.vec4.make(1.0, 0.654, 0.286, 1.0);
+PlayerFalco.FIRE_COLOR_C = util.vec4.make(1.0, 0.462, 0.223, 1.0);
 
 
 PlayerFalco.prototype.update = PlayerObject.prototype.update;
@@ -85,7 +83,7 @@ PlayerFalco.prototype.explode = PlayerObject.prototype.explode;
 PlayerFalco.prototype.fall = PlayerObject.prototype.fall;
 
 PlayerFalco.prototype.blip = function() {
-  this.effects.push(NxFx.falco.blip.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.effects.push(NxFx.fox.blip.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
   this.blipCooldown = PlayerFalco.BLIP_POWER_MAX;
 };
 
@@ -119,8 +117,17 @@ PlayerFalco.prototype.destroy = PlayerObject.prototype.destroy;
 PlayerFalco.prototype.type = function() { return "crt"; };
 
 /* Permutation dictionary */
+
+/* global PlayerFalcoRainbow */
+/* global PlayerFalcoGold */
+/* global PlayerFalcoOrange */
+/* global PlayerFalcoBlack */
 PlayerFalco.classByPermutation = function(perm) {
   switch(perm) {
+    case 2 : { return PlayerFalcoOrange; }
+    case 3 : { return PlayerFalcoRainbow; }
+    case 4 : { return PlayerFalcoGold; }
+    case 6 : { return PlayerFalcoBlack; }
     default : { return PlayerFalco; }
   }
 };

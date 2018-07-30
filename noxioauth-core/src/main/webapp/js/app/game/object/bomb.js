@@ -46,10 +46,20 @@ BombObject.prototype.update = function(data) {
       case "lnd" : { this.land(); break; }
       case "fal" : { this.fall(); break; }
       case "xpl" : { this.explode(); break; }
-      case "htg" : { this.stunGeneric(); return true; }
-      case "hts" : { this.stunSlash(); return true; }
-      case "hte" : { this.stunElectric(); return true; }
-      case "htf" : { this.stunFire(); return true; }
+      case "hg" : { this.stunGeneric(); return true; }
+      case "hs" : { this.stunSlash(); return true; }
+      case "he" : { this.stunElectric(); return true; }
+      case "hexr" : { this.stunElectric("red"); return true; }
+      case "hexo" : { this.stunElectric("orange"); return true; }
+      case "hexg" : { this.stunElectric("green"); return true; }
+      case "hexp" : { this.stunElectric("purple"); return true; }
+      case "hexb" : { this.stunElectric("black"); return true; }
+      case "hexrb" : { this.stunElectric("rainbow"); return true; }
+      case "hf" : { this.stunFire(); return true; }
+      case "hfxp" : { this.stunFire("purple"); return true; }
+      case "hfxb" : { this.stunFire("black"); return true; }
+      case "hfxrb" : { this.stunFire("rainbow"); return true; }
+      case "hfxrt" : { this.stunFire("retro"); return true; }
       case "crt" : { this.criticalHit(); return true; }
       case "imp" : { this.impact(); break; }
       case "arm" : { this.arm(); break; }
@@ -76,29 +86,11 @@ BombObject.prototype.stun = function() {
   
 };
 
-BombObject.prototype.stunGeneric = function() {
-  this.effects.push(NxFx.hit.generic.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
-  this.stun();
-};
-
-BombObject.prototype.stunSlash = function() {
-  this.effects.push(NxFx.hit.slash.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
-  this.stun();
-};
-
-BombObject.prototype.stunElectric = function() {
-  this.effects.push(NxFx.hit.electric.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
-  this.stun();
-};
-
-BombObject.prototype.stunFire = function() {
-  this.effects.push(NxFx.hit.fire.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
-  this.stun();
-};
-
-BombObject.prototype.criticalHit = function() {
-  this.effects.push(NxFx.hit.critical.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
-};
+BombObject.prototype.stunGeneric = PlayerObject.prototype.stunGeneric;
+BombObject.prototype.stunSlash = PlayerObject.prototype.stunSlash;
+BombObject.prototype.stunElectric = PlayerObject.prototype.stunElectric;
+BombObject.prototype.stunFire = PlayerObject.prototype.stunFire;
+BombObject.prototype.criticalHit = PlayerObject.prototype.criticalHit;
 
 BombObject.prototype.explode = function() { };
 BombObject.prototype.fall = function() { };
