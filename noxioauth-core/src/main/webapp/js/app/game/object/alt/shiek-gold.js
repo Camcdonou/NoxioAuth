@@ -9,6 +9,7 @@
 /* Define PlayerShiekGold Class */
 function PlayerShiekGold(game, oid, pos, team, color) {
   PlayerShiek.call(this, game, oid, pos, team, color);
+  this.material = this.game.display.getMaterial("character.shiek.gold");
 };
 
 PlayerShiekGold.prototype.update = PlayerShiek.prototype.update;

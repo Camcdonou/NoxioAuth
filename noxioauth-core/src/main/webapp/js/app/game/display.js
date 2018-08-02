@@ -59,6 +59,7 @@ Display.prototype.setupWebGL = function() {
   this.upscale = {sky: main.settings.graphics.upSky, world: main.settings.graphics.upGame, ui: main.settings.graphics.upUi};
   
   this.textures = [];
+  this.cubes = [];
   this.shaders = [];
   this.materials = [];
   this.models = [];
@@ -70,9 +71,11 @@ Display.prototype.setupWebGL = function() {
   console.log("##DEBUG GLSL UNIFORM MAX: " + maxUniform); /* @DEBUG */
   
   if(!this.createTexture("multi/default")) { return false; }
+  if(!this.createCube(["multi/cube0","multi/cube1","multi/cube2","multi/cube3","multi/cube4","multi/cube5"])) { return false; }
   
   if(!this.createMaterial(this.game.asset.material.multi.default)) { return false; }
   if(!this.createMaterial(this.game.asset.material.multi.shadow)) { return false; }
+  if(!this.createMaterial(this.game.asset.material.multi.shadowmask)) { return false; }
   if(!this.createMaterial(this.game.asset.material.multi.post_msaa)) { return false; }
   if(!this.createMaterial(this.game.asset.material.ui.calibri)) { return false; }
   
@@ -96,6 +99,13 @@ Display.prototype.createTexture = function(path) {
   var gl = this.gl; // Sanity Save
   var glTexture = gl.createTexture();
   this.textures.push(new Texture(gl, glTexture, path));
+  return true;
+};
+
+Display.prototype.createCube = function(path) {
+  var gl = this.gl; // Sanity Save
+  var glTexture = gl.createTexture();
+  this.cubes.push(new TextureCube(gl, glTexture, path));
   return true;
 };
 
@@ -171,13 +181,15 @@ Display.prototype.createShader = function(source) {
 Display.prototype.createMaterial = function(source) {
   var shader = this.getShader(source.shader);
   var texture = {};
+  var cube;
   if(source.texture0) { texture.texture0 = this.getTexture(source.texture0); }
   if(source.texture1) { texture.texture1 = this.getTexture(source.texture1); }
   if(source.texture2) { texture.texture2 = this.getTexture(source.texture2); }
   if(source.texture3) { texture.texture3 = this.getTexture(source.texture3); }
   if(source.texture4) { texture.texture4 = this.getTexture(source.texture4); }
+  if(source.cube) { cube = this.getCube(source.cube); }
   
-  this.materials.push(new Material(source.name, shader, texture, source.shadow));
+  this.materials.push(new Material(source.name, shader, texture, cube, source.shadow));
   
   return true;
 };
@@ -373,6 +385,8 @@ Display.prototype.draw = function() {
   gl.clearColor(1.0, 0.0, 0.0, 1.0);                                          // red -> Z=Zfar on the shadow map
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   
+  
+  /* Setup & draw shadows for materials that cast full opaque shadows. */
   var shadowMaterial = this.getMaterial("multi.shadow");
   var shadowUniformData = [
     {name: "Pmatrix", data: PROJMATRIX_SHADOW},
@@ -384,13 +398,38 @@ Display.prototype.draw = function() {
   shadowMaterial.shader.applyUniforms(gl, shadowUniformData);
   shadowMaterial.enable(gl);
   for(var i=0;i<geometry.length;i++) {
-    if(geometry[i].material.castShadow) {
+    if(geometry[i].material.castShadow === 1) {
       shadowMaterial.shader.applyUniforms(gl, geometry[i].uniforms);
       geometry[i].model.draw(gl, shadowMaterial.shader);
     }
   }
   shadowMaterial.disable(gl);
   shadowMaterial.shader.disable(gl);
+  
+  /* Setup & draw shadows for materials that cast masked shadows. */
+  var shadowMaskMaterial = this.getMaterial("multi.shadowmask");
+  var shadowMaskUniformData = [
+    {name: "Pmatrix", data: PROJMATRIX_SHADOW},
+    {name: "Lmatrix", data: LIGHTMATRIX},
+    {name: "Omatrix", data: OFFSETMATRIX},
+    {name: "texture0", data: 0}
+  ];
+  
+  shadowMaskMaterial.shader.enable(gl);
+  shadowMaskMaterial.shader.applyUniforms(gl, shadowMaskUniformData);
+  shadowMaskMaterial.enable(gl);
+  for(var i=0;i<geometry.length;i++) {
+    if(geometry[i].material.castShadow === 2) {
+      if(geometry[i].material.texture.texture0) { geometry[i].material.texture.texture0.enable(gl, 0); }
+      else { main.menu.warning.show("Material '" + geometry[i].material.name + "' was flagged for masked shadows but lacks a texture0 for masking."); }
+      shadowMaskMaterial.shader.applyUniforms(gl, geometry[i].uniforms);
+      geometry[i].model.draw(gl, shadowMaskMaterial.shader);
+      if(geometry[i].material.texture.texture0) { geometry[i].material.texture.texture0.disable(gl, 0); }
+    }
+  }
+  shadowMaskMaterial.disable(gl);
+  shadowMaskMaterial.shader.disable(gl);
+  
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); //Disable frame buffer
 
   /* === Compile Dynamic Lighting Information ============================================================================ */
@@ -455,7 +494,7 @@ Display.prototype.draw = function() {
     for(var j=0;j<shaderGroup.materials.length;j++) {
       var materialGroup = shaderGroup.materials[j];
       materialGroup.material.enable(gl);
-      gl.depthMask(materialGroup.material.castShadow);
+      gl.depthMask(materialGroup.material.castShadow  !== 0);
       for(var k=0;k<materialGroup.draws.length;k++) {
         var draw = materialGroup.draws[k];
         shaderGroup.shader.applyUniforms(gl, draw.uniforms);
@@ -479,7 +518,7 @@ Display.prototype.draw = function() {
     decal.material.shader.applyUniforms(gl, uniformData);
     decal.material.shader.applyUniforms(gl, uniformLightData);
     decal.material.shader.applyUniforms(gl, uniformDecal);
-    gl.depthMask(decal.material.castShadow);
+    gl.depthMask(decal.material.castShadow !== 0);
     for(var j=0;j<decal.geometry.length;j++) {
       decal.material.shader.applyUniforms(gl, decal.geometry[j].uniforms);
       decal.geometry[j].model.draw(gl, decal.material.shader);
@@ -495,7 +534,7 @@ Display.prototype.draw = function() {
     for(var j=0;j<shaderGroup.materials.length;j++) {
       var materialGroup = shaderGroup.materials[j];
       materialGroup.material.enable(gl);
-      gl.depthMask(materialGroup.material.castShadow);
+      gl.depthMask(materialGroup.material.castShadow === 1);
       for(var k=0;k<materialGroup.draws.length;k++) {
         var draw = materialGroup.draws[k];
         shaderGroup.shader.applyUniforms(gl, draw.uniforms);
@@ -690,7 +729,7 @@ Display.prototype.sortGeometry = function(geometry) {
     materialGroup.draws.push({model: geom.model, uniforms: geom.uniforms});
   }
   for(var i=0,j=0;j<geomSorted.length;i++,j++) {
-    if(!geomSorted[i].materials[0].material.castShadow) {
+    if(geomSorted[i].materials[0].material.castShadow === 0) {
       var spl = geomSorted.splice(i, 1)[0];
       geomSorted.push(spl);
       i--;
@@ -723,6 +762,20 @@ Display.prototype.getTexture = function(path) {
   
   main.menu.warning.show("Failed to load texture: '" + path + "'");
   return this.getTexture("multi/default");
+};
+
+/* Returns a cube by path. If cube is not found then returns default. */
+Display.prototype.getCube = function(path) {
+  for(var i=0;i<this.cubes.length;i++) {
+    if(this.cubes[i].path === path[0]) {
+      return this.cubes[i];
+    }
+  }
+  
+  if(this.createCube(path)) { return this.getCube(path); }
+  
+  main.menu.warning.show("Failed to load cubemap: '" + path[0] + "'");
+  return this.getCube("multi/cube0");
 };
 
 /* Returns a shader by name. If shader is not found then returns default. */

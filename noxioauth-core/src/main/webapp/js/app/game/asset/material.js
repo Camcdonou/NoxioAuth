@@ -52,7 +52,7 @@ Asset.prototype.material.map.iron = {};
 Asset.prototype.material.object.zone.zone = {
   name: "object.zone.zone",
   shader: "zone",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/default",
   texture1: "object/zone/gradient",
 };
@@ -61,7 +61,7 @@ Asset.prototype.material.object.zone.zone = {
 Asset.prototype.material.object.flag.flag = {
   name: "object.flag.flag",
   shader: "player",
-  shadow: true,
+  shadow: "true",
   texture0: "multi/default",
   texture1: "multi/normal",
 };
@@ -70,7 +70,7 @@ Asset.prototype.material.object.flag.flag = {
 Asset.prototype.material.object.hill.hill = {
   name: "object.hill.hill",
   shader: "zone",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/default",
   texture1: "object/hill/gradient",
 };
@@ -79,7 +79,7 @@ Asset.prototype.material.object.hill.hill = {
 Asset.prototype.material.object.bomb.bomb = {
   name: "object.bomb.bomb",
   shader: "default",
-  shadow: true,
+  shadow: "true",
   texture0: "object/bomb/bomb",
   texture1: "multi/normal",
 };
@@ -88,7 +88,7 @@ Asset.prototype.material.object.bomb.bomb = {
 Asset.prototype.material.object.target.targetcircle = {
   name: "object.target.targetcircle",
   shader: "decal_glow",
-  shadow: false,
+  shadow: "false",
   texture0: "object/target/targetdecal",
 };
 
@@ -96,7 +96,7 @@ Asset.prototype.material.object.target.targetcircle = {
 Asset.prototype.material.ui.credit = {
   name: "ui.credit",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "ui/credit",
 };
 
@@ -104,7 +104,7 @@ Asset.prototype.material.ui.credit = {
 Asset.prototype.material.ui.flag = {
   name: "ui.flag",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "ui/flag",
 };
 
@@ -112,7 +112,7 @@ Asset.prototype.material.ui.flag = {
 Asset.prototype.material.ui.king = {
   name: "ui.king",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "ui/king",
 };
 
@@ -120,7 +120,7 @@ Asset.prototype.material.ui.king = {
 Asset.prototype.material.ui.lockIconLarge = {
   name: "ui.lockIconLarge",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "ui/lock",
 };
 
@@ -128,7 +128,7 @@ Asset.prototype.material.ui.lockIconLarge = {
 Asset.prototype.material.ui.ultimate = {
   name: "ui.ultimate",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "ui/ultimate",
 };
 
@@ -136,7 +136,7 @@ Asset.prototype.material.ui.ultimate = {
 Asset.prototype.material.ui.color = {
   name: "ui.color",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "ui/white",
 };
 
@@ -144,7 +144,7 @@ Asset.prototype.material.ui.color = {
 Asset.prototype.material.ui.calibri = {
   name: "ui.calibri",
   shader: "font",
-  shadow: false,
+  shadow: "false",
   texture0: "ui/calibri",
 };
 
@@ -152,7 +152,7 @@ Asset.prototype.material.ui.calibri = {
 Asset.prototype.material.ui.zone = {
   name: "ui.zone",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "ui/zone",
 };
 
@@ -160,15 +160,22 @@ Asset.prototype.material.ui.zone = {
 Asset.prototype.material.ui.bomb = {
   name: "ui.bomb",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "ui/bomb",
+};
+
+/* Source File: shadowmask.mat */
+Asset.prototype.material.multi.shadowmask = {
+  name: "multi.shadowmask",
+  shader: "shadowmask",
+  shadow: "true",
 };
 
 /* Source File: hitbox.mat */
 Asset.prototype.material.multi.hitbox.hitbox = {
   name: "multi.hitbox.hitbox",
   shader: "effect",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/hitbox/hitbox",
 };
 
@@ -176,7 +183,7 @@ Asset.prototype.material.multi.hitbox.hitbox = {
 Asset.prototype.material.multi.hit.sparkRB = {
   name: "multi.hit.sparkRB",
   shader: "particlemodelRB",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/hit/spark",
   texture1: "multi/red_low",
   texture2: "multi/red_high",
@@ -186,7 +193,7 @@ Asset.prototype.material.multi.hit.sparkRB = {
 Asset.prototype.material.multi.hit.critflare = {
   name: "multi.hit.critflare",
   shader: "particle",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/hit/critflare",
 };
 
@@ -194,7 +201,7 @@ Asset.prototype.material.multi.hit.critflare = {
 Asset.prototype.material.multi.hit.line = {
   name: "multi.hit.line",
   shader: "particlemodel",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/hit/line",
 };
 
@@ -202,7 +209,7 @@ Asset.prototype.material.multi.hit.line = {
 Asset.prototype.material.multi.hit.zapRB = {
   name: "multi.hit.zapRB",
   shader: "particlespriteRB",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/hit/zap",
   texture1: "multi/red_low",
   texture2: "multi/white",
@@ -212,15 +219,25 @@ Asset.prototype.material.multi.hit.zapRB = {
 Asset.prototype.material.multi.hit.critspark = {
   name: "multi.hit.critspark",
   shader: "particle",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/hit/critspark",
+};
+
+/* Source File: slashRB.mat */
+Asset.prototype.material.multi.hit.slashRB = {
+  name: "multi.hit.slashRB",
+  shader: "particlespriteRB",
+  shadow: "false",
+  texture0: "multi/hit/slash",
+  texture1: "multi/red_low",
+  texture2: "multi/red_high",
 };
 
 /* Source File: burn.mat */
 Asset.prototype.material.multi.hit.burn = {
   name: "multi.hit.burn",
   shader: "particlesprite",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/hit/flame",
 };
 
@@ -228,7 +245,7 @@ Asset.prototype.material.multi.hit.burn = {
 Asset.prototype.material.multi.hit.slash = {
   name: "multi.hit.slash",
   shader: "particlesprite",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/hit/slash",
 };
 
@@ -236,15 +253,25 @@ Asset.prototype.material.multi.hit.slash = {
 Asset.prototype.material.multi.hit.spark = {
   name: "multi.hit.spark",
   shader: "particlemodel",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/hit/spark",
+};
+
+/* Source File: lineRB.mat */
+Asset.prototype.material.multi.hit.lineRB = {
+  name: "multi.hit.lineRB",
+  shader: "particlemodelRB",
+  shadow: "false",
+  texture0: "multi/hit/line",
+  texture1: "multi/red_low",
+  texture2: "multi/red_high",
 };
 
 /* Source File: zap.mat */
 Asset.prototype.material.multi.hit.zap = {
   name: "multi.hit.zap",
   shader: "particlesprite",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/hit/zap",
 };
 
@@ -252,7 +279,7 @@ Asset.prototype.material.multi.hit.zap = {
 Asset.prototype.material.multi.hit.burnRB = {
   name: "multi.hit.burnRB",
   shader: "particlespriteRB",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/hit/flame",
   texture1: "multi/red_mid",
   texture2: "multi/white",
@@ -262,7 +289,7 @@ Asset.prototype.material.multi.hit.burnRB = {
 Asset.prototype.material.multi.hit.smoke = {
   name: "multi.hit.smoke",
   shader: "particlesprite",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/hit/smoke",
 };
 
@@ -270,14 +297,14 @@ Asset.prototype.material.multi.hit.smoke = {
 Asset.prototype.material.multi.post_msaa = {
   name: "multi.post_msaa",
   shader: "post_msaa",
-  shadow: false,
+  shadow: "false",
 };
 
 /* Source File: default.mat */
 Asset.prototype.material.multi.default = {
   name: "multi.default",
   shader: "default",
-  shadow: true,
+  shadow: "true",
   texture0: "multi/default",
   texture1: "multi/normal",
 };
@@ -286,35 +313,35 @@ Asset.prototype.material.multi.default = {
 Asset.prototype.material.multi.post = {
   name: "multi.post",
   shader: "post",
-  shadow: false,
+  shadow: "false",
 };
 
 /* Source File: shadow.mat */
 Asset.prototype.material.multi.shadow = {
   name: "multi.shadow",
   shader: "shadow",
-  shadow: true,
+  shadow: "true",
 };
 
 /* Source File: post_fxaa.mat */
 Asset.prototype.material.multi.post_fxaa = {
   name: "multi.post_fxaa",
   shader: "post_fxaa",
-  shadow: false,
+  shadow: "false",
 };
 
 /* Source File: debug.mat */
 Asset.prototype.material.multi.debug = {
   name: "multi.debug",
   shader: "debug",
-  shadow: false,
+  shadow: "false",
 };
 
 /* Source File: iconlarge.mat */
 Asset.prototype.material.character.generic.ui.iconlarge = {
   name: "character.generic.ui.iconlarge",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/generic/ui/icon_lg",
 };
 
@@ -322,7 +349,7 @@ Asset.prototype.material.character.generic.ui.iconlarge = {
 Asset.prototype.material.character.generic.ui.meterstub = {
   name: "character.generic.ui.meterstub",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/generic/ui/meterstub",
 };
 
@@ -330,7 +357,7 @@ Asset.prototype.material.character.generic.ui.meterstub = {
 Asset.prototype.material.character.generic.decal.targetcircle = {
   name: "character.generic.decal.targetcircle",
   shader: "decal_glow",
-  shadow: false,
+  shadow: "false",
   texture0: "character/generic/decal/targetdecal",
 };
 
@@ -338,7 +365,7 @@ Asset.prototype.material.character.generic.decal.targetcircle = {
 Asset.prototype.material.character.generic.decal.bloodsplat = {
   name: "character.generic.decal.bloodsplat",
   shader: "decal",
-  shadow: false,
+  shadow: "false",
   texture0: "character/generic/decal/bloodsplat",
   texture1: "character/generic/decal/bloodsplatnormal",
 };
@@ -347,7 +374,7 @@ Asset.prototype.material.character.generic.decal.bloodsplat = {
 Asset.prototype.material.character.generic.decal.bloodsplatsmall = {
   name: "character.generic.decal.bloodsplatsmall",
   shader: "decal",
-  shadow: false,
+  shadow: "false",
   texture0: "character/generic/decal/bloodsplatsmall",
   texture1: "character/generic/decal/bloodsplatsmallnormal",
 };
@@ -356,7 +383,7 @@ Asset.prototype.material.character.generic.decal.bloodsplatsmall = {
 Asset.prototype.material.character.generic.effect.star = {
   name: "character.generic.effect.star",
   shader: "particle",
-  shadow: false,
+  shadow: "false",
   texture0: "character/generic/effect/star",
 };
 
@@ -364,7 +391,7 @@ Asset.prototype.material.character.generic.effect.star = {
 Asset.prototype.material.character.generic.effect.bloodsplash = {
   name: "character.generic.effect.bloodsplash",
   shader: "particle",
-  shadow: false,
+  shadow: "false",
   texture0: "character/generic/effect/bloodsplash",
 };
 
@@ -372,7 +399,7 @@ Asset.prototype.material.character.generic.effect.bloodsplash = {
 Asset.prototype.material.character.generic.effect.airjump = {
   name: "character.generic.effect.airjump",
   shader: "effect",
-  shadow: false,
+  shadow: "false",
   texture0: "character/generic/effect/airjump",
 };
 
@@ -380,7 +407,7 @@ Asset.prototype.material.character.generic.effect.airjump = {
 Asset.prototype.material.character.generic.effect.blooddrop = {
   name: "character.generic.effect.blooddrop",
   shader: "particle",
-  shadow: false,
+  shadow: "false",
   texture0: "character/generic/effect/blooddrop",
 };
 
@@ -388,7 +415,7 @@ Asset.prototype.material.character.generic.effect.blooddrop = {
 Asset.prototype.material.character.puff.ui.iconlarge = {
   name: "character.puff.ui.iconlarge",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/puff/ui/icon_lg",
 };
 
@@ -396,7 +423,7 @@ Asset.prototype.material.character.puff.ui.iconlarge = {
 Asset.prototype.material.character.puff.ui.meterrest = {
   name: "character.puff.ui.meterrest",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/puff/ui/meterrest",
 };
 
@@ -404,7 +431,7 @@ Asset.prototype.material.character.puff.ui.meterrest = {
 Asset.prototype.material.character.puff.ui.meterpound = {
   name: "character.puff.ui.meterpound",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/puff/ui/meterpound",
 };
 
@@ -412,16 +439,26 @@ Asset.prototype.material.character.puff.ui.meterpound = {
 Asset.prototype.material.character.puff.puff = {
   name: "character.puff.puff",
   shader: "player",
-  shadow: true,
+  shadow: "true",
   texture0: "character/puff/puff",
   texture1: "character/puff/puff_normal",
 };
+
+/* Source File: gold.mat */
+Asset.prototype.material.character.puff.gold = {
+  name: "character.puff.gold",
+  shader: "playershiny",
+  shadow: "true",
+  texture0: "character/puff/puff",
+  texture1: "character/puff/puff_normal",
+  texture2: "character/puff/gold",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
 
 /* Source File: shockwave.mat */
 Asset.prototype.material.character.puff.effect.shockwave = {
   name: "character.puff.effect.shockwave",
   shader: "effect",
-  shadow: false,
+  shadow: "false",
   texture0: "character/puff/effect/shockwave",
 };
 
@@ -429,7 +466,7 @@ Asset.prototype.material.character.puff.effect.shockwave = {
 Asset.prototype.material.character.puff.effect.line = {
   name: "character.puff.effect.line",
   shader: "particlemodel",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/hit/line",
 };
 
@@ -437,7 +474,7 @@ Asset.prototype.material.character.puff.effect.line = {
 Asset.prototype.material.character.puff.effect.dash = {
   name: "character.puff.effect.dash",
   shader: "particlesprite",
-  shadow: false,
+  shadow: "false",
   texture0: "character/puff/effect/dash",
 };
 
@@ -445,23 +482,111 @@ Asset.prototype.material.character.puff.effect.dash = {
 Asset.prototype.material.character.puff.effect.restwave = {
   name: "character.puff.effect.restwave",
   shader: "effect",
-  shadow: false,
+  shadow: "false",
   texture0: "character/puff/effect/hitwave",
+};
+
+/* Source File: sleepRB.mat */
+Asset.prototype.material.character.puff.effect.sleepRB = {
+  name: "character.puff.effect.sleepRB",
+  shader: "particleRB",
+  shadow: "false",
+  texture0: "character/puff/effect/z",
+  texture1: "multi/red_low",
+  texture2: "multi/red_high",
+};
+
+/* Source File: smokeRB.mat */
+Asset.prototype.material.character.puff.effect.smokeRB = {
+  name: "character.puff.effect.smokeRB",
+  shader: "particleRB",
+  shadow: "false",
+  texture0: "character/puff/effect/smoke",
+  texture1: "multi/red_low",
+  texture2: "multi/red_high",
 };
 
 /* Source File: hit.mat */
 Asset.prototype.material.character.puff.effect.hit = {
   name: "character.puff.effect.hit",
   shader: "particle",
-  shadow: false,
+  shadow: "false",
   texture0: "character/puff/effect/hit",
+};
+
+/* Source File: hitRB.mat */
+Asset.prototype.material.character.puff.effect.hitRB = {
+  name: "character.puff.effect.hitRB",
+  shader: "particleRB",
+  shadow: "false",
+  texture0: "character/puff/effect/hit",
+  texture1: "multi/red_low",
+  texture2: "multi/red_high",
+};
+
+/* Source File: shockwaveRB.mat */
+Asset.prototype.material.character.puff.effect.shockwaveRB = {
+  name: "character.puff.effect.shockwaveRB",
+  shader: "effectRB",
+  shadow: "false",
+  texture0: "character/puff/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: dashRB.mat */
+Asset.prototype.material.character.puff.effect.dashRB = {
+  name: "character.puff.effect.dashRB",
+  shader: "particlespriteRB",
+  shadow: "false",
+  texture0: "character/puff/effect/dash",
+  texture1: "multi/red_low",
+  texture2: "multi/red_high",
+};
+
+/* Source File: lineRB.mat */
+Asset.prototype.material.character.puff.effect.lineRB = {
+  name: "character.puff.effect.lineRB",
+  shader: "particlemodelRB",
+  shadow: "false",
+  texture0: "multi/hit/line",
+  texture1: "multi/red_low",
+  texture2: "multi/red_high",
+};
+
+/* Source File: restwaveRB.mat */
+Asset.prototype.material.character.puff.effect.restwaveRB = {
+  name: "character.puff.effect.restwaveRB",
+  shader: "effectRB",
+  shadow: "false",
+  texture0: "character/puff/effect/hitwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: smoke.mat */
+Asset.prototype.material.character.puff.effect.smoke = {
+  name: "character.puff.effect.smoke",
+  shader: "particle",
+  shadow: "false",
+  texture0: "character/puff/effect/smoke",
+};
+
+/* Source File: hitwaveRB.mat */
+Asset.prototype.material.character.puff.effect.hitwaveRB = {
+  name: "character.puff.effect.hitwaveRB",
+  shader: "particleRB",
+  shadow: "false",
+  texture0: "character/puff/effect/hitwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
 };
 
 /* Source File: hitwave.mat */
 Asset.prototype.material.character.puff.effect.hitwave = {
   name: "character.puff.effect.hitwave",
   shader: "particle",
-  shadow: false,
+  shadow: "false",
   texture0: "character/puff/effect/hitwave",
 };
 
@@ -469,7 +594,7 @@ Asset.prototype.material.character.puff.effect.hitwave = {
 Asset.prototype.material.character.puff.effect.sleep = {
   name: "character.puff.effect.sleep",
   shader: "particle",
-  shadow: false,
+  shadow: "false",
   texture0: "character/puff/effect/z",
 };
 
@@ -477,7 +602,7 @@ Asset.prototype.material.character.puff.effect.sleep = {
 Asset.prototype.material.character.falco.ui.iconlarge = {
   name: "character.falco.ui.iconlarge",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/falco/ui/icon_lg",
 };
 
@@ -485,7 +610,7 @@ Asset.prototype.material.character.falco.ui.iconlarge = {
 Asset.prototype.material.character.falco.ui.meterdash = {
   name: "character.falco.ui.meterdash",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/falco/ui/meterdash",
 };
 
@@ -493,15 +618,25 @@ Asset.prototype.material.character.falco.ui.meterdash = {
 Asset.prototype.material.character.falco.ui.meterblip = {
   name: "character.falco.ui.meterblip",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/falco/ui/meterblip",
 };
+
+/* Source File: gold.mat */
+Asset.prototype.material.character.falco.gold = {
+  name: "character.falco.gold",
+  shader: "playershiny",
+  shadow: "true",
+  texture0: "character/falco/falco",
+  texture1: "character/falco/falco_normal",
+  texture2: "character/falco/gold",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
 
 /* Source File: falco.mat */
 Asset.prototype.material.character.falco.falco = {
   name: "character.falco.falco",
   shader: "player",
-  shadow: true,
+  shadow: "true",
   texture0: "character/falco/falco",
   texture1: "character/falco/falco_normal",
 };
@@ -510,7 +645,7 @@ Asset.prototype.material.character.falco.falco = {
 Asset.prototype.material.character.falco.effect.shockwave = {
   name: "character.falco.effect.shockwave",
   shader: "effect2tone",
-  shadow: false,
+  shadow: "false",
   texture0: "character/falco/effect/shockwave",
 };
 
@@ -518,7 +653,7 @@ Asset.prototype.material.character.falco.effect.shockwave = {
 Asset.prototype.material.character.falco.effect.blastRB = {
   name: "character.falco.effect.blastRB",
   shader: "particleRB",
-  shadow: false,
+  shadow: "false",
   texture0: "character/falco/effect/shockwave",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
@@ -528,7 +663,7 @@ Asset.prototype.material.character.falco.effect.blastRB = {
 Asset.prototype.material.character.falco.effect.shockwaveRB = {
   name: "character.falco.effect.shockwaveRB",
   shader: "effectRB",
-  shadow: false,
+  shadow: "false",
   texture0: "character/falco/effect/shockwave",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
@@ -538,7 +673,7 @@ Asset.prototype.material.character.falco.effect.shockwaveRB = {
 Asset.prototype.material.character.falco.effect.flashRB = {
   name: "character.falco.effect.flashRB",
   shader: "particleRB",
-  shadow: false,
+  shadow: "false",
   texture0: "character/falco/effect/flash",
   texture1: "multi/red_low",
   texture2: "multi/red_high",
@@ -548,7 +683,7 @@ Asset.prototype.material.character.falco.effect.flashRB = {
 Asset.prototype.material.character.falco.effect.blast = {
   name: "character.falco.effect.blast",
   shader: "particle2tone",
-  shadow: false,
+  shadow: "false",
   texture0: "character/falco/effect/shockwave",
 };
 
@@ -556,7 +691,7 @@ Asset.prototype.material.character.falco.effect.blast = {
 Asset.prototype.material.character.falco.effect.flash = {
   name: "character.falco.effect.flash",
   shader: "particle",
-  shadow: false,
+  shadow: "false",
   texture0: "character/falco/effect/flash",
 };
 
@@ -564,7 +699,7 @@ Asset.prototype.material.character.falco.effect.flash = {
 Asset.prototype.material.character.marth.ui.metercounter = {
   name: "character.marth.ui.metercounter",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/marth/ui/metercounter",
 };
 
@@ -572,7 +707,7 @@ Asset.prototype.material.character.marth.ui.metercounter = {
 Asset.prototype.material.character.marth.ui.iconlarge = {
   name: "character.marth.ui.iconlarge",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/marth/ui/icon_lg",
 };
 
@@ -580,7 +715,7 @@ Asset.prototype.material.character.marth.ui.iconlarge = {
 Asset.prototype.material.character.marth.ui.meterslash = {
   name: "character.marth.ui.meterslash",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/marth/ui/meterslash",
 };
 
@@ -588,24 +723,66 @@ Asset.prototype.material.character.marth.ui.meterslash = {
 Asset.prototype.material.character.marth.marth = {
   name: "character.marth.marth",
   shader: "player",
-  shadow: true,
+  shadow: "true",
   texture0: "character/marth/marth",
   texture1: "character/marth/marth_normal",
 };
 
+/* Source File: gold.mat */
+Asset.prototype.material.character.marth.gold = {
+  name: "character.marth.gold",
+  shader: "playershiny",
+  shadow: "true",
+  texture0: "character/marth/marth",
+  texture1: "character/marth/marth_normal",
+  texture2: "character/marth/gold",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
+
 /* Source File: shockwave.mat */
 Asset.prototype.material.character.marth.effect.shockwave = {
   name: "character.marth.effect.shockwave",
-  shader: "particle",
-  shadow: false,
+  shader: "particle2tone",
+  shadow: "false",
   texture0: "character/marth/effect/shockwave",
+};
+
+/* Source File: shockwaveGroundRB.mat */
+Asset.prototype.material.character.marth.effect.shockwaveGroundRB = {
+  name: "character.marth.effect.shockwaveGroundRB",
+  shader: "effectRB",
+  shadow: "false",
+  texture0: "character/marth/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: slashRB.mat */
+Asset.prototype.material.character.marth.effect.slashRB = {
+  name: "character.marth.effect.slashRB",
+  shader: "effect_slashRB",
+  shadow: "false",
+  texture0: "character/marth/effect/slashmask",
+  texture1: "character/marth/effect/slashgrad",
+  texture2: "multi/rainbow_low",
+  texture3: "multi/rainbow_high",
+};
+
+/* Source File: riposteRB.mat */
+Asset.prototype.material.character.marth.effect.riposteRB = {
+  name: "character.marth.effect.riposteRB",
+  shader: "effect_slashRB",
+  shadow: "false",
+  texture0: "character/marth/effect/ripostemask",
+  texture1: "character/marth/effect/slashgrad",
+  texture2: "multi/rainbow_low",
+  texture3: "multi/rainbow_high",
 };
 
 /* Source File: shockwaveGround.mat */
 Asset.prototype.material.character.marth.effect.shockwaveGround = {
   name: "character.marth.effect.shockwaveGround",
-  shader: "effect",
-  shadow: false,
+  shader: "effect2tone",
+  shadow: "false",
   texture0: "character/marth/effect/shockwave",
 };
 
@@ -613,7 +790,7 @@ Asset.prototype.material.character.marth.effect.shockwaveGround = {
 Asset.prototype.material.character.marth.effect.slash = {
   name: "character.marth.effect.slash",
   shader: "effect_slash",
-  shadow: false,
+  shadow: "false",
   texture0: "character/marth/effect/slashmask",
   texture1: "character/marth/effect/slashgrad",
 };
@@ -622,16 +799,26 @@ Asset.prototype.material.character.marth.effect.slash = {
 Asset.prototype.material.character.marth.effect.riposte = {
   name: "character.marth.effect.riposte",
   shader: "effect_slash",
-  shadow: false,
+  shadow: "false",
   texture0: "character/marth/effect/ripostemask",
   texture1: "character/marth/effect/slashgrad",
+};
+
+/* Source File: shockwaveRB.mat */
+Asset.prototype.material.character.marth.effect.shockwaveRB = {
+  name: "character.marth.effect.shockwaveRB",
+  shader: "particleRB",
+  shadow: "false",
+  texture0: "character/marth/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
 };
 
 /* Source File: iconlarge.mat */
 Asset.prototype.material.character.captain.ui.iconlarge = {
   name: "character.captain.ui.iconlarge",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/captain/ui/icon_lg",
 };
 
@@ -639,7 +826,7 @@ Asset.prototype.material.character.captain.ui.iconlarge = {
 Asset.prototype.material.character.captain.ui.meterkick = {
   name: "character.captain.ui.meterkick",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/captain/ui/meterkick",
 };
 
@@ -647,7 +834,7 @@ Asset.prototype.material.character.captain.ui.meterkick = {
 Asset.prototype.material.character.captain.ui.meterpunch = {
   name: "character.captain.ui.meterpunch",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/captain/ui/meterpunch",
 };
 
@@ -655,7 +842,7 @@ Asset.prototype.material.character.captain.ui.meterpunch = {
 Asset.prototype.material.character.captain.decal.indicator = {
   name: "character.captain.decal.indicator",
   shader: "decal_glow",
-  shadow: false,
+  shadow: "false",
   texture0: "character/captain/decal/indicator",
 };
 
@@ -663,24 +850,74 @@ Asset.prototype.material.character.captain.decal.indicator = {
 Asset.prototype.material.character.captain.captain = {
   name: "character.captain.captain",
   shader: "player",
-  shadow: true,
+  shadow: "true",
   texture0: "character/captain/captain",
   texture1: "character/captain/captain_normal",
 };
+
+/* Source File: gold.mat */
+Asset.prototype.material.character.captain.gold = {
+  name: "character.captain.gold",
+  shader: "playershiny",
+  shadow: "true",
+  texture0: "character/captain/captain",
+  texture1: "character/captain/captain_normal",
+  texture2: "character/captain/gold",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
 
 /* Source File: shockwave.mat */
 Asset.prototype.material.character.captain.effect.shockwave = {
   name: "character.captain.effect.shockwave",
   shader: "effect2tone",
-  shadow: false,
+  shadow: "false",
   texture0: "character/captain/effect/shockwave",
+};
+
+/* Source File: blastRB.mat */
+Asset.prototype.material.character.captain.effect.blastRB = {
+  name: "character.captain.effect.blastRB",
+  shader: "particleRB",
+  shadow: "false",
+  texture0: "character/captain/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: rayRB.mat */
+Asset.prototype.material.character.captain.effect.rayRB = {
+  name: "character.captain.effect.rayRB",
+  shader: "particlemodelRB",
+  shadow: "false",
+  texture0: "character/captain/effect/ray",
+  texture1: "multi/red_low",
+  texture2: "multi/red_high",
+};
+
+/* Source File: shockwaveRB.mat */
+Asset.prototype.material.character.captain.effect.shockwaveRB = {
+  name: "character.captain.effect.shockwaveRB",
+  shader: "effectRB",
+  shadow: "false",
+  texture0: "character/captain/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: flashRB.mat */
+Asset.prototype.material.character.captain.effect.flashRB = {
+  name: "character.captain.effect.flashRB",
+  shader: "particleRB",
+  shadow: "false",
+  texture0: "character/captain/effect/flash",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
 };
 
 /* Source File: ray.mat */
 Asset.prototype.material.character.captain.effect.ray = {
   name: "character.captain.effect.ray",
   shader: "particlemodel",
-  shadow: false,
+  shadow: "false",
   texture0: "character/captain/effect/ray",
 };
 
@@ -688,7 +925,7 @@ Asset.prototype.material.character.captain.effect.ray = {
 Asset.prototype.material.character.captain.effect.blast = {
   name: "character.captain.effect.blast",
   shader: "particle2tone",
-  shadow: false,
+  shadow: "false",
   texture0: "character/captain/effect/shockwave",
 };
 
@@ -696,7 +933,7 @@ Asset.prototype.material.character.captain.effect.blast = {
 Asset.prototype.material.character.captain.effect.flash = {
   name: "character.captain.effect.flash",
   shader: "particle",
-  shadow: false,
+  shadow: "false",
   texture0: "character/captain/effect/flash",
 };
 
@@ -704,7 +941,7 @@ Asset.prototype.material.character.captain.effect.flash = {
 Asset.prototype.material.character.shiek.ui.iconlarge = {
   name: "character.shiek.ui.iconlarge",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/shiek/ui/icon_lg",
 };
 
@@ -712,15 +949,25 @@ Asset.prototype.material.character.shiek.ui.iconlarge = {
 Asset.prototype.material.character.shiek.ui.meterblip = {
   name: "character.shiek.ui.meterblip",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/shiek/ui/meterblip",
 };
+
+/* Source File: gold.mat */
+Asset.prototype.material.character.shiek.gold = {
+  name: "character.shiek.gold",
+  shader: "playershiny",
+  shadow: "true",
+  texture0: "character/shiek/shiek",
+  texture1: "character/shiek/shiek_normal",
+  texture2: "character/shiek/gold",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
 
 /* Source File: shiek.mat */
 Asset.prototype.material.character.shiek.shiek = {
   name: "character.shiek.shiek",
   shader: "player",
-  shadow: true,
+  shadow: "true",
   texture0: "character/shiek/shiek",
   texture1: "character/shiek/shiek_normal",
 };
@@ -729,7 +976,7 @@ Asset.prototype.material.character.shiek.shiek = {
 Asset.prototype.material.character.shiek.effect.markwaveRB = {
   name: "character.shiek.effect.markwaveRB",
   shader: "effectRB",
-  shadow: false,
+  shadow: "false",
   texture0: "character/shiek/effect/markwave",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
@@ -739,7 +986,7 @@ Asset.prototype.material.character.shiek.effect.markwaveRB = {
 Asset.prototype.material.character.shiek.effect.explode = {
   name: "character.shiek.effect.explode",
   shader: "particle",
-  shadow: false,
+  shadow: "false",
   texture0: "character/shiek/effect/tempexplode",
 };
 
@@ -747,7 +994,7 @@ Asset.prototype.material.character.shiek.effect.explode = {
 Asset.prototype.material.character.shiek.effect.shockwave = {
   name: "character.shiek.effect.shockwave",
   shader: "effect",
-  shadow: false,
+  shadow: "false",
   texture0: "character/shiek/effect/shockwave",
 };
 
@@ -755,7 +1002,7 @@ Asset.prototype.material.character.shiek.effect.shockwave = {
 Asset.prototype.material.character.shiek.effect.line = {
   name: "character.shiek.effect.line",
   shader: "particlemodel",
-  shadow: false,
+  shadow: "false",
   texture0: "character/shiek/effect/line",
 };
 
@@ -763,7 +1010,7 @@ Asset.prototype.material.character.shiek.effect.line = {
 Asset.prototype.material.character.shiek.effect.markwave = {
   name: "character.shiek.effect.markwave",
   shader: "effect2tone",
-  shadow: false,
+  shadow: "false",
   texture0: "character/shiek/effect/markwave",
 };
 
@@ -771,7 +1018,7 @@ Asset.prototype.material.character.shiek.effect.markwave = {
 Asset.prototype.material.character.shiek.effect.markRB = {
   name: "character.shiek.effect.markRB",
   shader: "effectRB",
-  shadow: false,
+  shadow: "false",
   texture0: "character/shiek/effect/mark",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
@@ -781,7 +1028,7 @@ Asset.prototype.material.character.shiek.effect.markRB = {
 Asset.prototype.material.character.shiek.effect.shockwaveRB = {
   name: "character.shiek.effect.shockwaveRB",
   shader: "effectRB",
-  shadow: false,
+  shadow: "false",
   texture0: "character/shiek/effect/shockwave",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
@@ -791,7 +1038,7 @@ Asset.prototype.material.character.shiek.effect.shockwaveRB = {
 Asset.prototype.material.character.shiek.effect.flashRB = {
   name: "character.shiek.effect.flashRB",
   shader: "particleRB",
-  shadow: false,
+  shadow: "false",
   texture0: "character/shiek/effect/flash",
   texture1: "multi/red_low",
   texture2: "multi/red_high",
@@ -801,7 +1048,7 @@ Asset.prototype.material.character.shiek.effect.flashRB = {
 Asset.prototype.material.character.shiek.effect.lineRB = {
   name: "character.shiek.effect.lineRB",
   shader: "particlemodelRB",
-  shadow: false,
+  shadow: "false",
   texture0: "character/shiek/effect/line",
   texture1: "multi/red_high",
   texture2: "multi/white",
@@ -811,7 +1058,7 @@ Asset.prototype.material.character.shiek.effect.lineRB = {
 Asset.prototype.material.character.shiek.effect.smoke = {
   name: "character.shiek.effect.smoke",
   shader: "particle",
-  shadow: false,
+  shadow: "false",
   texture0: "character/shiek/effect/smoke",
 };
 
@@ -819,7 +1066,7 @@ Asset.prototype.material.character.shiek.effect.smoke = {
 Asset.prototype.material.character.shiek.effect.mark = {
   name: "character.shiek.effect.mark",
   shader: "effect",
-  shadow: false,
+  shadow: "false",
   texture0: "character/shiek/effect/mark",
 };
 
@@ -827,7 +1074,7 @@ Asset.prototype.material.character.shiek.effect.mark = {
 Asset.prototype.material.character.shiek.effect.flash = {
   name: "character.shiek.effect.flash",
   shader: "particle",
-  shadow: false,
+  shadow: "false",
   texture0: "character/shiek/effect/flash",
 };
 
@@ -835,7 +1082,7 @@ Asset.prototype.material.character.shiek.effect.flash = {
 Asset.prototype.material.character.inferno.ui.iconlarge = {
   name: "character.inferno.ui.iconlarge",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/inferno/ui/icon_lg",
 };
 
@@ -843,7 +1090,7 @@ Asset.prototype.material.character.inferno.ui.iconlarge = {
 Asset.prototype.material.character.inferno.inferno = {
   name: "character.inferno.inferno",
   shader: "player",
-  shadow: true,
+  shadow: "true",
   texture0: "character/inferno/inferno",
   texture1: "character/inferno/inferno_normal",
 };
@@ -852,7 +1099,7 @@ Asset.prototype.material.character.inferno.inferno = {
 Asset.prototype.material.character.fox.ui.iconlarge = {
   name: "character.fox.ui.iconlarge",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/fox/ui/icon_lg",
 };
 
@@ -860,7 +1107,7 @@ Asset.prototype.material.character.fox.ui.iconlarge = {
 Asset.prototype.material.character.fox.ui.meterdash = {
   name: "character.fox.ui.meterdash",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/fox/ui/meterdash",
 };
 
@@ -868,7 +1115,7 @@ Asset.prototype.material.character.fox.ui.meterdash = {
 Asset.prototype.material.character.fox.ui.meterblip = {
   name: "character.fox.ui.meterblip",
   shader: "simpletrans",
-  shadow: false,
+  shadow: "false",
   texture0: "character/fox/ui/meterblip",
 };
 
@@ -876,16 +1123,26 @@ Asset.prototype.material.character.fox.ui.meterblip = {
 Asset.prototype.material.character.fox.fox = {
   name: "character.fox.fox",
   shader: "player",
-  shadow: true,
+  shadow: "true",
   texture0: "character/fox/fox",
   texture1: "character/fox/fox_normal",
 };
+
+/* Source File: gold.mat */
+Asset.prototype.material.character.fox.gold = {
+  name: "character.fox.gold",
+  shader: "playershiny",
+  shadow: "true",
+  texture0: "character/fox/fox",
+  texture1: "character/fox/fox_normal",
+  texture2: "character/fox/gold",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
 
 /* Source File: shockwave.mat */
 Asset.prototype.material.character.fox.effect.shockwave = {
   name: "character.fox.effect.shockwave",
   shader: "effect2tone",
-  shadow: false,
+  shadow: "false",
   texture0: "character/fox/effect/shockwave",
 };
 
@@ -893,7 +1150,7 @@ Asset.prototype.material.character.fox.effect.shockwave = {
 Asset.prototype.material.character.fox.effect.sparkRB = {
   name: "character.fox.effect.sparkRB",
   shader: "particleRB",
-  shadow: false,
+  shadow: "false",
   texture0: "character/fox/effect/spark",
   texture1: "multi/red_low",
   texture2: "multi/red_high",
@@ -903,7 +1160,7 @@ Asset.prototype.material.character.fox.effect.sparkRB = {
 Asset.prototype.material.character.fox.effect.speedline = {
   name: "character.fox.effect.speedline",
   shader: "particle2tone",
-  shadow: false,
+  shadow: "false",
   texture0: "character/fox/effect/speedline",
 };
 
@@ -911,7 +1168,7 @@ Asset.prototype.material.character.fox.effect.speedline = {
 Asset.prototype.material.character.fox.effect.initialRB = {
   name: "character.fox.effect.initialRB",
   shader: "particleRB",
-  shadow: false,
+  shadow: "false",
   texture0: "character/fox/effect/blip_init",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
@@ -921,7 +1178,7 @@ Asset.prototype.material.character.fox.effect.initialRB = {
 Asset.prototype.material.character.fox.effect.spark = {
   name: "character.fox.effect.spark",
   shader: "particle2tone",
-  shadow: false,
+  shadow: "false",
   texture0: "character/fox/effect/spark",
 };
 
@@ -929,7 +1186,7 @@ Asset.prototype.material.character.fox.effect.spark = {
 Asset.prototype.material.character.fox.effect.speedlineRB = {
   name: "character.fox.effect.speedlineRB",
   shader: "particleRB",
-  shadow: false,
+  shadow: "false",
   texture0: "character/fox/effect/speedline",
   texture1: "multi/red_low",
   texture2: "multi/white",
@@ -939,7 +1196,7 @@ Asset.prototype.material.character.fox.effect.speedlineRB = {
 Asset.prototype.material.character.fox.effect.shockwaveRB = {
   name: "character.fox.effect.shockwaveRB",
   shader: "particleRB",
-  shadow: false,
+  shadow: "false",
   texture0: "character/fox/effect/shockwave",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
@@ -949,7 +1206,7 @@ Asset.prototype.material.character.fox.effect.shockwaveRB = {
 Asset.prototype.material.character.fox.effect.flashRB = {
   name: "character.fox.effect.flashRB",
   shader: "particleRB",
-  shadow: false,
+  shadow: "false",
   texture0: "character/fox/effect/flash",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
@@ -959,7 +1216,7 @@ Asset.prototype.material.character.fox.effect.flashRB = {
 Asset.prototype.material.character.fox.effect.blipRB = {
   name: "character.fox.effect.blipRB",
   shader: "particleRB",
-  shadow: false,
+  shadow: "false",
   texture0: "character/fox/effect/blip",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
@@ -969,7 +1226,7 @@ Asset.prototype.material.character.fox.effect.blipRB = {
 Asset.prototype.material.character.fox.effect.initial = {
   name: "character.fox.effect.initial",
   shader: "particle2tone",
-  shadow: false,
+  shadow: "false",
   texture0: "character/fox/effect/blip_init",
 };
 
@@ -977,7 +1234,7 @@ Asset.prototype.material.character.fox.effect.initial = {
 Asset.prototype.material.character.fox.effect.flash = {
   name: "character.fox.effect.flash",
   shader: "particle2tone",
-  shadow: false,
+  shadow: "false",
   texture0: "character/fox/effect/flash",
 };
 
@@ -985,7 +1242,7 @@ Asset.prototype.material.character.fox.effect.flash = {
 Asset.prototype.material.character.fox.effect.blip = {
   name: "character.fox.effect.blip",
   shader: "particle2tone",
-  shadow: false,
+  shadow: "false",
   texture0: "character/fox/effect/blip",
 };
 
@@ -993,7 +1250,7 @@ Asset.prototype.material.character.fox.effect.blip = {
 Asset.prototype.material.sky.final.sky = {
   name: "sky.final.sky",
   shader: "final_space",
-  shadow: false,
+  shadow: "false",
   texture0: "sky/final/space_color",
   texture1: "sky/final/lines",
   texture2: "sky/final/multi_space",
@@ -1005,7 +1262,7 @@ Asset.prototype.material.sky.final.sky = {
 Asset.prototype.material.map.tin.metal_rough = {
   name: "map.tin.metal_rough",
   shader: "tin",
-  shadow: true,
+  shadow: "true",
   texture0: "map/tin/metal_rough",
   texture1: "map/tin/metal_rough_normal",
   texture2: "map/tin/edge_color",
@@ -1016,7 +1273,7 @@ Asset.prototype.material.map.tin.metal_rough = {
 Asset.prototype.material.map.tin.grid = {
   name: "map.tin.grid",
   shader: "tin_grid",
-  shadow: true,
+  shadow: "true",
   texture0: "map/tin/grid",
   texture1: "map/tin/flat_normal",
   texture2: "map/tin/edge_color",
@@ -1028,7 +1285,7 @@ Asset.prototype.material.map.tin.grid = {
 Asset.prototype.material.map.tin.light = {
   name: "map.tin.light",
   shader: "glow",
-  shadow: true,
+  shadow: "true",
   texture0: "map/tin/light",
 };
 
@@ -1036,7 +1293,7 @@ Asset.prototype.material.map.tin.light = {
 Asset.prototype.material.map.tin.metal_dark = {
   name: "map.tin.metal_dark",
   shader: "tin",
-  shadow: true,
+  shadow: "true",
   texture0: "map/tin/metal_dark",
   texture1: "map/tin/flat_normal",
   texture2: "map/tin/edge_color",
@@ -1047,7 +1304,7 @@ Asset.prototype.material.map.tin.metal_dark = {
 Asset.prototype.material.map.tin.orb = {
   name: "map.tin.orb",
   shader: "orb",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/multi_dif",
 };
 
@@ -1055,7 +1312,7 @@ Asset.prototype.material.map.tin.orb = {
 Asset.prototype.material.map.tin.metal_light = {
   name: "map.tin.metal_light",
   shader: "tin",
-  shadow: true,
+  shadow: "true",
   texture0: "map/tin/metal",
   texture1: "map/tin/flat_normal",
   texture2: "map/tin/edge_color",
@@ -1066,7 +1323,7 @@ Asset.prototype.material.map.tin.metal_light = {
 Asset.prototype.material.map.copper.metal_rough = {
   name: "map.copper.metal_rough",
   shader: "copper_wall",
-  shadow: true,
+  shadow: "true",
   texture0: "map/copper/metal_rough",
   texture1: "map/copper/cross_normal",
   texture2: "map/copper/edge_color",
@@ -1077,7 +1334,7 @@ Asset.prototype.material.map.copper.metal_rough = {
 Asset.prototype.material.map.copper.field = {
   name: "map.copper.field",
   shader: "glow",
-  shadow: false,
+  shadow: "false",
   texture0: "map/copper/light",
 };
 
@@ -1085,7 +1342,7 @@ Asset.prototype.material.map.copper.field = {
 Asset.prototype.material.map.copper.light = {
   name: "map.copper.light",
   shader: "glow",
-  shadow: true,
+  shadow: "true",
   texture0: "map/copper/light",
 };
 
@@ -1093,7 +1350,7 @@ Asset.prototype.material.map.copper.light = {
 Asset.prototype.material.map.copper.metal_dark = {
   name: "map.copper.metal_dark",
   shader: "tin",
-  shadow: true,
+  shadow: "true",
   texture0: "map/copper/metal_dark",
   texture1: "map/copper/flat_normal",
   texture2: "map/copper/edge_color",
@@ -1104,7 +1361,7 @@ Asset.prototype.material.map.copper.metal_dark = {
 Asset.prototype.material.map.copper.box = {
   name: "map.copper.box",
   shader: "cube",
-  shadow: false,
+  shadow: "false",
   texture0: "map/copper/cube",
   texture1: "multi/multi_dif",
 };
@@ -1113,7 +1370,7 @@ Asset.prototype.material.map.copper.box = {
 Asset.prototype.material.map.copper.metal_light = {
   name: "map.copper.metal_light",
   shader: "tin",
-  shadow: true,
+  shadow: "true",
   texture0: "map/copper/metal",
   texture1: "map/copper/flat_normal",
   texture2: "map/copper/edge_color",
@@ -1124,7 +1381,7 @@ Asset.prototype.material.map.copper.metal_light = {
 Asset.prototype.material.map.gold.rose = {
   name: "map.gold.rose",
   shader: "goldmask",
-  shadow: false,
+  shadow: "mask",
   texture0: "map/gold/flower_rose",
 };
 
@@ -1132,7 +1389,7 @@ Asset.prototype.material.map.gold.rose = {
 Asset.prototype.material.map.gold.log = {
   name: "map.gold.log",
   shader: "gold2x",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/log",
 };
 
@@ -1140,7 +1397,7 @@ Asset.prototype.material.map.gold.log = {
 Asset.prototype.material.map.gold.dirt = {
   name: "map.gold.dirt",
   shader: "gold",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/dirt",
 };
 
@@ -1148,7 +1405,7 @@ Asset.prototype.material.map.gold.dirt = {
 Asset.prototype.material.map.gold.fern = {
   name: "map.gold.fern",
   shader: "goldmask",
-  shadow: false,
+  shadow: "false",
   texture0: "map/gold/fern",
 };
 
@@ -1156,7 +1413,7 @@ Asset.prototype.material.map.gold.fern = {
 Asset.prototype.material.map.gold.cobble = {
   name: "map.gold.cobble",
   shader: "gold",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/cobblestone",
 };
 
@@ -1164,7 +1421,7 @@ Asset.prototype.material.map.gold.cobble = {
 Asset.prototype.material.map.gold.tallGrass = {
   name: "map.gold.tallGrass",
   shader: "goldmask",
-  shadow: false,
+  shadow: "mask",
   texture0: "map/gold/tallgrass",
 };
 
@@ -1172,7 +1429,7 @@ Asset.prototype.material.map.gold.tallGrass = {
 Asset.prototype.material.map.gold.water = {
   name: "map.gold.water",
   shader: "goldwater",
-  shadow: false,
+  shadow: "false",
   texture0: "map/gold/water",
 };
 
@@ -1180,7 +1437,7 @@ Asset.prototype.material.map.gold.water = {
 Asset.prototype.material.map.gold.book = {
   name: "map.gold.book",
   shader: "gold2x",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/book",
 };
 
@@ -1188,7 +1445,7 @@ Asset.prototype.material.map.gold.book = {
 Asset.prototype.material.map.gold.brick = {
   name: "map.gold.brick",
   shader: "gold",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/stonebrick",
 };
 
@@ -1196,7 +1453,7 @@ Asset.prototype.material.map.gold.brick = {
 Asset.prototype.material.map.gold.gravel = {
   name: "map.gold.gravel",
   shader: "gold",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/gravel",
 };
 
@@ -1204,7 +1461,7 @@ Asset.prototype.material.map.gold.gravel = {
 Asset.prototype.material.map.gold.dandelion = {
   name: "map.gold.dandelion",
   shader: "goldmask",
-  shadow: false,
+  shadow: "mask",
   texture0: "map/gold/flower_dandelion",
 };
 
@@ -1212,7 +1469,7 @@ Asset.prototype.material.map.gold.dandelion = {
 Asset.prototype.material.map.gold.bedrock = {
   name: "map.gold.bedrock",
   shader: "gold",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/bedrock",
 };
 
@@ -1220,7 +1477,7 @@ Asset.prototype.material.map.gold.bedrock = {
 Asset.prototype.material.map.gold.wood = {
   name: "map.gold.wood",
   shader: "gold",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/planks_oak",
 };
 
@@ -1228,7 +1485,7 @@ Asset.prototype.material.map.gold.wood = {
 Asset.prototype.material.map.gold.slab = {
   name: "map.gold.slab",
   shader: "gold2x",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/slab",
 };
 
@@ -1236,7 +1493,7 @@ Asset.prototype.material.map.gold.slab = {
 Asset.prototype.material.map.gold.sand = {
   name: "map.gold.sand",
   shader: "gold",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/sand",
 };
 
@@ -1244,7 +1501,7 @@ Asset.prototype.material.map.gold.sand = {
 Asset.prototype.material.map.gold.sapling = {
   name: "map.gold.sapling",
   shader: "goldmask",
-  shadow: false,
+  shadow: "mask",
   texture0: "map/gold/sapling_oak",
 };
 
@@ -1252,7 +1509,7 @@ Asset.prototype.material.map.gold.sapling = {
 Asset.prototype.material.map.gold.grass = {
   name: "map.gold.grass",
   shader: "gold2x",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/grass",
 };
 
@@ -1260,7 +1517,7 @@ Asset.prototype.material.map.gold.grass = {
 Asset.prototype.material.map.gold.reed = {
   name: "map.gold.reed",
   shader: "goldmask",
-  shadow: false,
+  shadow: "mask",
   texture0: "map/gold/reeds",
 };
 
@@ -1268,7 +1525,7 @@ Asset.prototype.material.map.gold.reed = {
 Asset.prototype.material.map.gold.leaves = {
   name: "map.gold.leaves",
   shader: "goldmask",
-  shadow: true,
+  shadow: "mask",
   texture0: "map/gold/leaves",
 };
 
@@ -1276,7 +1533,7 @@ Asset.prototype.material.map.gold.leaves = {
 Asset.prototype.material.map.gold.lily = {
   name: "map.gold.lily",
   shader: "goldmask",
-  shadow: true,
+  shadow: "mask",
   texture0: "map/gold/lily",
 };
 
@@ -1284,7 +1541,7 @@ Asset.prototype.material.map.gold.lily = {
 Asset.prototype.material.map.gold.lamp = {
   name: "map.gold.lamp",
   shader: "gold",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/redstone_lamp_on",
 };
 
@@ -1292,7 +1549,7 @@ Asset.prototype.material.map.gold.lamp = {
 Asset.prototype.material.map.gold.farm = {
   name: "map.gold.farm",
   shader: "gold2x",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/farm",
 };
 
@@ -1300,7 +1557,7 @@ Asset.prototype.material.map.gold.farm = {
 Asset.prototype.material.map.gold.wheat = {
   name: "map.gold.wheat",
   shader: "goldmask",
-  shadow: false,
+  shadow: "mask",
   texture0: "map/gold/wheat_stage_7",
 };
 
@@ -1308,7 +1565,7 @@ Asset.prototype.material.map.gold.wheat = {
 Asset.prototype.material.map.gold.gold = {
   name: "map.gold.gold",
   shader: "gold",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/gold_ore",
 };
 
@@ -1316,7 +1573,7 @@ Asset.prototype.material.map.gold.gold = {
 Asset.prototype.material.map.gold.lava = {
   name: "map.gold.lava",
   shader: "goldlava",
-  shadow: false,
+  shadow: "false",
   texture0: "map/gold/lava",
 };
 
@@ -1324,7 +1581,7 @@ Asset.prototype.material.map.gold.lava = {
 Asset.prototype.material.map.gold.path = {
   name: "map.gold.path",
   shader: "gold2x",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/path",
 };
 
@@ -1332,7 +1589,7 @@ Asset.prototype.material.map.gold.path = {
 Asset.prototype.material.map.gold.coal = {
   name: "map.gold.coal",
   shader: "gold",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/coal_ore",
 };
 
@@ -1340,7 +1597,7 @@ Asset.prototype.material.map.gold.coal = {
 Asset.prototype.material.map.gold.iron = {
   name: "map.gold.iron",
   shader: "gold",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/iron_ore",
 };
 
@@ -1348,7 +1605,7 @@ Asset.prototype.material.map.gold.iron = {
 Asset.prototype.material.map.gold.carved = {
   name: "map.gold.carved",
   shader: "gold",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/stonebrick_carved",
 };
 
@@ -1356,7 +1613,7 @@ Asset.prototype.material.map.gold.carved = {
 Asset.prototype.material.map.gold.stone = {
   name: "map.gold.stone",
   shader: "gold",
-  shadow: true,
+  shadow: "true",
   texture0: "map/gold/stone",
 };
 
@@ -1364,7 +1621,7 @@ Asset.prototype.material.map.gold.stone = {
 Asset.prototype.material.map.iron.metal_rough = {
   name: "map.iron.metal_rough",
   shader: "tin",
-  shadow: true,
+  shadow: "true",
   texture0: "map/iron/metal_rough",
   texture1: "map/iron/metal_rough_normal",
   texture2: "map/iron/edge_color",
@@ -1375,7 +1632,7 @@ Asset.prototype.material.map.iron.metal_rough = {
 Asset.prototype.material.map.iron.grid = {
   name: "map.iron.grid",
   shader: "tin_grid",
-  shadow: true,
+  shadow: "true",
   texture0: "map/iron/grid",
   texture1: "map/iron/flat_normal",
   texture2: "map/iron/edge_color",
@@ -1387,7 +1644,7 @@ Asset.prototype.material.map.iron.grid = {
 Asset.prototype.material.map.iron.light = {
   name: "map.iron.light",
   shader: "glow",
-  shadow: true,
+  shadow: "true",
   texture0: "map/iron/light",
 };
 
@@ -1395,7 +1652,7 @@ Asset.prototype.material.map.iron.light = {
 Asset.prototype.material.map.iron.metal_dark = {
   name: "map.iron.metal_dark",
   shader: "tin",
-  shadow: true,
+  shadow: "true",
   texture0: "map/iron/metal_dark",
   texture1: "map/iron/flat_normal",
   texture2: "map/iron/edge_color",
@@ -1406,7 +1663,7 @@ Asset.prototype.material.map.iron.metal_dark = {
 Asset.prototype.material.map.iron.plasma = {
   name: "map.iron.plasma",
   shader: "ironplasma",
-  shadow: false,
+  shadow: "false",
   texture0: "map/iron/edge_color",
   texture1: "multi/multi_dif",
   texture2: "map/iron/plasma_mask",
@@ -1416,7 +1673,7 @@ Asset.prototype.material.map.iron.plasma = {
 Asset.prototype.material.map.iron.orb = {
   name: "map.iron.orb",
   shader: "orb",
-  shadow: false,
+  shadow: "false",
   texture0: "multi/multi_dif",
 };
 
@@ -1424,7 +1681,7 @@ Asset.prototype.material.map.iron.orb = {
 Asset.prototype.material.map.iron.metal_light = {
   name: "map.iron.metal_light",
   shader: "tin",
-  shadow: true,
+  shadow: "true",
   texture0: "map/iron/metal",
   texture1: "map/iron/flat_normal",
   texture2: "map/iron/edge_color",

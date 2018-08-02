@@ -64,6 +64,7 @@ RespawnUI.prototype.generate = function() {
       {id: "box_red", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXRED")},
       {id: "box_rb", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXRAINBOW")},
       {id: "box_gld", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXGOLD")},
+      {id: "box_del", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXDELTA")},
       {id: "box_hit", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXHIT")},
       {id: "box_for", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXFOUR")},
       {id: "box_bld", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXBLOOD")},
@@ -75,6 +76,7 @@ RespawnUI.prototype.generate = function() {
       {id: "crt_orn", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEORANGE")},
       {id: "crt_rb", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATERAINBOW")},
       {id: "crt_gld", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEGOLD")},
+      {id: "crt_del", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEDELTA")},
       {id: "crt_fir", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEFIRE")},
       {id: "crt_blk", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEBLACK")},
       {id: "crt_lt", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATELOOT")}
@@ -85,12 +87,16 @@ RespawnUI.prototype.generate = function() {
       {id: "vox_grn", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXGREEN")},
       {id: "vox_rb", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXRAINBOW")},
       {id: "vox_gld", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXGOLD")},
+      {id: "vox_del", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXDELTA")},
       {id: "vox_blk", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXBLACK")},
       {id: "vox_lt", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXLOOT")}
     ],
     [
       {id: "qua_n", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("CHAR_QUAD")},
       {id: "qua_vo", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADVO")},
+      {id: "qua_rb", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADRAINBOW")},
+      {id: "qua_gld", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADGOLD")},
+      {id: "qua_del", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADDELTA")},
       {id: "qua_fir", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADFIRE")},
       {id: "qua_lgn", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADLEGEND")},
       {id: "qua_rs", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADRUNE")}
@@ -98,6 +104,9 @@ RespawnUI.prototype.generate = function() {
     [
       {id: "blk_n", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("CHAR_BLOCK")},
       {id: "blk_vo", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKVO")},
+      {id: "blk_rb", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKRAINBOW")},
+      {id: "blk_gld", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKGOLD")},
+      {id: "blk_del", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKDELTA")},
       {id: "blk_rnd", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKROUND")},
       {id: "blk_win", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKWIN")},
       {id: "blk_fir", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKFIRE")},
@@ -108,7 +117,9 @@ RespawnUI.prototype.generate = function() {
       {id: "crg_n", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("CHAR_CARGO")},
       {id: "crg_vo", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGOVO")},
       {id: "crg_pl", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGOPLUS")},
+      {id: "crg_rb", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGORAINBOW")},
       {id: "crg_gld", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGOGOLD")},
+      {id: "crg_del", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGODELTA")},
       {id: "crg_mc", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGOMINE")},
       {id: "crg_ret", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGORETRO")}
     ]

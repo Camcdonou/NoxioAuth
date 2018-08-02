@@ -42,8 +42,8 @@ PlayerMarth.SLASH_COMBO_DEGEN = 90;
 PlayerMarth.COUNTER_COOLDOWN_LENGTH = 45;
 PlayerMarth.COUNTER_ACTIVE_LENGTH = 7;
 PlayerMarth.COUNTER_LAG_LENGTH = 30;
-PlayerMarth.COMBO_LIGHT = util.vec4.make(1.0, 1.0, 1.0, 0.5);
-PlayerMarth.RIPOSTE_LIGHT = util.vec4.make(1.0, 1.0, 1.0, 0.9);
+PlayerMarth.COLOR_A = util.vec4.make(1.0, 1.0, 1.0, 1.0);
+PlayerMarth.COLOR_B = util.vec4.make(0.55, 0.55, 1.0, 1.0);
 
 PlayerMarth.prototype.update = PlayerObject.prototype.update;
 PlayerMarth.prototype.parseUpd = function(data) {
@@ -163,8 +163,14 @@ PlayerMarth.prototype.destroy = PlayerObject.prototype.destroy;
 PlayerMarth.prototype.type = function() { return "qua"; };
 
 /* Permutation dictionary */
+/* global PlayerMarthFire */
+/* global PlayerMarthRainbow */
+/* global PlayerMarthGold */
 PlayerMarth.classByPermutation = function(perm) {
   switch(perm) {
+    case 2 : { return PlayerMarthRainbow; }
+    case 3 : { return PlayerMarthGold; }
+    case 5 : { return PlayerMarthFire; }
     default : { return PlayerMarth; }
   }
 };

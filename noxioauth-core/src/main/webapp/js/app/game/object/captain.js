@@ -156,8 +156,12 @@ PlayerCaptain.prototype.destroy = PlayerObject.prototype.destroy;
 PlayerCaptain.prototype.type = function() { return "crg"; };
 
 /* Permutation dictionary */
+/* global PlayerCaptainRainbow */
+/* global PlayerCaptainGold */
 PlayerCaptain.classByPermutation = function(perm) {
   switch(perm) {
+    case 3 : { return PlayerCaptainRainbow; }
+    case 4 : { return PlayerCaptainGold; }
     default : { return PlayerCaptain; }
   }
 };

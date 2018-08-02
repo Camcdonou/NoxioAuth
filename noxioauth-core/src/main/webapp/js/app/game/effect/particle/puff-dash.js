@@ -13,7 +13,7 @@ function ParticlePuffDash(game, pos, vel, colorA, colorB) {
 
 ParticlePuffDash.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
-  var dashMat = this.game.display.getMaterial("character.shiek.effect.smoke");
+  var dashMat = this.game.display.getMaterial("character.puff.effect.smoke");
   
   var parent = this;
   var colorA = function() { return util.vec4.copy3(parent.colorA, 0.6); };

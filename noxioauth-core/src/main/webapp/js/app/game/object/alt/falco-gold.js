@@ -9,12 +9,10 @@
 /* Define PlayerFalcoGold Class */
 function PlayerFalcoGold(game, oid, pos, team, color) {
   PlayerFalco.call(this, game, oid, pos, team, color);
+  this.material = this.game.display.getMaterial("character.falco.gold");
 };
 
 /* Constants */
-PlayerFalcoGold.BLIP_COLOR_A = util.vec4.lerp(util.vec4.make(0.8, 0.666, 0.1, 1.0), util.vec4.make(1,1,1,1), 0.5);
-PlayerFalcoGold.BLIP_COLOR_B = util.vec4.make(0.8, 0.666, 0.1, 1.0);
-
 PlayerFalcoGold.prototype.update = PlayerFalco.prototype.update;
 PlayerFalcoGold.prototype.parseUpd = PlayerFalco.prototype.parseUpd;
 

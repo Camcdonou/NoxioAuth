@@ -90,6 +90,9 @@ PlayerObject.prototype.effectSwitch = function(e) {
   switch(e) {
     case "hg" : { this.stunGeneric(); return true; }
     case "hs" : { this.stunSlash(); return true; }
+    case "hsxp" : { this.stunSlash("purple"); return true; }
+    case "hsxf" : { this.stunSlash("fire"); return true; }
+    case "hsxrb" : { this.stunSlash("rainbow"); return true; }
     case "he" : { this.stunElectric(); return true; }
     case "hexr" : { this.stunElectric("red"); return true; }
     case "hexo" : { this.stunElectric("orange"); return true; }
@@ -148,6 +151,9 @@ PlayerObject.prototype.stunSlash = function(perm) {
   var p = util.vec2.toVec3(this.pos, this.height);
   var v = util.vec2.toVec3(this.vel, this.vspeed);
   switch(perm) {
+    case "purple" : { this.effects.push(NxFx.hit.alt.slash.purple.trigger(this.game, p, v)); break; }
+    case "fire" : { this.effects.push(NxFx.hit.alt.slash.fire.trigger(this.game, p, v)); break; }
+    case "rainbow" : { this.effects.push(NxFx.hit.alt.slash.rainbow.trigger(this.game, p, v)); break; }
     default : { this.effects.push(NxFx.hit.slash.trigger(this.game, p, v)); break; }
   }
   this.stun();

@@ -11,11 +11,12 @@
 /* Define Gold Fox Alternate Class */
 function PlayerFoxGold(game, oid, pos, team, color) {
   PlayerFox.call(this, game, oid, pos, team, color);
+  this.material = this.game.display.getMaterial("character.fox.gold");
 };
 
 /* Constants */
-PlayerFoxGold.BLIP_COLOR_A = util.vec4.lerp(util.vec4.make(0.9, 0.666, 1.0, 1.0), util.vec4.make(1,1,1,1), 0.5);
-PlayerFoxGold.BLIP_COLOR_B = util.vec4.make(0.9, 0.4, 1.0, 1.0);
+PlayerFoxGold.BLIP_COLOR_A = util.vec4.lerp(util.vec4.make(0.521, 0.2, 1.0, 1.0), util.vec4.make(1,1,1,1), 0.925);
+PlayerFoxGold.BLIP_COLOR_B = util.vec4.make(0.521, 0.2, 1.0, 1.0);
 
 PlayerFoxGold.prototype.update = PlayerFox.prototype.update;
 PlayerFoxGold.prototype.parseUpd = PlayerFox.prototype.parseUpd;

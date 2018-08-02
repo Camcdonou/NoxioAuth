@@ -18,7 +18,8 @@ function Texture(gl, glTexture, path) {
    5 - Shadow depth texture
    6 - World FBO render texture
    7 - UI FBO render texture
-   8, 9 - Unused
+   8 - Cubemap
+   9 - Unused
  */
 
 Texture.prototype.enable = function(gl, location) {

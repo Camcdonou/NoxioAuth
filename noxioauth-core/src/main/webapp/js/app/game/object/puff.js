@@ -29,9 +29,6 @@ function PlayerPuff(game, oid, pos, team, color) {
     {type: "bar", iconMat: this.game.display.getMaterial("character.puff.ui.meterrest"), length: 16, scalar: 1.0},
     {type: "bar", iconMat: this.game.display.getMaterial("character.puff.ui.meterpound"), length: 14, scalar: 1.0}
   ];
-  
-  /* Visual Hitboxes */
-  this.hitboxModel = this.game.display.getModel("multi.hitbox.circle");
 };
 
 /* Constants */
@@ -92,11 +89,6 @@ PlayerPuff.prototype.rest = function() {
   this.effects.push(this.restEffect);
   this.effects.push(NxFx.puff.wave.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec3.make(0, 0, 0)));
   this.restCooldown = PlayerPuff.REST_SLEEP_LENGTH;
-  this.hitboxPos = this.pos;
-  this.hitboxColor = util.vec4.make(1, 0, 0, 0.5);
-  this.hitboxScale = this.radius;
-  this.hitBoxAngle = 0;
-  //this.drawHitbox = this.hitboxModel;
 };
 
 PlayerPuff.prototype.wake = function() {
@@ -116,11 +108,6 @@ PlayerPuff.prototype.poundDash = function() {
 
 PlayerPuff.prototype.pound = function() {
   this.effects.push(NxFx.puff.wave.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(util.vec2.scale(this.poundDirection, PlayerPuff.POUND_OFFSET*2.), 0.1)));
-  this.hitboxPos = util.vec2.add(this.pos, util.vec2.scale(this.poundDirection, PlayerPuff.POUND_OFFSET));
-  this.hitboxColor = util.vec4.make(1, 0, 0, 0.85);
-  this.hitboxScale = PlayerPuff.POUND_RADIUS;
-  this.hitBoxAngle = 0;
-  //this.drawHitbox = this.hitboxModel;
 };
 
 PlayerPuff.prototype.poundHit = function() {
@@ -144,8 +131,12 @@ PlayerPuff.prototype.destroy = PlayerObject.prototype.destroy;
 PlayerPuff.prototype.type = function() { return "blk"; };
 
 /* Permutation dictionary */
+/* global PlayerPuffGold */
+/* global PlayerPuffRainbow */
 PlayerPuff.classByPermutation = function(perm) {
   switch(perm) {
+    case 2 : { return PlayerPuffRainbow; }
+    case 3 : { return PlayerPuffGold; }
     default : { return PlayerPuff; }
   }
 };

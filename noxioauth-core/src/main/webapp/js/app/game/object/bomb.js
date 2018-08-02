@@ -48,6 +48,9 @@ BombObject.prototype.update = function(data) {
       case "xpl" : { this.explode(); break; }
       case "hg" : { this.stunGeneric(); return true; }
       case "hs" : { this.stunSlash(); return true; }
+      case "hsxp" : { this.stunSlash("purple"); return true; }
+      case "hsxf" : { this.stunSlash("fire"); return true; }
+      case "hsxrb" : { this.stunSlash("rainbow"); return true; }
       case "he" : { this.stunElectric(); return true; }
       case "hexr" : { this.stunElectric("red"); return true; }
       case "hexo" : { this.stunElectric("orange"); return true; }

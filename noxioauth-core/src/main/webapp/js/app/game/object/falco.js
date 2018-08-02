@@ -127,7 +127,7 @@ PlayerFalco.classByPermutation = function(perm) {
     case 2 : { return PlayerFalcoOrange; }
     case 3 : { return PlayerFalcoRainbow; }
     case 4 : { return PlayerFalcoGold; }
-    case 6 : { return PlayerFalcoBlack; }
+    case 7 : { return PlayerFalcoBlack; }
     default : { return PlayerFalco; }
   }
 };

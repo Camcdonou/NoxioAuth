@@ -140,7 +140,7 @@ PlayerShiek.classByPermutation = function(perm) {
     case 2 : { return PlayerShiekGreen; }
     case 3 : { return PlayerShiekRainbow; }
     case 4 : { return PlayerShiekGold; }
-    case 5 : { return PlayerShiekBlack; }
+    case 6 : { return PlayerShiekBlack; }
     default : { return PlayerShiek; }
   }
 };

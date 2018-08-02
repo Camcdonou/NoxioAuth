@@ -4,7 +4,10 @@
 /* global Particle */
 
 /* Define Blip Particle System Class */
-function ParticleSlash(game, pos, vel) {
+function ParticleSlash(game, pos, vel, colorA, colorB) {
+  /* Colors to use for particles */
+  this.colorA = colorA;
+  this.colorB = colorB;
   Particle.call(this, game, pos, vel);
 }
 
@@ -13,7 +16,9 @@ ParticleSlash.prototype.create = function() {
   
   var slashMat = this.game.display.getMaterial("character.marth.effect.slash");
   
-  var white = function(){ return {x: 0.65, y: 0.75, z: 1.0, w: 1.0}; };
+  var parent = this;
+  var colorA = function() { return util.vec4.copy3(parent.colorA, 1.0); };
+  var colorB = function() { return util.vec4.copy3(parent.colorB, 0.75); };
   
   var norm = util.vec3.normalize(this.vel);
   
@@ -29,7 +34,8 @@ ParticleSlash.prototype.create = function() {
       pos: this.pos,
       scale: 2.0,
       angle: (util.vec2.angle(util.vec2.make(1, 0), norm)*(norm.y>0?-1:1))+(Math.PI*0.5),
-      color: white()
+      color: colorA(),
+      tone: colorB()
     }
   };
   
@@ -47,6 +53,7 @@ ParticleSlash.prototype.getDraw = function(geometry, decals, lights, bounds) {
       {name: "transform", data: util.vec3.toArray(part.properties.pos)},
       {name: "scale", data: part.properties.scale},
       {name: "color", data: util.vec4.toArray(part.properties.color)},
+      {name: "tone", data: util.vec4.toArray(part.properties.tone)},
       {name: "frame", data: this.frame},
       {name: "rotation", data: part.properties.angle}
     ];
