@@ -135,11 +135,13 @@ PlayerShiek.prototype.type = function() { return "vox"; };
 /* global PlayerShiekGold */
 /* global PlayerShiekGreen */
 /* global PlayerShiekBlack */
+/* global PlayerShiekDelta */
 PlayerShiek.classByPermutation = function(perm) {
   switch(perm) {
     case 2 : { return PlayerShiekGreen; }
     case 3 : { return PlayerShiekRainbow; }
     case 4 : { return PlayerShiekGold; }
+    case 5 : { return PlayerShiekDelta; }
     case 6 : { return PlayerShiekBlack; }
     default : { return PlayerShiek; }
   }

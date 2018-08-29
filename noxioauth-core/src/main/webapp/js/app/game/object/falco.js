@@ -122,11 +122,13 @@ PlayerFalco.prototype.type = function() { return "crt"; };
 /* global PlayerFalcoGold */
 /* global PlayerFalcoOrange */
 /* global PlayerFalcoBlack */
+/* global PlayerFalcoDelta */
 PlayerFalco.classByPermutation = function(perm) {
   switch(perm) {
     case 2 : { return PlayerFalcoOrange; }
     case 3 : { return PlayerFalcoRainbow; }
     case 4 : { return PlayerFalcoGold; }
+    case 5 : { return PlayerFalcoDelta; }
     case 7 : { return PlayerFalcoBlack; }
     default : { return PlayerFalco; }
   }

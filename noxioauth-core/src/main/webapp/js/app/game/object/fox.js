@@ -102,11 +102,15 @@ PlayerFox.prototype.type = function() { return "box"; };
 /* global PlayerFoxRed */
 /* global PlayerFoxRainbow */
 /* global PlayerFoxGold */
+/* global PlayerFoxDelta */
+/* global PlayerFoxHit */
 PlayerFox.classByPermutation = function(perm) {
   switch(perm) {
     case 2 : { return PlayerFoxRed; }
     case 3 : { return PlayerFoxRainbow; }
     case 4 : { return PlayerFoxGold; }
+    case 5 : { return PlayerFoxDelta; }
+    case 6 : { return PlayerFoxHit; }
     default : { return PlayerFox; }
   }
 };

@@ -133,10 +133,14 @@ PlayerPuff.prototype.type = function() { return "blk"; };
 /* Permutation dictionary */
 /* global PlayerPuffGold */
 /* global PlayerPuffRainbow */
+/* global PlayerPuffDelta */
+/* global PlayerPuffWindow */
 PlayerPuff.classByPermutation = function(perm) {
   switch(perm) {
     case 2 : { return PlayerPuffRainbow; }
     case 3 : { return PlayerPuffGold; }
+    case 4 : { return PlayerPuffDelta; }
+    case 6 : { return PlayerPuffWindow; }
     default : { return PlayerPuff; }
   }
 };

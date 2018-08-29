@@ -454,6 +454,15 @@ Asset.prototype.material.character.puff.gold = {
   texture2: "character/puff/gold",
   cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
 
+/* Source File: delta.mat */
+Asset.prototype.material.character.puff.delta = {
+  name: "character.puff.delta",
+  shader: "playerdelta",
+  shadow: "true",
+  texture0: "character/puff/puff",
+  texture1: "character/puff/puff_normal",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
+
 /* Source File: shockwave.mat */
 Asset.prototype.material.character.puff.effect.shockwave = {
   name: "character.puff.effect.shockwave",
@@ -641,6 +650,15 @@ Asset.prototype.material.character.falco.falco = {
   texture1: "character/falco/falco_normal",
 };
 
+/* Source File: delta.mat */
+Asset.prototype.material.character.falco.delta = {
+  name: "character.falco.delta",
+  shader: "playerdelta",
+  shadow: "true",
+  texture0: "character/falco/falco",
+  texture1: "character/falco/falco_normal",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
+
 /* Source File: shockwave.mat */
 Asset.prototype.material.character.falco.effect.shockwave = {
   name: "character.falco.effect.shockwave",
@@ -736,6 +754,15 @@ Asset.prototype.material.character.marth.gold = {
   texture0: "character/marth/marth",
   texture1: "character/marth/marth_normal",
   texture2: "character/marth/gold",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
+
+/* Source File: delta.mat */
+Asset.prototype.material.character.marth.delta = {
+  name: "character.marth.delta",
+  shader: "playerdelta",
+  shadow: "true",
+  texture0: "character/marth/marth",
+  texture1: "character/marth/marth_normal",
   cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
 
 /* Source File: shockwave.mat */
@@ -865,6 +892,15 @@ Asset.prototype.material.character.captain.gold = {
   texture2: "character/captain/gold",
   cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
 
+/* Source File: delta.mat */
+Asset.prototype.material.character.captain.delta = {
+  name: "character.captain.delta",
+  shader: "playerdelta",
+  shadow: "true",
+  texture0: "character/captain/captain",
+  texture1: "character/captain/captain_normal",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
+
 /* Source File: shockwave.mat */
 Asset.prototype.material.character.captain.effect.shockwave = {
   name: "character.captain.effect.shockwave",
@@ -971,6 +1007,15 @@ Asset.prototype.material.character.shiek.shiek = {
   texture0: "character/shiek/shiek",
   texture1: "character/shiek/shiek_normal",
 };
+
+/* Source File: delta.mat */
+Asset.prototype.material.character.shiek.delta = {
+  name: "character.shiek.delta",
+  shader: "playerdelta",
+  shadow: "true",
+  texture0: "character/shiek/shiek",
+  texture1: "character/shiek/shiek_normal",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
 
 /* Source File: markwaveRB.mat */
 Asset.prototype.material.character.shiek.effect.markwaveRB = {
@@ -1138,6 +1183,15 @@ Asset.prototype.material.character.fox.gold = {
   texture2: "character/fox/gold",
   cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
 
+/* Source File: delta.mat */
+Asset.prototype.material.character.fox.delta = {
+  name: "character.fox.delta",
+  shader: "playerdelta",
+  shadow: "true",
+  texture0: "character/fox/fox",
+  texture1: "character/fox/fox_normal",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
+
 /* Source File: shockwave.mat */
 Asset.prototype.material.character.fox.effect.shockwave = {
   name: "character.fox.effect.shockwave",
@@ -1154,6 +1208,30 @@ Asset.prototype.material.character.fox.effect.sparkRB = {
   texture0: "character/fox/effect/spark",
   texture1: "multi/red_low",
   texture2: "multi/red_high",
+};
+
+/* Source File: hitA.mat */
+Asset.prototype.material.character.fox.effect.hitA = {
+  name: "character.fox.effect.hitA",
+  shader: "particle2tone",
+  shadow: "false",
+  texture0: "character/fox/effect/hit_a",
+};
+
+/* Source File: flashDelta.mat */
+Asset.prototype.material.character.fox.effect.flashDelta = {
+  name: "character.fox.effect.flashDelta",
+  shader: "particle2tone",
+  shadow: "false",
+  texture0: "character/fox/effect/flash_delta",
+};
+
+/* Source File: blipDelta.mat */
+Asset.prototype.material.character.fox.effect.blipDelta = {
+  name: "character.fox.effect.blipDelta",
+  shader: "particle2tone",
+  shadow: "false",
+  texture0: "character/fox/effect/blip_delta",
 };
 
 /* Source File: speedline.mat */
@@ -1220,6 +1298,22 @@ Asset.prototype.material.character.fox.effect.blipRB = {
   texture0: "character/fox/effect/blip",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
+};
+
+/* Source File: hitB.mat */
+Asset.prototype.material.character.fox.effect.hitB = {
+  name: "character.fox.effect.hitB",
+  shader: "particle2tone",
+  shadow: "false",
+  texture0: "character/fox/effect/hit_b",
+};
+
+/* Source File: initialDelta.mat */
+Asset.prototype.material.character.fox.effect.initialDelta = {
+  name: "character.fox.effect.initialDelta",
+  shader: "particle2tone",
+  shadow: "false",
+  texture0: "character/fox/effect/blip_init_delta",
 };
 
 /* Source File: initial.mat */

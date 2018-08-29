@@ -166,10 +166,12 @@ PlayerMarth.prototype.type = function() { return "qua"; };
 /* global PlayerMarthFire */
 /* global PlayerMarthRainbow */
 /* global PlayerMarthGold */
+/* global PlayerMarthDelta */
 PlayerMarth.classByPermutation = function(perm) {
   switch(perm) {
     case 2 : { return PlayerMarthRainbow; }
     case 3 : { return PlayerMarthGold; }
+    case 4 : { return PlayerMarthDelta; }
     case 5 : { return PlayerMarthFire; }
     default : { return PlayerMarth; }
   }

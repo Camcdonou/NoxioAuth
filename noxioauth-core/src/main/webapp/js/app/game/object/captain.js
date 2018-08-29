@@ -158,10 +158,12 @@ PlayerCaptain.prototype.type = function() { return "crg"; };
 /* Permutation dictionary */
 /* global PlayerCaptainRainbow */
 /* global PlayerCaptainGold */
+/* global PlayerCaptainDelta */
 PlayerCaptain.classByPermutation = function(perm) {
   switch(perm) {
     case 3 : { return PlayerCaptainRainbow; }
     case 4 : { return PlayerCaptainGold; }
+    case 5 : { return PlayerCaptainDelta; }
     default : { return PlayerCaptain; }
   }
 };
