@@ -444,6 +444,15 @@ Asset.prototype.material.character.puff.puff = {
   texture1: "character/puff/puff_normal",
 };
 
+/* Source File: reverse.mat */
+Asset.prototype.material.character.puff.reverse = {
+  name: "character.puff.reverse",
+  shader: "player",
+  shadow: "true",
+  texture0: "character/puff/reverse",
+  texture1: "character/puff/puff_normal",
+};
+
 /* Source File: gold.mat */
 Asset.prototype.material.character.puff.gold = {
   name: "character.puff.gold",
@@ -631,6 +640,15 @@ Asset.prototype.material.character.falco.ui.meterblip = {
   texture0: "character/falco/ui/meterblip",
 };
 
+/* Source File: reverse.mat */
+Asset.prototype.material.character.falco.reverse = {
+  name: "character.falco.reverse",
+  shader: "player",
+  shadow: "true",
+  texture0: "character/falco/reverse",
+  texture1: "character/falco/falco_normal",
+};
+
 /* Source File: gold.mat */
 Asset.prototype.material.character.falco.gold = {
   name: "character.falco.gold",
@@ -735,6 +753,15 @@ Asset.prototype.material.character.marth.ui.meterslash = {
   shader: "simpletrans",
   shadow: "false",
   texture0: "character/marth/ui/meterslash",
+};
+
+/* Source File: reverse.mat */
+Asset.prototype.material.character.marth.reverse = {
+  name: "character.marth.reverse",
+  shader: "player",
+  shadow: "true",
+  texture0: "character/marth/reverse",
+  texture1: "character/marth/marth_normal",
 };
 
 /* Source File: marth.mat */
@@ -882,6 +909,15 @@ Asset.prototype.material.character.captain.captain = {
   texture1: "character/captain/captain_normal",
 };
 
+/* Source File: reverse.mat */
+Asset.prototype.material.character.captain.reverse = {
+  name: "character.captain.reverse",
+  shader: "player",
+  shadow: "true",
+  texture0: "character/captain/reverse",
+  texture1: "character/captain/captain_normal",
+};
+
 /* Source File: gold.mat */
 Asset.prototype.material.character.captain.gold = {
   name: "character.captain.gold",
@@ -987,6 +1023,15 @@ Asset.prototype.material.character.shiek.ui.meterblip = {
   shader: "simpletrans",
   shadow: "false",
   texture0: "character/shiek/ui/meterblip",
+};
+
+/* Source File: reverse.mat */
+Asset.prototype.material.character.shiek.reverse = {
+  name: "character.shiek.reverse",
+  shader: "player",
+  shadow: "true",
+  texture0: "character/shiek/reverse",
+  texture1: "character/shiek/shiek_normal",
 };
 
 /* Source File: gold.mat */
@@ -1140,6 +1185,15 @@ Asset.prototype.material.character.inferno.inferno = {
   texture1: "character/inferno/inferno_normal",
 };
 
+/* Source File: hat.mat */
+Asset.prototype.material.character.fox.hat = {
+  name: "character.fox.hat",
+  shader: "default",
+  shadow: "true",
+  texture0: "character/fox/hat",
+  texture1: "multi/normal",
+};
+
 /* Source File: iconlarge.mat */
 Asset.prototype.material.character.fox.ui.iconlarge = {
   name: "character.fox.ui.iconlarge",
@@ -1170,6 +1224,15 @@ Asset.prototype.material.character.fox.fox = {
   shader: "player",
   shadow: "true",
   texture0: "character/fox/fox",
+  texture1: "character/fox/fox_normal",
+};
+
+/* Source File: reverse.mat */
+Asset.prototype.material.character.fox.reverse = {
+  name: "character.fox.reverse",
+  shader: "player",
+  shadow: "true",
+  texture0: "character/fox/reverse",
   texture1: "character/fox/fox_normal",
 };
 

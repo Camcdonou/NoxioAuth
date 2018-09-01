@@ -156,11 +156,13 @@ PlayerCaptain.prototype.destroy = PlayerObject.prototype.destroy;
 PlayerCaptain.prototype.type = function() { return "crg"; };
 
 /* Permutation dictionary */
+/* global PlayerCaptainVoice */
 /* global PlayerCaptainRainbow */
 /* global PlayerCaptainGold */
 /* global PlayerCaptainDelta */
 PlayerCaptain.classByPermutation = function(perm) {
   switch(perm) {
+    case 1 : { return PlayerCaptainVoice; }
     case 3 : { return PlayerCaptainRainbow; }
     case 4 : { return PlayerCaptainGold; }
     case 5 : { return PlayerCaptainDelta; }

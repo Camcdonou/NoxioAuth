@@ -11,6 +11,7 @@
 /* Define Voice Fox Alternate Class */
 function PlayerFoxVoice(game, oid, pos, team, color) {
   PlayerFox.call(this, game, oid, pos, team, color);
+  this.material = this.game.display.getMaterial("character.fox.reverse");
 };
 
 /* Constants */

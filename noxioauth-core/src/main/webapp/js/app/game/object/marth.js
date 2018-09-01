@@ -163,12 +163,14 @@ PlayerMarth.prototype.destroy = PlayerObject.prototype.destroy;
 PlayerMarth.prototype.type = function() { return "qua"; };
 
 /* Permutation dictionary */
+/* global PlayerMarthVoice */
 /* global PlayerMarthFire */
 /* global PlayerMarthRainbow */
 /* global PlayerMarthGold */
 /* global PlayerMarthDelta */
 PlayerMarth.classByPermutation = function(perm) {
   switch(perm) {
+    case 1 : { return PlayerMarthVoice; }
     case 2 : { return PlayerMarthRainbow; }
     case 3 : { return PlayerMarthGold; }
     case 4 : { return PlayerMarthDelta; }

@@ -99,18 +99,22 @@ PlayerFox.prototype.type = function() { return "box"; };
 
 /* Permutation dictionary */
 
+/* global PlayerFoxVoice */
 /* global PlayerFoxRed */
 /* global PlayerFoxRainbow */
 /* global PlayerFoxGold */
 /* global PlayerFoxDelta */
+/* global PlayerFoxFour */
 /* global PlayerFoxHit */
 PlayerFox.classByPermutation = function(perm) {
   switch(perm) {
+    case 1 : { return PlayerFoxVoice; }
     case 2 : { return PlayerFoxRed; }
     case 3 : { return PlayerFoxRainbow; }
     case 4 : { return PlayerFoxGold; }
     case 5 : { return PlayerFoxDelta; }
     case 6 : { return PlayerFoxHit; }
+    case 7 : { return PlayerFoxFour; }
     default : { return PlayerFox; }
   }
 };

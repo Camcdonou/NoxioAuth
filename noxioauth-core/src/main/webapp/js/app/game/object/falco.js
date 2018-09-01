@@ -118,6 +118,7 @@ PlayerFalco.prototype.type = function() { return "crt"; };
 
 /* Permutation dictionary */
 
+/* global PlayerFalcoVoice */
 /* global PlayerFalcoRainbow */
 /* global PlayerFalcoGold */
 /* global PlayerFalcoOrange */
@@ -125,6 +126,7 @@ PlayerFalco.prototype.type = function() { return "crt"; };
 /* global PlayerFalcoDelta */
 PlayerFalco.classByPermutation = function(perm) {
   switch(perm) {
+    case 1 : { return PlayerFalcoVoice; }
     case 2 : { return PlayerFalcoOrange; }
     case 3 : { return PlayerFalcoRainbow; }
     case 4 : { return PlayerFalcoGold; }

@@ -9,6 +9,7 @@
 /* Define PlayerPuffVoice Class */
 function PlayerPuffVoice(game, oid, pos, team, color) {
   PlayerPuff.call(this, game, oid, pos, team, color);
+  this.material = this.game.display.getMaterial("character.puff.reverse");
 };
 
 PlayerPuffVoice.prototype.update = PlayerPuff.prototype.update;

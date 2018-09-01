@@ -131,15 +131,19 @@ PlayerPuff.prototype.destroy = PlayerObject.prototype.destroy;
 PlayerPuff.prototype.type = function() { return "blk"; };
 
 /* Permutation dictionary */
+/* global PlayerPuffVoice */
 /* global PlayerPuffGold */
 /* global PlayerPuffRainbow */
 /* global PlayerPuffDelta */
+/* global PlayerPuffRound */
 /* global PlayerPuffWindow */
 PlayerPuff.classByPermutation = function(perm) {
   switch(perm) {
+    case 1 : { return PlayerPuffVoice; }
     case 2 : { return PlayerPuffRainbow; }
     case 3 : { return PlayerPuffGold; }
     case 4 : { return PlayerPuffDelta; }
+    case 5 : { return PlayerPuffRound; }
     case 6 : { return PlayerPuffWindow; }
     default : { return PlayerPuff; }
   }

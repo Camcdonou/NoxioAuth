@@ -568,6 +568,45 @@ NxFx.fox.alt.hit = {
 
 NxFx.falco.alt = {};
 
+NxFx.falco.alt.voice = {
+  jump: new EffectDefinition(
+    "Falco-Voice-Jump", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/falco/voice/jump0.wav", "character/falco/voice/jump1.wav", "character/falco/voice/jump2.wav"], 0.45, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  hit: new EffectDefinition(
+    "Falco-Voice-Hit", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/falco/voice/hit0.wav", "character/falco/voice/hit1.wav"], 0.45, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  dash: new EffectDefinition(
+    "Falco-Voice-Dash", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/falco/voice/dash0.wav", 0.45, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  taunt: new EffectDefinition(
+    "Falco-Voice-Taunt", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/falco/voice/taunt0.wav", "character/falco/voice/taunt1.wav", "character/falco/voice/taunt2.wav"], 0.45, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  explode: new EffectDefinition(
+    "Falco-Voice-Explode", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/falco/voice/impact0.wav", "character/falco/voice/impact1.wav", "character/falco/voice/impact2.wav"], 0.45, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  fall: new EffectDefinition(
+    "Falco-Voice-Fall", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/falco/voice/fall0.wav", 0.45, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  )
+};
+
 /* global PlayerFalcoOrange */
 NxFx.falco.alt.orange = {
   blip: new EffectDefinition(
@@ -1085,6 +1124,51 @@ NxFx.puff.alt.rainbow = {
 };
 
 NxFx.captain.alt = {};
+
+NxFx.captain.alt.voice = {
+  jump: new EffectDefinition(
+    "Captain-Voice-Jump", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/captain/voice/jump0.wav", "character/captain/voice/jump1.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  hit: new EffectDefinition(
+    "Captain-Voice-Hit", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/captain/voice/hit0.wav", "character/captain/voice/hit1.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  charge: new EffectDefinition(
+    "Captain-Voice-Charge", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/voice/punch0.wav", 0.4, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  punch: new EffectDefinition(
+    "Captain-Voice-Punch", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/voice/punch1.wav", 0.4, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  taunt: new EffectDefinition(
+    "Captain-Voice-Taunt", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/captain/voice/taunt0.wav", "character/captain/voice/taunt1.wav", "character/captain/voice/taunt2.wav", "character/captain/voice/taunt3.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  explode: new EffectDefinition(
+    "Captain-Voice-Explode", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/voice/death0.wav", 0.4, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  fall: new EffectDefinition(
+    "Captain-Voice-Fall", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/voice/death1.wav", 0.4, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  )
+};
 
 /* global PlayerCaptainGold */
 NxFx.captain.alt.gold = {

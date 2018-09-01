@@ -131,6 +131,7 @@ PlayerShiek.prototype.type = function() { return "vox"; };
 
 /* Permutation dictionary */
 
+/* global PlayerShiekVoice */
 /* global PlayerShiekRainbow */
 /* global PlayerShiekGold */
 /* global PlayerShiekGreen */
@@ -138,6 +139,7 @@ PlayerShiek.prototype.type = function() { return "vox"; };
 /* global PlayerShiekDelta */
 PlayerShiek.classByPermutation = function(perm) {
   switch(perm) {
+    case 1 : { return PlayerShiekVoice; }
     case 2 : { return PlayerShiekGreen; }
     case 3 : { return PlayerShiekRainbow; }
     case 4 : { return PlayerShiekGold; }

@@ -9,6 +9,7 @@
 /* Define PlayerMarthVoice Class */
 function PlayerMarthVoice(game, oid, pos, team, color) {
   PlayerMarth.call(this, game, oid, pos, team, color);
+  this.material = this.game.display.getMaterial("character.marth.reverse");
 };
 
 PlayerMarthVoice.prototype.update = PlayerMarth.prototype.update;
