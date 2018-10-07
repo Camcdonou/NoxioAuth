@@ -183,6 +183,7 @@ NoxioGame.prototype.doUpdate = function(packet) {
   var obj = this.getObject(this.control);                                               // Get the object that the player controls
   if(obj) { this.display.camera.setPos({x: -obj.pos.x, y: -obj.pos.y, z: 0.0}); }       // Update camera to player's object position
   this.display.camera.update();                                                         // Update camera interpolation
+  this.display.sky.step();                                                              // Step skybox 1 frame
   
   /* Step world effects */
   for(var i=0;i<this.effects.length;i++) {

@@ -1,7 +1,7 @@
 "use strict";
 /* global main */
 
-/* Define TextureCube Classes */
+/* Define Cube map texture Classes */
 function TextureCube(gl, glTexture, path) {
   var tmp = this; /* I FUCKING HATE JAVASCRIPT SCOPES */
   this.glTexture = glTexture;

@@ -87,6 +87,9 @@ Display.prototype.setupWebGL = function() {
   if(!this.createFramebuffer("world", this.upscale.world)) { return false; }
   if(!this.createFramebuffer("ui", this.upscale.ui)) { return false; }
   
+  /* debug @TODO: */
+  this.sky = new Sky(this, this.game.asset.sky.final);
+  
   /* @TODO: @DEBUG: Used by js/app/game/ui/debug.js exclusively. */
   this.shadowDebugMat = new Material("~SHADOW_DEBUG_MATERIAL", this.getShader("simpletrans"), {texture0: this.fbo.shadow.tex}, false);
   this.materials.push(this.shadowDebugMat);
@@ -551,7 +554,7 @@ Display.prototype.draw = function() {
   
   /* === Draw Sky ======================================================================================================== */
   /* ===================================================================================================================== */
-  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.sky.fb);                                                    // Enable menu framebuffer
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.sky.fb);                                                    // Enable Sky framebuffer
   gl.viewport(0, 0, (this.window.width*this.fbo.sky.upscale), (this.window.height*this.fbo.sky.upscale)); // Resize to canvas
   gl.clearColor(0.0, 0.0, 0.0, 1.0);                                                                      // Transparent Black Background
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);                                                    // Clear Color and Depth from previous draw.
@@ -559,34 +562,40 @@ Display.prototype.draw = function() {
   gl.disable(gl.DEPTH_TEST);                                                                              // Disable depth testing for UI Draw
   gl.enable(gl.BLEND);                                                                                    // Enable Transparency 
   
-  // @TODO: this isnt exactly right, doesnt scale correctly with aspect ratio and isnt centered right.
-  // Also I want to move sky definitions to the map file along with the ability to define 3d skys and use perspective and massive scale and stuff.
-  
-  var ASPECT = this.window.height/this.window.width;
-  var PROJMATRIX_SKY = mat4.create(); mat4.ortho(PROJMATRIX_SKY, 0.0, 1.0, 0.0, 1.0*ASPECT, 0.0, 1.0);
-  var VIEWMATRIX_SKY= mat4.create();
+  var SKYPROJMATRIX = mat4.create(); mat4.perspective(SKYPROJMATRIX, this.camera.fov, this.window.width/this.window.height, 8, 256); // Perspective
+  var SKYMOVEMATRIX = mat4.create();
+    mat4.translate(SKYMOVEMATRIX, SKYMOVEMATRIX, [0.0, 0.0, -this.camera.zoom]);
+    mat4.rotate(SKYMOVEMATRIX, SKYMOVEMATRIX, this.camera.rot.x, [1.0, 0.0, 0.0]);
+    mat4.rotate(SKYMOVEMATRIX, SKYMOVEMATRIX, this.camera.rot.y, [0.0, 1.0, 0.0]);
+    mat4.rotate(SKYMOVEMATRIX, SKYMOVEMATRIX, this.camera.rot.z, [0.0, 0.0, 1.0]);
+    mat4.translate(SKYMOVEMATRIX, SKYMOVEMATRIX, [0, 0, 0]);
+  var SKYVIEWMATRIX = mat4.create();
+
   var uniformDataSky = [
-    {name: "Pmatrix", data: PROJMATRIX_SKY},
-    {name: "Vmatrix", data: VIEWMATRIX_SKY},
-    {name: "time", data: this.frame},
-    {name: "transform", data: [0.0, 0.0, -0.5]},
-    {name: "size", data: [1.0, 1.0]}
+    {name: "Pmatrix", data: SKYPROJMATRIX},
+    {name: "Vmatrix", data: SKYVIEWMATRIX},
+    {name: "Mmatrix", data: SKYMOVEMATRIX},
+    {name: "color", data: [0.0, 0.0, 1.0]},
+    {name: "frame", data: this.frame}
   ];
   
-  var skyMaterial = this.getMaterial("sky.final.sky");
-  var sheetModel = this.getModel("multi.sheet");
+  var skyGeom = [];
+  this.sky.getDraw(skyGeom);
   
-  skyMaterial.shader.enable(gl);
-  skyMaterial.enable(gl);
-  skyMaterial.shader.applyUniforms(gl, uniformDataSky);
-  sheetModel.draw(gl, skyMaterial.shader);
-  skyMaterial.shader.disable(gl);
-  skyMaterial.disable(gl);
+  for(var i=0;i<skyGeom.length;i++) {
+    skyGeom[i].material.shader.enable(gl);
+    skyGeom[i].material.enable(gl);
+    skyGeom[i].material.shader.applyUniforms(gl, skyGeom[i].uniforms);
+    skyGeom[i].material.shader.applyUniforms(gl, uniformDataSky);
+    skyGeom[i].model.draw(gl, skyGeom[i].material.shader);
+    skyGeom[i].material.shader.disable(gl);
+    skyGeom[i].material.disable(gl);
+  }
 
   gl.depthMask(true);                       // Reenable depth write after UI draw
   gl.enable(gl.DEPTH_TEST);                 // Reenable after UI Draw
   gl.disable(gl.BLEND);                     // Disable transparency
-  gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable menu framebuffer
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable Sky framebuffer
     
   /* === Draw UI ========================================================================================================= */
   /* ===================================================================================================================== */

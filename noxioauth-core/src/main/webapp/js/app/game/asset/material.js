@@ -42,6 +42,7 @@ Asset.prototype.material.character.fox.decal = {};
 Asset.prototype.material.character.fox.effect = {};
 Asset.prototype.material.sky = {};
 Asset.prototype.material.sky.final = {};
+Asset.prototype.material.sky.orbit = {};
 Asset.prototype.material.map = {};
 Asset.prototype.material.map.tin = {};
 Asset.prototype.material.map.copper = {};
@@ -1403,16 +1404,60 @@ Asset.prototype.material.character.fox.effect.blip = {
   texture0: "character/fox/effect/blip",
 };
 
-/* Source File: sky.mat */
-Asset.prototype.material.sky.final.sky = {
-  name: "sky.final.sky",
-  shader: "final_space",
+/* Source File: outer.mat */
+Asset.prototype.material.sky.final.outer = {
+  name: "sky.final.outer",
+  shader: "finalout",
   shadow: "false",
-  texture0: "sky/final/space_color",
-  texture1: "sky/final/lines",
-  texture2: "sky/final/multi_space",
-  texture3: "sky/final/twink",
-  texture4: "multi/multi_dif",
+  texture0: "sky/final/mask",
+  texture1: "sky/final/star_multi",
+};
+
+/* Source File: comet.mat */
+Asset.prototype.material.sky.final.comet = {
+  name: "sky.final.comet",
+  shader: "finalcomet",
+  shadow: "false",
+  texture0: "sky/final/comet",
+  texture1: "sky/final/rainbow",
+};
+
+/* Source File: space.mat */
+Asset.prototype.material.sky.final.space = {
+  name: "sky.final.space",
+  shader: "finalspace",
+  shadow: "false",
+  texture0: "sky/final/space",
+  texture1: "sky/final/mask",
+  texture2: "sky/final/star_multi",
+};
+
+/* Source File: inner.mat */
+Asset.prototype.material.sky.final.inner = {
+  name: "sky.final.inner",
+  shader: "finalin",
+  shadow: "false",
+  texture0: "sky/final/nebula_multi",
+  texture1: "sky/final/nebula_color",
+  texture2: "sky/final/mask",
+};
+
+/* Source File: nebula.mat */
+Asset.prototype.material.sky.final.nebula = {
+  name: "sky.final.nebula",
+  shader: "finalspace",
+  shadow: "false",
+  texture0: "sky/final/nebula_multi",
+  texture1: "sky/final/nebula_color",
+  texture2: "sky/final/mask",
+};
+
+/* Source File: earth.mat */
+Asset.prototype.material.sky.orbit.earth = {
+  name: "sky.orbit.earth",
+  shader: "finalspace",
+  shadow: "false",
+  texture0: "sky/final/earth",
 };
 
 /* Source File: metal_rough.mat */

@@ -36,14 +36,6 @@ function PlayerObject(game, oid, pos, permutation, team, color) {
   /* Decal */
   var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
   this.targetCircle = new Decal(this.game, "character.generic.decal.targetcircle", util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), util.vec3.make(0.0, 0.0, 1.0), 1.1, angle, util.vec4.make(1,1,1,1), 15, 0, 0);
-
-  /* Visual Hitboxes */
-  this.hitboxMat = this.game.display.getMaterial("multi.hitbox.hitbox");
-  this.hitboxPos = this.pos;
-  this.hitboxColor = util.vec4.make(1, 0, 0, 0.5);
-  this.hitboxScale = 1;
-  this.hitBoxAngle = 0;
-  this.drawHitbox = undefined;
 };
 
 PlayerObject.prototype.update = function(data) {
@@ -241,16 +233,6 @@ PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
       this.effects[i].getDraw(geometry, decals, lights, bounds);
     }
     this.targetCircle.getDraw(decals, bounds);
-    if(this.drawHitbox && this.height > -0.5) {
-      var hitboxUniformData = [
-        {name: "transform", data: [this.hitboxPos.x, this.hitboxPos.y, 0.01]},
-        {name: "scale", data: this.hitboxScale},
-        {name: "color", data: util.vec4.toArray(this.hitboxColor)},
-        {name: "rotation", data: this.hitBoxAngle}
-      ];
-      geometry.push({model: this.drawHitbox, material: this.hitboxMat, uniforms: hitboxUniformData});
-      this.drawHitbox = undefined;
-    }
   }
 };
 

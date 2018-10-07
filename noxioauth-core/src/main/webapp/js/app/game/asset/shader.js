@@ -135,6 +135,30 @@ Asset.prototype.shader.zone = {
   fragment: "precision mediump float;\n\n/* Texture Samples */\nuniform sampler2D texture0;\nuniform sampler2D texture1;\n\n/* General */\nuniform int  frame;\nuniform vec3 color;\nvarying vec3 vUV;\n\nvoid main(void) {\n\n  float ff = float(frame);\n  vec4 diffuse = texture2D(texture0, vUV.st+vec2(ff*0.0067, 0.0));\n  vec4 gradient = texture2D(texture1, vUV.st);\n\n  gl_FragColor = vec4(gradient.rgb+(diffuse.rgb*.25), gradient.a)*vec4(color, 1.);\n}\n",
 };
 
+/* Source File: finaling */
+Asset.prototype.shader.finalin = {
+  name: "finalin",
+  attributes: [
+    {type: "vec3", name: "position"},
+    {type: "vec3", name: "texcoord"},
+  ],
+  uniforms: [
+    {type: "mat4", name: "Pmatrix"},
+    {type: "mat4", name: "Vmatrix"},
+    {type: "mat4", name: "Mmatrix"},
+    {type: "vec3", name: "transform"},
+    {type: "vec3", name: "rotation"},
+    {type: "vec3", name: "offset"},
+    {type: "float", name: "scale"},
+    {type: "sampler2D", name: "texture0"},
+    {type: "sampler2D", name: "texture1"},
+    {type: "sampler2D", name: "texture2"},
+    {type: "int", name: "frame"},
+  ],
+  vertex: "precision mediump float;\n#define PI 3.1415926535897932384626433832795\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\nuniform vec3 rotation;\nuniform vec3 offset; /* Rotational offset */\nuniform float scale;\n\nvarying vec2 vUV;\n\nvec3 rotateX(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float y = (a.y * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.y * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(a.x, y, z);\n}\n\nvec3 rotateY(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.x * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(x, a.y, z);\n}\n\nvec3 rotateZ(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.y * sinDegrees);\n    float y = (a.x * -sinDegrees) + (a.y * cosDegrees);\n\n    return vec3(x, y, a.z);\n}\n\nvec3 rotate(vec3 a, vec3 b) {\n  vec3 c = rotateX(a, b.x);\n  c = rotateY(c, b.y);\n  c = rotateZ(c, b.z);\n  return c;\n}\n\n\nvoid main(void) {\n  /* Geom */\n  vec4 cPos = vec4((rotate(rotate(position, rotation), offset)+transform)*scale, 1.0);\n\n  /* Texture Coordinates */\n  vUV=texcoord.st;\n\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n#define PI 3.1415926535897932384626433832795\n\nuniform sampler2D texture0;\nuniform sampler2D texture1;\nuniform sampler2D texture2;\n\nuniform int frame;\n\nvarying vec2 vUV;\n\nvoid main(void) {\n  float ftime = float(frame);  // No implicit casting in glsl.\n\n  float texMask = texture2D(texture2, vUV).g;\n  vec4  texColor = texture2D(texture1, vUV + vec2(ftime*.0001, 0.));\n\n  float texMaskA = texture2D(texture0, (vUV * vec2(6., 1.)) + vec2(ftime*.0009, 0.)).r;\n  float texMaskB = texture2D(texture0, (vUV * vec2(5., 1.)) + vec2(-ftime*.0004, 0.)).g;\n  float texMaskC = texture2D(texture0, (vUV * vec2(5., 1.)) + vec2(ftime*.0003, 0.)).b;\n  float texMaskD = texture2D(texture0, (vUV * vec2(6., 1.)) + vec2(-ftime*.0007, 0.)).a;\n\n  float noise = min(1., max(0., (texMaskA + texMaskB + texMaskC + texMaskD)-1.5));\n\n  vec4 neb = vec4(texColor.rgb, texColor.a * texMask * noise);\n\n  gl_FragColor = neb;\n}\n",
+};
+
 /* Source File: ting */
 Asset.prototype.shader.tin = {
   name: "tin",
@@ -256,6 +280,29 @@ Asset.prototype.shader.simpletrans = {
   ],
   vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\n\nuniform vec2 transform;\nuniform vec2 size;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4((position*vec3(size,1.0))+vec3(transform, -0.5), 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*cPos;\n}\n",
   fragment: "precision mediump float;\n\nuniform sampler2D texture0;\nuniform vec4 color;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  gl_FragColor = texture2D(texture0, vUV.st) * color;\n}\n",
+};
+
+/* Source File: finalcometg */
+Asset.prototype.shader.finalcomet = {
+  name: "finalcomet",
+  attributes: [
+    {type: "vec3", name: "position"},
+    {type: "vec3", name: "texcoord"},
+  ],
+  uniforms: [
+    {type: "mat4", name: "Pmatrix"},
+    {type: "mat4", name: "Vmatrix"},
+    {type: "mat4", name: "Mmatrix"},
+    {type: "vec3", name: "transform"},
+    {type: "vec3", name: "rotation"},
+    {type: "vec3", name: "offset"},
+    {type: "float", name: "scale"},
+    {type: "sampler2D", name: "texture0"},
+    {type: "sampler2D", name: "texture1"},
+    {type: "int", name: "frame"},
+  ],
+  vertex: "precision mediump float;\n#define PI 3.1415926535897932384626433832795\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\nuniform vec3 rotation;\nuniform vec3 offset; /* Rotational offset */\nuniform float scale;\n\nvarying vec2 vUV;\nvarying float rainbowOffset;\n\nvec3 rotateX(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float y = (a.y * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.y * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(a.x, y, z);\n}\n\nvec3 rotateY(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.x * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(x, a.y, z);\n}\n\nvec3 rotateZ(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.y * sinDegrees);\n    float y = (a.x * -sinDegrees) + (a.y * cosDegrees);\n\n    return vec3(x, y, a.z);\n}\n\nvec3 rotate(vec3 a, vec3 b) {\n  vec3 c = rotateX(a, b.x);\n  c = rotateY(c, b.y);\n  c = rotateZ(c, b.z);\n  return c;\n}\n\n\nvoid main(void) {\n  /* Geom */\n  vec4 cPos = vec4((rotate(rotate(position, rotation), offset)+transform)*scale, 1.0);\n\n  /* Texture Coordinates */\n  vUV=texcoord.st;\n  rainbowOffset = offset.x;\n\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n#define PI 3.1415926535897932384626433832795\n\nuniform sampler2D texture0;\nuniform sampler2D texture1;\n\nuniform int frame;\n\nvarying vec2 vUV;\nvarying float rainbowOffset;\n\nvoid main(void) {\n  float ftime = float(frame);  // No implicit casting in glsl.\n\n  float texMask = texture2D(texture0, vUV).r;\n  float texAlpha = texture2D(texture0, vUV).a;\n  vec3  texColor = texture2D(texture1, (vUV * vec2(.33, 1.))+vec2(rainbowOffset, 0.)+(vec2(-.015*ftime, 0.))).rgb;\n\n  vec4 comet = vec4(texColor, pow(texMask, 2.)*texAlpha);\n\n  gl_FragColor = comet;\n}\n",
 };
 
 /* Source File: particlespriteRBg */
@@ -600,6 +647,30 @@ Asset.prototype.shader.post = {
   fragment: "precision mediump float;\n\nuniform sampler2D texture6;\nuniform sampler2D texture7;\n\nvarying vec2 vUVworld;\nvarying vec2 vUVui;\n\nvoid main(void) {\n  vec4 world = texture2D(texture6, vUVworld);\n  vec4 ui = texture2D(texture7, vUVui);\n  vec4 color = ((1.0 - ui.a) * world) + (ui * ui.a);\n  gl_FragColor = vec4(color.rgb, 1.0);\n}\n",
 };
 
+/* Source File: finalspaceg */
+Asset.prototype.shader.finalspace = {
+  name: "finalspace",
+  attributes: [
+    {type: "vec3", name: "position"},
+    {type: "vec3", name: "texcoord"},
+  ],
+  uniforms: [
+    {type: "mat4", name: "Pmatrix"},
+    {type: "mat4", name: "Vmatrix"},
+    {type: "mat4", name: "Mmatrix"},
+    {type: "vec3", name: "transform"},
+    {type: "vec3", name: "rotation"},
+    {type: "vec3", name: "offset"},
+    {type: "float", name: "scale"},
+    {type: "sampler2D", name: "texture0"},
+    {type: "sampler2D", name: "texture1"},
+    {type: "sampler2D", name: "texture2"},
+    {type: "int", name: "frame"},
+  ],
+  vertex: "precision mediump float;\n#define PI 3.1415926535897932384626433832795\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\nuniform vec3 rotation;\nuniform vec3 offset; /* Rotational offset */\nuniform float scale;\n\nvarying vec2 vUV;\n\nvec3 rotateX(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float y = (a.y * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.y * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(a.x, y, z);\n}\n\nvec3 rotateY(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.x * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(x, a.y, z);\n}\n\nvec3 rotateZ(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.y * sinDegrees);\n    float y = (a.x * -sinDegrees) + (a.y * cosDegrees);\n\n    return vec3(x, y, a.z);\n}\n\nvec3 rotate(vec3 a, vec3 b) {\n  vec3 c = rotateX(a, b.x);\n  c = rotateY(c, b.y);\n  c = rotateZ(c, b.z);\n  return c;\n}\n\n\nvoid main(void) {\n  /* Geom */\n  vec4 cPos = vec4((rotate(rotate(position, rotation), offset)+transform)*scale, 1.0);\n\n  /* Texture Coordinates */\n  vUV=texcoord.st;\n\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n#define PI 3.1415926535897932384626433832795\n\nuniform sampler2D texture0;\nuniform sampler2D texture1;\nuniform sampler2D texture2;\n\nuniform int frame;\n\nvarying vec2 vUV;\n\nvoid main(void) {\n  float ftime = float(frame);  // No implicit casting in glsl.\n\n  vec4  texSky = texture2D(texture0, vUV);\n  float texSkyMask = texture2D(texture1, vUV).r;\n  float texStarMask = texture2D(texture2, ((vUV*9.55)+(vec2(-0.00077*ftime, -0.00027*ftime)))).r;\n  float texStarTwink = texture2D(texture2, ((vUV*3.33)+(vec2(0.00033*ftime, 0.00055*ftime)))).g;\n  float star = texStarMask;\n  float twink = pow(texStarTwink, 2.);\n  vec4 space = vec4(mix(texSky.rgb, vec3(star), pow(twink*star, 0.75) * 1.5), texSkyMask);\n\n  gl_FragColor = space;\n}\n",
+};
+
 /* Source File: particlespriteg */
 Asset.prototype.shader.particlesprite = {
   name: "particlesprite",
@@ -688,6 +759,29 @@ Asset.prototype.shader.effectRB = {
   ],
   vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\nuniform float scale;\nuniform float rotation;\n\nvarying vec3 vPos;\nvarying vec3 vUV;\n\nvec3 rotate(vec3 v, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (v.x * cosDegrees) + (v.y * sinDegrees);\n    float y = (v.x * -sinDegrees) + (v.y * cosDegrees);\n\n    return vec3(x, y, v.z);\n}\n\nvoid main(void) {\n  vec4 cPos = vec4((rotate(position, rotation)*scale)+transform, 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
   fragment: "precision mediump float;\n\nuniform sampler2D texture0;\nuniform sampler2D texture1;\nuniform sampler2D texture2;\n\nuniform int frame;\nuniform vec2 alpha;\n\nvarying vec3 vUV;\n\nvec3 RGBToHSL(vec3 color)\n{\nvec3 hsl; // init to 0 to avoid warnings ? (and reverse if + remove first part)\n\nfloat fmin = min(min(color.r, color.g), color.b); //Min. value of RGB\nfloat fmax = max(max(color.r, color.g), color.b); //Max. value of RGB\nfloat delta = fmax - fmin; //Delta RGB value\n\nhsl.z = (fmax + fmin) / 2.0; // Luminance\n\nif (delta == 0.0)	//This is a gray, no chroma...\n{\nhsl.x = 0.0;	// Hue\nhsl.y = 0.0;	// Saturation\n}\nelse //Chromatic data...\n{\nif (hsl.z < 0.5)\nhsl.y = delta / (fmax + fmin); // Saturation\nelse\nhsl.y = delta / (2.0 - fmax - fmin); // Saturation\n\nfloat deltaR = (((fmax - color.r) / 6.0) + (delta / 2.0)) / delta;\nfloat deltaG = (((fmax - color.g) / 6.0) + (delta / 2.0)) / delta;\nfloat deltaB = (((fmax - color.b) / 6.0) + (delta / 2.0)) / delta;\n\nif (color.r == fmax )\nhsl.x = deltaB - deltaG; // Hue\nelse if (color.g == fmax)\nhsl.x = (1.0 / 3.0) + deltaR - deltaB; // Hue\nelse if (color.b == fmax)\nhsl.x = (2.0 / 3.0) + deltaG - deltaR; // Hue\n\nif (hsl.x < 0.0)\nhsl.x += 1.0; // Hue\nelse if (hsl.x > 1.0)\nhsl.x -= 1.0; // Hue\n}\n\nreturn hsl;\n\n}\n\nfloat HueToRGB(float f1, float f2, float hue)\n{\nif (hue < 0.0)\nhue += 1.0;\nelse if (hue > 1.0)\nhue -= 1.0;\nfloat res;\nif ((6.0 * hue) < 1.0)\nres = f1 + (f2 - f1) * 6.0 * hue;\nelse if ((2.0 * hue) < 1.0)\nres = f2;\nelse if ((3.0 * hue) < 2.0)\nres = f1 + (f2 - f1) * ((2.0 / 3.0) - hue) * 6.0;\nelse\nres = f1;\nreturn res;\n}\n\nvec3 HSLToRGB(vec3 hsl)\n{\nvec3 rgb;\n\nif (hsl.y == 0.0)\nrgb = vec3(hsl.z); // Luminance\nelse\n{\nfloat f2;\n\nif (hsl.z < 0.5)\nf2 = hsl.z * (1.0 + hsl.y);\nelse\nf2 = (hsl.z + hsl.y) - (hsl.y * hsl.z);\n\nfloat f1 = 2.0 * hsl.z - f2;\n\nrgb.r = HueToRGB(f1, f2, hsl.x + (1.0/3.0));\nrgb.g = HueToRGB(f1, f2, hsl.x);\nrgb.b= HueToRGB(f1, f2, hsl.x - (1.0/3.0));\n}\n\nreturn rgb;\n}\n\nvec3 hueShift( vec3 color, float hueAdjust ){\n  vec3 hsly = RGBToHSL(color);\n  hsly.x = mod(hsly.x+hueAdjust, 1.);\n  return HSLToRGB(hsly);\n}\n\n\nvoid main(void) {\n  vec4 tex = texture2D(texture0, vUV.st);\n  vec3 rba = texture2D(texture1, vUV.st).rgb;\n  vec3 rbb = texture2D(texture2, vUV.st).rgb;\n  vec4 colored = mix(vec4(rba, alpha.x), vec4(rbb, alpha.y), tex.r);\n  gl_FragColor = vec4(hueShift(colored.rgb, float(frame) * 0.073), colored.a * tex.a);\n}\n",
+};
+
+/* Source File: finaloutg */
+Asset.prototype.shader.finalout = {
+  name: "finalout",
+  attributes: [
+    {type: "vec3", name: "position"},
+    {type: "vec3", name: "texcoord"},
+  ],
+  uniforms: [
+    {type: "mat4", name: "Pmatrix"},
+    {type: "mat4", name: "Vmatrix"},
+    {type: "mat4", name: "Mmatrix"},
+    {type: "vec3", name: "transform"},
+    {type: "vec3", name: "rotation"},
+    {type: "vec3", name: "offset"},
+    {type: "float", name: "scale"},
+    {type: "sampler2D", name: "texture0"},
+    {type: "sampler2D", name: "texture1"},
+    {type: "int", name: "frame"},
+  ],
+  vertex: "precision mediump float;\n#define PI 3.1415926535897932384626433832795\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\nuniform vec3 rotation;\nuniform vec3 offset; /* Rotational offset */\nuniform float scale;\n\nvarying vec2 vUV;\n\nvec3 rotateX(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float y = (a.y * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.y * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(a.x, y, z);\n}\n\nvec3 rotateY(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.x * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(x, a.y, z);\n}\n\nvec3 rotateZ(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.y * sinDegrees);\n    float y = (a.x * -sinDegrees) + (a.y * cosDegrees);\n\n    return vec3(x, y, a.z);\n}\n\nvec3 rotate(vec3 a, vec3 b) {\n  vec3 c = rotateX(a, b.x);\n  c = rotateY(c, b.y);\n  c = rotateZ(c, b.z);\n  return c;\n}\n\n\nvoid main(void) {\n  /* Geom */\n  vec4 cPos = vec4((rotate(rotate(position, rotation), offset)+transform)*scale, 1.0);\n\n  /* Texture Coordinates */\n  vUV=texcoord.st;\n\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n#define PI 3.1415926535897932384626433832795\n\nuniform sampler2D texture0;\nuniform sampler2D texture1;\n\nuniform int frame;\n\nvarying vec2 vUV;\n\nvoid main(void) {\n  float ftime = float(frame);  // No implicit casting in glsl.\n\n  float texSkyMask = texture2D(texture0, vUV).g;\n  float texStarMask = texture2D(texture1, ((vUV*1.9*vec2(8., 1.))+(vec2(-0.00077*ftime, -0.00027*ftime)))).r;\n  float texStarTwink = texture2D(texture1, ((vUV*0.77*vec2(8., 1.))+(vec2(0.00033*ftime, 0.00055*ftime)))).g;\n  float star = texStarMask;\n  float twink = pow(texStarTwink, 2.);\n  vec4 space = vec4(mix(vec3(0.), vec3(star), pow(twink*star, 0.75) * 1.5), texSkyMask);\n\n  gl_FragColor = space;\n}\n",
 };
 
 /* Source File: decal_glowg */
