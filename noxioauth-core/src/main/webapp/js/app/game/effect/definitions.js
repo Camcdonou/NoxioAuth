@@ -1259,6 +1259,57 @@ NxFx.captain.alt.rainbow = {
 
 NxFx.marth.alt = {};
 
+NxFx.marth.alt.voice = {
+  jump: new EffectDefinition(
+    "Marth-Voice-Jump", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/jump0.wav", "character/marth/voice/jump1.wav", "character/marth/voice/jump2.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  hit: new EffectDefinition(
+    "Marth-Voice-Hit", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/hit0.wav", "character/marth/voice/hit1.wav", "character/marth/voice/hit2.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  heavy: new EffectDefinition(
+    "Marth-Voice-heavy", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/heavy0.wav", "character/marth/voice/heavy1.wav", "character/marth/voice/heavy2.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  counter: new EffectDefinition(
+    "Marth-Voice-Counter", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/marth/voice/counter0.wav", 0.4, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  riposte: new EffectDefinition(
+    "Marth-Voice-Riposte", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/riposte0.wav", "character/marth/voice/riposte1.wav", "character/marth/voice/riposte2.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  taunt: new EffectDefinition(
+    "Marth-Voice-Taunt", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/taunt0.wav", "character/marth/voice/taunt1.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  explode: new EffectDefinition(
+    "Marth-Voice-Explode", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/impact0.wav", "character/marth/voice/impact1.wav", "character/marth/voice/impact2.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  fall: new EffectDefinition(
+    "Marth-Voice-Fall", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/marth/voice/fall0.wav", 0.4, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  )
+};
+
 /* global PlayerMarthRainbow */
 /* global ParticleMarthSlashRainbow, ParticleMarthReadyRainbow, ParticleMarthRiposteRainbow */
 NxFx.marth.alt.rainbow = {

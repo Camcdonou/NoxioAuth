@@ -15,6 +15,8 @@ public class MailDao {
     properties.put("mail.smtp.host", Settable.getMailHost());  /* Security concern @TODO: make this ssl */
     properties.put("mail.smtp.port", Settable.getMailPort());
     properties.put("mail.smtp.auth", "true");
+    properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+    properties.put("mail.smtp.starttls.enable", "true");
   }
   
   /* Returns true if sent, false if not. */

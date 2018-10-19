@@ -134,6 +134,13 @@ function LobbyMenu() {
   this.customGame = {
     rotation: [{}]
   };
+  
+  /* @TODO: jank hack. hides or shows create game menu based on user unlocks */
+  this.jank = {
+    create: document.getElementById("lobby-create-cont-a"),
+    none: document.getElementById("lobby-create-cont-b"),
+    username: document.getElementById("lobby-name-name")
+  };
 };
 
 LobbyMenu.prototype.dropDownHide = function() {
@@ -238,6 +245,9 @@ LobbyMenu.prototype.show = function() {
   this.items.create.show();
   main.menu.credit.show();
   main.menu.rank.show();
+  this.jank.create.style.display = main.unlocks.has("FT_LOBBY") ? "block" : "none";
+  this.jank.none.style.display = main.unlocks.has("FT_LOBBY") ? "none" : "block";
+  this.jank.username.innerHTML = main.net.user;
   this.element.style.display = "block";
   if(!this.customGame.rotation[0].gametype) { this.drops.settings.button.style.display = "none"; }
   this.resize();

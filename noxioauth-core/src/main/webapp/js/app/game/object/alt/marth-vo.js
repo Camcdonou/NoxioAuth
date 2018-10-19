@@ -18,18 +18,37 @@ PlayerMarthVoice.prototype.effectSwitch = PlayerMarth.prototype.effectSwitch;
 PlayerMarthVoice.prototype.timers = PlayerMarth.prototype.timers;
 PlayerMarthVoice.prototype.ui = PlayerMarth.prototype.ui;
 
-PlayerMarthVoice.prototype.air  = PlayerMarth.prototype.air;
-PlayerMarthVoice.prototype.jump = PlayerMarth.prototype.jump;
+PlayerMarthVoice.prototype.air  = function() {
+  PlayerMarth.prototype.air.call(this);
+  this.effects.push(NxFx.marth.alt.voice.jump.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+
+PlayerMarthVoice.prototype.jump = function() {
+  PlayerMarth.prototype.jump.call(this);
+  this.effects.push(NxFx.marth.alt.voice.jump.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+
 PlayerMarthVoice.prototype.land = PlayerMarth.prototype.land;
 
-PlayerMarthVoice.prototype.stun = PlayerMarth.prototype.stun;
+PlayerMarthVoice.prototype.stun = function() {
+  PlayerMarth.prototype.stun.call(this);
+  this.effects.push(NxFx.marth.alt.voice.hit.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+
 PlayerMarthVoice.prototype.stunGeneric = PlayerMarth.prototype.stunGeneric;
 PlayerMarthVoice.prototype.stunSlash = PlayerMarth.prototype.stunSlash;
 PlayerMarthVoice.prototype.stunElectric = PlayerMarth.prototype.stunElectric;
 PlayerMarthVoice.prototype.stunFire = PlayerMarth.prototype.stunFire;
 PlayerMarthVoice.prototype.criticalHit = PlayerMarth.prototype.criticalHit;
-PlayerMarthVoice.prototype.explode = PlayerMarth.prototype.explode;
-PlayerMarthVoice.prototype.fall = PlayerMarth.prototype.fall;
+
+PlayerMarthVoice.prototype.explode = function() {
+  PlayerMarth.prototype.explode.call(this);
+  this.effects.push(NxFx.marth.alt.voice.explode.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+PlayerMarthVoice.prototype.fall = function() {
+  PlayerMarth.prototype.fall.call(this);
+  this.effects.push(NxFx.marth.alt.voice.fall.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
 
 PlayerMarthVoice.prototype.slash = function() {
   PlayerMarth.prototype.slash.call(this);
@@ -45,6 +64,7 @@ PlayerMarthVoice.prototype.ready = function() {
 
 PlayerMarthVoice.prototype.combo = function() {
   PlayerMarth.prototype.combo.call(this);
+  this.effects.push(NxFx.marth.alt.voice.heavy.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
 PlayerMarthVoice.prototype.comboHit = function() {
@@ -57,9 +77,13 @@ PlayerMarthVoice.prototype.counter = function() {
 
 PlayerMarthVoice.prototype.riposte = function() {
   PlayerMarth.prototype.riposte.call(this);
+  this.effects.push(NxFx.marth.alt.voice.riposte.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
-PlayerMarthVoice.prototype.taunt = PlayerMarth.prototype.taunt;
+PlayerMarthVoice.prototype.taunt = function() {
+  PlayerMarth.prototype.taunt.call(this);
+  this.effects.push(NxFx.marth.alt.voice.taunt.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
 
 PlayerMarthVoice.prototype.setPos = PlayerMarth.prototype.setPos;
 PlayerMarthVoice.prototype.setVel = PlayerMarth.prototype.setVel;
