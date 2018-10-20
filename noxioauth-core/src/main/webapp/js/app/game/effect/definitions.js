@@ -321,6 +321,40 @@ NxFx.marth = {
   )
 };
 
+/* global PlayerInferno */
+NxFx.inferno = {
+  jump: new EffectDefinition(
+    "Inferno-Jump", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/inferno/voice/jump0.wav", "character/inferno/voice/jump1.wav", "character/inferno/voice/jump2.wav"], 0.5, 0.0, "voice"], attachment: true, delay: 0}
+    ]
+  ),
+  hit: new EffectDefinition(
+    "Inferno-Hit", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/inferno/voice/hit0.wav", "character/inferno/voice/hit1.wav", "character/inferno/voice/hit2.wav"], 0.5, 0.0, "voice"], attachment: true, delay: 0}
+    ]
+  ),
+  explode: new EffectDefinition(
+    "Inferno-Explode", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/inferno/voice/impact0.wav", "character/inferno/voice/impact1.wav"], 0.5, 0.0, "voice"], attachment: true, delay: 0}
+    ]
+  ),
+  fall: new EffectDefinition(
+    "Inferno-Fall", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/inferno/voice/fall0.wav", 0.5, 0.0, "voice"], attachment: true, delay: 0}
+    ]
+  ),
+  taunt: new EffectDefinition(
+    "Inferno-Taunt", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/inferno/voice/taunt0.wav", "character/inferno/voice/taunt1.wav", "character/inferno/voice/taunt2.wav"], 0.5, 0.0, "voice"], attachment: true, delay: 0}
+    ]
+  )
+};
+
 /* ================================================================================================================================= */
 /* ================================================================================================================================= */
 /* ================================================================================================================================= */
@@ -572,37 +606,37 @@ NxFx.falco.alt.voice = {
   jump: new EffectDefinition(
     "Falco-Voice-Jump", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/falco/voice/jump0.wav", "character/falco/voice/jump1.wav", "character/falco/voice/jump2.wav"], 0.45, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/falco/voice/jump0.wav", "character/falco/voice/jump1.wav", "character/falco/voice/jump2.wav"], 0.45, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   hit: new EffectDefinition(
     "Falco-Voice-Hit", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/falco/voice/hit0.wav", "character/falco/voice/hit1.wav"], 0.45, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/falco/voice/hit0.wav", "character/falco/voice/hit1.wav"], 0.45, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   dash: new EffectDefinition(
     "Falco-Voice-Dash", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/falco/voice/dash0.wav", 0.45, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/falco/voice/dash0.wav", 0.45, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   taunt: new EffectDefinition(
     "Falco-Voice-Taunt", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/falco/voice/taunt0.wav", "character/falco/voice/taunt1.wav", "character/falco/voice/taunt2.wav"], 0.45, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/falco/voice/taunt0.wav", "character/falco/voice/taunt1.wav", "character/falco/voice/taunt2.wav"], 0.45, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   explode: new EffectDefinition(
     "Falco-Voice-Explode", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/falco/voice/impact0.wav", "character/falco/voice/impact1.wav", "character/falco/voice/impact2.wav"], 0.45, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/falco/voice/impact0.wav", "character/falco/voice/impact1.wav", "character/falco/voice/impact2.wav"], 0.45, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   fall: new EffectDefinition(
     "Falco-Voice-Fall", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/falco/voice/fall0.wav", 0.45, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/falco/voice/fall0.wav", 0.45, 0.0, "voice"], attachment: true, delay: 0}
     ]
   )
 };
@@ -1129,43 +1163,43 @@ NxFx.captain.alt.voice = {
   jump: new EffectDefinition(
     "Captain-Voice-Jump", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/captain/voice/jump0.wav", "character/captain/voice/jump1.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/captain/voice/jump0.wav", "character/captain/voice/jump1.wav"], 0.4, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   hit: new EffectDefinition(
     "Captain-Voice-Hit", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/captain/voice/hit0.wav", "character/captain/voice/hit1.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/captain/voice/hit0.wav", "character/captain/voice/hit1.wav"], 0.4, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   charge: new EffectDefinition(
     "Captain-Voice-Charge", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/voice/punch0.wav", 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/voice/punch0.wav", 0.4, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   punch: new EffectDefinition(
     "Captain-Voice-Punch", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/voice/punch1.wav", 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/voice/punch1.wav", 0.4, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   taunt: new EffectDefinition(
     "Captain-Voice-Taunt", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/captain/voice/taunt0.wav", "character/captain/voice/taunt1.wav", "character/captain/voice/taunt2.wav", "character/captain/voice/taunt3.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/captain/voice/taunt0.wav", "character/captain/voice/taunt1.wav", "character/captain/voice/taunt2.wav", "character/captain/voice/taunt3.wav"], 0.4, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   explode: new EffectDefinition(
     "Captain-Voice-Explode", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/voice/death0.wav", 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/voice/death0.wav", 0.4, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   fall: new EffectDefinition(
     "Captain-Voice-Fall", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/voice/death1.wav", 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/captain/voice/death1.wav", 0.4, 0.0, "voice"], attachment: true, delay: 0}
     ]
   )
 };
@@ -1263,49 +1297,49 @@ NxFx.marth.alt.voice = {
   jump: new EffectDefinition(
     "Marth-Voice-Jump", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/jump0.wav", "character/marth/voice/jump1.wav", "character/marth/voice/jump2.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/jump0.wav", "character/marth/voice/jump1.wav", "character/marth/voice/jump2.wav"], 0.5, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   hit: new EffectDefinition(
     "Marth-Voice-Hit", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/hit0.wav", "character/marth/voice/hit1.wav", "character/marth/voice/hit2.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/hit0.wav", "character/marth/voice/hit1.wav", "character/marth/voice/hit2.wav"], 0.5, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   heavy: new EffectDefinition(
     "Marth-Voice-heavy", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/heavy0.wav", "character/marth/voice/heavy1.wav", "character/marth/voice/heavy2.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/heavy0.wav", "character/marth/voice/heavy1.wav", "character/marth/voice/heavy2.wav"], 0.5, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   counter: new EffectDefinition(
     "Marth-Voice-Counter", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/marth/voice/counter0.wav", 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/marth/voice/counter0.wav", 0.5, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   riposte: new EffectDefinition(
     "Marth-Voice-Riposte", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/riposte0.wav", "character/marth/voice/riposte1.wav", "character/marth/voice/riposte2.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/riposte0.wav", "character/marth/voice/riposte1.wav", "character/marth/voice/riposte2.wav"], 0.5, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   taunt: new EffectDefinition(
     "Marth-Voice-Taunt", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/taunt0.wav", "character/marth/voice/taunt1.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/taunt0.wav", "character/marth/voice/taunt1.wav"], 0.5, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   explode: new EffectDefinition(
     "Marth-Voice-Explode", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/impact0.wav", "character/marth/voice/impact1.wav", "character/marth/voice/impact2.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/marth/voice/impact0.wav", "character/marth/voice/impact1.wav", "character/marth/voice/impact2.wav"], 0.5, 0.0, "voice"], attachment: true, delay: 0}
     ]
   ),
   fall: new EffectDefinition(
     "Marth-Voice-Fall", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/marth/voice/fall0.wav", 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/marth/voice/fall0.wav", 0.5, 0.0, "voice"], attachment: true, delay: 0}
     ]
   )
 };

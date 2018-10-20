@@ -2,7 +2,7 @@
 /* global main */
 /* global util */
 /* global GameObject */
-/* global PlayerObject */
+/* global PlayerObject, NxFx */
 
 /* Define PlayerInferno Class */
 function PlayerInferno(game, oid, pos, team, color) {
@@ -52,21 +52,37 @@ PlayerInferno.prototype.ouch = function() {
 };
 
 PlayerInferno.prototype.taunt = function() {
-
+  this.effects.push(NxFx.inferno.taunt.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
 PlayerInferno.prototype.air  = PlayerObject.prototype.air;
-PlayerInferno.prototype.jump = PlayerObject.prototype.jump;
+
+PlayerInferno.prototype.jump = function() {
+  PlayerObject.prototype.jump.call(this);
+  this.effects.push(NxFx.inferno.jump.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+
 PlayerInferno.prototype.land = PlayerObject.prototype.land;
 
-PlayerInferno.prototype.stun = PlayerObject.prototype.stun;
+PlayerInferno.prototype.stun = function() {
+  PlayerObject.prototype.stun.call(this);
+  this.effects.push(NxFx.inferno.hit.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+
 PlayerInferno.prototype.stunGeneric = PlayerObject.prototype.stunGeneric;
 PlayerInferno.prototype.stunSlash = PlayerObject.prototype.stunSlash;
 PlayerInferno.prototype.stunElectric = PlayerObject.prototype.stunElectric;
 PlayerInferno.prototype.stunFire = PlayerObject.prototype.stunFire;
 PlayerInferno.prototype.criticalHit = PlayerObject.prototype.criticalHit;
-PlayerInferno.prototype.explode = PlayerObject.prototype.explode;
-PlayerInferno.prototype.fall = PlayerObject.prototype.fall;
+
+PlayerInferno.prototype.explode = function() {
+  PlayerObject.prototype.explode.call(this);
+  this.game.putEffect(NxFx.inferno.explode.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+PlayerInferno.prototype.fall = function() {
+  PlayerObject.prototype.fall.call(this);
+  this.effects.push(NxFx.inferno.fall.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
 
 PlayerInferno.prototype.setPos = PlayerObject.prototype.setPos;
 PlayerInferno.prototype.setVel = PlayerObject.prototype.setVel;

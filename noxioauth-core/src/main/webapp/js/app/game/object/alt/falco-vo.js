@@ -43,7 +43,7 @@ PlayerFalcoVoice.prototype.criticalHit = PlayerFalco.prototype.criticalHit;
 
 PlayerFalcoVoice.prototype.explode = function() {
   PlayerFalco.prototype.explode.call(this);
-  this.effects.push(NxFx.falco.alt.voice.explode.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.game.putEffect(NxFx.falco.alt.voice.explode.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
 PlayerFalcoVoice.prototype.fall = function() {

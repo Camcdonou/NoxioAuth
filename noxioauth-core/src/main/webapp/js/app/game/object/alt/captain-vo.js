@@ -43,7 +43,7 @@ PlayerCaptainVoice.prototype.criticalHit = PlayerCaptain.prototype.criticalHit;
 
 PlayerCaptainVoice.prototype.explode = function() {
   PlayerCaptain.prototype.explode.call(this);
-  this.effects.push(NxFx.captain.alt.voice.explode.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.game.putEffect(NxFx.captain.alt.voice.explode.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 PlayerCaptainVoice.prototype.fall = function() {
   PlayerCaptain.prototype.fall.call(this);

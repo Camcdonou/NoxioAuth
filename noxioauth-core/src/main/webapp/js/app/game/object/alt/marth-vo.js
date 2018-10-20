@@ -43,7 +43,7 @@ PlayerMarthVoice.prototype.criticalHit = PlayerMarth.prototype.criticalHit;
 
 PlayerMarthVoice.prototype.explode = function() {
   PlayerMarth.prototype.explode.call(this);
-  this.effects.push(NxFx.marth.alt.voice.explode.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.game.putEffect(NxFx.marth.alt.voice.explode.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 PlayerMarthVoice.prototype.fall = function() {
   PlayerMarth.prototype.fall.call(this);

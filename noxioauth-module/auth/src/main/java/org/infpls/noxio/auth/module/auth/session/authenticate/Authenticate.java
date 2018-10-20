@@ -13,50 +13,62 @@ import org.infpls.noxio.auth.module.auth.util.Validation;
 
 public class Authenticate extends SessionState {
   
-  private static final String CREATE_EMAIL_SUBJECT = "20xx.io Email Verification";
-  private static final String CREATE_EMAIL_CONTENT = "<html>\n" +
-"<head>\n" +
-"  <title>20XX.io</title>\n" +
-"</head>\n" +
-"<body>\n" +
-"<div style='width: 512px; font-family:Arial,Helvetica,sans-serif;'>\n" +
-" <div style='background-color:#0d1e33; color:#c6d4df;'>\n" +
-" <div style='background-color:#28323a; color:#c6d4df; font-size:32px; padding:8px 8px 0px 8px'>The Year Is 20XX . . .</div>\n" +
-"  <p style='font-size:18px; padding:0px 8px 0px 8px; color:#c6d4df;'>\n" +
-"  Thanks for joining 20XX.io.\n" +
-"  To finish creating your account copy the verification code below and enter it on the site.\n" +
-"  </p>\n" +
-"  <div style='font-size:18px; padding:0px 8px 0px 8px; color:#c6d4df;'>Your username is:</div>\n" +
-"  <span style='font-size:32px;background-color:#6c6e70; color:#c6d4df; font-weight: bold; margin:0px 8px 0px 8px;'>$$USER$$</span>\n" +
-"  <div style='font-size:18px; padding:0px 8px 0px 8px; color:#c6d4df;'>Your verification code is:</div>\n" +
-"  <span style='font-size:32px;background-color:#6c6e70; color:#c6d4df; font-weight: bold; margin:0px 8px 0px 8px;'>$$CODE$$</span>\n" +
-"  <div style='font-size:12px; padding:0px 8px 0px 8px; color:#c6d4df;'>Now get out there and get destrudled!</div>\n" +
-"  <div style='background-color:#0d1e33; color:#0d1e33; font-size:32px;'>_</div>\n" +
-" </div>\n" +
-"</div>\n" +
-"</body>\n" +
-"</html>\n" +
-"";
+  /* @TODO: Cleanup html messages, this is messy. Move to seperate static class? */
   
+  private static final String CREATE_EMAIL_SUBJECT = "Welcome to 20xx.io";
+  private static final String CREATE_EMAIL_CONTENT_HTML = "<html>\n" +
+  "<head>\n" +
+  "  <title>20XX.io</title>\n" +
+  "</head>\n" +
+  "<body>\n" +
+  "<div style='width: 512px; font-family:Arial,Helvetica,sans-serif;'>\n" +
+  " <div style='background-color:#0d1e33; color:#c6d4df;'>\n" +
+  " <div style='background-color:#28323a; color:#c6d4df; font-size:32px; padding:8px 8px 0px 8px'>The Year Is 20XX . . .</div>\n" +
+  "  <p style='font-size:18px; padding:0px 8px 0px 8px; color:#c6d4df;'>\n" +
+  "  Thanks for joining 20XX.io.\n" +
+  "  To finish creating your account copy the code below and enter it on the site.\n" +
+  "  </p>\n" +
+  "  <div style='font-size:18px; padding:0px 8px 0px 8px; color:#c6d4df;'>Your username is:</div>\n" +
+  "  <span style='font-size:32px;background-color:#6c6e70; color:#c6d4df; font-weight: bold; margin:0px 8px 0px 8px;'>$$USER$$</span>\n" +
+  "  <div style='font-size:18px; padding:0px 8px 0px 8px; color:#c6d4df;'>Your code is:</div>\n" +
+  "  <span style='font-size:32px;background-color:#6c6e70; color:#c6d4df; font-weight: bold; margin:0px 8px 0px 8px;'>$$CODE$$</span>\n" +
+  "  <div style='font-size:12px; padding:0px 8px 0px 8px; color:#c6d4df;'>Now get out there and get destrudled!</div>\n" +
+  "  <div style='background-color:#0d1e33; color:#0d1e33; font-size:32px;'>_</div>\n" +
+  " </div>\n" +
+  "</div>\n" +
+  "</body>\n" +
+  "</html>\n" +
+  "";
+  private static final String CREATE_EMAIL_CONTENT_TEXT = "The Year Is 20XX . . .\n" +
+  "Thanks for joining 20XX.io. To finish creating your account copy the code below and enter it on the site.\n" +
+  "\n" +
+  "Your username is: $$USER$$\n" +
+  "Your code is: $$CODE$$\n" +
+  "Now get out there and get destrudled!";
+
   private static final String RESET_EMAIL_SUBJECT = "20xx.io Password Reset";
-  private static final String RESET_EMAIL_CONTENT = "<html>\n" +
-"<head>\n" +
-"  <title>20XX.io</title>\n" +
-"</head>\n" +
-"<body>\n" +
-"<div style='width: 512px; font-family:Arial,Helvetica,sans-serif;'>\n" +
-" <div style='background-color:#0d1e33; color:#c6d4df;'>\n" +
-" <div style='background-color:#28323a; color:#c6d4df; font-size:32px; padding:8px 8px 0px 8px'>Password Reset Request</div>\n" +
-"  <p style='font-size:18px; padding:0px 8px 0px 8px; color:#c6d4df;'>\n" +
-"  Forgot something?\n</p>" +
-"  <div style='font-size:18px; padding:0px 8px 0px 8px; color:#c6d4df;'>Your verification code is:</div>\n" +
-"  <span style='font-size:32px;background-color:#6c6e70; color:#c6d4df; font-weight: bold; margin:0px 8px 0px 8px;'>$$CODE$$</span>\n" +
-"  <div style='background-color:#0d1e33; color:#0d1e33; font-size:32px;'>_</div>\n" +
-" </div>\n" +
-"</div>\n" +
-"</body>\n" +
-"</html>\n" +
-"";
+  private static final String RESET_EMAIL_CONTENT_HTML = "<html>\n" +
+  "<head>\n" +
+  "  <title>20XX.io</title>\n" +
+  "</head>\n" +
+  "<body>\n" +
+  "<div style='width: 512px; font-family:Arial,Helvetica,sans-serif;'>\n" +
+  " <div style='background-color:#0d1e33; color:#c6d4df;'>\n" +
+  " <div style='background-color:#28323a; color:#c6d4df; font-size:32px; padding:8px 8px 0px 8px'>Password Reset Request</div>\n" +
+  "  <p style='font-size:18px; padding:0px 8px 0px 8px; color:#c6d4df;'>\n" +
+  "  Forgot something?\n</p>" +
+  "  <div style='font-size:18px; padding:0px 8px 0px 8px; color:#c6d4df;'>Your code is:</div>\n" +
+  "  <span style='font-size:32px;background-color:#6c6e70; color:#c6d4df; font-weight: bold; margin:0px 8px 0px 8px;'>$$CODE$$</span>\n" +
+  "  <div style='background-color:#0d1e33; color:#0d1e33; font-size:32px;'>_</div>\n" +
+  " </div>\n" +
+  "</div>\n" +
+  "</body>\n" +
+  "</html>\n" +
+  "";
+  private static final String RESET_EMAIL_CONTENT_TEXT = "Password Reset Request\n" +
+  "Forgot something?\n" +
+  "\n" +
+  "Your code is: $$CODE$$";
   
   private final UserDao userDao;
   private final MailDao mailDao;
@@ -178,9 +190,10 @@ public class Authenticate extends SessionState {
     }
 
     final String vc = ID.generate6();
-    final String emc = CREATE_EMAIL_CONTENT.replace("$$USER$$", user).replace("$$CODE$$", vc);
+    final String emcHTML = CREATE_EMAIL_CONTENT_HTML.replace("$$USER$$", user).replace("$$CODE$$", vc);
+    final String emcTEXT = CREATE_EMAIL_CONTENT_TEXT.replace("$$USER$$", user).replace("$$CODE$$", vc);
     sendPacket(new PacketA11());                                              // Valid data, sending verification email
-    if(mailDao.send(email, CREATE_EMAIL_SUBJECT, emc)) {                        // Verification email has been sent successfully /* @TODO: blocking. */
+    if(mailDao.send(email, CREATE_EMAIL_SUBJECT, emcHTML, emcTEXT)) {         // Verification email has been sent successfully /* @TODO: blocking. */
       createUserName = user;
       createUserEmail = email;
       createUserHash = hash;
@@ -216,8 +229,9 @@ public class Authenticate extends SessionState {
     
     /* Do */
     final String vc = ID.generate6();
-    final String emc = RESET_EMAIL_CONTENT.replace("$$USER$$", usr.name).replace("$$CODE$$", vc);
-    if(mailDao.send(usr.email, RESET_EMAIL_SUBJECT, emc)) {
+    final String emcHTML = RESET_EMAIL_CONTENT_HTML.replace("$$USER$$", usr.name).replace("$$CODE$$", vc);
+    final String emcTEXT = RESET_EMAIL_CONTENT_TEXT.replace("$$USER$$", usr.name).replace("$$CODE$$", vc);
+    if(mailDao.send(usr.email, RESET_EMAIL_SUBJECT, emcHTML, emcTEXT)) {
       resetPasswordCode = vc;
       resetUser = usr;
       sendPacket(new PacketA22());

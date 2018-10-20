@@ -78,7 +78,7 @@ SpatialSoundInstance.prototype.create = function(gain, shift, volume) {
   this.gain.connect(this.panner);                      // Gain -> Panner
   this.panner.connect(volume);                         // Panner -> Global Volume
   this.panner.setPosition(1.0, 0.0, 0.0);
-  this.panner.setOrientation(1.0, 0.0, 0.0);
+  this.panner.setOrientation(1.0, 0.0, 0.0);     /* @TODO: uhhhh probably want to define start point of sound before playing? (dunno if important) */
   
   this.ready = true;
 };
@@ -98,7 +98,7 @@ SpatialSoundInstance.prototype.position = function(pos) {
     if(this.panner.positionX) {
       this.panner.positionX.value = pos.x;
       this.panner.positionY.value = pos.y;
-      this.panner.positionZ.value = pos.z;
+      this.panner.positionZ.value = pos.z*0.2;  /* vertical value is scaled to make falling sounds last longer */
     }
     else { this.panner.setPosition(pos.x, pos.y, pos.z); }
   }
