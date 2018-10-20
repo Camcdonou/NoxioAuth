@@ -8,7 +8,7 @@ function Decal(game, material, pos, normal, size, angle, color, fin, length, fou
   this.material = game.display.getMaterial(material);
   this.pos = pos;
   this.normal = normal;
-  this.size = 1.0/size;
+  this.size = size;
   this.angle = angle;
   this.color = color;
   
@@ -36,7 +36,7 @@ Decal.prototype.step = function(pos, size, angle) {
 };
 
 Decal.prototype.move = function(pos, size, angle) {
-  this.pos = pos; this.size = 1.0/size;
+  this.pos = pos; this.size = size;
   this.geometry = this.game.map.getGeometryNear(this.pos, this.size);
   this.angle = angle;
 };
@@ -44,7 +44,7 @@ Decal.prototype.move = function(pos, size, angle) {
 Decal.prototype.setColor = function(color) { this.color = color; };
 
 Decal.prototype.getDraw = function(decals, bounds) {
-  decals.push({geometry: this.geometry, material: this.material, pos: this.pos, normal: this.normal, size: this.size, angle: this.angle, color: util.vec4.copy3(this.color, this.color.w*this.fade)});
+  decals.push({geometry: this.geometry, material: this.material, pos: this.pos, normal: this.normal, size: 1.0/this.size, angle: this.angle, color: util.vec4.copy3(this.color, this.color.w*this.fade)});
 };
 
 Decal.prototype.active = function() {

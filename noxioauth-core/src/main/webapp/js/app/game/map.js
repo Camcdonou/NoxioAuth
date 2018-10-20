@@ -55,7 +55,7 @@ Map.prototype.getGeometryNear = function(pos, radius) {
     for(var i=0;i<this.size.x;i++) {
       var dat = this.data[j][i];
       if(dat.ind === 0) { continue; }
-      if(util.vec2.distance(pos, {x: i, y: j}) > radius+1.42) { continue; } // Hypotnuse of tile + radius of decal
+      if(util.vec2.distance(pos, {x: i, y: j}) > Math.sqrt(radius*radius*2.)*0.9) { continue; } // Hypotnuse of tile + radius of decal
       var tileUniformData = [
         {name: "transform", data: [i, j, 0.0]},
         {name: "rotation", data: this.CONST_ROT[dat.rot]},
