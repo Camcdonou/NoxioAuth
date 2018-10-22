@@ -1007,6 +1007,59 @@ NxFx.shiek.alt.black = {
 
 NxFx.puff.alt = {};
 
+NxFx.puff.alt.voice = {
+  rest: new EffectDefinition(
+    "Puff-Voice-Rest", util.vec3.make(0.0, 0.0, 0.25), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerPuff.REST_LIGHT, util.vec4.copy3(PlayerPuff.REST_LIGHT, 0.0)], [1.25, 2.15], 18, "fast"], attachment: true, delay: 0},
+      {class: ParticleSleep, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/voice/rest0.wav", 0.5, 0.0, "voice"], attachment: true, delay: 0}
+    ]
+  ),
+  wake: new EffectDefinition(
+    "Puff-Voice-Wake", util.vec3.make(0.0, 0.0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/voice/rest1.wav", 0.5, 0.0, "voice"], attachment: true, delay: 0}
+    ]
+  ),
+  pound: new EffectDefinition(
+    "Puff-Voice-Pound", util.vec3.make(0.0, 0.0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/puff/voice/attack0.wav", "character/puff/voice/attack1.wav"], 0.5, 0.0, "voice"], attachment: true, delay: 0}
+    ]
+  ),
+  jump: new EffectDefinition(
+    "Puff-Voice-Jump", util.vec3.make(0.0, 0.0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/puff/voice/jump0.wav", "character/puff/voice/jump1.wav", "character/puff/voice/jump2.wav"], 0.5, 0.0, "voice"], attachment: true, delay: 0}
+    ]
+  ),
+  hit: new EffectDefinition(
+    "Puff-Voice-Hit", util.vec3.make(0.0, 0.0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/voice/hit0.wav", 0.5, 0.0, "voice"], attachment: true, delay: 0}
+    ]
+  ),
+  explode: new EffectDefinition(
+    "Puff-Voice-Explode", util.vec3.make(0.0, 0.0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/voice/impact0.wav", 0.5, 0.0, "voice"], attachment: true, delay: 0}
+    ]
+  ),
+  fall: new EffectDefinition(
+    "Puff-Voice-Fall", util.vec3.make(0.0, 0.0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/voice/fall0.wav", 0.5, 0.0, "voice"], attachment: true, delay: 0}
+    ]
+  ),
+  taunt: new EffectDefinition(
+    "Puff-Voice-Taunt", util.vec3.make(0.0, 0.0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/puff/voice/taunt0.wav", "character/puff/voice/taunt1.wav", "character/puff/voice/taunt2.wav"], 0.5, 0.0, "voice"], attachment: true, delay: 0}
+    ]
+  )
+};
+
 /* global PlayerPuffGold */
 NxFx.puff.alt.gold = {
   rest: new EffectDefinition(
