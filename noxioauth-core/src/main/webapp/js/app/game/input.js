@@ -15,8 +15,21 @@ function Input(game) {
   document.onkeyup = function(event) { main.game.input.keyboard.event(event, false); };
   document.onkeydown = function(event) { main.game.input.keyboard.event(event, true); };
   
+  this.touchEvt = function(event) { main.game.input.touch.event(event); };
+  
+  document.addEventListener('touchstart', this.touchEvt, true);
+  document.addEventListener('touchmove', this.touchEvt, true);
+  document.addEventListener('touchend', this.touchEvt, true);
+  
+  this.meta = document.createElement("meta");
+  this.meta.name = "viewport";
+  this.meta.id = "meta-zoom";
+  this.meta.content = "initial-scale=0.5, maximum-scale=0.5, user-scalable=0";
+  document.getElementsByTagName('head')[0].appendChild(this.meta);
+  
   this.mouse.input = this;    // Le sigh...
   this.keyboard.input = this; // Hnnggg
+  this.touch.input = this; // Reeeeeeee
 };
 
 Input.prototype.mouse = {
@@ -56,22 +69,47 @@ Input.prototype.keyboard = {
   keys: []
 };
 
+Input.prototype.keyboard.event = function(evt, state) {
+  this.keys[evt.keyCode] = state;  
+  if(state) { this.inputs.push({key: evt.keyCode, char: evt.key.length!==1?"":evt.key}); }
+};
+
+Input.prototype.touch = {
+  inputs: [],
+  pos: []
+};
+
+Input.prototype.touch.event = function(event) {
+  var last = this.pos;
+  this.pos = [];
+  for(var i=0;i<event.touches.length;i++) {
+    var tch = event.touches[i];
+    var contains = false;
+    for(var j=0;j<last.length;j++) {
+      if(last[j].id === tch.identifier) { contains = true; break; }
+    }
+    if(!contains) {
+      this.inputs.push({x: tch.clientX, y: tch.clientY});
+    }
+    this.pos.push({id: tch.identifier, x: tch.clientX, y: tch.clientY});
+  }
+};
+
 Input.prototype.popInputs = function() {
   this.mouse.mov = this.mouse.nxtMov;
   this.mouse.spin = this.mouse.nxtSpin;
   this.mouse.nxtMov = {x: 0, y: 0};
   this.mouse.nxtSpin = 0.0;
   
-  var inputs = {mouse: this.mouse.inputs, keyboard: this.keyboard.inputs};
+  this.touch.mov = this.touch.nxtMov;
+  this.touch.nxtMov = {x: 0, y: 0};
+  
+  var inputs = {mouse: this.mouse.inputs, keyboard: this.keyboard.inputs, touch: this.touch.inputs};
   this.keyboard.inputs = [];
   this.mouse.inputs = [];
+  this.touch.inputs = [];
   
   return inputs;
-};
-
-Input.prototype.keyboard.event = function(evt, state) {
-  this.keys[evt.keyCode] = state;  
-  if(state) { this.inputs.push({key: evt.keyCode, char: evt.key.length!==1?"":evt.key}); }
 };
 
 Input.prototype.destroy = function() {
@@ -82,4 +120,8 @@ Input.prototype.destroy = function() {
   this.window.removeEventListener("DOMMouseScroll", main.game.input.mouse.wheel, false); // Firefox
   document.onkeyup = function() {};
   document.onkeydown = function() {};
+  document.removeEventListener('touchstart', this.touchEvt, false);
+  document.removeEventListener('touchmove', this.touchEvt, false);
+  document.removeEventListener('touchend', this.touchEvt, false);
+  document.getElementsByTagName('head')[0].removeChild(this.meta);
 };

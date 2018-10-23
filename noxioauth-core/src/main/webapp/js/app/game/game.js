@@ -46,7 +46,10 @@ function NoxioGame(name, settings, map) {
   this.control = -1;                  // OID of object that the player controls. ( -1 is null )
   this.charSelect = "box";            // ID of character the player wants to play as.
   this.chatMsgOut = [];               // Chat messages to send to server on next doInput()
+  this.touchMode = false;             // Flagged true if we are using touch screen based controls
   this.lastMouse = {x: 0.0, y: 1.0};  // Last valid mouse direction sent to server
+  this.lastTch = {x: 0.0, y: 0.0};    // Last valid touch direction sent to server
+  this.tchAction = [];                // Hacky fix for touch controls
   
   this.packHand = new PackHand(this);
   
@@ -198,7 +201,7 @@ NoxioGame.prototype.doUpdate = function(packet) {
   if(this.respawnTimer>0) { this.respawnTimer--; }
   
   /* Process player input and send along to server */
-  this.doInput();
+  this.determineInput();
   
   this.frame++;
 };
@@ -246,15 +249,28 @@ NoxioGame.prototype.update = function(tick) {
   /* === DEBUG BLOCK END ==================== */
 };
 
-/* Process player input and send them along to the server */
-NoxioGame.prototype.doInput = function() {
+/* Determine input mode and handle it. */
+NoxioGame.prototype.determineInput = function() {
+  if(!(this.ready && this.serverReady)) { return; }
+  
+  var imp = this.input.popInputs(); // Pops Impulse inputs for this frame
+  
+  if(imp.touch.length > 0) { this.touchMode = true; }
+  else if(imp.keyboard.length > 0) { this.touchMode = false; }
+  
+  if(!this.touchMode) { this.doInputMouse(imp); }
+  else { this.doInputTouch(imp); }
+};
+
+/* Process player input for mouse and keyboard and send them along to the server */
+NoxioGame.prototype.doInputMouse = function(imp) {
   if(!(this.ready && this.serverReady)) { return; }
   
   var obj = this.getObject(this.control);
-  var imp = this.input.popInputs();
   
   /* Pass input to UI, if UI uses the input it will return true, in that case the input will not go through to the game */
   var pass = this.ui.step(
+    false,
     imp,
     {
       mouse: this.input.mouse,
@@ -322,6 +338,101 @@ NoxioGame.prototype.doInput = function() {
     else {
       /* Spectate State Input */
       if(this.input.mouse.rmb || this.forceSpawn) { this.forceSpawn = false; inputs.push("02;"+this.charSelect); }
+      inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y);
+    }
+  }
+  else {
+    /* Menu-Focus State Input */
+    inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y);
+  }
+  
+  /* Send Input */
+  var inp = "";
+  for(var i=0;i<inputs.length;i++) {
+    inp += inputs[i] + (i<inputs.length-1?";":"");
+  }
+  main.net.game.send({type: "i00", data: inp});
+};
+
+/* Process player input for touch screen and send them along to the server */
+NoxioGame.prototype.doInputTouch = function(imp) {
+  if(!(this.ready && this.serverReady)) { return; }
+  
+  var obj = this.getObject(this.control);
+  
+  /* Make copy of touch positions for UI to use */
+  var tchs = [];
+  for(var i=0;i<this.input.touch.pos.length;i++) {
+    tchs.push(this.input.touch.pos[i]);
+  }
+  
+  /* Pass input to UI, if UI uses the input it will return true, in that case the input will not go through to the game */  
+  var pass = this.ui.step(
+    true,
+    imp,
+    {
+      mouse: this.input.mouse,
+      keyboard: this.input.keyboard,
+      touch: tchs
+    },
+    util.vec2.make(this.display.window.width, this.display.window.height)
+  );
+  
+  var inputs = [];
+  
+  /* Chat Messages */
+  // No chat on mobile.
+  
+  /* Global-Client Impulse Input */
+  // Main Menu is a button in touch mode.
+  
+  if(!pass) {
+    /* Client Impulse Input */
+    // Camera control not supported on touch mode.
+    
+    /* Client State Input */
+    // Shows when dead only on touch mode.
+    
+    /* Control Check */
+    var tch = tchs.length > 0;
+    if(obj) {
+      var actions = [];
+      var movTch = tch ? tchs[0] : this.lastTch;
+      this.lastTch = movTch;
+      
+      /* Control State Input */
+      var near = util.matrix.unprojection(this.window, this.display.camera, movTch, 0.0);
+      var far = util.matrix.unprojection(this.window, this.display.camera, movTch, 1.0); /* @FIXME doing 2 unprojects is inefficent. Maybe calc camera center? */
+      var floorPlane = {a: {x: 0.0, y: 0.0, z: 0.0}, b: {x: 1.0, y: 0.0, z: 0.0}, c: {x: 0.0, y: 1.0, z: 0.0}, n: {x: 0.0, y: 0.0, z: 1.0}};
+      var result = util.intersection.linePlane({a: near, b: far}, floorPlane);
+
+      if(result) { // Missed the floor plane.
+        var dir = util.vec2.subtract(result.intersection, obj.pos);
+        var mag = util.vec2.magnitude(dir);
+        var norm = util.vec2.normalize(dir);
+
+        this.lastMouse = norm;
+        if(tch) { inputs.push("04;"+norm.x+","+norm.y+";"+Math.min(Math.max(mag/1.75, 0.33), 1.0)); }
+        else { inputs.push("01;"+norm.x+","+norm.y); }
+      }
+      else { inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y); }
+      
+      for(var i=0;i<this.tchAction.length;i++) {
+        actions.push(this.tchAction[i]);
+      }
+      this.tchAction = [];
+      
+      if(actions.length>0) {
+        var act = "05;";
+        for(var i=0;i<actions.length;i++) {
+          act += actions[i] + (i<actions.length-1?",":"");
+        }
+        inputs.push(act);
+      }
+    }
+    else {
+      /* Spectate State Input */
+      if(this.forceSpawn) { this.forceSpawn = false; inputs.push("02;"+this.charSelect); }
       inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y);
     }
   }

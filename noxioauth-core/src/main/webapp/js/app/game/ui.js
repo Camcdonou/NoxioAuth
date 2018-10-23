@@ -10,9 +10,11 @@ function GameUI(game) {
     new LogUI(this.game, this, "log"),
     new CreditUI(this.game, this, "credit"),
     new MeterUI(this.game, this, "meter"),
+    new MeterTouchUI(this.game, this, "meterTouch"),
     new AnnounceUI(this.game, this, "announce"),
     new ScoreUI(this.game, this, "score"),
     new RespawnUI(this.game, this, "respawn"),
+    new RespawnTouchUI(this.game, this, "respawnTouch"),
     new EndUI(this.game, this, "end"),
     new DebugUI(this.game, this, "debug"),
     new OptionUI(this.game, this, "option"),
@@ -20,6 +22,7 @@ function GameUI(game) {
     new AudioUI(this.game, this, "audio"),
     new ControlUI(this.game, this, "control"),
     new GraphicUI(this.game, this, "graphic"),
+    new MenuTouchUI(this.game, this, "menu"),
     new MainUI(this.game, this, "main")
   ];
   for(var i=0;i<this.elements.length;i++) {
@@ -38,6 +41,7 @@ function GameUI(game) {
     score: false,
     debug: false,
     respawn: false,
+    menu: true,
     end: false
   };
   this.sub = "main";
@@ -50,7 +54,7 @@ GameUI.prototype.menuKey = function() {
 
 /* Steps UI and returns true if imp input is absorbed by a UI element */
 /* Window is a Vec2 of the size, in pixels, of the game window for this draw */
-GameUI.prototype.step = function(imp, state, window) {
+GameUI.prototype.step = function(tch, imp, state, window) {
   /* Show or hide ui based on current flags */
   if(this.flags.main) {
     this.main.setVisible(this.sub === "main");
@@ -64,10 +68,13 @@ GameUI.prototype.step = function(imp, state, window) {
     this.log.hide();
     this.credit.hide();
     this.meter.hide();
+    this.meterTouch.hide();
     this.announce.hide();
     this.score.hide();
     this.debug.setVisible(this.flags.debug);
     this.respawn.hide();
+    this.respawnTouch.hide();
+    this.menu.hide();
     this.end.hide();
   }
   else {
@@ -82,16 +89,19 @@ GameUI.prototype.step = function(imp, state, window) {
     this.graphic.hide();
     this.name.setVisible(this.flags.name);
     this.objective.setVisible(this.flags.objective);
-    this.log.setVisible(this.flags.log);
-    this.credit.setVisible(this.flags.credit);
-    this.meter.setVisible(this.flags.meter);
+    this.log.setVisible(this.flags.log&&!tch);
+    this.credit.setVisible(this.flags.credit&&!tch);
+    this.meter.setVisible(this.flags.meter&&!tch);
+    this.meterTouch.setVisible(tch);
     this.announce.setVisible(this.flags.announce);
     this.score.setVisible(this.flags.score||ded||gam);
     this.debug.setVisible(this.flags.debug);
-    this.respawn.setVisible(this.flags.respawn||(ded&&!gam));
+    this.respawn.setVisible((this.flags.respawn||(ded&&!gam))&&!tch);
+    this.respawnTouch.setVisible((this.flags.respawn||(ded&&!gam))&&tch);
+    this.menu.setVisible(tch);
     this.end.setVisible(this.flags.end||gam);
   }
-  
+
   /* Update ui and pass input through */
   var hit = false;
   for(var i=0;i<this.elements.length;i++) {

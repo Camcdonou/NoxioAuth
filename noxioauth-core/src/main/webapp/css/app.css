@@ -874,6 +874,8 @@ serv {
   height: 100%;
   
   font-weight: bold;
+  
+  touch-action: none;
 }
 
 .unselectable {

@@ -1,0 +1,269 @@
+"use strict";
+/* global main */
+/* global util */
+/* global GenericUI */
+/* global GenericUIBlock */
+/* global GenericUIText */
+
+/* Define Game UI Respawn TouchScreen Menu Class */
+function RespawnTouchUI(game, ui, name) {
+  GenericUI.call(this, game, ui, name);
+  this.roundInfo = undefined;
+}
+
+RespawnTouchUI.prototype.setRound = function(text) {
+  this.roundInfo = text;
+};
+
+RespawnTouchUI.prototype.clearRound = function() {
+  this.roundInfo = undefined;
+};
+
+RespawnTouchUI.prototype.setVisible = GenericUI.prototype.setVisible;
+RespawnTouchUI.prototype.show = GenericUI.prototype.show;
+RespawnTouchUI.prototype.hide = GenericUI.prototype.hide;
+RespawnTouchUI.prototype.refresh = function() {
+  var fontMat  = this.game.display.getMaterial("ui.calibri");         // Font material
+  var fontName = "Calibri";                                           // Name of this font for text rendering
+  
+  var swhite = util.vec4.make(1.0, 1.0, 1.0, 1.0);
+  
+  var w = 2048;
+  var h = 0;
+  var s = 32;
+  var v = s*0.15;
+  
+  var TEXT;
+  if(!this.roundInfo) { TEXT = this.game.respawnTimer<=0?"Select character to respawn!":"Respawn in " + (this.game.respawnTimer/30).toFixed(1) + " seconds!"; }
+  else { TEXT = this.roundInfo; }
+  
+  var TEXT_LENGTH = util.font.textLength(TEXT, fontName, s);
+  var o = (w*0.5)-(TEXT_LENGTH*0.5);
+  
+ this.respawnTimer.neutral.text[0] = new GenericUIText(util.vec2.make(o,h+v), s, swhite, fontName, fontMat, TEXT);
+ 
+ var spch = (this.game.display.window.height*0.5)+128;
+ this.spacer.neutral.block[0].size.y = spch;
+};
+
+RespawnTouchUI.prototype.generate = function() {
+  var parent = this;
+  var colorMat = this.game.display.getMaterial("ui.color");           // Basic color material
+  var fontMat  = this.game.display.getMaterial("ui.calibri");         // Font material
+  var fontName = "Calibri";                                           // Name of this font for text rendering
+
+  // Materials and ids used for character select icons, organized into groups
+  var LOCKEDMAT = this.game.display.getMaterial("ui.lockIconLarge");
+  var SPEC = [
+    [
+      {id: "inf_n", mat: this.game.display.getMaterial("character.inferno.ui.iconlarge"), lock: !main.unlocks.has("CHAR_INFERNO")}
+    ],
+    [
+      {id: "box_n", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("CHAR_BOX")},
+      {id: "box_vo", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXVO")},
+      {id: "box_red", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXRED")},
+      {id: "box_rb", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXRAINBOW")},
+      {id: "box_gld", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXGOLD")},
+      {id: "box_del", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXDELTA")},
+      {id: "box_hit", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXHIT")},
+      {id: "box_for", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXFOUR")},
+      {id: "box_bld", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXBLOOD")},
+      {id: "box_lt", mat: this.game.display.getMaterial("character.fox.ui.iconlarge"), lock: !main.unlocks.has("ALT_BOXLOOT")}
+    ],
+    [
+      {id: "crt_n", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("CHAR_CRATE")},
+      {id: "crt_vo", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEVO")},
+      {id: "crt_orn", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEORANGE")},
+      {id: "crt_rb", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATERAINBOW")},
+      {id: "crt_gld", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEGOLD")},
+      {id: "crt_del", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEDELTA")},
+      {id: "crt_fir", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEFIRE")},
+      {id: "crt_blk", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATEBLACK")},
+      {id: "crt_lt", mat: this.game.display.getMaterial("character.falco.ui.iconlarge"), lock: !main.unlocks.has("ALT_CRATELOOT")}
+    ],
+    [
+      {id: "vox_n", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("CHAR_VOXEL")},
+      {id: "vox_vo", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXVO")},
+      {id: "vox_grn", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXGREEN")},
+      {id: "vox_rb", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXRAINBOW")},
+      {id: "vox_gld", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXGOLD")},
+      {id: "vox_del", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXDELTA")},
+      {id: "vox_blk", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXBLACK")},
+      {id: "vox_lt", mat: this.game.display.getMaterial("character.shiek.ui.iconlarge"), lock: !main.unlocks.has("ALT_VOXLOOT")}
+    ],
+    [
+      {id: "qua_n", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("CHAR_QUAD")},
+      {id: "qua_vo", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADVO")},
+      {id: "qua_rb", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADRAINBOW")},
+      {id: "qua_gld", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADGOLD")},
+      {id: "qua_del", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADDELTA")},
+      {id: "qua_fir", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADFIRE")},
+      {id: "qua_lgn", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADLEGEND")},
+      {id: "qua_rs", mat: this.game.display.getMaterial("character.marth.ui.iconlarge"), lock: !main.unlocks.has("ALT_QUADRUNE")}
+    ],
+    [
+      {id: "blk_n", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("CHAR_BLOCK")},
+      {id: "blk_vo", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKVO")},
+      {id: "blk_rb", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKRAINBOW")},
+      {id: "blk_gld", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKGOLD")},
+      {id: "blk_del", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKDELTA")},
+      {id: "blk_rnd", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKROUND")},
+      {id: "blk_win", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKWIN")},
+      {id: "blk_fir", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKFIRE")},
+      {id: "blk_ro", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKRO")},
+      {id: "blk_lt", mat: this.game.display.getMaterial("character.puff.ui.iconlarge"), lock: !main.unlocks.has("ALT_BLOCKLOOT")}
+    ],
+    [
+      {id: "crg_n", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("CHAR_CARGO")},
+      {id: "crg_vo", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGOVO")},
+      {id: "crg_pl", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGOPLUS")},
+      {id: "crg_rb", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGORAINBOW")},
+      {id: "crg_gld", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGOGOLD")},
+      {id: "crg_del", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGODELTA")},
+      {id: "crg_mc", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGOMINE")},
+      {id: "crg_ret", mat: this.game.display.getMaterial("character.captain.ui.iconlarge"), lock: !main.unlocks.has("ALT_CARGORETRO")}
+    ]
+  ];
+  
+  var black  = util.vec4.make(0.0, 0.0, 0.0, 0.5);
+  var white  = util.vec4.make(1.0, 1.0, 1.0, 0.75);
+  var swhite = util.vec4.make(1.0, 1.0, 1.0, 1.0);
+  var sblack = util.vec4.make(0.0, 0.0, 0.0, 1.0);
+  
+  var container = new UIContainer({x: '=', y: '-'});
+  
+  /* Reuseable 'checks if clicked then calls an onclick function' */
+  var protoOnClick = function(imp, state, window) {
+    if(parent.game.charSelect === this.charId) { this.isHovered = true; }
+    for(var i=0;i<imp.mouse.length;i++) {
+      var align = container.makeAlign(window);
+      var over = parent.pointInElement(imp.mouse[i].pos, this, window, align);
+      if(imp.mouse[i].btn === 0) {
+        if(over) { this.onClick(); parent.game.forceSpawn = true; parent.play("ui/button2.wav", 0.5, 0.0); return true; }
+        else { this.offClick(); return false; }
+      }
+      else {
+        if(over) { return true; }
+        else { return false; }
+      }
+    }
+    return false;
+  };
+  
+  //Invisible spacer to push bottom of this element to the dead middle of the screen
+  var spch = (this.game.display.window.height*0.5)+128;
+  this.spacer = {
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(0,0), util.vec2.make(32,spch), util.vec4.make(0.0, 0.0, 0.0, 0.0), colorMat)],
+      text:  []
+    },
+    step: function(imp, state, window) { },
+    isHovered: false
+  };
+  container.add(this.spacer);
+  
+  var w = 2048;
+  var h = 0;
+  var s = 32;
+  var v = s*0.15;
+  
+  var TEXT        = "?? YOU SHOULD NOT SEE THIS ??";
+  var TEXT_LENGTH = util.font.textLength(TEXT, fontName, s);
+  var o = (w*0.5)-(TEXT_LENGTH*0.5);
+  
+  this.respawnTimer = {
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), black, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, swhite, fontName, fontMat, TEXT)]
+    },
+    step: function(imp, state, window) { },
+    isHovered: false
+  };
+  
+  container.add(this.respawnTimer);
+  
+  h += s+v;
+  var b = 112;
+  var bh = b*0.33333;
+  var t = SPEC.length;
+  
+  for(var i=0;i<t;i++) {
+    o = (w*0.5)-(i*b)+(t*b-(t*b*0.5))-b;
+    if(!SPEC[i][0].lock) {
+      container.add({
+        neutral: {
+          block: [
+            new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), black, colorMat),
+            new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), swhite, SPEC[i][0].mat)
+          ],
+          text:  []
+        },
+        hover: {
+          block: [
+            new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), white, colorMat),
+            new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), sblack, SPEC[i][0].mat)
+          ],
+          text:  [],
+          sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
+        },
+        step: protoOnClick,
+        onClick: function() { parent.game.charSelect = this.charId; },
+        offClick: function() { },
+        charId: SPEC[i][0].id,
+        isHovered: false
+      });
+    }
+    else {
+      container.add({
+        neutral: {
+          block: [
+            new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), black, colorMat),
+            new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), swhite, LOCKEDMAT)
+          ],
+          text:  []
+        },
+        step: function() { },
+        isHovered: false
+      });
+    }
+    var hh = h+b;
+    var bho = o+((b-bh)*0.5);
+    for(var j=1;j<SPEC[i].length;j++) {
+      if(SPEC[i][j].lock) { continue; }
+      container.add({
+        neutral: {
+          block: [
+            new GenericUIBlock(util.vec2.make(o,hh), util.vec2.make(b,bh), black, colorMat),
+            new GenericUIBlock(util.vec2.make(bho,hh), util.vec2.make(bh,bh), swhite, SPEC[i][j].mat)
+          ],
+          text:  []
+        },
+        hover: {
+          block: [
+            new GenericUIBlock(util.vec2.make(o,hh), util.vec2.make(b,bh), white, colorMat),
+            new GenericUIBlock(util.vec2.make(bho,hh), util.vec2.make(bh,bh), sblack, SPEC[i][j].mat)
+          ],
+          text:  [],
+          sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
+        },
+        step: protoOnClick,
+        onClick: function() { parent.game.charSelect = this.charId; },
+        offClick: function() { },
+        charId: SPEC[i][j].id,
+        isHovered: false
+      });
+      hh += bh;
+    }
+  }
+  
+  this.containers.push(container);
+};
+
+RespawnTouchUI.prototype.pointInElement = GenericUI.prototype.pointInElement;
+
+RespawnTouchUI.prototype.step = GenericUI.prototype.step;
+RespawnTouchUI.prototype.play = GenericUI.prototype.play;
+RespawnTouchUI.prototype.getDraw = GenericUI.prototype.getDraw;
+
+RespawnTouchUI.prototype.clear = GenericUI.prototype.clear;
+RespawnTouchUI.prototype.destroy = GenericUI.prototype.destroy;
