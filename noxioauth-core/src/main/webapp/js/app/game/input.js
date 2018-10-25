@@ -21,12 +21,6 @@ function Input(game) {
   document.addEventListener('touchmove', this.touchEvt, true);
   document.addEventListener('touchend', this.touchEvt, true);
   
-  this.meta = document.createElement("meta");
-  this.meta.name = "viewport";
-  this.meta.id = "meta-zoom";
-  this.meta.content = "initial-scale=0.5, maximum-scale=0.5, user-scalable=0";
-  document.getElementsByTagName('head')[0].appendChild(this.meta);
-  
   this.mouse.input = this;    // Le sigh...
   this.keyboard.input = this; // Hnnggg
   this.touch.input = this; // Reeeeeeee
@@ -89,7 +83,7 @@ Input.prototype.touch.event = function(event) {
       if(last[j].id === tch.identifier) { contains = true; break; }
     }
     if(!contains) {
-      this.inputs.push({x: tch.clientX, y: tch.clientY});
+      this.inputs.push({id: tch.identifier, x: tch.clientX, y: tch.clientY});
     }
     this.pos.push({id: tch.identifier, x: tch.clientX, y: tch.clientY});
   }
@@ -120,8 +114,7 @@ Input.prototype.destroy = function() {
   this.window.removeEventListener("DOMMouseScroll", main.game.input.mouse.wheel, false); // Firefox
   document.onkeyup = function() {};
   document.onkeydown = function() {};
-  document.removeEventListener('touchstart', this.touchEvt, false);
-  document.removeEventListener('touchmove', this.touchEvt, false);
-  document.removeEventListener('touchend', this.touchEvt, false);
-  document.getElementsByTagName('head')[0].removeChild(this.meta);
+  document.removeEventListener('touchstart', this.touchEvt, true);
+  document.removeEventListener('touchmove', this.touchEvt, true);
+  document.removeEventListener('touchend', this.touchEvt, true);
 };

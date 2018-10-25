@@ -101,6 +101,14 @@ Asset.prototype.material.ui.credit = {
   texture0: "ui/credit",
 };
 
+/* Source File: thumbin.mat */
+Asset.prototype.material.ui.thumbin = {
+  name: "ui.thumbin",
+  shader: "simpletrans",
+  shadow: "false",
+  texture0: "ui/thumbin",
+};
+
 /* Source File: flag.mat */
 Asset.prototype.material.ui.flag = {
   name: "ui.flag",
@@ -139,6 +147,14 @@ Asset.prototype.material.ui.color = {
   shader: "simpletrans",
   shadow: "false",
   texture0: "ui/white",
+};
+
+/* Source File: thumbout.mat */
+Asset.prototype.material.ui.thumbout = {
+  name: "ui.thumbout",
+  shader: "simpletrans",
+  shadow: "false",
+  texture0: "ui/thumbout",
 };
 
 /* Source File: calibri.mat */

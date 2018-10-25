@@ -11,6 +11,7 @@ function GameUI(game) {
     new CreditUI(this.game, this, "credit"),
     new MeterUI(this.game, this, "meter"),
     new MeterTouchUI(this.game, this, "meterTouch"),
+    new ThumbTouchUI(this.game, this, "thumb"),
     new AnnounceUI(this.game, this, "announce"),
     new ScoreUI(this.game, this, "score"),
     new RespawnUI(this.game, this, "respawn"),
@@ -30,6 +31,7 @@ function GameUI(game) {
   }
   
   /* Boolean flags that determine which parts of the UI are visible/hidden */
+  /* @TODO: some of these flags are pointless, this should be cleaned up a bit */
   this.flags = {
     main: false,
     name: true,
@@ -69,6 +71,7 @@ GameUI.prototype.step = function(tch, imp, state, window) {
     this.credit.hide();
     this.meter.hide();
     this.meterTouch.hide();
+    this.thumb.hide();
     this.announce.hide();
     this.score.hide();
     this.debug.setVisible(this.flags.debug);
@@ -92,7 +95,8 @@ GameUI.prototype.step = function(tch, imp, state, window) {
     this.log.setVisible(this.flags.log&&!tch);
     this.credit.setVisible(this.flags.credit&&!tch);
     this.meter.setVisible(this.flags.meter&&!tch);
-    this.meterTouch.setVisible(tch);
+    this.meterTouch.setVisible(tch&&!ded&&!gam);
+    this.thumb.setVisible(tch&&!ded&&!gam);
     this.announce.setVisible(this.flags.announce);
     this.score.setVisible(this.flags.score||ded||gam);
     this.debug.setVisible(this.flags.debug);

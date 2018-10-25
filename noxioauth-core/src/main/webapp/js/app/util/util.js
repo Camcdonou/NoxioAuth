@@ -89,6 +89,17 @@ util.vec2.lerp = function(a, b, i) {
   return util.vec2.add(util.vec2.scale(a, 1.0-i), util.vec2.scale(b, i));
 };
 
+/* Rotates vec2 around 0,0. Identical to rotateZ on a vec3. */
+util.vec2.rotate = function(a, r) {
+    var cosDegrees = Math.cos(r);
+    var sinDegrees = Math.sin(r);
+
+    var x = (a.x * cosDegrees) + (a.y * sinDegrees);
+    var y = (a.x * -sinDegrees) + (a.y * cosDegrees);
+
+    return {x: x, y: y};
+};
+
 /* Find angle between vectors a and b */
 util.vec2.angle = function(a, b) {
   var dot = util.vec2.dot(a, b);

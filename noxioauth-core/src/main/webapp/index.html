@@ -2,7 +2,8 @@
     <head>
         <title>20XX</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" id="meta-zoom" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=0">
         <link rel="icon" href="img/aes/icon.png">
         <link rel="stylesheet" type="text/css" href="css/app.css">
         <link rel="stylesheet" type="text/css" href="css/error.css">
@@ -10,6 +11,12 @@
         <link rel="stylesheet" type="text/css" href="css/footer.css">
         <link rel="stylesheet" type="text/css" href="css/buy.css">
         <link rel="stylesheet" type="text/css" href="css/gauss.css">
+        <script>
+          document.addEventListener('touchmove', function(event) {
+            event = event.originalEvent || event;
+            if (event.scale !== undefined) { event.preventDefault(); }
+          }, false);
+        </script>
     </head>
     
     <body ondragstart="return false;" ondrop="return false;" onresize="main.menu.resize()">
@@ -389,6 +396,7 @@
       <script src="js/app/game/ui/credit.js"></script>
       <script src="js/app/game/ui/meter.js"></script>
       <script src="js/app/game/ui/meter-touch.js"></script>
+      <script src="js/app/game/ui/thumb-touch.js"></script>
       <script src="js/app/game/ui/announce.js"></script>
       <script src="js/app/game/ui/score.js"></script>
       <script src="js/app/game/ui/end.js"></script>

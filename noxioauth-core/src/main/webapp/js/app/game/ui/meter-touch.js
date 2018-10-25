@@ -36,7 +36,7 @@ MeterTouchUI.prototype.generate = function() {
   var swhite = util.vec4.make(1.0, 1.0, 1.0, 1.0);
   var sblack = util.vec4.make(0.0, 0.0, 0.0, 1.0);
 
-  var container = new UIContainer({x: '+', y: '+'});
+  var container = new UIContainer({x: '-', y: '+'});
   
   var s = 128;
   var h = 0;

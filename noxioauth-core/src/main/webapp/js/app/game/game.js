@@ -47,9 +47,10 @@ function NoxioGame(name, settings, map) {
   this.charSelect = "box";            // ID of character the player wants to play as.
   this.chatMsgOut = [];               // Chat messages to send to server on next doInput()
   this.touchMode = false;             // Flagged true if we are using touch screen based controls
-  this.lastMouse = {x: 0.0, y: 1.0};  // Last valid mouse direction sent to server
-  this.lastTch = {x: 0.0, y: 0.0};    // Last valid touch direction sent to server
-  this.tchAction = [];                // Hacky fix for touch controls
+  this.lastDir = {x: 0.0, y: 1.0};    // Last valid move direction sent to server
+  
+  this.thumb = {id: undefined, origin: undefined, offset: undefined}; // Touch control thumbstick values
+  this.tchAction = [];                                                // Hacky fix for touch controls
   
   this.packHand = new PackHand(this);
   
@@ -315,11 +316,11 @@ NoxioGame.prototype.doInputMouse = function(imp) {
         var mag = util.vec2.magnitude(dir);
         var norm = util.vec2.normalize(dir);
 
-        this.lastMouse = norm;
+        this.lastDir = norm;
         if(this.input.mouse.rmb) { inputs.push("04;"+norm.x+","+norm.y+";"+Math.min(Math.max(mag/1.75, 0.33), 1.0)); }
         else { inputs.push("01;"+norm.x+","+norm.y); }
       }
-      else { inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y); }
+      else { inputs.push("01;"+this.lastDir.x+","+this.lastDir.y); }
       
       if(this.input.keyboard.keys[main.settings.control.jump]) { actions.push("jmp"); }
       if(this.input.keyboard.keys[main.settings.control.actionA]) { actions.push("atk"); }
@@ -338,12 +339,12 @@ NoxioGame.prototype.doInputMouse = function(imp) {
     else {
       /* Spectate State Input */
       if(this.input.mouse.rmb || this.forceSpawn) { this.forceSpawn = false; inputs.push("02;"+this.charSelect); }
-      inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y);
+      inputs.push("01;"+this.lastDir.x+","+this.lastDir.y);
     }
   }
   else {
     /* Menu-Focus State Input */
-    inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y);
+    inputs.push("01;"+this.lastDir.x+","+this.lastDir.y);
   }
   
   /* Send Input */
@@ -362,7 +363,9 @@ NoxioGame.prototype.doInputTouch = function(imp) {
   
   /* Make copy of touch positions for UI to use */
   var tchs = [];
+  var thmb = undefined;
   for(var i=0;i<this.input.touch.pos.length;i++) {
+    if(this.input.touch.pos[i].id === this.thumb.id) { thmb = this.input.touch.pos[i]; continue; }
     tchs.push(this.input.touch.pos[i]);
   }
   
@@ -394,29 +397,41 @@ NoxioGame.prototype.doInputTouch = function(imp) {
     // Shows when dead only on touch mode.
     
     /* Control Check */
-    var tch = tchs.length > 0;
+    
     if(obj) {
       var actions = [];
-      var movTch = tch ? tchs[0] : this.lastTch;
-      this.lastTch = movTch;
+      if(!thmb && this.thumb.id !== undefined) {
+        this.thumb.id = undefined;
+        this.thumb.origin = undefined;
+        this.thumb.offset = undefined;
+      }
+      if(tchs.length > 0 && this.thumb.id === undefined) {
+        this.thumb.id = tchs[0].id;
+        this.thumb.origin = util.vec2.make(tchs[0].x, tchs[0].y);
+        thmb = tchs[0];
+      }
       
       /* Control State Input */
-      var near = util.matrix.unprojection(this.window, this.display.camera, movTch, 0.0);
-      var far = util.matrix.unprojection(this.window, this.display.camera, movTch, 1.0); /* @FIXME doing 2 unprojects is inefficent. Maybe calc camera center? */
-      var floorPlane = {a: {x: 0.0, y: 0.0, z: 0.0}, b: {x: 1.0, y: 0.0, z: 0.0}, c: {x: 0.0, y: 1.0, z: 0.0}, n: {x: 0.0, y: 0.0, z: 1.0}};
-      var result = util.intersection.linePlane({a: near, b: far}, floorPlane);
-
-      if(result) { // Missed the floor plane.
-        var dir = util.vec2.subtract(result.intersection, obj.pos);
-        var mag = util.vec2.magnitude(dir);
-        var norm = util.vec2.normalize(dir);
-
-        this.lastMouse = norm;
-        if(tch) { inputs.push("04;"+norm.x+","+norm.y+";"+Math.min(Math.max(mag/1.75, 0.33), 1.0)); }
-        else { inputs.push("01;"+norm.x+","+norm.y); }
+      if(thmb) {
+        var offset = util.vec2.subtract(thmb, this.thumb.origin);
+        var mag = util.vec2.magnitude(offset);
+        var norm = util.vec2.rotate(util.vec2.multiply(util.vec2.normalize(offset), util.vec2.make(1., -1.)), this.display.camera.rot.z);
+        var speed = mag/100;
+        
+        this.thumb.offset = offset;
+        
+        if(speed > 0.01) {
+          inputs.push("04;"+norm.x+","+norm.y+";"+Math.min(Math.max(speed, 0.33), 1.0));
+          this.lastDir = norm;
+        }
+        else {
+          inputs.push("01;"+this.lastDir.x+","+this.lastDir.y);
+        }
       }
-      else { inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y); }
-      
+      else {
+        inputs.push("01;"+this.lastDir.x+","+this.lastDir.y);
+      }
+
       for(var i=0;i<this.tchAction.length;i++) {
         actions.push(this.tchAction[i]);
       }
@@ -433,12 +448,12 @@ NoxioGame.prototype.doInputTouch = function(imp) {
     else {
       /* Spectate State Input */
       if(this.forceSpawn) { this.forceSpawn = false; inputs.push("02;"+this.charSelect); }
-      inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y);
+      inputs.push("01;"+this.lastDir.x+","+this.lastDir.y);
     }
   }
   else {
     /* Menu-Focus State Input */
-    inputs.push("01;"+this.lastMouse.x+","+this.lastMouse.y);
+    inputs.push("01;"+this.lastDir.x+","+this.lastDir.y);
   }
   
   /* Send Input */
