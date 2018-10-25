@@ -26,32 +26,22 @@ Main.prototype.setStats = function(stats) {
 };
 
 Main.prototype.startGame = function(name, settings, map) {
-  try {
-    if(!this.inGame() && main.net.game.address) {
-      this.menu.connect.show("Downloading map file...", 0);
-      $.ajax({
-        url: "http://" + main.net.game.address + ":" + main.net.game.port + "/noxiogame/map/" + map,
-        type: 'GET',
-        timeout: 3000,
-        success: function(data) {
-          try {
-            main.game = new NoxioGame(name, settings, data);
-            main.menu.game.show();
-          }
-          catch(ex) {
-            main.menu.error.showErrorException("Game Load Error", "Exception while starting game: " + ex.message, ex.stack); this.close();
-          }
-        },
-        error: function() {
-          main.menu.error.showError("Map Error", "Server returned FNF(404) for map: " + map);
-        }
-      });
-    }
-    else { this.menu.error.showError("State Error", "Attempted to start a game while a game was running."); this.close(); }
-    }
-  catch(ex) {
-    main.menu.error.showErrorException("Map Load Error", "Exception while downloading map: " + ex.message, ex.stack); this.close();
+  if(!this.inGame() && main.net.game.address) {
+    this.menu.connect.show("Downloading map file...", 0);
+    $.ajax({
+      url: "http://" + main.net.game.address + ":" + main.net.game.port + "/noxiogame/map/" + map,
+      type: 'GET',
+      timeout: 3000,
+      success: function(data) {
+        main.game = new NoxioGame(name, settings, data);
+        main.menu.game.show();
+      },
+      error: function() {
+        main.menu.error.showError("Map Error", "Server returned FNF(404) for map: " + map);
+      }
+    });
   }
+  else { this.menu.error.showError("State Error", "Attempted to start a game while a game was running."); this.close(); }
 };
 
 Main.prototype.inGame = function() {
