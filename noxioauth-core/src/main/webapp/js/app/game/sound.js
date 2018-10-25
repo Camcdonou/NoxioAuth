@@ -12,8 +12,8 @@ function Sound(game) {
 /* Returns true if webaudio is set up correctly, false if fuck no. */
 Sound.prototype.initWebAudio = function() {
   try {
-    this.game.window.AudioContext = this.game.window.AudioContext || this.game.window.webkitAudioContext;
-    this.context = new AudioContext();
+    var ACc = window.AudioContext || window.webkitAudioContext;
+    this.context = new ACc();
   }
   catch(ex) {
     main.menu.warning.show("WebAudio not supported. Intializing fallback mode...");
