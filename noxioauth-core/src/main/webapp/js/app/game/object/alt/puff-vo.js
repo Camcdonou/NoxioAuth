@@ -51,14 +51,14 @@ PlayerPuffVoice.prototype.fall = function() {
   this.game.putEffect(NxFx.puff.alt.voice.fall.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
-PlayerPuff.prototype.rest = function() {
+PlayerPuffVoice.prototype.rest = function() {
   this.restEffect =   NxFx.puff.alt.voice.rest.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
   this.effects.push(this.restEffect);
   this.effects.push(NxFx.puff.wave.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec3.make(0, 0, 0)));
   this.restCooldown = PlayerPuff.REST_SLEEP_LENGTH;
 };
 
-PlayerPuff.prototype.wake = function() {
+PlayerPuffVoice.prototype.wake = function() {
   this.effects.push(NxFx.puff.alt.voice.wake.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
