@@ -12,6 +12,7 @@
         <link rel="stylesheet" type="text/css" href="css/buy.css">
         <link rel="stylesheet" type="text/css" href="css/gauss.css">
         <script>
+          /* Prevent phones from zooming screen. The webapp handles this. */
           document.addEventListener('touchmove', function(event) {
             event = event.originalEvent || event;
             if (event.scale !== undefined) { event.preventDefault(); }
