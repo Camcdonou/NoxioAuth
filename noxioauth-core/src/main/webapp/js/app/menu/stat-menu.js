@@ -100,6 +100,7 @@ StatMenu.prototype.back = function() {
 };
 
 StatMenu.prototype.show = function() {
+  main.menu.navigation("stat", "stat");
   main.menu.hideAll();
   this.generateList("general");
   main.menu.credit.show();
@@ -109,4 +110,9 @@ StatMenu.prototype.show = function() {
 
 StatMenu.prototype.hide = function() {
   this.element.style.display = "none";
+};
+
+/* Called when the back button is hit on this menu */
+StatMenu.prototype.onBack = function() {
+  this.back();
 };

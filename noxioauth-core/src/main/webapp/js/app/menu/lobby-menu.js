@@ -238,6 +238,7 @@ LobbyMenu.prototype.resize = function() {
 
 /* Shows this menu */
 LobbyMenu.prototype.show = function() {
+  main.menu.navigation("lobby", "lobby");
   main.menu.hideAll();
   document.getElementById("lobby-server").innerHTML = main.net.game.info.location;
   this.hideAll();
@@ -262,4 +263,9 @@ LobbyMenu.prototype.hide = function() {
 LobbyMenu.prototype.hideAll = function() {
   this.items.create.hide();
   this.items.leave.hide();
+};
+
+/* Called when the back button is hit on this menu */
+LobbyMenu.prototype.onBack = function() {
+  main.net.leaveServer();
 };

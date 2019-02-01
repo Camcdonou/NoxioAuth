@@ -88,12 +88,17 @@ UnlockMenu.prototype.hideInfoModal = function() {
   this.info.style.display = "none";
 };
 
+UnlockMenu.prototype.goBack = function() {
+  main.menu.online.show();
+};
+
 /* Type corresponds to which type of unlocks we are showing -
  * - CHARACTER
  * - ALTERNATE
  * - FEATURE
  */
 UnlockMenu.prototype.show = function(type) {
+  main.menu.navigation("unlock", "unlock");
   main.menu.hideAll();
   this.hideInfoModal();
   switch(type?type:this.last) {
@@ -110,4 +115,9 @@ UnlockMenu.prototype.show = function(type) {
 UnlockMenu.prototype.hide = function() {
   this.element.style.display = "none";
   this.hideInfoModal();
+};
+
+/* Called when the back button is hit on this menu */
+UnlockMenu.prototype.onBack = function() {
+  this.goBack();
 };

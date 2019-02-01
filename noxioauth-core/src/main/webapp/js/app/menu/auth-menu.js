@@ -88,6 +88,7 @@ AuthMenu.prototype.guest = function() {
 
 /* Shows this menu */
 AuthMenu.prototype.show = function() {
+  main.menu.navigation("auth", "login");
   main.menu.hideAll();
   this.hideAll();
   this.element.style.display = "block";

@@ -12,6 +12,7 @@ function VerifyMenu() {
 };
 
 VerifyMenu.prototype.show = function() {
+  main.menu.navigation("verify", "verify");
   main.menu.hideAll();
   this.element.style.display = "block";
 };
@@ -22,4 +23,9 @@ VerifyMenu.prototype.hide = function() {
 
 VerifyMenu.prototype.submit = function() {
   main.net.auth.state.submitCode(this.input.value);
+};
+
+/* Called when the back button is hit on this menu */
+VerifyMenu.prototype.onBack = function() {
+  reset(); //This is a unique function call only used for restarting the JS client on a new session.
 };

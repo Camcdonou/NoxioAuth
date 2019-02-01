@@ -230,6 +230,7 @@ SettingGameMenu.prototype.back = function() {
 };
 
 SettingGameMenu.prototype.show = function() {
+  main.menu.navigation("setgame", "settings");
   main.menu.hideAll();
   this.hideColorModal();
   this.update();
@@ -241,4 +242,9 @@ SettingGameMenu.prototype.show = function() {
 SettingGameMenu.prototype.hide = function() {
   this.hideColorModal();
   this.element.style.display = "none";
+};
+
+/* Called when the back button is hit on this menu */
+SettingGameMenu.prototype.onBack = function() {
+  this.back();
 };

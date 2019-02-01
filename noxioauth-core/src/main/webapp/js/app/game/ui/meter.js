@@ -34,6 +34,8 @@ MeterUI.prototype.generate = function() {
   var white  = util.vec4.make(1.0, 1.0, 1.0, 0.75);
   var swhite = util.vec4.make(1.0, 1.0, 1.0, 1.0);
   var sblack = util.vec4.make(0.0, 0.0, 0.0, 1.0);
+  var clear = util.vec4.make(0.0, 0.0, 0.0, 0.0);
+  var sred   = util.vec4.make(1.0, 0.0, 0.0, 1.0);
 
   var container = new UIContainer({x: '+', y: '+'});
   
@@ -122,6 +124,7 @@ MeterUI.prototype.generate = function() {
   };
   
   var h = 0;
+  
   for(var i=0;i<this.meters.length;i++) {
     var mtr = this.meters[i];
     switch(mtr.type) {
@@ -133,6 +136,25 @@ MeterUI.prototype.generate = function() {
     }
     h += s;
   }
+  
+  h += 4;
+  
+  var ts = 16;
+  var to = 2;
+  
+  var PING        = "Ping [ " + this.game.ping + "ms ]";
+  var PING_LENGTH = util.font.textLength(PING, fontName, s) + (to*2);
+  
+  container.add({
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(to,h), util.vec2.make(PING_LENGTH,ts), clear, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(to,h), ts, (this.game.ping > 250 ? sred : swhite), fontName, fontMat, PING)]
+    },
+    step: function(imp, state, window) { return false; },
+    isHovered: false
+  });
+    
+  h += ts;
 
   this.containers.push(container);
 };

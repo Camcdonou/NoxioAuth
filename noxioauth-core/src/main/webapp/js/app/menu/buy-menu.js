@@ -28,6 +28,7 @@ BuyMenu.prototype.updateButtons = function() {
 };
 
 BuyMenu.prototype.show = function() {
+  main.menu.navigation("buy", "buy");
   main.menu.hideAll();
   main.menu.credit.show();
   main.menu.rank.show();
@@ -37,4 +38,9 @@ BuyMenu.prototype.show = function() {
 
 BuyMenu.prototype.hide = function() {
   this.element.style.display = "none";
+};
+
+/* Called when the back button is hit on this menu */
+BuyMenu.prototype.onBack = function() {
+  this.back();
 };

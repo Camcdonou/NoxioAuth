@@ -7,6 +7,9 @@
  */
 
 function Menu() {
+  
+  window.history.pushState({html:"index.html", pageTitle:"20XX"}, "", "#");
+  
   /* Register all menu classes here*/
   var m = [
     {id: "error", obj: new ErrorMenu()}, // Displays on top as a modal.
@@ -34,6 +37,19 @@ function Menu() {
     this[m[i].id] = m[i].obj;
   }
   
+  this.lastNav = "";
+  var tmp = this;
+  window.onpopstate = function(e) {
+    if(tmp[tmp.lastNav] && tmp[tmp.lastNav].onBack) { tmp.onBack(); return; }
+    if(e.state && e.state.pageTitle !== "20XX"){
+        document.getElementById("content").innerHTML = e.state.html;
+        document.title = e.state.pageTitle;
+    }
+    else if(e.state && e.state.pageTitle === "20XX"){
+      window.history.back();
+    }
+  };
+  
   this.hideAll();
 };
 
@@ -45,4 +61,15 @@ Menu.prototype.hideAll = function() {
   for(var i=3;i<this.menus.length;i++) { /* Skip first 3 elements because they are ErrorMenu and WarningMenu and InfoMenu which display on top of all other menus */
     this.menus[i].hide();
   }
+};
+
+/* Pushes menu changes into history state. */
+Menu.prototype.navigation = function(id, nam) {
+  this.lastNav = id;
+  window.history.replaceState({html:"index.html", pageTitle:"20XX"}, nam, "#"+nam);
+};
+
+Menu.prototype.onBack = function() {
+  window.history.pushState({html:"index.html", pageTitle:"20XX"}, "", "#");
+  this[this.lastNav].onBack();
 };

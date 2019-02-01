@@ -54,8 +54,13 @@ function NoxioGame(name, settings, map) {
   
   this.packHand = new PackHand(this);
   
-  this.debug = {ss: 128, stime: [], ctime: [], dtime: [], ping: [], frames: [], sAvg: 0, cAvg: 0, pAvg: 0, fAvg: 0}; /* SS is Sample Size: The number of frames to sample for data. */
-  for(var i=0;i<this.debug.ss;i++) { this.debug.stime[i] = 0; this.debug.ctime[i] = 0; this.debug.dtime[i] = 0; this.debug.ping[i] = 0; this.debug.frames[i] = 0; }
+  this.pingOut = false;
+  this.pingLast = 0;
+  this.pingFrame = 90;
+  this.ping = 0;
+  
+  this.debug = {ss: 128, stime: [], ctime: [], dtime: [], frames: [], sAvg: 0, cAvg: 0, fAvg: 0}; /* SS is Sample Size: The number of frames to sample for data. */
+  for(var i=0;i<this.debug.ss;i++) { this.debug.stime[i] = 0; this.debug.ctime[i] = 0; this.debug.dtime[i] = 0; this.debug.frames[i] = 0; }
   
   this.requestAnimFrameFunc = (function() {
     return window.requestAnimationFrame         || 
@@ -165,6 +170,7 @@ NoxioGame.prototype.handlePacket = function(packet) {
   switch(packet.type) {
     /* Ingame Type Packets gxx */
     case "g10" : { this.updatePacket(packet); return true; }
+    case "g21" : { this.recievePing(packet); return true; }
     /* Input Type Packets ixx */
     default : { return false; }
   }
@@ -210,20 +216,23 @@ NoxioGame.prototype.doUpdate = function(packet) {
 NoxioGame.prototype.update = function(tick) {
   this.lastDelta = util.time.now();           // Update last delta first to avoid small time offsets
   
-  /* === DEBUG BLOCK START ==================== */
-  var ping = 1337;
+  /* Send ping */
+  if(this.pingFrame++ > 90) {
+    this.sendPing();
+    this.pingFrame = 0;
+  }
   
-  this.debug.ping.pop();
+  
+  
+  /* === DEBUG BLOCK START ==================== */  
   this.debug.stime.pop();
-  this.debug.ping.unshift(ping);
   this.debug.stime.unshift(tick);
   
-  var sAvg = 0, dAvg = 0, cAvg = 0, pAvg = 0, fAvg = 0;
+  var sAvg = 0, dAvg = 0, cAvg = 0, fAvg = 0;
   for(var i=0;i<this.debug.ss;i++) {
     sAvg += this.debug.stime[i];
     cAvg += this.debug.ctime[i];
     dAvg += this.debug.dtime[i];
-    pAvg += this.debug.ping[i];
   }
   for(var i=0;i<this.debug.ss-1&&this.debug.frames[i+1]!==0;i++) {
     fAvg += this.debug.frames[i] - this.debug.frames[i+1];
@@ -232,14 +241,13 @@ NoxioGame.prototype.update = function(tick) {
   this.debug.sAvg = sAvg/this.debug.ss;
   this.debug.cAvg = cAvg/this.debug.ss;
   this.debug.dAvg = dAvg/this.debug.ss;
-  this.debug.pAvg = pAvg/this.debug.ss;
   /* === DEBUG BLOCK END ==================== */
   
   /* === DEBUG BLOCK START ==================== */  
   this.ui.debug.setText(
     "WHO[ " + main.net.user + "@" + main.net.game.state.info.name + "@" + main.net.game.info.name + " ]\n-\n" +
     "S[ " + (this.debug.sAvg).toFixed(2) + "ms ] C[ " + (this.debug.cAvg).toFixed(2) + "ms ] D[ " + (this.debug.dAvg).toFixed(2) + "ms ]\n-\n" +
-    "FPS[ " + (this.debug.fAvg).toFixed(2) + " ] MEME[ " + (this.debug.pAvg).toFixed(2) + "ms ]\n" +
+    "FPS[ " + (this.debug.fAvg).toFixed(2) + " ] PING[ " + this.ping + "ms ]\n" +
     "ASSET[ " + this.display.models.length + "," + this.display.materials.length + "," + this.display.shaders.length + "," + this.display.textures.length +" ] FBO[ 4 ]\n" +
     "SHADOW [ " + this.display.fbo.shadow.fb.width + "," + this.display.fbo.shadow.fb.height + " ]\n" +
     "WORLD  [ " + this.display.fbo.world.fb.width + "," + this.display.fbo.world.fb.height + " ]\n" +
@@ -531,6 +539,23 @@ NoxioGame.prototype.draw = function() {
   }
   
   this.nextFrame = this.requestAnimFrameFunc.call(window, function() { if(main.inGame()) { main.game.draw(); }}); // Javascript 🙄
+};
+
+NoxioGame.prototype.sendPing = function() {
+  var now = util.time.now();
+  
+  if(this.pingOut && this.pingLast - now < 999) { return; }
+  else if(this.pingOut) { this.ping = 999; }
+  
+  main.net.game.send({type: "g21", delta: now});
+  this.pingOut = now;
+  this.pingOut = true;
+};
+
+NoxioGame.prototype.recievePing = function(packet) {
+  var now = util.time.now();
+  this.ping = now - packet.delta;
+  this.pingOut = false;
 };
 
 /* Leave the game and return to lobby menu */
