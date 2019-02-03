@@ -27,6 +27,8 @@ public class Online extends SessionState {
      > o20 request payment
      < o21 request good & redirect
      < o22 request bad
+     > o30 request quickmatch server info
+     < o31 send quickmatch server info
   */
   
   @Override
@@ -41,6 +43,7 @@ public class Online extends SessionState {
         case "o03" : { stateReady(gson.fromJson(data, PacketO03.class)); break; }
         case "o07" : { checkUnlock(gson.fromJson(data, PacketO07.class)); break; }
         case "o20" : { requestPayment(gson.fromJson(data, PacketO20.class)); break; }
+        case "o30" : { quickInfo(gson.fromJson(data, PacketO30.class)); break; }
         default : { close("Invalid data: " + p.getType()); break; }
       }
     } catch(IOException | NullPointerException | JsonParseException ex) {
@@ -74,6 +77,10 @@ public class Online extends SessionState {
     final String result = session.doPayment(item);
     if(result != null) { sendPacket(new PacketO21(result)); }
     else { sendPacket(new PacketO22("Failed to create transaction.")); }
+  }
+  
+  private void quickInfo(final PacketO30 p) throws IOException {
+    sendPacket(new PacketO31(Settable.getGameServerInfo()));
   }
   
   @Override

@@ -13,6 +13,7 @@ OnlineState.prototype.handlePacket = function(packet) {
     case "o09" : { this.unlockFail(packet.message); return true; }
     case "o21" : { this.requestPaymentRedirect(packet.redirect); return true; }
     case "o22" : { this.requestPaymentFail(packet.message); return true; }
+    case "o31" : { main.net.connectGameAuto(packet.servers); return true; }
     default : { return false; }
   }
 };
@@ -64,6 +65,11 @@ OnlineState.prototype.requestPaymentRedirect = function(redirect) {
 OnlineState.prototype.requestPaymentFail = function(message) {
   main.menu.warning.show(message);
   main.menu.online.show();
+};
+
+OnlineState.prototype.requestQuickInfo = function() {
+  this.send({type: "o30"});
+  main.menu.connect.show("Requesting Info...", 0);
 };
 
 OnlineState.prototype.send = function(data) {

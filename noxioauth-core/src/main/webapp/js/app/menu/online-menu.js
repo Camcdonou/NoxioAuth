@@ -8,6 +8,8 @@ function OnlineMenu() {
   this.motd = true; /* Shows motd when you first login */
   this.visible = false;
   
+  /* @TODO: Critical issue. As it stands the player count limit on game servers is a client side setting. It can be easily circumvented. This is bad obviously. Please fix it.
+  
   /* Prototype functions for sub menus to use */
   var hide = function() {
     this.element.classList.remove("selected");
@@ -25,6 +27,12 @@ function OnlineMenu() {
   
   /* Creates sub menus */
   this.items = {
+    quick: {
+      element: document.getElementById("online-quick"),
+      hide: hide,
+      show: function() { },
+      onEnter: function() { main.net.auth.state.requestQuickInfo(); }
+    },
     server: {
       element: document.getElementById("online-server"),
       hide: hide,
@@ -53,7 +61,7 @@ function OnlineMenu() {
         }
         else { //Server Online
           elm.classList.add("btn");
-          elm.onclick = function() { main.net.game.establish(info.domain, data.port); };
+          elm.onclick = function() { main.net.connectGame(info.domain, data.port); };
           elm.innerHTML = data.location + " | " + data.users + " online<svg class='ico-serv' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg' version='1.1'><circle cx='100' cy='100' r='85' fill='none' stroke='currentColor' stroke-width='30' /></svg>";
         }
       },

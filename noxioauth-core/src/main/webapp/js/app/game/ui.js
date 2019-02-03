@@ -4,6 +4,8 @@
 /* Define Game UI Class */
 function GameUI(game) {
   this.game = game;
+  this.hide = false; // Hides all UI
+  
   this.elements = [
     new NameUI(this.game, this, "name"),
     new ObjectiveUI(this.game, this, "objective"),
@@ -52,6 +54,10 @@ function GameUI(game) {
 GameUI.prototype.menuKey = function() {
   this.flags.main = !this.flags.main;
   if(!this.flags.main) { this.sub = "main"; }
+};
+
+GameUI.prototype.hideKey = function() {
+  this.hide = !this.hide;
 };
 
 /* Steps UI and returns true if imp input is absorbed by a UI element */
@@ -116,6 +122,7 @@ GameUI.prototype.step = function(tch, imp, state, window) {
 
 /* Window is a Vec2 of the size, in pixels, of the game window for this draw */
 GameUI.prototype.getDraw = function(block, texts, window) {
+  if(this.hide) { return; }
   for(var i=0;i<this.elements.length;i++) {
     this.elements[i].getDraw(block, texts, window);
   }

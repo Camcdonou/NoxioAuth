@@ -59,6 +59,8 @@ function NoxioGame(name, settings, map) {
   this.pingFrame = 90;
   this.ping = 0;
   
+  this.specPos = undefined; // Anchor point when moving spectator camera
+  
   this.debug = {ss: 128, stime: [], ctime: [], dtime: [], frames: [], sAvg: 0, cAvg: 0, fAvg: 0}; /* SS is Sample Size: The number of frames to sample for data. */
   for(var i=0;i<this.debug.ss;i++) { this.debug.stime[i] = 0; this.debug.ctime[i] = 0; this.debug.dtime[i] = 0; this.debug.frames[i] = 0; }
   
@@ -221,9 +223,7 @@ NoxioGame.prototype.update = function(tick) {
     this.sendPing();
     this.pingFrame = 0;
   }
-  
-  
-  
+    
   /* === DEBUG BLOCK START ==================== */  
   this.debug.stime.pop();
   this.debug.stime.unshift(tick);
@@ -297,15 +297,12 @@ NoxioGame.prototype.doInputMouse = function(imp) {
   this.chatMsgOut.splice(0, this.chatMsgOut.length);
   
   /* Global-Client Impulse Input */
-  if(!this.inx27 && this.input.keyboard.keys[27]) { this.ui.menuKey(); } this.inx27 = this.input.keyboard.keys[27]; // Hardcoded Main Menu to ESC
+  if(!this.inx27 && this.input.keyboard.keys[27]) { this.ui.menuKey(); } this.inx27 = this.input.keyboard.keys[27];    // Hardcoded Main Menu to ESC
+  if(!this.inx145 && this.input.keyboard.keys[145]) { this.ui.hideKey(); } this.inx145 = this.input.keyboard.keys[145]; // Hardcoded Hide UI to ScrollLock
   
   if(!pass) {
     /* Client Impulse Input */
     this.display.camera.setZoom(this.input.mouse.spin*0.65);
-    if(this.input.mouse.mmb) {
-      var rot = util.vec3.make(this.input.mouse.mov.y*0.002, 0, -this.input.mouse.mov.x*0.003);
-      this.display.camera.addRot(rot);
-    }
     
     /* Client State Input */
     this.ui.flags.score = !!this.input.keyboard.keys[main.settings.control.scoreboard];                                          //~
@@ -313,6 +310,7 @@ NoxioGame.prototype.doInputMouse = function(imp) {
     /* Control Check */
     if(obj) {
       var actions = [];
+      
       /* Control State Input */
       var near = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 0.0);
       var far = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 1.0); /* @FIXME doing 2 unprojects is inefficent. Maybe calc camera center? */
@@ -343,11 +341,29 @@ NoxioGame.prototype.doInputMouse = function(imp) {
         }
         inputs.push(act);
       }
+      
+      /* Rotate Camera */
+      if(this.input.mouse.mmb) {
+        var rot = util.vec3.make(this.input.mouse.mov.y*0.002, 0, -this.input.mouse.mov.x*0.003);
+        this.display.camera.addRot(rot);
+      }
     }
     else {
       /* Spectate State Input */
       if(this.input.mouse.rmb || this.forceSpawn) { this.forceSpawn = false; inputs.push("02;"+this.charSelect); }
       inputs.push("01;"+this.lastDir.x+","+this.lastDir.y);
+      
+      /* Move Camera */
+      if(this.input.mouse.mmb) {
+        if(!this.specPos) { this.specPos = this.input.mouse.pos; }
+        else {
+          var dir = util.vec2.subtract(this.specPos, this.input.mouse.pos);
+          dir.y *= -1.;
+          dir = util.vec2.rotate(dir, this.display.camera.rot.z);
+          this.display.camera.addPos(util.vec3.make(dir.x*0.0005, dir.y*0.0005, 0.0));
+        }
+      }
+      else { this.specPos = undefined; }
     }
   }
   else {

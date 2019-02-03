@@ -29,7 +29,8 @@ LobbyState.prototype.createLobby = function(settings) {
 };
 
 LobbyState.prototype.ready = function() {
-  main.menu.lobby.show();
+  if(main.net.game.auto) { main.net.game.auto = false; main.menu.connect.show("Joining Game...", 0); this.send({type: "b11"}); }
+  else { main.menu.lobby.show(); }
 };
 
 LobbyState.prototype.refreshLobbyList = function() {

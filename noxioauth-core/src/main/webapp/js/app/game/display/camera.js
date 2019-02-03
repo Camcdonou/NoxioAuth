@@ -47,6 +47,10 @@ Camera.prototype.setPos = function(pos) {
   this.interp.pos = pos;
 };
 
+Camera.prototype.addPos = function(pos) {
+  this.interp.pos = util.vec3.add(this.interp.pos, pos);
+};
+
 Camera.prototype.setRot = function(rot) {
   this.interp.rot = rot;
   this.interp.rot.x = Math.min(-0.01, Math.max(-1.1765659999999967, this.interp.rot.x));

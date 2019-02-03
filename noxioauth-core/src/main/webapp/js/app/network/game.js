@@ -5,6 +5,7 @@
 /* Define Game Class */
 function Game () {
   this.safe = false;
+  this.auto = false; // Quick match. If this is flagged true we will automatically select a lobby and join it once connected to a game server.
 };
 
 Game.prototype.establish = function(address, port) {
@@ -14,6 +15,7 @@ Game.prototype.establish = function(address, port) {
     return;
   }
   
+  this.auto = false;
   this.connect(address, port);
 };
 
