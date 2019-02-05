@@ -10,6 +10,7 @@
         <link rel="stylesheet" type="text/css" href="css/info.css">
         <link rel="stylesheet" type="text/css" href="css/footer.css">
         <link rel="stylesheet" type="text/css" href="css/buy.css">
+        <link rel="stylesheet" type="text/css" href="css/admin.css">
         <link rel="stylesheet" type="text/css" href="css/gauss.css">
         <script>
           /* Prevent phones from zooming screen. The webapp handles this. */
@@ -116,9 +117,9 @@
       <!-- Game Server / Settings Menu -->
       <div id="online" class="menu-container" style="display: none">
         <div id="online-user" class="menu usr">User</div>
-        <div id="online-quick" class="menu cat btn" onclick="main.menu.online.items.quick.onEnter()">Quick</div>
         <div id="online-server" class="menu cat" onclick="main.menu.online.items.server.show()">Servers</div>
           <span id="online-server-cont"></span>
+        <div id="online-quick" class="menu cat" onclick="main.menu.online.items.quick.onEnter()">Quickmatch</div>
         <div id="online-unlock" class="menu cat" onclick="main.menu.online.items.unlock.show()">Unlocks</div>
           <div id="online-unlock-1" class="menu sub btn" onclick="main.menu.unlock.show('CHARACTER')">Characters</div>
           <div id="online-unlock-2" class="menu sub btn" onclick="main.menu.unlock.show('ALTERNATE')">Alternates</div>
@@ -128,7 +129,8 @@
           <div id="online-setting-2" class="menu sub btn" onclick="">Controls</div>
           <div id="online-setting-3" class="menu sub btn" onclick="">Graphics</div>
           <div id="online-setting-4" class="menu sub btn" onclick="main.menu.setgame.show()">Game</div>
-        <div id="online-buy" class="menu cat" onclick="main.menu.online.items.buy.onEnter()">Dosh</div>
+        <div id="online-buy" class="menu cat" onclick="main.menu.online.items.buy.onEnter()">Buy</div>
+        <div id="online-admin" class="menu cat" onclick="main.menu.online.items.admin.onEnter()">Admin</div>
         <div id="online-logout" class="menu cat" onclick="main.menu.online.items.logout.onEnter()">Logout</div>
       </div>
       <div id="online-ebeg" class="ebeg" style="display: none" onclick="main.menu.online.items.buy.onEnter()">Game servers are expensive! Support 20xx.io and unlock <i>spicy</i> extras.</div>
@@ -246,6 +248,20 @@
         </div>
       </div>
       
+      <div id="admin" class="menu-container" style="display: none">
+        <div id="admin-control" class="admin-control">
+          <input id="admin-control-uid" class="inp" type="text" placeholder="UID"/>
+          <input id="admin-control-ban-length" class="inp" type="text" placeholder="Ban length (MILLISECONDS)"/>
+          <div id="admin-control-ban" class="menu sub btn">Banhammer</div>
+          <div id="admin-control-free" class="menu sub btn">Make Free</div>
+          <div id="admin-control-lite" class="menu sub btn">Make Lite</div>
+          <div id="admin-control-full" class="menu sub btn">Make Full</div>
+          <div id="admin-control-mod" class="menu sub btn">Make Mod</div>
+          <div id="admin-control-support" class="menu sub btn">Make Patreon Supporter</div>
+        </div>
+        <div id="admin-info" class="admin-info">...</div>
+      </div>
+      
       <!-- Game Server Lobby -->
       <div id="lobby" class="menu-container" style="display: none">
         <div class="left-container">
@@ -348,6 +364,7 @@
       <script src="js/app/menu/stat-menu.js"></script>
       <script src="js/app/menu/setting-game-menu.js"></script>
       <script src="js/app/menu/buy-menu.js"></script>
+      <script src="js/app/menu/admin-menu.js"></script>
       <script src="js/app/menu/lobby-menu.js"></script>
       <script src="js/app/menu/game-menu.js"></script>
       <script src="js/app/menu/menu.js"></script>

@@ -58,7 +58,7 @@ public class NoxioSession {
   public void changeState(final int s) throws IOException { /* Not a huge fan of how this works. */
     sessionState.destroy();
     switch(s) {
-      case 1 : { sessionState = new Online(this); break; }
+      case 1 : { sessionState = new Online(this, dao.getUserDao()); break; }
       default : { close(); break; } //NO.
     }
   }

@@ -27,6 +27,7 @@ function Menu() {
     {id: "stat", obj: new StatMenu()},
     {id: "setgame", obj: new SettingGameMenu()},
     {id: "buy", obj: new BuyMenu()},
+    {id: "admin", obj: new AdminMenu()},
     {id: "lobby", obj: new LobbyMenu()},
     {id: "game", obj: new GameMenu()}
   ];

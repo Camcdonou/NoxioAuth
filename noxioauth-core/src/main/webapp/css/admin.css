@@ -1,0 +1,18 @@
+table, th, td {
+  border: 1px solid white;
+  color: white;
+}
+
+th {
+  background-color: rgba(255, 255, 255, 0.25);
+  font-weight: bold;
+}
+
+.admin-control {
+  
+}
+
+.admin-info {
+  height: 700px;
+  overflow: scroll;
+}

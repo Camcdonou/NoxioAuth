@@ -14,6 +14,7 @@ OnlineState.prototype.handlePacket = function(packet) {
     case "o21" : { this.requestPaymentRedirect(packet.redirect); return true; }
     case "o22" : { this.requestPaymentFail(packet.message); return true; }
     case "o31" : { main.net.connectGameAuto(packet.servers); return true; }
+    case "o41" : { this.adminInfo(packet); return true; }
     default : { return false; }
   }
 };
@@ -70,6 +71,26 @@ OnlineState.prototype.requestPaymentFail = function(message) {
 OnlineState.prototype.requestQuickInfo = function() {
   this.send({type: "o30"});
   main.menu.connect.show("Requesting Info...", 0);
+};
+
+OnlineState.prototype.requestAdminMenu = function() {
+  this.send({type: "o40"});
+};
+
+OnlineState.prototype.adminInfo = function(info) {
+  main.menu.admin.generate(info);
+};
+
+OnlineState.prototype.adminBan = function(uid, length) {
+  this.send({type: "o42", uid: uid, length: length});
+};
+
+OnlineState.prototype.adminSetUserType = function(uid, userType) {
+  this.send({type: "o43", uid: uid, userType: userType});
+};
+
+OnlineState.prototype.adminSetUserSupport = function(uid) {
+  this.send({type: "o44", uid: uid});
 };
 
 OnlineState.prototype.send = function(data) {

@@ -149,13 +149,9 @@ public class Authenticate extends SessionState {
       return;
     }
     
-    switch(userDao.authenticate(p.getUser(), p.getHash())) {
-      case 0 : { session.login(p.getUser()); break; } /* Login successful */
-      case 1 : { sendPacket(new PacketA05("User is already logged in.")); break; }
-      case 2 : { sendPacket(new PacketA05("Incorrect Username or Password.")); break; }
-      case 3 : { sendPacket(new PacketA05("User does not exist.")); break; }
-      default : { sendPacket(new PacketA05("Unknown error.")); break; }
-    }
+    final String result = userDao.authenticate(p.getUser(), p.getHash());
+    if(result != null) { sendPacket(new PacketA05(result)); }
+    else { session.login(p.getUser()); }
   }
   
   private void createUser(final PacketA00 p) throws IOException {

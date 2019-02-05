@@ -1,6 +1,7 @@
 package org.infpls.noxio.auth.module.auth.dao.user;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.*;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -35,8 +36,8 @@ public class UserDao {
     final UserSettings us = new UserSettings(uid);
     try {
       dao.jdbc.update(
-        "INSERT into USERS ( UID, NAME, DISPLAY, EMAIL, HASH, TYPE, SUPPORTER, CREATED, UPDATED, LASTLOGIN ) VALUES ( ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), NOW() )",
-              uid, user, user, email, sash, User.Type.FREE.name(), false
+        "INSERT into USERS ( UID, NAME, DISPLAY, EMAIL, HASH, TYPE, SUPPORTER, CREATED, UPDATED, LASTLOGIN, SUSPENDUNTIL ) VALUES ( ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), NOW(), ? )",
+              uid, user, user, email, sash, User.Type.FREE.name(), false, null
       );
       dao.jdbc.update(
         "INSERT into SETTINGS ( " +
@@ -80,17 +81,13 @@ public class UserDao {
     return true;
   }
   
-  /*  returns int @TODO: i dont like this style of return so just change it to a != null stringy one
-    0 - success
-    1 - user is already logged in
-    2 - incorrect password or username
-    3 - user does not exist
-  */
-  public synchronized int authenticate(final String user, final String hash) throws IOException {
+  /* Return error message string or null if valid */
+  public synchronized String authenticate(final String user, final String hash) throws IOException {
     User u = getUserByName(user);
-    if(u == null) { return 3; } //Does user exist?
-    if(getSessionByUser(u.name) != null) { return 1; } //Is this user already logged in?
-    return u.hashCompare(hash) ? 0 : 2; //Does the password hash match?
+    if(u == null) { return "Incorrect Username or Password."; } //Does user exist?
+    if(getSessionByUser(u.name) != null) { return "User is already logged in."; } //Is this user already logged in?
+    if(u.suspendUntil != null && u.suspendUntil.getTime() > new Date().getTime()) { return "This account is suspended until: " + u.suspendUntil.toString(); }
+    return u.hashCompare(hash) ? null : "Incorrect Username or Password."; //Does the password hash match?
   }
   
   public User getUserByName(final String user) throws IOException {
@@ -180,6 +177,38 @@ public class UserDao {
         "UPDATED = NOW(), TYPE = ?" +
         "WHERE UID=?",
               type.name(), uid
+      );
+    }
+    catch(DataAccessException ex) {
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      throw new IOException("SQL Error during account type change.");
+    }
+  }
+  
+  /* Sets supporter flag to true */
+  public void setUserSupport(final String uid) throws IOException {
+    try {
+      dao.jdbc.update(
+        "UPDATE USERS SET " +
+        "UPDATED = NOW(), SUPPORTER = ?" +
+        "WHERE UID=?",
+              true, uid
+      );
+    }
+    catch(DataAccessException ex) {
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      throw new IOException("SQL Error during account type change.");
+    }
+  }
+  
+  /* Bans user for <length> milliseconds */
+  public void setUserSuspended(final String uid, final long length) throws IOException {
+    try {
+      dao.jdbc.update(
+        "UPDATE USERS SET " +
+        "UPDATED = NOW(), SUSPENDUNTIL = ?" +
+        "WHERE UID=?",
+              new Date(new Date().getTime() + length), uid
       );
     }
     catch(DataAccessException ex) {
@@ -313,6 +342,27 @@ public class UserDao {
     catch(DataAccessException ex) {
       Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user unlock.");
+    }
+  }
+  
+  public List<UserInfo> getAdminInfo() throws IOException {
+    try {
+      final List<Map<String,Object>> results = dao.jdbc.queryForList(
+        "SELECT UID, NAME, DISPLAY, EMAIL, TYPE, SUPPORTER, CREATED, UPDATED, LASTLOGIN, SUSPENDUNTIL FROM USERS"
+      );
+      List<UserInfo> users = new ArrayList();
+      for(int i=0;i<results.size();i++) {
+        users.add(new UserInfo(results.get(i)));
+      }
+      return users;
+    }
+    catch(DataAccessException ex) {
+      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      throw new IOException("SQL Error during user lookup.");
+    }
+    catch(ClassCastException | NullPointerException ex) {
+      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
+      throw new IOException("SQL Error during user lookup.");
     }
   }
     

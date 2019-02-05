@@ -8,7 +8,7 @@ function OnlineMenu() {
   this.motd = true; /* Shows motd when you first login */
   this.visible = false;
   
-  /* @TODO: Critical issue. As it stands the player count limit on game servers is a client side setting. It can be easily circumvented. This is bad obviously. Please fix it.
+  /* @TODO: Critical issue. As it stands the player count limit on game servers is a client side setting. It can be easily circumvented. This is bad obviously. Please fix it. */
   
   /* Prototype functions for sub menus to use */
   var hide = function() {
@@ -98,6 +98,13 @@ function OnlineMenu() {
       onEnter: function() { main.menu.buy.show(); },
       items: []
     },
+    admin: {
+      element: document.getElementById("online-admin"),
+      hide: hide,
+      show: show,
+      onEnter: function() { main.menu.admin.show(); },
+      items: []
+    },
     logout: {
       element: document.getElementById("online-logout"),
       hide: hide,
@@ -136,11 +143,6 @@ OnlineMenu.prototype.hideEbeg = function() {
   this.ebeg.style.display = "none";
 };
 
-/* Hides the buy menu if user is a guest. */
-OnlineMenu.prototype.showBuy = function() {
-  this.items.buy.element.style.display = main.net.guest ? "none" : "block";
-};
-
 /* Shows this menu */
 OnlineMenu.prototype.show = function() {
   main.menu.navigation("online", "online");
@@ -151,8 +153,9 @@ OnlineMenu.prototype.show = function() {
   this.items.server.show();
   main.menu.credit.show();
   main.menu.rank.show();
+  this.items.buy.element.style.display = main.net.guest ? "none" : "block";      // Hide buy menu on guests
+  this.items.admin.element.style.display = main.net.type < 3 ? "none" : "block"; // Hide admin menu unless mod or admin
   this.visible = true;
-  this.showBuy();
   this.showEbeg();
   this.element.style.display = "block";
 };
