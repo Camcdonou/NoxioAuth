@@ -74,7 +74,7 @@ BombObject.prototype.update = function(data) {
   /* Timers */
   
   /* Step Effects */
-  this.targetCircle.step(util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), 0.4, 0.0);
+  this.targetCircle.step(util.vec2.toVec3(this.pos, 0.0), 0.4, 0.0);
   for(var i=0;i<this.effects.length;i++) {
     if(this.effects[i].active()) { this.effects[i].step(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)); }
     else { this.effects.splice(i--, 1); }

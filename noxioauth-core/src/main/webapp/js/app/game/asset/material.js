@@ -88,7 +88,7 @@ Asset.prototype.material.object.bomb.bomb = {
 /* Source File: targetcircle.mat */
 Asset.prototype.material.object.target.targetcircle = {
   name: "object.target.targetcircle",
-  shader: "decal_glow",
+  shader: "decal_glow_noneg",
   shadow: "false",
   texture0: "object/target/targetdecal",
 };
@@ -373,7 +373,7 @@ Asset.prototype.material.character.generic.ui.meterstub = {
 /* Source File: targetcircle.mat */
 Asset.prototype.material.character.generic.decal.targetcircle = {
   name: "character.generic.decal.targetcircle",
-  shader: "decal_glow",
+  shader: "decal_glow_noneg",
   shadow: "false",
   texture0: "character/generic/decal/targetdecal",
 };

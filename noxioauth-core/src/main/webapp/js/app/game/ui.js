@@ -5,6 +5,13 @@
 function GameUI(game) {
   this.game = game;
   this.hide = false; // Hides all UI
+
+  
+  if(!localStorage.getItem("firstGameTutorial")){
+    localStorage.setItem("firstGameTutorial",true);
+    this.showTutorial = true;
+  }
+  else { this.showTutorial = false; }
   
   this.elements = [
     new NameUI(this.game, this, "name"),
@@ -111,6 +118,8 @@ GameUI.prototype.step = function(tch, imp, state, window) {
     this.menu.setVisible(tch);
     this.end.setVisible(this.flags.end||gam);
   }
+  
+  if(this.showTutorial) { this.controlTutorial(); }
 
   /* Update ui and pass input through */
   var hit = false;
@@ -118,6 +127,12 @@ GameUI.prototype.step = function(tch, imp, state, window) {
     if(this.elements[i].step(imp, state, window)) { hit = true; }
   }
   return hit;
+};
+
+/* Displays tutorial if this.showTutorial is true */
+GameUI.prototype.controlTutorial = function() {
+  console.log("tutorial go here");
+  this.showTutorial = false;
 };
 
 /* Window is a Vec2 of the size, in pixels, of the game window for this draw */

@@ -80,12 +80,15 @@ public class Authenticate extends SessionState {
   
   private String resetPasswordCode;
   private User resetUser;
+  private int loginAttempts;
   
   public Authenticate(final NoxioSession session, final UserDao userDao, final MailDao mailDao) throws IOException {
     super(session);
     
     this.userDao = userDao;
     this.mailDao = mailDao;
+    
+    loginAttempts = 0;
     
     sendPacket(new PacketS00('a'));
   }
@@ -148,6 +151,8 @@ public class Authenticate extends SessionState {
       sendPacket(new PacketA05("Password hash is bogus."));
       return;
     }
+    
+    if(++loginAttempts > 5) { sendPacket(new PacketA05("Lockout. Too many failed login attempts.")); return; }
     
     final String result = userDao.authenticate(p.getUser(), p.getHash());
     if(result != null) { sendPacket(new PacketA05(result)); }

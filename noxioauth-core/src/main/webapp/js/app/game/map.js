@@ -64,6 +64,17 @@ Map.prototype.getGeometryNear = function(pos, radius) {
       geometry.push({model: this.pallete[dat.ind].model, material: this.pallete[dat.ind].material, uniforms: tileUniformData});
     }
   }
+  for(var i=0;i<this.doodads.length;i++) {
+    var dood = this.doodads[i];
+    if(util.vec2.distance(dood.pos, pos) <= radius+2.5) {
+    var doodadUniformData = [
+      {name: "transform", data: util.vec3.toArray(util.vec3.add(dood.pos, util.vec3.make(-0.5, -0.5, 0.0)))},
+      {name: "rotation", data: dood.rot},
+      {name: "scale", data: dood.scale}
+    ];
+      geometry.push({model: this.doodadPallete[dood.index].model, material: this.doodadPallete[dood.index].material, uniforms: doodadUniformData});
+    }
+  }
   return geometry;
 };
 

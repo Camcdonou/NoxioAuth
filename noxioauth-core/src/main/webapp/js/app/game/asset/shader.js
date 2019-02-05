@@ -415,6 +415,32 @@ Asset.prototype.shader.glow = {
   fragment: "precision mediump float;\n\n/* Texture Samples */\nuniform sampler2D texture0;      // Diffuse\n\n/* General */\nvarying vec3 vUV;\n\nvoid main(void) {\n  /* Texture Samples */\n  vec3  texDiffuse = texture2D(texture0, vUV.st).rgb;\n\n  /* Finalize */\n  gl_FragColor = vec4(texDiffuse, 1.);\n}\n",
 };
 
+/* Source File: decal_glow_nonegg */
+Asset.prototype.shader.decal_glow_noneg = {
+  name: "decal_glow_noneg",
+  attributes: [
+    {type: "vec3", name: "position"},
+    {type: "vec3", name: "texcoord"},
+    {type: "vec3", name: "normal"},
+  ],
+  uniforms: [
+    {type: "mat4", name: "Pmatrix"},
+    {type: "mat4", name: "Vmatrix"},
+    {type: "mat4", name: "Mmatrix"},
+    {type: "vec3", name: "transform"},
+    {type: "float", name: "rotation"},
+    {type: "float", name: "scale"},
+    {type: "sampler2D", name: "texture0"},
+    {type: "vec3", name: "dPos"},
+    {type: "vec3", name: "dNormal"},
+    {type: "float", name: "dSize"},
+    {type: "float", name: "dAngle"},
+    {type: "vec4", name: "color"},
+  ],
+  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\nattribute vec3 normal;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\nuniform float rotation;\nuniform float scale;\n\nvarying vec3 vPos;\n\nvec3 rotateZ(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.y * sinDegrees);\n    float y = (a.x * -sinDegrees) + (a.y * cosDegrees);\n\n    return vec3(x, y, a.z);\n}\n\n\nvoid main(void) {\n  vPos = (rotateZ(position, rotation)*scale)+transform;\n  vec4 cPos = vec4(vPos, 1.0);\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\n\nvarying vec3 vPos;\n\nuniform vec3 dPos;\nuniform vec3 dNormal;\nuniform float dSize;\nuniform float dAngle;\n\nuniform vec4 color;\n\nvec3 rotateZ(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.y * sinDegrees);\n    float y = (a.x * -sinDegrees) + (a.y * cosDegrees);\n\n    return vec3(x, y, a.z);\n}\n\n\nvoid main(void) {\n  vec3 rPos = dPos-vPos;\n  rPos = rotateZ(rPos, -dAngle);\n  vec3 dUVW = (rPos+vec3(0.5/dSize))*dSize;\n\n  vec4 tex=vec4(texture2D(texture0, dUVW.st));\n\n  if(dUVW.s > 0.0 && dUVW.s < 1.0 && dUVW.t > 0.0 && dUVW.t < 1.0 && dUVW.p > 0.425 && dUVW.p < 0.55) { gl_FragColor = tex*color; }\n  else { discard; }\n}\n",
+};
+
 /* Source File: goldlavag */
 Asset.prototype.shader.goldlava = {
   name: "goldlava",
