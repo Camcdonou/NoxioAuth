@@ -10,6 +10,7 @@ Asset.prototype.material.object.hill = {};
 Asset.prototype.material.object.bomb = {};
 Asset.prototype.material.object.target = {};
 Asset.prototype.material.ui = {};
+Asset.prototype.material.ui.tutorial = {};
 Asset.prototype.material.multi = {};
 Asset.prototype.material.multi.hitbox = {};
 Asset.prototype.material.multi.hit = {};
@@ -155,6 +156,30 @@ Asset.prototype.material.ui.thumbout = {
   shader: "simpletrans",
   shadow: "false",
   texture0: "ui/thumbout",
+};
+
+/* Source File: tutorial2.mat */
+Asset.prototype.material.ui.tutorial.tutorial2 = {
+  name: "ui.tutorial.tutorial2",
+  shader: "simpletrans",
+  shadow: "false",
+  texture0: "ui/tutorial/tutorial2",
+};
+
+/* Source File: tutorial1.mat */
+Asset.prototype.material.ui.tutorial.tutorial1 = {
+  name: "ui.tutorial.tutorial1",
+  shader: "simpletrans",
+  shadow: "false",
+  texture0: "ui/tutorial/tutorial1",
+};
+
+/* Source File: tutorial0.mat */
+Asset.prototype.material.ui.tutorial.tutorial0 = {
+  name: "ui.tutorial.tutorial0",
+  shader: "simpletrans",
+  shadow: "false",
+  texture0: "ui/tutorial/tutorial0",
 };
 
 /* Source File: calibri.mat */

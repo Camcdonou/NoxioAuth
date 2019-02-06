@@ -6,10 +6,9 @@ function GameUI(game) {
   this.game = game;
   this.hide = false; // Hides all UI
 
-  
   if(!localStorage.getItem("firstGameTutorial")){
-    localStorage.setItem("firstGameTutorial",true);
     this.showTutorial = true;
+    this.tutorialFrame = 0;
   }
   else { this.showTutorial = false; }
   
@@ -26,6 +25,9 @@ function GameUI(game) {
     new RespawnUI(this.game, this, "respawn"),
     new RespawnTouchUI(this.game, this, "respawnTouch"),
     new EndUI(this.game, this, "end"),
+    new TutorialUI(this.game, this, "tutorialA", this.game.display.getMaterial("ui.tutorial.tutorial0")),
+    new TutorialUI(this.game, this, "tutorialB", this.game.display.getMaterial("ui.tutorial.tutorial1")),
+    new TutorialUI(this.game, this, "tutorialC", this.game.display.getMaterial("ui.tutorial.tutorial2")),
     new DebugUI(this.game, this, "debug"),
     new OptionUI(this.game, this, "option"),
     new SettingUI(this.game, this, "setting"),
@@ -113,13 +115,14 @@ GameUI.prototype.step = function(tch, imp, state, window) {
     this.announce.setVisible(this.flags.announce);
     this.score.setVisible(this.flags.score||ded||gam);
     this.debug.setVisible(this.flags.debug);
-    this.respawn.setVisible((this.flags.respawn||(ded&&!gam))&&!tch);
+    this.respawn.setVisible((this.flags.respawn||(ded&&!gam))&&!tch&&!this.showTutorial);
     this.respawnTouch.setVisible((this.flags.respawn||(ded&&!gam))&&tch);
     this.menu.setVisible(tch);
     this.end.setVisible(this.flags.end||gam);
   }
   
-  if(this.showTutorial) { this.controlTutorial(); }
+  if(this.showTutorial && !this.flags.main) { this.controlTutorial(); }
+  else { this.tutorialA.hide(); this.tutorialB.hide(); this.tutorialC.hide(); }
 
   /* Update ui and pass input through */
   var hit = false;
@@ -131,8 +134,11 @@ GameUI.prototype.step = function(tch, imp, state, window) {
 
 /* Displays tutorial if this.showTutorial is true */
 GameUI.prototype.controlTutorial = function() {
-  console.log("tutorial go here");
-  this.showTutorial = false;
+  this.tutorialFrame++;
+  if(this.tutorialFrame < 180) { this.tutorialA.show(); this.tutorialB.hide(); this.tutorialC.hide(); }
+  else if(this.tutorialFrame < 320) { this.tutorialA.hide(); this.tutorialB.show(); this.tutorialC.hide(); }
+  else if(this.tutorialFrame < 520) { this.tutorialA.hide(); this.tutorialB.hide(); this.tutorialC.show(); }
+  else { localStorage.setItem("firstGameTutorial",true); this.showTutorial = false; }
 };
 
 /* Window is a Vec2 of the size, in pixels, of the game window for this draw */
@@ -142,7 +148,6 @@ GameUI.prototype.getDraw = function(block, texts, window) {
     this.elements[i].getDraw(block, texts, window);
   }
 };
-
 
 GameUI.prototype.destroy = function() {
   for(var i=0;i<this.elements.length;i++) {
