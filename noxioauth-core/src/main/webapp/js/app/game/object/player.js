@@ -47,7 +47,7 @@ PlayerObject.prototype.update = function(data) {
   
   /* Step Effects */
   var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
-  this.targetCircle.step(util.vec2.toVec3(this.pos, 0.0), 1.1, angle);
+  this.targetCircle.step(util.vec2.toVec3(this.pos, this.height > 0. ? 0. : this.height), 1.1, angle);
   for(var i=0;i<this.effects.length;i++) {
     if(this.effects[i].active()) { this.effects[i].step(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)); }
     else { this.effects.splice(i--, 1); }

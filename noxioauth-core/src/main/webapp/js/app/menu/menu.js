@@ -29,6 +29,7 @@ function Menu() {
     {id: "buy", obj: new BuyMenu()},
     {id: "admin", obj: new AdminMenu()},
     {id: "lobby", obj: new LobbyMenu()},
+    {id: "custom", obj: new CustomMenu()},
     {id: "game", obj: new GameMenu()}
   ];
   

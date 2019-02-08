@@ -1,0 +1,102 @@
+
+.cstm-head {
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.cstm-float {
+  display: inline-block;
+  width: 49.5%;
+  vertical-align: top;
+}
+
+.cstm-scroll {
+  overflow-y: scroll;
+  max-height: 500px;
+  border-top: rgba(255, 255, 255, 1.0) dashed 2px;
+  border-bottom: rgba(255, 255, 255, 1.0) dashed 2px;
+}
+
+/* Track */
+.cstm-scroll::-webkit-scrollbar {
+    width: 16px;
+}
+
+.cstm-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.0);
+}
+
+/* Handle */
+.cstm-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.75);
+}
+
+/* Handle on hover */
+.cstm-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 1.0);
+}
+
+.cstm-cont {
+  text-align: center;
+}
+
+.cstm-box {
+  display: inline-block;
+  width: 175px;
+  height: 175px;
+  padding: 1px;
+  margin: 1px;
+  border: 2px solid rgba(255, 255, 255, 0.0);
+}
+
+.cstm-box:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 1.0);
+}
+
+.cstm-box-selected {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 1.0);
+}
+
+.cstm-box-img-cont {
+  width: 100%;
+  text-align: center;
+}
+
+.cstm-box-img {
+  width: 135px;
+  height: 135px;
+}
+
+.cstm-box-name {
+  display: block;
+  color: rgba(255, 255, 255, 1.0);
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 4px;
+}
+
+.cstm-box-players {
+  display: inline-block;
+  color: rgba(255, 255, 255, 1.0);
+  font-size: 14px;
+  font-weight: normal;
+  margin-left: 2px;
+}
+
+.cstm-back {
+  cursor: pointer;
+  display: inline-block;
+  width: 33%;
+  text-align: center;
+  font-size: 24px;
+  background-color: rgba(255, 255, 255, 0.0);
+  color: rgba(255, 255, 255, 1.0);
+  padding-top: 4px;
+}
+
+.cstm-back:hover {
+  background-color: rgba(255, 255, 255, 1.0);
+  color: rgba(0, 0, 0, 1.0);
+}

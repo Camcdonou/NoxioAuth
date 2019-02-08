@@ -11,6 +11,7 @@
         <link rel="stylesheet" type="text/css" href="css/footer.css">
         <link rel="stylesheet" type="text/css" href="css/buy.css">
         <link rel="stylesheet" type="text/css" href="css/admin.css">
+        <link rel="stylesheet" type="text/css" href="css/custom.css">
         <link rel="stylesheet" type="text/css" href="css/gauss.css">
         <script>
           /* Prevent phones from zooming screen. The webapp handles this. */
@@ -137,7 +138,7 @@
       
       <!-- Unlock Menu -->
       <div id="unlock" class="menu-container" style="display: none">
-        <div id="unlock-head" class="unl-head">User</div>
+        <div id="unlock-head" class="unl-head">...</div>
         <div class="unl-scroll">
           <div id="unlock-container" class="unl-cont">...</div>
         </div>
@@ -265,33 +266,30 @@
       <!-- Game Server Lobby -->
       <div id="lobby" class="menu-container" style="display: none">
         <div class="left-container">
-          <div id="lobby-server" class="menu loc">User@Server Name</div>
-          <div id="lobby-create-cont-a">
-            <div id="lobby-create" class="menu cat" onclick="main.menu.lobby.items.create.show()">Create</div>
-              <div id="lobby-create-name" class="menu sub fld"><input id="lobby-create-name-input" class="inp" type="text" placeholder="Lobby Name"/></div>
-              <div id="lobby-create-gametype" class="menu sub btn" onclick="main.menu.lobby.dropDownGametype();">Gametype</div>
-              <div id="lobby-create-gametype-container"></div>
-              <div id="lobby-create-map" class="menu sub btn" onclick="main.menu.lobby.dropDownMap();">Map</div>
-              <div id="lobby-create-map-container"></div>
-              <div id="lobby-create-settings" class="menu sub btn" onclick="main.menu.lobby.dropDownSettings();">Settings</div>
-              <div id="lobby-create-settings-container">
-                <div class='menu sub drop combo'><span class='combo-l'>Max Players&nbsp;</span><input id='lobby-create-settings-maxplayers' class='combo-r' type='number' placeholder='Default'/></div>
-                <div class='menu sub drop combo'><span class='combo-l'>Score Limit&nbsp;</span><input id='lobby-create-settings-scoretowin' class='combo-r' type='number' placeholder='Default'/></div>
-                <div class='menu sub drop combo'><span class='combo-l'>Respawn Time&nbsp;</span><input id='lobby-create-settings-respawntime' class='combo-r' type='number' placeholder='Default'/></div>
-                <div class='menu sub drop combo' onclick='main.menu.lobby.toggleSetting("static_hill")'><span class='combo-l'>Moving Hill&nbsp;</span><input id='lobby-create-settings-statichill' class='combo-r' type='text' disabled placeholder='Default'/></div>
-                <div class='menu sub drop combo'><span class='combo-l'>Score To Move&nbsp;</span><input id='lobby-create-settings-scoretomove' class='combo-r' type='number' placeholder='Default'/></div>
-              </div>
-              <div id="lobby-create-create" class="menu sub btn ico-blip" onclick="main.menu.lobby.items.create.onEnter()"></div>
-          </div>
-          <div id="lobby-create-cont-b">
-            <div id="lobby-name-name" class="menu cat selected not-btn">...</div>
-          </div>
+          <div id="lobby-server" class="menu loc">...</div>
+          <div id="lobby-name" class="menu cat selected not-btn">...</div>
+          <div id="lobby-custom" class="menu cat" onclick="main.menu.lobby.items.custom.onEnter()">Custom</div>
           <div id="lobby-leave" class="menu cat" onclick="main.menu.lobby.items.leave.onEnter()">Back</div>
         </div>
         <div class="right-container">
           <div class="menu ref"><span class="ico-ref" onclick="main.menu.lobby.list.refresh()"> ↺ </span></div>
           <div class='menu lob'>Join</div>
           <div id="lobby-list-container"></div>
+        </div>
+      </div>
+      
+      <!-- Custom Game Creation -->
+      <div id="custom" class="menu-container" style="display: none">
+        <div class="cstm-head">
+          <div id="custom-type" class="cstm-float">...</div>
+          <div id="custom-set" class="cstm-float">...</div>
+        </div>
+        <div class="cstm-scroll">
+          <div id="custom-map" class="cstm-cont">...</div>
+        </div>
+        <div class="cstm-cont">
+          <div id="custom-create" class="cstm-back" onclick="main.menu.custom.create()">Create</div>
+          <div id="custom-back" class="cstm-back" onclick="main.menu.custom.back()">Back</div>
         </div>
       </div>
       
@@ -366,6 +364,7 @@
       <script src="js/app/menu/buy-menu.js"></script>
       <script src="js/app/menu/admin-menu.js"></script>
       <script src="js/app/menu/lobby-menu.js"></script>
+      <script src="js/app/menu/custom-menu.js"></script>
       <script src="js/app/menu/game-menu.js"></script>
       <script src="js/app/menu/menu.js"></script>
       
