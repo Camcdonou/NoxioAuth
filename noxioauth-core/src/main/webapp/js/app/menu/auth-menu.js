@@ -22,6 +22,7 @@ function AuthMenu() {
   };
   
   /* Creates sub menus */
+  var parent = this;
   this.items = {
     login: {
       element: document.getElementById("auth-login"),
@@ -35,7 +36,7 @@ function AuthMenu() {
       onEnter: function() {
         var u = document.getElementById("auth-login-username-input");
         var p = document.getElementById("auth-login-password-input");
-        main.net.auth.state.login(u.value, p.value);
+        parent.login(u.value, p.value);
         p.value = "";
       }
     },
@@ -82,8 +83,11 @@ function AuthMenu() {
 };
 
 AuthMenu.prototype.guest = function() {
-  main.menu.connect.show("Guest Login", 0);
-  main.net.connectGuest();
+  main.net.connect();
+};
+
+AuthMenu.prototype.login = function(user, pass) {
+  main.net.connect(user, pass);
 };
 
 /* Shows this menu */

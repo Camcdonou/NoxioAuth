@@ -12,6 +12,7 @@ import org.infpls.noxio.auth.module.auth.session.error.*;
 import org.infpls.noxio.auth.module.auth.session.online.Online;
 import org.infpls.noxio.auth.module.auth.util.ID;
 import org.infpls.noxio.auth.module.auth.util.Oak;
+import org.infpls.noxio.auth.module.auth.util.Validation;
 
 public class NoxioSession {
   private final WebSocketSession webSocket;
@@ -38,11 +39,11 @@ public class NoxioSession {
   
   /* Called after construction */
   public void init() throws IOException {
-    sessionState = new Authenticate(this, dao.getUserDao(), dao.getMailDao());
+    sessionState = new Authenticate(this);
   }
   
   public void handlePacket(final String data) throws IOException {
-    
+    if(!loggedIn()) { login(data); return; }
     sessionState.handlePacket(data);
   }
   
@@ -51,28 +52,35 @@ public class NoxioSession {
     webSocket.sendMessage(new TextMessage(gson.toJson(p)));
   }
   
-  /* State info
-    00 - Authentication State
-    01 - Online State
-  */
-  public void changeState(final int s) throws IOException { /* Not a huge fan of how this works. */
-    sessionState.destroy();
-    switch(s) {
-      case 1 : { sessionState = new Online(this, dao.getUserDao()); break; }
-      default : { close(); break; } //NO.
-    }
-  }
-  
-  public void login(final String usr) throws IOException {
+  public void login(String data) throws IOException {
     if(loggedIn()) { throw new IOException("This session is already logged in!"); }
+    
+    /* Check for correct auth packet */
+    final Gson gson = new GsonBuilder().create();
+    Packet p = gson.fromJson(data, Packet.class);
+    if(!p.getType().equals("s10")) { close("Unexpected Data"); return; }
+    final PacketS10 authp = gson.fromJson(data, PacketS10.class);
+    
+    /* Make sure data is valid */
+    if(!Validation.isAlphaNumeric(authp.getUser())) {
+      sendPacket(new PacketS12("Username must be Alpha-Numeric characters only.")); return; }
+    if(!Validation.isAlphaNumeric(authp.getHash())) {
+      sendPacket(new PacketS12("Password hash is bogus.")); return; }
+    
+    /* Auth User/Hash */
+    final String result = dao.getUserDao().authenticate(authp.getUser(), authp.getHash());
+    if(result != null) { sendPacket(new PacketS12(result)); return; }
+    
+    /* Do Login */
     sid = ID.generate32();
-    user = dao.getUserDao().getUserByName(usr);
+    user = dao.getUserDao().getUserByName(authp.getUser());
     settings = dao.getUserDao().getUserSettings(user.uid);
     stats = dao.getUserDao().getUserStats(user.uid);
     unlocks = dao.getUserDao().getUserUnlocks(user.uid);
     if(user == null || settings == null || stats == null || unlocks == null) { close("Fatal error during login. Please contact support."); return; }
     sendPacket(new PacketS01(user.name, sid, user.display, user.getType(), isGuest(), settings, stats, unlocks));
-    changeState(1);
+    sessionState.destroy();
+    sessionState = new Online(this, dao.getUserDao());
   }
   
   public void saveSettings(final UserSettings usrsets) throws IOException {

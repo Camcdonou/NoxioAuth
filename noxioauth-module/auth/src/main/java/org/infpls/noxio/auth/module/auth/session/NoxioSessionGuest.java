@@ -1,5 +1,7 @@
 package org.infpls.noxio.auth.module.auth.session;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -26,10 +28,17 @@ public class NoxioSessionGuest extends NoxioSession {
     super(webSocket, dao);
   }
   
-  /* Called after construction */
   @Override
-  public void init() throws IOException {
+  public void login(String data) throws IOException {
     if(loggedIn()) { throw new IOException("This session is already logged in!"); }
+    
+    /* Check for correct auth packet */
+    final Gson gson = new GsonBuilder().create();
+    Packet p = gson.fromJson(data, Packet.class);
+    if(!p.getType().equals("s11")) { close("Unexpected Data"); return; }
+    final PacketS11 guestp = gson.fromJson(data, PacketS11.class);
+    
+    /* Do Login */
     sid = ID.generate32();
     final String usr = ID.generate32();
     if(dao.getUserDao().getUserByName(usr) != null) { close("Error during guest login, 256bit id collision. You should buy a lottery ticket."); return; }
@@ -39,12 +48,8 @@ public class NoxioSessionGuest extends NoxioSession {
     unlocks = new UserUnlocks();
     if(user == null || settings == null || stats == null || unlocks == null) { close("Fatal error during login. Please contact support."); return; }
     sendPacket(new PacketS01(user.name, sid, user.display, user.getType(), isGuest(), settings, stats, unlocks));
+    sessionState.destroy();
     sessionState = new Online(this, dao.getUserDao());
-  }
-  
-  @Override
-  public void login(final String usr) throws IOException {
-    throw new IOException("Guest Session called invalid function :: login()");
   }
   
   @Override

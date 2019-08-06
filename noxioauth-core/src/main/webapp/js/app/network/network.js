@@ -1,5 +1,6 @@
 "use strict";
 /* global main */
+/* global AuthState */
 
 /* Define Network Class */
 function Network () {
@@ -12,18 +13,33 @@ function Network () {
   this.guest = undefined;  // Boolean flag for if the account is a guest or a normal account.
 };
 
-/* Opens connection to noxioauth on normal user socket */
-Network.prototype.connect = function() {
+/* Opens connection to server */
+Network.prototype.connect = function(user, pass) {
   if(this.loggedIn()) { main.close(); return; }
   if(this.auth.isConnected()) { this.auth.close(); }
-  this.auth.establish("auth");
-};
-
-/* Opens connection to noxioauth on guest socket */
-Network.prototype.connectGuest = function() {
-  if(this.loggedIn()) { main.close(); return; }
-  if(this.auth.isConnected()) { this.auth.close(); }
-  this.auth.establish("guest");
+  
+  var that = this;
+  var retry = 5; // Retry this many times before giving up
+  var pak;
+  if(!user) {
+    this.auth.establish("guest");
+    pak = {type: "s11"};
+  }
+  else {
+    this.auth.establish("auth");
+    pak = {type: "s10", user: user, hash: sha256("20"+pass+"xx")};
+  }
+  var waitForReady = function() { 
+    setTimeout(function() {
+      if(that.auth.state instanceof AuthState) {
+        that.auth.send(pak);
+        return;
+      }
+      if(--retry < 1) { main.close(); }
+      else { waitForReady(); }
+    }, 1000);
+  };
+  waitForReady();
 };
 
 /* Connects to specific game server */

@@ -15,7 +15,7 @@ function Main () {
 Main.prototype.init = function() {
   this.gauss.init();
   this.gauss.show();
-  this.net.connect();
+  this.menu.auth.show();
   this.gauss.status();
 };
 
@@ -68,7 +68,9 @@ var main = new Main();
 main.init();
 
 /* Disconnect and reset page */
-function reset() {
+function reset(delay) {
+  if(delay) { setTimeout(function() { reset(); }, delay); return; }
+  
   main.close();
   location.reload();
 };
