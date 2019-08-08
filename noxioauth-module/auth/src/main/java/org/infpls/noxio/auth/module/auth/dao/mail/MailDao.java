@@ -38,7 +38,7 @@ public class MailDao {
       message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
       message.setSubject(subject);
       message.setContent(mpMessage(text, html));
-      message.addHeader("List-Unsubscribe","<https://20xx.io/noxioauth/unsubscribe>");
+      message.addHeader("List-Unsubscribe","<https://20xx.io/nxc/unsubscribe>");
 
       Transport.send(message);
       return true;

@@ -71,6 +71,8 @@ function AuthMenu() {
     }
   };
   
+  this.items.about.items[0].innerHTML = this.items.about.items[0].innerHTML.replace("_VER", _VER());
+  
   /* ENTER keypress to SUBMIT on fields.*/
   var tmp = this;
   this.items.login.items[0].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.login.items[2].click(); } });
@@ -93,7 +95,7 @@ AuthMenu.prototype.login = function(user, pass) {
 AuthMenu.prototype.create = function(user, email, pass) {
   main.menu.connect.show("Sending Verification Email");
   $.ajax({
-    url: "http://" + window.location.host + "/noxioauth/auth/create",
+    url: "http://" + window.location.host + "/nxc/auth/create",
     type: 'POST',
     data: JSON.stringify({user: user, hash: sha256("20"+pass+"xx"), email: email}),
     contentType : 'application/json',

@@ -261,7 +261,7 @@ Gauss.prototype.createTexture = function(path) {
   };
   tex.img = new Image();
   tex.img.onload = function() { tex.handleTextureLoaded(gl); tex.ready = true; };
-  tex.img.src = "img/gauss/" + path + ".png";
+  tex.img.src = "img/gauss/" + path + ".png?v=_" + _VER() + "_";
   
   return tex;
 };

@@ -29,7 +29,7 @@ Main.prototype.startGame = function(name, settings, map) {
   if(!this.inGame() && main.net.game.address) {
     this.menu.connect.show("Downloading map file...", 0);
     $.ajax({
-      url: "http://" + main.net.game.address + ":" + main.net.game.port + "/noxiogame/map/" + map,
+      url: "http://" + main.net.game.address + ":" + main.net.game.port + "/nxg/map/" + map,
       type: 'GET',
       timeout: 3000,
       success: function(data) {

@@ -34,7 +34,7 @@ function ResetMenu() {
 ResetMenu.prototype.submitRequest = function() {
   main.menu.connect.show("Sending Reset Email", 0);
   $.ajax({
-    url: "http://" + window.location.host + "/noxioauth/auth/reset/request",
+    url: "http://" + window.location.host + "/nxc/auth/reset/request",
     type: 'POST',
     data: JSON.stringify({user: this.request.user.value, email: this.request.email.value}),
     contentType : 'application/json',
@@ -57,7 +57,7 @@ ResetMenu.prototype.submitVerify = function() {
   else {
     main.menu.connect.show("Verifying", 0);
     $.ajax({
-      url: "http://" + window.location.host + "/noxioauth/auth/reset/process",
+      url: "http://" + window.location.host + "/nxc/auth/reset/process",
       type: 'POST',
       data: JSON.stringify({hash: sha256("20"+this.verify.passwordA.value+"xx"), verification: this.verify.code.value}),
       contentType : 'application/json',

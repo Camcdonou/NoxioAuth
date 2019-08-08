@@ -34,7 +34,7 @@ Game.prototype.connect = function(address, port) {
     return;
   }
 
-  this.webSocket = new WebSocket("ws://" + address + ":" + port + "/noxiogame/game");
+  this.webSocket = new WebSocket("ws://" + address + ":" + port + "/nxg/game");
   main.menu.connect.show("Connecting @" + address + ":" + port, 0);
 
   this.webSocket.onopen = function(event){

@@ -14,7 +14,7 @@ function TextureCube(gl, glTexture, path) {
   for(var i=0;i<6;i++) {
     var ni = new Image();
     ni.onload = function() { tmp.handleTextureLoaded(gl); tmp.ready = true; };
-    ni.src = "img/game/" + path[i] + ".png";
+    ni.src = "img/game/" + path[i] + ".png?v=_" + _VER() + "_";
     this.img.push(ni);
   }
 }

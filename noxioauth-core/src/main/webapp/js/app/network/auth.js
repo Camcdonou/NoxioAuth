@@ -26,7 +26,7 @@ Auth.prototype.establish = function(socket) {
     }
     main.menu.connect.show("Checking server status @" + addresses[r], 0);
     $.ajax({
-      url: "http://" + addresses[r] + "/noxioauth/status",
+      url: "http://" + addresses[r] + "/nxc/status",
       type: 'GET',
       timeout: 3000,
       success: function() { main.net.auth.connect(addresses[r], socket); },
@@ -48,7 +48,7 @@ Auth.prototype.connect = function(address, socket){
     return;
   }
 
-  this.webSocket = new WebSocket("ws://" + address + "/noxioauth/" + socket);
+  this.webSocket = new WebSocket("ws://" + address + "/nxc/" + socket);
   main.menu.connect.show("Connecting @" + address, 0);
 
   this.webSocket.onopen = function(event){

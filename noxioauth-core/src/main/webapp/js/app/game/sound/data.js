@@ -7,7 +7,7 @@ function SoundData(context, path) {
   
   var tmp = this; /* Oh look. Javascript. */
   var request = new XMLHttpRequest();
-  request.open('GET', "audio/" + path, true);
+  request.open('GET', "audio/" + path + "?v=_" + _VER() + "_", true);
   request.responseType = 'arraybuffer';
 
   // Decode asynchronously
@@ -42,7 +42,7 @@ function CustomSoundData(context, path) {
   
   var tmp = this; /* Oh look. Javascript. */
   var request = new XMLHttpRequest();
-  request.open('GET', "file/sound/" + path, true);
+  request.open('GET', "file/sound/" + path + "?v=_" + _VER() + "_", true);
   request.responseType = 'arraybuffer';
 
   // Decode asynchronously
