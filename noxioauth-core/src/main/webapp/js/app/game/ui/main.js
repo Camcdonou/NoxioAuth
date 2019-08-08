@@ -93,27 +93,7 @@ MainUI.prototype.generate = function() {
     onClick: function() { parent.ui.sub = "setting"; },
     isHovered: false
   });
-  
-  h += s;
-  var DEBUG        = "Debug";
-  var DEBUG_LENGTH = util.font.textLength(DEBUG, fontName, s);
-  o = (w*0.5)-(DEBUG_LENGTH*0.5);
-  
-  menuContainer.add({
-    neutral: {
-      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), clear, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(o,h+v), s, swhite, fontName, fontMat, DEBUG)]
-    },
-    hover: {
-      block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, DEBUG)],
-      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
-    },
-    step: protoOnClick,
-    onClick: function() { parent.ui.flags.debug = !parent.ui.flags.debug; },
-    isHovered: false
-  });
-  
+   
   h += s;
   var GAME        = "Game";
   var GAME_LENGTH = util.font.textLength(GAME, fontName, s);

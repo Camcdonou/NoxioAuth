@@ -7,13 +7,13 @@ function Input(game) {
   this.window = this.game.window;
   
   /* These functions are wrapped since main.game.input does not exist yet. But it will before they can be called because javascript is synchronous. */
-  this.window.onmousemove = function(event) { main.game.input.mouse.event(event); };
-  this.window.onmousedown = function(event) { main.game.input.mouse.event(event, true); };
-  this.window.onmouseup = function(event) { main.game.input.mouse.event(event, false); };
-  this.window.addEventListener("mousewheel", function(event) { main.game.input.mouse.wheel(event); }, false); // IE9, Chrome, Safari, Opera
-  this.window.addEventListener("DOMMouseScroll", function(event) { main.game.input.mouse.wheel(event); }, false); // Firefox
-  document.onkeyup = function(event) { main.game.input.keyboard.event(event, false); };
-  document.onkeydown = function(event) { main.game.input.keyboard.event(event, true); };
+  this.window.onmousemove = function(event) { main.game.input.mouse.event(event); event.preventDefault(); return false; };
+  this.window.onmousedown = function(event) { main.game.input.mouse.event(event, true); event.preventDefault(); return false; };
+  this.window.onmouseup = function(event) { main.game.input.mouse.event(event, false); event.preventDefault(); return false; };
+  this.window.addEventListener("mousewheel", function(event) { main.game.input.mouse.wheel(event); event.preventDefault(); return false; }, false); // IE9, Chrome, Safari, Opera
+  this.window.addEventListener("DOMMouseScroll", function(event) { main.game.input.mouse.wheel(event); event.preventDefault(); return false; }, false); // Firefox
+  document.onkeyup = function(event) { main.game.input.keyboard.event(event, false); event.preventDefault(); event.preventDefault(); return false; };
+  document.onkeydown = function(event) { main.game.input.keyboard.event(event, true); event.preventDefault(); event.preventDefault(); return false; };
   
   this.touchEvt = function(event) { main.game.input.touch.event(event); };
   

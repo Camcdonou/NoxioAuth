@@ -15,7 +15,7 @@ function Main () {
 Main.prototype.init = function() {
   this.gauss.init();
   this.gauss.show();
-  this.menu.auth.show();
+  this.menu.init();
   this.gauss.status();
 };
 

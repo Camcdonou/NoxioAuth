@@ -95,22 +95,22 @@ OptionUI.prototype.generate = function() {
   });
   
   h += s;
-  var KICK        = "Vote Kick";
-  var KICK_LENGTH = util.font.textLength(KICK, fontName, s);
-  o = (w*0.5)-(KICK_LENGTH*0.5);
+  var DEBUG        = "Debug";
+  var DEBUG_LENGTH = util.font.textLength(DEBUG, fontName, s);
+  o = (w*0.5)-(DEBUG_LENGTH*0.5);
   
   menuContainer.add({
     neutral: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), clear, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(o,h+v), s, swhite, fontName, fontMat, KICK)]
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, swhite, fontName, fontMat, DEBUG)]
     },
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, KICK)],
+      text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, DEBUG)],
       sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
-    onClick: function() { },
+    onClick: function() { parent.ui.flags.debug = !parent.ui.flags.debug; },
     isHovered: false
   });
   

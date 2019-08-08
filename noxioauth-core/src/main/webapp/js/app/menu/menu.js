@@ -55,6 +55,27 @@ function Menu() {
   this.hideAll();
 };
 
+Menu.prototype.init = function() {
+  if(this.supported()) { this.auth.show(); }
+  else { this.connect.show("iOS is not supported", 1); }
+};
+
+Menu.prototype.supported = function() {
+  var iDevices = [
+    'iPad',
+    'iPhone',
+    'iPod'
+  ];
+
+  if(!!navigator.platform) {
+    while(iDevices.length) {
+      if(navigator.platform.includes(iDevices.pop())) { return false; }
+    }
+  }
+  
+  return true;
+};
+
 Menu.prototype.resize = function() {
   this.lobby.resize();
 };

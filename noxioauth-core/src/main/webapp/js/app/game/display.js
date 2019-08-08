@@ -881,6 +881,11 @@ Display.prototype.destroy = function() {
   deleteFBO(this.fbo.ui);
   deleteFBO(this.fbo.sky);
   this.fbo = {};
+  
+  /* Clear canvas so when we load a game the last frame of the previous game dosen't show. */
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clearDepth(1.0);
+  
   this.window.width = 1; this.window.height = 1;
   this.gl = null;
 };

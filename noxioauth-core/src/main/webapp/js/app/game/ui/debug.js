@@ -137,7 +137,7 @@ DebugUI.prototype.generate = function() {
       sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
-    onClick: function() { parent.game.sound.setMusic(parent.game.sound.getSound("music/roll.wav", 1.0, 0.0, "music"), true); },
+    onClick: function() { window.open("https://www.youtube.com/watch?v=oHg5SJYRHA0",'_blank'); }, // Oof
     isHovered: false
   });
   
