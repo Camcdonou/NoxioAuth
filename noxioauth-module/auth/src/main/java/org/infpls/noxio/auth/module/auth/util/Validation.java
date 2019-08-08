@@ -5,7 +5,7 @@ public class Validation {
   public static String validUserName(final String in) {
     if(!Validation.isAlphaNumeric(in)) { return "Username must be Alpha-Numeric characters only."; }
     if(in.length() < 4) { return "Username must be at least 4 characters."; }
-    if(in.length() > 32) { return "Username cannot be longer than 32 characters."; }
+    if(in.length() > 18) { return "Username cannot be longer than 18 characters."; }
     return null;
   }
   

@@ -57,7 +57,7 @@ function AuthMenu() {
         var pa = document.getElementById("auth-create-password-a-input");
         var pb = document.getElementById("auth-create-password-b-input");
         if(pa.value !== pb.value) { main.menu.warning.show("Your passwords do not match."); return; }
-        main.net.auth.state.create(u.value, e.value, pa.value);
+        parent.create(u.value, e.value, pa.value);
         pa.value = ""; pb.value = "";
       }
     },
@@ -88,6 +88,26 @@ AuthMenu.prototype.guest = function() {
 
 AuthMenu.prototype.login = function(user, pass) {
   main.net.connect(user, pass);
+};
+
+AuthMenu.prototype.create = function(user, email, pass) {
+  main.menu.connect.show("Sending Verification Email");
+  $.ajax({
+    url: "http://" + window.location.host + "/noxioauth/auth/create",
+    type: 'POST',
+    data: JSON.stringify({user: user, hash: sha256("20"+pass+"xx"), email: email}),
+    contentType : 'application/json',
+    timeout: 120000,
+    success: function() {
+      main.menu.connect.show("Email Sent");
+      main.menu.warning.show("Check your spam folder if you can't find it.");
+      reset(5000);
+    },
+    error: function(data) {
+      if(data) { main.menu.warning.show(data.responseJSON.message); main.menu.auth.show(); }
+      else { main.menu.connect.show("Request Timed Out", 1); }
+    }
+  });
 };
 
 /* Shows this menu */

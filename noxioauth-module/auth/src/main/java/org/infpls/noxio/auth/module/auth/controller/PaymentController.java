@@ -1,4 +1,4 @@
-package org.infpls.noxio.auth.module.auth.websocket;
+package org.infpls.noxio.auth.module.auth.controller;
 
 import com.google.gson.*;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package org.infpls.noxio.auth.module.auth.websocket;
+package org.infpls.noxio.auth.module.auth.controller;
 
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;

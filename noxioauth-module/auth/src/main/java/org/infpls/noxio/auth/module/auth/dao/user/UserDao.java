@@ -22,9 +22,17 @@ public class UserDao {
   private final DaoContainer dao;
   private final List<NoxioSession> sessions; /* This is a list of all active user NoxioSessions. */
   
+  /* User accounts that are pending creation. Once email is validated they are created. */
+  private final List<PendingUser> pending;
+  
+  /* Pending password resets. */
+  private final List<PendingReset> resets;
+  
   public UserDao(final DaoContainer dao) {
     this.dao = dao;
     sessions = Collections.synchronizedList(new ArrayList());
+    pending = Collections.synchronizedList(new ArrayList());
+    resets = Collections.synchronizedList(new ArrayList());
   }
   
   public synchronized boolean createUser(final String user, final String email, final String hash) throws IOException {
@@ -398,5 +406,51 @@ public class UserDao {
       }
     }
     return null;
+  }
+  
+  public void createPending(String user, String hash, String email, String verification) throws IOException {
+    for(int i=0;i<pending.size();i++) {
+      final PendingUser pu = pending.get(i);
+      if(pu.name.equals(user)) { pending.remove(pu); }
+    }
+    pending.add(new PendingUser(user, hash, email, verification));
+  }
+  
+  public PendingUser getPending(String user, String verification) {
+    for(int i=0;i<pending.size();i++) {
+      final PendingUser pu = pending.get(i);
+      if(pu.name.equals(user) && pu.verification.equals(verification)) { pending.remove(pu); return pu; }
+    }
+    return null;
+  }
+  
+  public void createReset(String user, String email, String verification) throws IOException {
+    for(int i=0;i<resets.size();i++) {
+      final PendingReset pu = resets.get(i);
+      if(pu.name.equals(user)) { resets.remove(pu); }
+    }
+    resets.add(new PendingReset(user, email, verification));
+  }
+  
+  public PendingReset getReset(String verification) {
+    for(int i=0;i<resets.size();i++) {
+      final PendingReset pu = resets.get(i);
+      if(pu.verification.equals(verification)) { resets.remove(pu); return pu; }
+    }
+    return null;
+  }
+  
+  public static class PendingUser {
+    public final String name, hash, email, verification;
+    public PendingUser(String name, String hash, String email, String verification) {
+      this.name = name; this.hash = hash; this.email = email; this.verification = verification;
+    }
+  }
+  
+  public static class PendingReset {
+    public final String name, email, verification;
+    public PendingReset(String name, String email, String verification) {
+      this.name = name; this.email = email; this.verification = verification;
+    }
   }
 }
