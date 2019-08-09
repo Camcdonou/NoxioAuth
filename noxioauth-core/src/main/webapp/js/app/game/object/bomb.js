@@ -14,7 +14,7 @@ function BombObject(game, oid, pos, permutation, team, color) {
   
   /* Settings */
   this.radius = 0.25; this.weight = 0.5; this.friction = 0.725;
-  this.cullRadius = 1.0;
+  this.cullRadius = 1.5;
 
   /* State */
   this.onBase = 1;                 // 1 -> Bomb is on start point | 0 -> Bomb is not on the start point and should draw on hud

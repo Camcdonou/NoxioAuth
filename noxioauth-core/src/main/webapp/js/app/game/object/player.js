@@ -25,7 +25,7 @@ function PlayerObject(game, oid, pos, permutation, team, color) {
   
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.725;
-  this.moveSpeed = 0.0375; this.jumpHeight = 0.175; this.cullRadius = 1.0;
+  this.moveSpeed = 0.0375; this.jumpHeight = 0.175; this.cullRadius = 1.5;
   
   /* State */
   this.glow = 0.0;          // Scalar from 0 to 1, used to shift color to white for things like marths counter
