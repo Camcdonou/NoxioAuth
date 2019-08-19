@@ -72,7 +72,7 @@ PlayerPuff.prototype.land = PlayerObject.prototype.land;
 PlayerPuff.prototype.stun = function() {
   PlayerObject.prototype.stun.call(this);
   if(this.chargeEffect) { this.chargeEffect.destroy(); this.chargeEffect = undefined; }
-  if(this.restEfefct) { this.restEffect.destroy(); this.restEffect = undefined; }
+  if(this.restEffect) { this.restEffect.destroy(); this.restEffect = undefined; }
   this.restCooldown = 0;
 };
 

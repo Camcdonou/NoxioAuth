@@ -412,7 +412,7 @@ util.matrix.unprojection = function(window, camera, cursor, depth) {
   return {x: modelPointArrayResults[0], y: modelPointArrayResults[1], z: modelPointArrayResults[2]};
 };
 
-util.matrix.projection = function(window, camera, coord) { 
+util.matrix.projection = function(window, camera, coord) {
   var VIEWPORT = [0, 0, window.width, window.height];
   var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, camera.fov, window.width/window.height, camera.near, camera.far); // Perspective
   var MOVEMATRIX = mat4.create();

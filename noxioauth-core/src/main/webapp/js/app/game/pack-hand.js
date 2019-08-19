@@ -31,6 +31,7 @@ PackHand.prototype.gameDataUpdate = function(packet) {
       case "ctl" : { this.control(data); break; }
       case "rst" : { this.respawnTimer(data); break; }
       case "rnd" : { this.roundInfo(data); break; }
+      case "frc" : { this.forceRespawn(data); break; }
       case "wsp" : { this.whisper(data); break; }
       case "crd" : { this.credits(data); break; }
       default : { main.menu.warning.show("Game data parsing interupted unexpectedly on '" + field + "' with " + data.length + " fields remaining."); break; }
@@ -187,6 +188,11 @@ PackHand.prototype.roundInfo = function(data) {
   if(!msg) { this.game.ui.respawn.clearRound(); this.game.forceSpawn = true; }
   else { this.game.ui.respawn.setRound(msg); }
   
+};
+
+/* GAM::FORCERSP | frc */
+PackHand.prototype.forceRespawn = function(data) {
+  this.game.forceSpawn = true;
 };
 
 /* SYS::WHISPER | wsp */

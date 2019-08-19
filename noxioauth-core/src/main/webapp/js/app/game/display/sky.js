@@ -21,6 +21,7 @@ Sky.prototype.genComp = function(display, source) {
   var comp = {};
   comp.model = display.getModel(source.model);
   comp.material = display.getMaterial(source.material);
+  comp.pos = source.pos;
   comp.offset = source.offset;
   comp.velocity = source.velocity;
   return comp;
@@ -35,7 +36,7 @@ Sky.prototype.getDraw = function(geometry) {
     var cr = util.vec3.scale(this.components[i].velocity, this.frame);
     
     var skyUniformData = [
-      {name: "transform", data: [0, 0, 0]},
+      {name: "transform", data: util.vec3.toArray(this.components[i].pos)},
       {name: "rotation", data: util.vec3.toArray(cr)},
       {name: "offset", data: util.vec3.toArray(this.components[i].offset)},
       {name: "scale", data: 1.0}

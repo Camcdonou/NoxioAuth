@@ -42,7 +42,9 @@ Asset.prototype.material.character.fox.ui = {};
 Asset.prototype.material.character.fox.decal = {};
 Asset.prototype.material.character.fox.effect = {};
 Asset.prototype.material.sky = {};
+Asset.prototype.material.sky.vapor = {};
 Asset.prototype.material.sky.final = {};
+Asset.prototype.material.sky.gold = {};
 Asset.prototype.material.sky.orbit = {};
 Asset.prototype.material.map = {};
 Asset.prototype.material.map.tin = {};
@@ -1445,6 +1447,24 @@ Asset.prototype.material.character.fox.effect.blip = {
   texture0: "character/fox/effect/blip",
 };
 
+/* Source File: grid.mat */
+Asset.prototype.material.sky.vapor.grid = {
+  name: "sky.vapor.grid",
+  shader: "skyvaporgrid",
+  shadow: "false",
+  texture0: "sky/vapor/grid",
+  texture1: "sky/final/mask",
+};
+
+/* Source File: comet.mat */
+Asset.prototype.material.sky.vapor.comet = {
+  name: "sky.vapor.comet",
+  shader: "finalcomet",
+  shadow: "false",
+  texture0: "sky/final/comet",
+  texture1: "sky/vapor/grad",
+};
+
 /* Source File: outer.mat */
 Asset.prototype.material.sky.final.outer = {
   name: "sky.final.outer",
@@ -1491,6 +1511,30 @@ Asset.prototype.material.sky.final.nebula = {
   texture0: "sky/final/nebula_multi",
   texture1: "sky/final/nebula_color",
   texture2: "sky/final/mask",
+};
+
+/* Source File: void.mat */
+Asset.prototype.material.sky.gold.void = {
+  name: "sky.gold.void",
+  shader: "skygoldsky",
+  shadow: "false",
+  texture0: "sky/gold/void",
+};
+
+/* Source File: cloud.mat */
+Asset.prototype.material.sky.gold.cloud = {
+  name: "sky.gold.cloud",
+  shader: "skygoldcloud",
+  shadow: "false",
+  texture0: "sky/gold/cloud",
+};
+
+/* Source File: sky.mat */
+Asset.prototype.material.sky.gold.sky = {
+  name: "sky.gold.sky",
+  shader: "skygoldsky",
+  shadow: "false",
+  texture0: "sky/gold/sky",
 };
 
 /* Source File: earth.mat */

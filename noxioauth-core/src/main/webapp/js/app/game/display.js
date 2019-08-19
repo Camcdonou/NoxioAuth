@@ -88,7 +88,7 @@ Display.prototype.setupWebGL = function() {
   if(!this.createFramebuffer("ui", this.upscale.ui)) { return false; }
   
   /* debug @TODO: */
-  this.sky = new Sky(this, this.game.asset.sky.final);
+  this.sky = new Sky(this, this.game.asset.sky.vapor);
   
   /* @TODO: @DEBUG: Used by js/app/game/ui/debug.js exclusively. */
   this.shadowDebugMat = new Material("~SHADOW_DEBUG_MATERIAL", this.getShader("simpletrans"), {texture0: this.fbo.shadow.tex}, false);
@@ -558,8 +558,8 @@ Display.prototype.draw = function() {
   gl.viewport(0, 0, (this.window.width*this.fbo.sky.upscale), (this.window.height*this.fbo.sky.upscale)); // Resize to canvas
   gl.clearColor(0.0, 0.0, 0.0, 1.0);                                                                      // Transparent Black Background
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);                                                    // Clear Color and Depth from previous draw.
-  gl.depthMask(false);                                                                                    // Disable depth write for UI Draw
-  gl.disable(gl.DEPTH_TEST);                                                                              // Disable depth testing for UI Draw
+  gl.depthMask(true);                                                                                     // Enables depth buffer
+  gl.enable(gl.DEPTH_TEST);                                                                               // Enable depth test
   gl.enable(gl.BLEND);                                                                                    // Enable Transparency 
   
   var SKYPROJMATRIX = mat4.create(); mat4.perspective(SKYPROJMATRIX, this.camera.fov, this.window.width/this.window.height, 8, 256); // Perspective
@@ -583,6 +583,7 @@ Display.prototype.draw = function() {
   this.sky.getDraw(skyGeom);
   
   for(var i=0;i<skyGeom.length;i++) {
+    gl.clear(gl.DEPTH_BUFFER_BIT);                          // Clears depth buffer between each layer of sky
     skyGeom[i].material.shader.enable(gl);
     skyGeom[i].material.enable(gl);
     skyGeom[i].material.shader.applyUniforms(gl, skyGeom[i].uniforms);
@@ -592,8 +593,6 @@ Display.prototype.draw = function() {
     skyGeom[i].material.disable(gl);
   }
 
-  gl.depthMask(true);                       // Reenable depth write after UI draw
-  gl.enable(gl.DEPTH_TEST);                 // Reenable after UI Draw
   gl.disable(gl.BLEND);                     // Disable transparency
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable Sky framebuffer
     

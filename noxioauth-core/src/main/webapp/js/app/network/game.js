@@ -68,7 +68,7 @@ Game.prototype.handlePacket = function(packet) {
     case "s01" : { this.handleBlob(packet.packets); break; }
     case "x00" : { main.menu.error.showError("Connection Error", packet.message); main.close(); break; }
     case "x01" : { main.menu.error.showErrorException("Server Exception", packet.message, packet.trace); main.close(); break; }
-    default : { main.menu.error.showErrorException("Connection Error", "Recieved invalid packet type: " + packet.type, JSON.stringify(packet)); main.close(); break; }
+    default : { main.menu.warning.show("Connection Error", "Recieved unexpected packet: " + packet.type); break; }
   }
 };
 
