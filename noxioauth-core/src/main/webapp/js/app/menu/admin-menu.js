@@ -6,6 +6,7 @@ function AdminMenu() {
   this.info = document.getElementById("admin-info");
   this.inpUid = document.getElementById("admin-control-uid");
   this.inpBan = document.getElementById("admin-control-ban-length");
+  this.inpMsg = document.getElementById("admin-control-msg");
   
   this.btnBan = document.getElementById("admin-control-ban");
   this.btnFree = document.getElementById("admin-control-free");
@@ -13,6 +14,7 @@ function AdminMenu() {
   this.btnFull = document.getElementById("admin-control-full");
   this.btnMod = document.getElementById("admin-control-mod");
   this.btnSupport = document.getElementById("admin-control-support");
+  this.btnSend = document.getElementById("admin-control-send");
   
   var tmp = this;
   this.btnBan.onclick = function() { tmp.banUser(); };
@@ -21,6 +23,7 @@ function AdminMenu() {
   this.btnFull.onclick = function() { tmp.setUserType("FULL"); };
   this.btnMod.onclick = function() { tmp.setUserType("MOD"); };
   this.btnSupport.onclick = function() { tmp.setSupport(); };
+  this.btnSend.onclick = function() { tmp.sendGlobalMessage(); };
 };
 
 AdminMenu.prototype.setUserSupport = function() {
@@ -33,6 +36,10 @@ AdminMenu.prototype.banUser = function() {
 
 AdminMenu.prototype.setUserType = function(type) {
   main.net.auth.state.adminSetUserType(this.inpUid.value, type);
+};
+
+AdminMenu.prototype.sendGlobalMessage = function() {
+  main.net.auth.state.adminSendGlobalMessage(this.inpMsg.value);
 };
 
 /* Creates a table from the given admin info */

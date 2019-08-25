@@ -40,6 +40,7 @@ public class Online extends SessionState {
      > o42 admin ban user
      > o43 admin change user type
      > o44 admin set supporter flag
+     > o45 admin global message
   */
   
   @Override
@@ -60,6 +61,7 @@ public class Online extends SessionState {
         case "o42" : { adminSuspendUser(gson.fromJson(data, PacketO42.class)); break; }
         case "o43" : { adminSetUserType(gson.fromJson(data, PacketO43.class)); break; }
         case "o44" : { adminSetUserSupport(gson.fromJson(data, PacketO44.class)); break; }
+        case "o45" : { adminSendGlobalMessage(gson.fromJson(data, PacketO45.class)); break; }
         default : { close("Invalid data: " + p.getType()); break; }
       }
     } catch(IOException | NullPointerException | JsonParseException ex) {
@@ -129,6 +131,11 @@ public class Online extends SessionState {
   private void adminSetUserSupport(final PacketO44 p) throws IOException {
     if(!isMod()) { session.close("Stop right there criminal scum!"); return; }
     userDao.setUserSupport(p.getUid());
+  }
+  
+  private void adminSendGlobalMessage(final PacketO45 p) throws IOException {
+    if(!isMod()) { session.close("Stop right there criminal scum!"); return; }
+    userDao.sendGlobalMessage(p.getMessage());
   }
   
   @Override

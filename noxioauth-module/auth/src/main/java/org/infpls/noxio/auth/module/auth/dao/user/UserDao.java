@@ -442,6 +442,17 @@ public class UserDao {
     return null;
   }
   
+  /* Sends a message to all online users */
+  public void sendGlobalMessage(String message) {
+    for(int i=0;i<sessions.size();i++) {
+      try {
+        final NoxioSession s = sessions.get(i);
+        if(s.isOpen()) { s.sendPacket(new PacketS45(message)); };
+      }
+      catch(Exception ex) { Oak.log(Oak.Type.SESSION, Oak.Level.ERR, "Failed to send global message to user."); }
+    }
+  }
+  
   public static class PendingUser {
     public final String name, hash, email, verification;
     public PendingUser(String name, String hash, String email, String verification) {

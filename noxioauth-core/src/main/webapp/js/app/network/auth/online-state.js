@@ -93,6 +93,10 @@ OnlineState.prototype.adminSetUserSupport = function(uid) {
   this.send({type: "o44", uid: uid});
 };
 
+OnlineState.prototype.adminSendGlobalMessage = function(message) {
+  this.send({type: "o45", message: message});
+};
+
 OnlineState.prototype.send = function(data) {
   main.net.auth.send(data);
 };
