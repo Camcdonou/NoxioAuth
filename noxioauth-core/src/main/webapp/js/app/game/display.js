@@ -86,10 +86,7 @@ Display.prototype.setupWebGL = function() {
   if(!this.createFramebuffer("sky", this.upscale.sky)) { return false; }
   if(!this.createFramebuffer("world", this.upscale.world)) { return false; }
   if(!this.createFramebuffer("ui", this.upscale.ui)) { return false; }
-  
-  /* debug @TODO: */
-  this.sky = new Sky(this, this.game.asset.sky.vapor);
-  
+
   /* @TODO: @DEBUG: Used by js/app/game/ui/debug.js exclusively. */
   this.shadowDebugMat = new Material("~SHADOW_DEBUG_MATERIAL", this.getShader("simpletrans"), {texture0: this.fbo.shadow.tex}, false);
   this.materials.push(this.shadowDebugMat);
@@ -580,7 +577,7 @@ Display.prototype.draw = function() {
   ];
   
   var skyGeom = [];
-  this.sky.getDraw(skyGeom);
+  this.game.map.sky.getDraw(skyGeom);
   
   for(var i=0;i<skyGeom.length;i++) {
     gl.clear(gl.DEPTH_BUFFER_BIT);                          // Clears depth buffer between each layer of sky

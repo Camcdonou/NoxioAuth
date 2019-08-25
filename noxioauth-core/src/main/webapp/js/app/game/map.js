@@ -13,6 +13,8 @@ function Map(display, data) {
     3.1415926536,
     4.7123889804
   ];
+  
+  this.sky = new Sky(display, display.game.asset.sky[data.sky]);
 
   this.collision = {floor: data.floor, wall: data.wall};
   
