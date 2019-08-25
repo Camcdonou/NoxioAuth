@@ -19,8 +19,6 @@ function CustomMenu() {
       id: "elimination",
       team: false,
       settings: [
-        {name: "Score Limit", id: "score_to_win", type: "int"},
-        {name: "Respawn Time", id: "respawn_time", type: "int"},
         {name: "Minimum Players", id: "min_players", type: "int"},
         {name: "Round Countdown", id: "round_start_time", type: "sec"}
       ]
@@ -31,7 +29,7 @@ function CustomMenu() {
       team: false,
       settings: [
         {name: "Score Limit", id: "score_to_win", type: "int"},
-        {name: "Respawn Time", id: "respawn_time", type: "int"}
+        {name: "Respawn Time", id: "respawn_time", type: "sec"}
       ]
     },
     {
@@ -40,7 +38,7 @@ function CustomMenu() {
       team: false,
       settings: [
         {name: "Score Limit", id: "score_to_win", type: "int"},
-        {name: "Respawn Time", id: "respawn_time", type: "int"},
+        {name: "Respawn Time", id: "respawn_time", type: "sec"},
         {name: "Moving Hill", id: "static_hill", type: "bool"},
         {name: "Points To Move", id: "score_to_move", type: "int"}
       ]
@@ -51,7 +49,7 @@ function CustomMenu() {
       team: false,
       settings: [
         {name: "Score Limit", id: "score_to_win", type: "int"},
-        {name: "Respawn Time", id: "respawn_time", type: "int"}
+        {name: "Respawn Time", id: "respawn_time", type: "sec"}
       ]
     },
     {
@@ -60,8 +58,7 @@ function CustomMenu() {
       team: false,
       settings: [
         {name: "Score Limit", id: "score_to_win", type: "int"},
-        {name: "Respawn Time", id: "respawn_time", type: "int"},
-        {name: "Number Of Flags", id: "flag_count", type: "int"}
+        {name: "Respawn Time", id: "respawn_time", type: "sec"}
       ]
     },
     {
@@ -70,7 +67,7 @@ function CustomMenu() {
       team: false,
       settings: [
         {name: "Score Limit", id: "score_to_win", type: "int"},
-        {name: "Respawn Time", id: "respawn_time", type: "int"}
+        {name: "Respawn Time", id: "respawn_time", type: "sec"}
       ]
     },
     {
@@ -78,8 +75,6 @@ function CustomMenu() {
       id: "teamelimination",
       team: true,
       settings: [
-        {name: "Score", id: "score_to_win", type: "int"},
-        {name: "Respawn", id: "respawn_time", type: "int"},
         {name: "Auto-Balance", id: "auto_balance", type: "bool"},
         {name: "Minimum Players", id: "min_players", type: "int"},
         {name: "Round Countdown", id: "round_start_time", type: "sec"}
@@ -91,7 +86,7 @@ function CustomMenu() {
       team: true,
       settings: [
         {name: "Score", id: "score_to_win", type: "int"},
-        {name: "Respawn", id: "respawn_time", type: "int"},
+        {name: "Respawn", id: "respawn_time", type: "sec"},
         {name: "Auto-Balance", id: "auto_balance", type: "bool"}
       ]
     },
@@ -101,7 +96,7 @@ function CustomMenu() {
       team: true,
       settings: [
         {name: "Score", id: "score_to_win", type: "int"},
-        {name: "Respawn", id: "respawn_time", type: "int"},
+        {name: "Respawn", id: "respawn_time", type: "sec"},
         {name: "Auto-Balance", id: "auto_balance", type: "bool"},
         {name: "Moving Hill", id: "static_hill", type: "bool"},
         {name: "Points To Move", id: "score_to_move", type: "int"}
@@ -113,7 +108,7 @@ function CustomMenu() {
       team: true,
       settings: [
         {name: "Score", id: "score_to_win", type: "int"},
-        {name: "Respawn", id: "respawn_time", type: "int"},
+        {name: "Respawn", id: "respawn_time", type: "sec"},
         {name: "Auto-Balance", id: "auto_balance", type: "bool"}
       ]
     },
@@ -123,7 +118,7 @@ function CustomMenu() {
       team: true,
       settings: [
         {name: "Score", id: "score_to_win", type: "int"},
-        {name: "Respawn", id: "respawn_time", type: "int"},
+        {name: "Respawn", id: "respawn_time", type: "sec"},
         {name: "Auto-Balance", id: "auto_balance", type: "bool"}
       ]
     },
@@ -133,34 +128,34 @@ function CustomMenu() {
       team: true,
       settings: [
         {name: "Score", id: "score_to_win", type: "int"},
-        {name: "Respawn", id: "respawn_time", type: "int"},
+        {name: "Respawn", id: "respawn_time", type: "sec"},
         {name: "Auto-Balance", id: "auto_balance", type: "bool"}
       ]
     },
-    {
-      name: "Bomb",
-      id: "bomb",
-      team: true,
-      settings: [
-        {name: "Score", id: "score_to_win", type: "int"},
-        {name: "Respawn", id: "respawn_time", type: "int"},
-        {name: "Auto-Balance", id: "auto_balance", type: "bool"},
-        {name: "Minimum Players", id: "min_players", type: "int"},
-        {name: "Round Countdown", id: "round_start_time", type: "sec"},
-        {name: "Round Time Limit", id: "round_time_limit", type: "sec"},
-        {name: "Round Limit", id: "round_limit", type: "int"}
-      ]
-    },
-    {
-      name: "Sports Ball",
-      id: "football",
-      team: true,
-      settings: [
-        {name: "Score", id: "score_to_win", type: "int"},
-        {name: "Respawn", id: "respawn_time", type: "int"},
-        {name: "Auto-Balance", id: "auto_balance", type: "bool"}
-      ]
-    }
+//    {
+//      name: "Bomb",
+//      id: "bomb",
+//      team: true,
+//      settings: [
+//        {name: "Score", id: "score_to_win", type: "int"},
+//        {name: "Respawn", id: "respawn_time", type: "sec"},
+//        {name: "Auto-Balance", id: "auto_balance", type: "bool"},
+//        {name: "Minimum Players", id: "min_players", type: "int"},
+//        {name: "Round Countdown", id: "round_start_time", type: "sec"},
+//        {name: "Round Time Limit", id: "round_time_limit", type: "sec"},
+//        {name: "Round Limit", id: "round_limit", type: "int"}
+//      ]
+//    },
+//    {
+//      name: "Sports Ball",
+//      id: "football",
+//      team: true,
+//      settings: [
+//        {name: "Score", id: "score_to_win", type: "int"},
+//        {name: "Respawn", id: "respawn_time", type: "sec"},
+//        {name: "Auto-Balance", id: "auto_balance", type: "bool"}
+//      ]
+//    }
   ];
   
   this.mapData = [
@@ -271,10 +266,16 @@ CustomMenu.prototype.generateSettings = function() {
         gen += "<input class='combo-r' type='number' onchange='main.menu.custom.setInt(this.value, \"" + set.id + "\")' placeholder='Default'/></div>";
         break;
       }
+      case "sec" : {
+        gen += "<div class='menu sub drop combo'>";
+        gen += "<span class='combo-l'>" + set.name + "&nbsp;</span>";
+        gen += "<input class='combo-r' type='number' onchange='main.menu.custom.setSec(this.value, \"" + set.id + "\")' placeholder='Default'/></div>";
+        break;
+      }
       case "bool" : {
         gen += "<div class='menu sub drop combo' onclick=''>";
         gen += "<span class='combo-l'>" + set.name + "&nbsp;</span>";
-        gen += "<input id='custom-set-' class='combo-r' type='text' disabled onclick='main.menu.custom.setBool(\"" + set.id + "\", this)' placeholder='Default'/></div>";
+        gen += "<input id='custom-set-' class='combo-r' type='text' onclick='main.menu.custom.setBool(\"" + set.id + "\", this)' placeholder='Default'/></div>";
         break;
       }
     }
@@ -321,8 +322,8 @@ CustomMenu.prototype.setSec = function(val, id) {
 };
 
 CustomMenu.prototype.setBool = function(id, ele) {
-  this.selectedSettings.rotation[0][id] = !this.selectedSettings.rotation[0][id];
-  ele.value = this.selectedSettings.rotation[0][id]?"On":"Off";
+  this.selectedSettings.rotation[0][id] = this.selectedSettings.rotation[0][id]===1?0:1;
+  ele.value = this.selectedSettings.rotation[0][id]===1?"On":"Off";
 };
 
 CustomMenu.prototype.create = function() {

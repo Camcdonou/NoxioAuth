@@ -9,6 +9,7 @@ function Main () {
   this.stats = undefined;                // Contains read only user account data like credits, total wins, and rank
   this.unlocks = new Unlocks();          // Contains read only user account data pertaining to unlockable content/features
   this.gauss = new Gauss();              // Animated background handler 
+  this.afk = new AFK();                  // Checks if client is idle or not. Logs user out if it is.
 };
 
 /* We can't start the engine during the construction of new Main() so we do it here instead. */
@@ -17,6 +18,7 @@ Main.prototype.init = function() {
   this.gauss.show();
   this.menu.init();
   this.gauss.status();
+  this.afk.init();
 };
 
 Main.prototype.setStats = function(stats) {

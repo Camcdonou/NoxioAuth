@@ -69,6 +69,7 @@ PackHand.prototype.createObject = function(data) {
     /* Gameplay Object Classes :: These do not use permutation dictionaries */
     case "flg" : { this.game.objects.push(new FlagObject(this.game, oid, pos, permutation, team, color)); break; }
     case "hil" : { this.game.objects.push(new HillObject(this.game, oid, pos, permutation, team, color)); break; }
+    case "flz" : { this.game.objects.push(new FlagZoneObject(this.game, oid, pos, permutation, team, color)); break; }
     case "zon" : { this.game.objects.push(new ZoneObject(this.game, oid, pos, permutation, team, color)); break; }
     case "bmb" : { this.game.objects.push(new BombObject(this.game, oid, pos, permutation, team, color)); break; }
     default : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for '" + type + "' which does not exist.", JSON.stringify(data)); main.close(); break; }
