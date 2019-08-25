@@ -42,7 +42,7 @@ public class UserInfo {
         type = ((Type)en.get(null));
       }
       catch(NoSuchFieldException | IllegalAccessException ex) {
-        Oak.log(Oak.Level.CRIT, "Error parsing user data from database.", ex);
+        Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "Error parsing user data from database.", ex);
       }
   }
 }

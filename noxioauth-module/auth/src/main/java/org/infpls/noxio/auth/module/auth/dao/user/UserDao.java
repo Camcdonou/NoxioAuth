@@ -82,7 +82,7 @@ public class UserDao {
       );
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during account creation.");
     }
     
@@ -109,11 +109,11 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user lookup.");
     }
     catch(ClassCastException | NullPointerException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
       throw new IOException("SQL Error during user lookup.");
     }
     return null;
@@ -130,11 +130,11 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user lookup.");
     }
     catch(ClassCastException | NullPointerException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
       throw new IOException("SQL Error during user lookup.");
     }
     return null;
@@ -151,11 +151,11 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user lookup.");
     }
     catch(ClassCastException | NullPointerException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
       throw new IOException("SQL Error during user lookup.");
     }
     return null;
@@ -172,7 +172,7 @@ public class UserDao {
       );
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during password change.");
     }
   }
@@ -188,7 +188,7 @@ public class UserDao {
       );
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during account type change.");
     }
   }
@@ -204,7 +204,7 @@ public class UserDao {
       );
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during account type change.");
     }
   }
@@ -220,7 +220,7 @@ public class UserDao {
       );
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during account type change.");
     }
   }
@@ -236,11 +236,11 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user settings retrieval.");
     }
     catch(ClassCastException | NullPointerException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
       throw new IOException("SQL Error during user settings retrieval.");
     }
     return null;
@@ -266,7 +266,7 @@ public class UserDao {
       );
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user settings save.");
     }
   }
@@ -282,11 +282,11 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user stats retrieval.");
     }
     catch(ClassCastException | NullPointerException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
       throw new IOException("SQL Error during user stats retrieval.");
     }
     return null;
@@ -311,7 +311,7 @@ public class UserDao {
       );
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user stats save.");
     }
   }
@@ -327,11 +327,11 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user unlocks retrieval.");
     }
     catch(ClassCastException | NullPointerException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
       throw new IOException("SQL Error during user unlocks retrieval.");
     }
     return null;
@@ -348,7 +348,7 @@ public class UserDao {
       );
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user unlock.");
     }
   }
@@ -365,50 +365,52 @@ public class UserDao {
       return users;
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during user lookup.");
     }
     catch(ClassCastException | NullPointerException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
       throw new IOException("SQL Error during user lookup.");
     }
   }
     
-  public NoxioSession createSession(final WebSocketSession webSocket, DaoContainer dao) throws IOException {
+  public synchronized NoxioSession createSession(final WebSocketSession webSocket, DaoContainer dao) throws IOException {
     NoxioSession session = NoxioSession.create(webSocket, dao);
     sessions.add(session);
     return session;
   }
   
-  public NoxioSession createSessionGuest(final WebSocketSession webSocket, DaoContainer dao) throws IOException {
+  public synchronized NoxioSession createSessionGuest(final WebSocketSession webSocket, DaoContainer dao) throws IOException {
     NoxioSession session = NoxioSessionGuest.create(webSocket, dao);
     sessions.add(session);
     return session;
   }
   
-  public void destroySession(final WebSocketSession webSocket) throws IOException {
+  public synchronized void destroySession(final WebSocketSession webSocket) throws IOException {
     for(int i=0;i<sessions.size();i++) {
-      if(sessions.get(i).getWebSocketId().equals(webSocket.getId())) {
-        sessions.get(i).destroy();
-        sessions.remove(i);
+      final NoxioSession s = sessions.get(i);
+      if(s.getWebSocketId().equals(webSocket.getId())) {
+        try { s.destroy(); sessions.remove(i); }
+        catch(Exception ex) { Oak.log(Oak.Type.SESSION, Oak.Level.ERR, "Failed to remove session.", ex); }
         return;
       }
     }
   }
   
-  public NoxioSession getSessionByUser(final String user) {
+  public synchronized NoxioSession getSessionByUser(final String user) {
     for(int i=0;i<sessions.size();i++) {
-      if(sessions.get(i).loggedIn()) {
-        if(sessions.get(i).getUser().equals(user)) {
-          try { sessions.get(i).sendPacket(new PacketS02()); } catch(IOException ex) { Oak.log(Oak.Level.ERR, "Failed to send hearbeat.", ex); }  // @TODO: This is a jank fix that heartbeats a session when someone trys to log in on it while its already logged in.
-          return sessions.get(i);
+      final NoxioSession s = sessions.get(i);
+      if(s.loggedIn()) {
+        if(s.getUser().equals(user)) {
+          try { s.sendPacket(new PacketS02()); } catch(IOException ex) { Oak.log(Oak.Type.SESSION, Oak.Level.ERR, "Failed to send hearbeat.", ex); }  // @TODO: This is a jank fix that heartbeats a session when someone trys to log in on it while its already logged in.
+          return s;
         }
       }
     }
     return null;
   }
   
-  public void createPending(String user, String hash, String email, String verification) throws IOException {
+  public synchronized void createPending(String user, String hash, String email, String verification) throws IOException {
     for(int i=0;i<pending.size();i++) {
       final PendingUser pu = pending.get(i);
       if(pu.name.equals(user)) { pending.remove(pu); }
@@ -416,7 +418,7 @@ public class UserDao {
     pending.add(new PendingUser(user, hash, email, verification));
   }
   
-  public PendingUser getPending(String user, String verification) {
+  public synchronized PendingUser getPending(String user, String verification) {
     for(int i=0;i<pending.size();i++) {
       final PendingUser pu = pending.get(i);
       if(pu.name.equals(user) && pu.verification.equals(verification)) { pending.remove(pu); return pu; }
@@ -424,7 +426,7 @@ public class UserDao {
     return null;
   }
   
-  public void createReset(String user, String email, String verification) throws IOException {
+  public synchronized void createReset(String user, String email, String verification) throws IOException {
     for(int i=0;i<resets.size();i++) {
       final PendingReset pu = resets.get(i);
       if(pu.name.equals(user)) { resets.remove(pu); }
@@ -432,7 +434,7 @@ public class UserDao {
     resets.add(new PendingReset(user, email, verification));
   }
   
-  public PendingReset getReset(String verification) {
+  public synchronized PendingReset getReset(String verification) {
     for(int i=0;i<resets.size();i++) {
       final PendingReset pu = resets.get(i);
       if(pu.verification.equals(verification)) { resets.remove(pu); return pu; }

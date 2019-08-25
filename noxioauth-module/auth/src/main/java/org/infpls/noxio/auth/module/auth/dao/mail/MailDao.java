@@ -43,7 +43,7 @@ public class MailDao {
       Transport.send(message);
       return true;
     } catch (MessagingException mex) {
-      Oak.log(Oak.Level.WARN, "Failed to send email to: " + to, mex);
+      Oak.log(Oak.Type.SYSTEM, Oak.Level.WARN, "Failed to send email to: " + to, mex);
       return false;
     }
   }

@@ -139,7 +139,7 @@ public class UserUnlocks {
       tmp = ((User.Type)en.get(null));
     }
     catch(NoSuchFieldException | IllegalAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "Error parsing account type from database.", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "Error parsing account type from database.", ex);
     }
     
     type = tmp;
@@ -153,7 +153,7 @@ public class UserUnlocks {
       }
     }
     catch(NoSuchFieldException | IllegalAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "Error parsing unlock data from database.", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "Error parsing unlock data from database.", ex);
     }
   }
   

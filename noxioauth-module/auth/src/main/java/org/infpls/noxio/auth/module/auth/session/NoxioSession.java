@@ -128,7 +128,7 @@ public class NoxioSession {
     stats = stats.add(nuStats);
     try { saveStats(); }
     catch(IOException ex) {
-      Oak.log(Oak.Level.ERR, "Error while writing stats to database.", ex);
+      Oak.log(Oak.Type.SESSION, Oak.Level.ERR, "Error while writing stats to database.", ex);
     }
   }
   
@@ -183,14 +183,14 @@ public class NoxioSession {
   
   /* Error connection close */
   public void close(final String message) throws IOException {
-    Oak.log(Oak.Level.WARN, "Connection closed for user: '" + (loggedIn()?(isGuest()?"Guest":getUser()):"Not Logged In") + "' with message: " + message);
+    Oak.log(Oak.Type.SESSION, Oak.Level.WARN, "Connection closed for user: '" + (loggedIn()?(isGuest()?"Guest":getUser()):"Not Logged In") + "' with message: " + message);
     sendPacket(new PacketX00(message));
     webSocket.close(CloseStatus.NOT_ACCEPTABLE);
   }
   
   /* Exception connection close */
   public void close(final Exception ex) throws IOException {
-    Oak.log(Oak.Level.WARN, "Connection closed for user: '" + (loggedIn()?(isGuest()?"Guest":getUser()):"Not Logged In") + "' with Exception: ", ex);
+    Oak.log(Oak.Type.SESSION, Oak.Level.WARN, "Connection closed for user: '" + (loggedIn()?(isGuest()?"Guest":getUser()):"Not Logged In") + "' with Exception: ", ex);
     StringWriter sw = new StringWriter();
     PrintWriter pw = new PrintWriter(sw);
     ex.printStackTrace(pw);

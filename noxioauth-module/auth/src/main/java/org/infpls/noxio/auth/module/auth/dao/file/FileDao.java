@@ -33,13 +33,13 @@ public class FileDao {
   public void init() {
     final String path = Settable.getFilePath();
     final File fsDir = new File(path);
-    if(fsDir.exists() && !fsDir.isDirectory()) { Oak.log(Oak.Level.ERR, "FileDao::init() - Filestore path is not a valid directory!"); }
-    if(fsDir.exists() && !fsDir.canWrite()) { Oak.log(Oak.Level.ERR, "FileDao::init() - Can't write to filestore path!"); }
-    if(!fsDir.exists()) { if(!fsDir.mkdirs()) { Oak.log(Oak.Level.ERR, "FileDao::init() - Failed to create filestore directory!"); } }
+    if(fsDir.exists() && !fsDir.isDirectory()) { Oak.log(Oak.Type.SYSTEM, Oak.Level.ERR, "FileDao::init() - Filestore path is not a valid directory!"); }
+    if(fsDir.exists() && !fsDir.canWrite()) { Oak.log(Oak.Type.SYSTEM, Oak.Level.ERR, "FileDao::init() - Can't write to filestore path!"); }
+    if(!fsDir.exists()) { if(!fsDir.mkdirs()) { Oak.log(Oak.Type.SYSTEM, Oak.Level.ERR, "FileDao::init() - Failed to create filestore directory!"); } }
     for(Type t : Type.values()) {
       final File fsType = new File(path + t.path);
-      if(fsType.exists() && !fsType.isDirectory()) { Oak.log(Oak.Level.ERR, "FileDao::init() - Filestore type path is not a valid directory!"); }
-      if(!fsType.exists()) { if(!fsDir.mkdirs()) { Oak.log(Oak.Level.ERR, "FileDao::init() - Failed to create filestore type directory!"); } }
+      if(fsType.exists() && !fsType.isDirectory()) { Oak.log(Oak.Type.SYSTEM, Oak.Level.ERR, "FileDao::init() - Filestore type path is not a valid directory!"); }
+      if(!fsType.exists()) { if(!fsDir.mkdirs()) { Oak.log(Oak.Type.SYSTEM, Oak.Level.ERR, "FileDao::init() - Failed to create filestore type directory!"); } }
     }
   }
   
@@ -52,7 +52,7 @@ public class FileDao {
       f.transferTo(file);
     }
     catch(IOException ex) {
-      Oak.log(Oak.Level.WARN, "Error trying to write file to file store.", ex);
+      Oak.log(Oak.Type.SYSTEM, Oak.Level.WARN, "Error trying to write file to file store.", ex);
       return null;
     }
     return filename;

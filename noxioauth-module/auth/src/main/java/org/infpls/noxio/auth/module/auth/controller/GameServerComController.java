@@ -29,7 +29,7 @@ public class GameServerComController {
   public @ResponseBody ResponseEntity userStatus(HttpServletRequest request, @PathVariable(value="user") final String user, @PathVariable(value="sid") final String sid) {
     /* Validate that this request is made from a white listed game server */
     if(!Settable.isWhiteListed(request.getRemoteAddr())) {
-      Oak.log(Oak.Level.WARN, "Unknown address made request :" + request.getRemoteAddr());
+      Oak.log(Oak.Type.HTTPS, Oak.Level.WARN, "Unknown address made request :" + request.getRemoteAddr());
       return new ResponseEntity("{\"type\":\"l03\", \"message\":\"Invalid request.\"}", HttpStatus.FORBIDDEN);
     }
     
@@ -53,7 +53,7 @@ public class GameServerComController {
   public @ResponseBody ResponseEntity reportStats(HttpServletRequest request, @RequestBody final String data) {
     /* Validate that this request is made from a white listed game server */
     if(!Settable.isWhiteListed(request.getRemoteAddr())) {
-      Oak.log(Oak.Level.WARN, "GameServerComController::reportStats() - Unknown address made request :" + request.getRemoteAddr() + " ... " + data);
+      Oak.log(Oak.Type.HTTPS, Oak.Level.WARN, "GameServerComController::reportStats() - Unknown address made request :" + request.getRemoteAddr() + " ... " + data);
       return new ResponseEntity("{\"type\":\"h09\", \"message\":\"Invalid request.\"}", HttpStatus.FORBIDDEN);
     }
     
@@ -78,7 +78,7 @@ public class GameServerComController {
       return new ResponseEntity("{\"type\":\"h00\"}", HttpStatus.OK);
     }
     catch(Exception ex) {
-      Oak.log(Oak.Level.ERR, "Error during handling of reported stats.", ex);
+      Oak.log(Oak.Type.HTTPS, Oak.Level.ERR, "Error during handling of reported stats.", ex);
     }
     return new ResponseEntity("{\"type\":\"h09\", \"message\":\"Failed to parse data.\"}", HttpStatus.OK);
   }

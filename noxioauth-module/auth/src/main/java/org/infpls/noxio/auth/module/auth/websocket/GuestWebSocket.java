@@ -20,7 +20,7 @@ public class GuestWebSocket extends AuthWebSocket {
         webSocket.getAttributes().put("session", session);
       }
       catch(Exception ex) {
-        Oak.log(Oak.Level.ERR, "Exception thrown at Websocket top level.", ex);
+        Oak.log(Oak.Type.SESSION, Oak.Level.ERR, "Exception thrown at Websocket top level.", ex);
       }
     }
 }

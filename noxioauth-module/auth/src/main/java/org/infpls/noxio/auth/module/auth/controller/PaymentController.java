@@ -7,6 +7,7 @@ import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
 import org.infpls.noxio.auth.module.auth.dao.pay.PaymentDao;
 import org.infpls.noxio.auth.module.auth.dao.user.User;
 import org.infpls.noxio.auth.module.auth.session.NoxioSession;
+import org.infpls.noxio.auth.module.auth.util.Oak;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,7 @@ public class PaymentController {
     try {
       PaymentDao.NoxioTransaction nt = dao.getPaymentDao().processPayment(pp.paymentId, pp.payerId);
       if(nt != null) {
+        Oak.log(Oak.Type.TRANSACTION, Oak.Level.INFO, "Payment processed for: " + nt.uid + "::" + nt.tid);
         switch(nt.getItem()) {
           case SPEC : { dao.getUserDao().setUserType(nt.uid, User.Type.SPEC); break; }
           case FULL : { dao.getUserDao().setUserType(nt.uid, User.Type.FULL); break; }
@@ -48,11 +50,14 @@ public class PaymentController {
       }
     }
     catch(IOException ex) {
+        Oak.log(Oak.Type.TRANSACTION, Oak.Level.WARN, "Payment processing failed for: " + pp.payerId + "::" + pp.paymentId);
       return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
     catch(Exception ex) {
+        Oak.log(Oak.Type.TRANSACTION, Oak.Level.WARN, "Payment processing failed for: " + pp.payerId + "::" + pp.paymentId);
       return new ResponseEntity(ex.getClass() + " thrown while processing payment.", HttpStatus.BAD_REQUEST);
     }
+    Oak.log(Oak.Type.TRANSACTION, Oak.Level.WARN, "Payment processing failed for: " + pp.payerId + "::" + pp.paymentId);
     return new ResponseEntity("Error while processing payment.", HttpStatus.BAD_REQUEST);
   }
   

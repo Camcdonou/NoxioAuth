@@ -22,7 +22,7 @@ public class AuthWebSocket extends TextWebSocketHandler {
         webSocket.getAttributes().put("session", session);
       }
       catch(Exception ex) {
-        Oak.log(Oak.Level.ERR, "Exception thrown at Websocket top level.", ex);
+        Oak.log(Oak.Type.SESSION, Oak.Level.ERR, "Exception thrown at Websocket top level.", ex);
       }
     }
 
@@ -33,9 +33,9 @@ public class AuthWebSocket extends TextWebSocketHandler {
         session.handlePacket(data.getPayload());
       }
       catch(Exception ex) {
-        Oak.log(Oak.Level.ERR, "Exception thrown at Websocket top level.", ex);
+        Oak.log(Oak.Type.SESSION, Oak.Level.ERR, "Exception thrown at Websocket top level.", ex);
         try { ((NoxioSession)(webSocket.getAttributes().get("session"))).close(ex); }
-        catch(IOException ioex) { Oak.log(Oak.Level.CRIT, "Failed to close session after exception.", ioex); }
+        catch(IOException ioex) { Oak.log(Oak.Type.SESSION, Oak.Level.CRIT, "Failed to close session after exception.", ioex); }
       }
     }
   
@@ -45,7 +45,7 @@ public class AuthWebSocket extends TextWebSocketHandler {
         dao.getUserDao().destroySession(webSocket);
       }
       catch(Exception ex) {
-        Oak.log(Oak.Level.ERR, "Exception thrown at Websocket top level.", ex);
+        Oak.log(Oak.Type.SESSION, Oak.Level.ERR, "Exception thrown at Websocket top level.", ex);
       }
     }
 }

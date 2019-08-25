@@ -97,12 +97,12 @@ public class PaymentDao {
         }
       }
     } catch (PayPalRESTException ex) {
-      Oak.log(Oak.Level.ERR, "Failed to created payment.", ex);
+      Oak.log(Oak.Type.TRANSACTION, Oak.Level.ERR, "Failed to created payment.", ex);
     }
     return null;
   }
   
-  /* Returns the completed NoxioTransaction if payment is valid and succeeds. Returns null is payment is invalid.
+  /* Returns the completed NoxioTransaction if payment is valid and succeeds. Returns null if payment is invalid.
      Throws IOException if there is an error, exception message is returned to user */
   public NoxioTransaction processPayment(String paymentId, String payerId) throws IOException {
     Payment payment = new Payment();
@@ -136,7 +136,7 @@ public class PaymentDao {
       );
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during transaction creation.");
     }
   }
@@ -149,7 +149,7 @@ public class PaymentDao {
       );
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during transaction update.");
     }
   }
@@ -165,11 +165,11 @@ public class PaymentDao {
       }
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during transaction retrieval.");
     }
     catch(ClassCastException | NullPointerException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
       throw new IOException("SQL Error during transaction retrieval.");
     }
     return null;
@@ -183,7 +183,7 @@ public class PaymentDao {
       );
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Level.CRIT, "SQL Error!", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
       throw new IOException("SQL Error during transaction deletion.");
     }
   }
@@ -207,7 +207,7 @@ public class PaymentDao {
         item = ((Item)en.get(null));
       }
       catch(NoSuchFieldException | IllegalAccessException ex) {
-        Oak.log(Oak.Level.CRIT, "Error parsing transaction data from database.", ex);
+        Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "Error parsing transaction data from database.", ex);
       }
     }
     

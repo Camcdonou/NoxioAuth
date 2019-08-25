@@ -68,9 +68,9 @@ public class FileController {
     session.getSettings().game.setCustomSoundFile(filename);
     try { session.saveSettings(); }
     catch(IOException ex) {
-      Oak.log(Oak.Level.ERR, "Error while saving settings.", ex);
+      Oak.log(Oak.Type.SQL, Oak.Level.ERR, "Error while saving settings.", ex);
       try { session.close(ex); }
-      catch(IOException ex2) { Oak.log(Oak.Level.ERR, "Error while closing user connection.", ex2); }
+      catch(IOException ex2) { Oak.log(Oak.Type.SESSION, Oak.Level.ERR, "Error while closing user connection.", ex2); }
       return new ResponseEntity("Unknown error while saving settings.", HttpStatus.NOT_ACCEPTABLE);
     }
     
