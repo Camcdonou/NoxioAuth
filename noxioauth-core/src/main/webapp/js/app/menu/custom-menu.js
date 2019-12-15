@@ -185,9 +185,14 @@ function CustomMenu() {
       players: "4"
     },
     {
-      name: "Dig Build",
+      name: "Dig",
       id: "dig",
       players: "4"
+    },
+    {
+      name: "Excavate",
+      id: "excavate",
+      players: "16"
     },
     {
       name: "Final Destination",
@@ -208,6 +213,11 @@ function CustomMenu() {
       name: "Prerequisite Point",
       id: "pre",
       players: "5"
+    },
+    {
+      name: "Unearth",
+      id: "unearth",
+      players: "8"
     },
     {
       name: "War Ground",
