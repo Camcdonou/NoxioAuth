@@ -1606,6 +1606,17 @@ Asset.prototype.material.map.tin.metal_light = {
   texture3: "multi/multi_dif",
 };
 
+/* Source File: metal_rough_2x.mat */
+Asset.prototype.material.map.copper.metal_rough_2x = {
+  name: "map.copper.metal_rough_2x",
+  shader: "copper_wall_2x",
+  shadow: "true",
+  texture0: "map/copper/metal_rough",
+  texture1: "map/copper/cross_normal",
+  texture2: "map/copper/edge_color",
+  texture3: "multi/multi_dif",
+};
+
 /* Source File: metal_rough.mat */
 Asset.prototype.material.map.copper.metal_rough = {
   name: "map.copper.metal_rough",
@@ -1860,7 +1871,7 @@ Asset.prototype.material.map.gold.gold = {
 Asset.prototype.material.map.gold.lava = {
   name: "map.gold.lava",
   shader: "goldlava",
-  shadow: "false",
+  shadow: "true",
   texture0: "map/gold/lava",
 };
 
