@@ -101,7 +101,7 @@ ObjectiveUI.prototype.generate = function() {
     var y = (Math.min(0.9, Math.max(0.1, ((screenCoord.y*0.5)+0.5))) * this.game.display.window.height) - (v) + objectives[i].offset;
     
     var bclr = util.vec4.copy(black); bclr.w *= objectives[i].fade;
-    var fclr = util.vec4.copy(objectives[i].team===-1?swhite:util.kalide.getColorAuto(0, objectives[i].team)); fclr.w *= objectives[i].fade;
+    var fclr = util.vec4.copy(objectives[i].team===-1?swhite:util.vec3.toVec4(util.kalide.getColorAuto(0, objectives[i].team), 1.)); fclr.w *= objectives[i].fade;
     if(objectives[i].mat) {
       container.add({
         neutral: {

@@ -1880,6 +1880,14 @@ Asset.prototype.material.map.gold.coal = {
   texture0: "map/gold/coal_ore",
 };
 
+/* Source File: pimp.mat */
+Asset.prototype.material.map.gold.pimp = {
+  name: "map.gold.pimp",
+  shader: "gold",
+  shadow: "true",
+  texture0: "map/gold/gold_block",
+};
+
 /* Source File: iron.mat */
 Asset.prototype.material.map.gold.iron = {
   name: "map.gold.iron",

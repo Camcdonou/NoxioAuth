@@ -37,7 +37,7 @@ Decal.prototype.step = function(pos, size, angle) {
 
 Decal.prototype.move = function(pos, size, angle) {
   this.pos = pos; this.size = size;
-  this.geometry = this.game.map.getGeometryNear(this.pos, this.size);
+  this.geometry = this.game.map.getGeometryNear(this.pos, Math.max(this.size, 1.1)); // @TODO: this is hacky, setting min radius to 1.1 to avoid clipping bug
   this.angle = angle;
 };
 
