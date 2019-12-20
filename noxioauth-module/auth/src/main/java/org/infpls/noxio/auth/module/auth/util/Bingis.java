@@ -33,6 +33,8 @@ public class Bingis {
     "Dribble",
     "Fuggle",
     "Cunk",
+    "Bird Talk",
+    "Puddle",
     "Ham",
     "Food",
     "Quaffer",

@@ -7,7 +7,7 @@
 
 /* Define Game UI Log/Chat Menu Class */
 function LogUI(game, ui, name) {
-  this.log = "...\n";
+  this.log = [];
   this.message = "";
   
   this.cursorTimer = 0;
@@ -18,7 +18,8 @@ function LogUI(game, ui, name) {
 }
 
 LogUI.prototype.addMessage = function(text) {
-  this.log += text + "\n";
+  if(this.log.length > 10) { this.log.shift(); }
+  this.log.push(text);
   this.textUpdated = true;
   this.play("ui/chat0.wav", 0.5, 0.0);
 };
@@ -52,8 +53,10 @@ LogUI.prototype.refresh = function() {
   this.textInput.hover.text[0] = new GenericUIText(util.vec2.make(a,v), s, sblack, fontName, fontMat, MESSAGE);
   this.textInput.hover.block[1] = new GenericUIBlock(util.vec2.make(a+1+MESSAGE_LENGTH,v), util.vec2.make(s*0.5,s*0.1), this.cursor?sblack:clear, colorMat);
   
-  /* Update log */  
-  var lines = util.font.serrateText(this.log, "Calibri", s, w);
+  /* Update log */
+  var LOG = "";
+  for(var i=0;i<this.log.length;i++) { LOG += this.log[i] + "\n"; }
+  var lines = util.font.serrateText(LOG, "Calibri", s, w);
   var gen = [];
   for(var i=lines.length-1;i>=0&&h+s<t;i--) {
     gen.push(new GenericUIText(util.vec2.make(a,h+v), s, swhite, fontName, fontMat, lines[i]));

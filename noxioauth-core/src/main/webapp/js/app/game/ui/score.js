@@ -121,9 +121,9 @@ ScoreUI.prototype.generate = function() {
           new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,sb), black, colorMat)
         ],
         text:  [
-          new GenericUIText(util.vec2.make(bwaa,h+vb), sb, swhite, fontName, fontMat, LNAME),
+          new GenericUIText(util.vec2.make(bwaa,h+vb), sb, swhite, fontName, fontMat, LNAME.substring(0,16)),
           new GenericUIText(util.vec2.make(bwba,h+vc), sc, swhite, fontName, fontMat, LSCORE),
-          new GenericUIText(util.vec2.make(bwa+bwb+bwca,h+vb), sb, swhite, fontName, fontMat, RNAME),
+          new GenericUIText(util.vec2.make(bwa+bwb+bwca,h+vb), sb, swhite, fontName, fontMat, RNAME.substring(0,16)),
           new GenericUIText(util.vec2.make(bwa+bwb+bwda,h+vc), sc, swhite, fontName, fontMat, RSCORE)
         ]
       },
