@@ -44,6 +44,10 @@ PlayerShiekVoice.prototype.charge = function() {
   PlayerShiek.prototype.charge.call(this);
 };
 
+PlayerShiekVoice.prototype.pre = function() {
+  PlayerShiek.prototype.pre.call(this);
+};
+
 PlayerShiekVoice.prototype.recall = function() {
   PlayerShiek.prototype.recall.call(this);
 };

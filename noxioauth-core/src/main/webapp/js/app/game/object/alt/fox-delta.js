@@ -15,8 +15,8 @@ function PlayerFoxDelta(game, oid, pos, team, color) {
 };
 
 /* Constants */
-PlayerFoxDelta.COLOR_A = util.vec4.lerp(util.vec4.make(0.2, 0.2, 1.0, 1.0), util.vec4.make(1,1,1,1), 0.925);
-PlayerFoxDelta.COLOR_B = util.vec4.make(0.2, 0.2, 1.0, 1.0);
+PlayerFoxDelta.COLOR_A = util.vec4.lerp(util.vec4.make(0.207,  0.301, 0.65, 1.0), util.vec4.make(1,1,1,1), 0.925);
+PlayerFoxDelta.COLOR_B = util.vec4.make(0.237,  0.351, 0.85, 1.0);
 
 PlayerFoxDelta.prototype.update = PlayerFox.prototype.update;
 PlayerFoxDelta.prototype.parseUpd = PlayerFox.prototype.parseUpd;

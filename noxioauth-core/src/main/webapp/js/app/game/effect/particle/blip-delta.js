@@ -36,7 +36,7 @@ ParticleBlipDelta.prototype.create = function() {
       this.properties.color.w *= 0.85;
       this.properties.tone.w *= 0.8;
     },
-    properties: {pos: this.pos, scale: 2.05, rotation: 0, color: colorC(), tone: colorB()}
+    properties: {pos: this.pos, scale: 2.25, rotation: 0, color: colorC(), tone: colorB()}
   };
   
   var blipInit = {

@@ -46,9 +46,12 @@ PlayerShiekRainbow.prototype.charge = function() {
   this.chargeTimer = PlayerShiek.FLASH_CHARGE_LENGTH;
 };
 
+PlayerShiekRainbow.prototype.pre = function() {
+  this.game.putEffect(NxFx.shiek.alt.rainbow.vanish.trigger(this.game, util.vec2.toVec3(this.pos, 0), util.vec3.create()));
+};
+
 PlayerShiekRainbow.prototype.recall = function() {
   this.effects.push(NxFx.shiek.alt.rainbow.recall.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
-  this.effects.push(NxFx.shiek.alt.rainbow.vanish.trigger(this.game, util.vec2.toVec3(this.lastLocation, 0), util.vec3.create()));
   this.markLocation = undefined;
   if(this.locationEffect) { this.locationEffect.destroy(); this.locationEffect = undefined; }
 };

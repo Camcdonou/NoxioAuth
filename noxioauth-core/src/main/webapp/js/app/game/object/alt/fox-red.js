@@ -14,8 +14,8 @@ function PlayerFoxRed(game, oid, pos, team, color) {
 };
 
 /* Constants */
-PlayerFoxRed.BLIP_COLOR_A = util.vec4.lerp(util.vec4.make(1.0, 0.9058, 0.6666, 1.0), util.vec4.make(1,1,1,1), 0.5);
-PlayerFoxRed.BLIP_COLOR_B = util.vec4.make(1.0, 0.5450, 0.4, 1.0);
+PlayerFoxRed.BLIP_COLOR_A = util.vec4.lerp(util.vec4.make(1.0, 0.3, 0.25, 1.0), util.vec4.make(1,1,1,1), 0.95);
+PlayerFoxRed.BLIP_COLOR_B = util.vec4.make(1.0, 0.2, 0.15, 1.0);
 
 PlayerFoxRed.prototype.update = PlayerFox.prototype.update;
 PlayerFoxRed.prototype.parseUpd = PlayerFox.prototype.parseUpd;

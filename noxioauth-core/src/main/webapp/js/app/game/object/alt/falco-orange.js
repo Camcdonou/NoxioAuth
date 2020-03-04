@@ -12,8 +12,8 @@ function PlayerFalcoOrange(game, oid, pos, team, color) {
 };
 
 /* Constants */
-PlayerFalcoOrange.BLIP_COLOR_A = util.vec4.lerp(util.vec4.make(0.8, 0.666, 0.1, 1.0), util.vec4.make(1,1,1,1), 0.5);
-PlayerFalcoOrange.BLIP_COLOR_B = util.vec4.make(0.8, 0.666, 0.1, 1.0);
+PlayerFalcoOrange.BLIP_COLOR_A = util.vec4.lerp(util.vec4.make(0.9, 0.462, 0.223, 1.0), util.vec4.make(1,1,1,1), 0.9);
+PlayerFalcoOrange.BLIP_COLOR_B = util.vec4.make(0.9, 0.462, 0.223, 1.0);
 
 PlayerFalcoOrange.prototype.update = PlayerFalco.prototype.update;
 PlayerFalcoOrange.prototype.parseUpd = PlayerFalco.prototype.parseUpd;

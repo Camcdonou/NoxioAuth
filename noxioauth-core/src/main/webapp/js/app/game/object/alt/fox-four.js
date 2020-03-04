@@ -11,16 +11,11 @@
 /* Define Delta Fox Alternate Class */
 function PlayerFoxFour(game, oid, pos, team, color) {
   PlayerFox.call(this, game, oid, pos, team, color);
-  this.material = this.game.display.getMaterial("character.fox.delta");
   this.hat = {
     model: this.game.display.getModel("character.fox.hat"),
     material: this.game.display.getMaterial("character.fox.hat")
   };
 };
-
-/* Constants */
-PlayerFoxFour.COLOR_A = util.vec4.lerp(util.vec4.make(0.2, 0.2, 1.0, 1.0), util.vec4.make(1,1,1,1), 0.925);
-PlayerFoxFour.COLOR_B = util.vec4.make(0.2, 0.2, 1.0, 1.0);
 
 PlayerFoxFour.prototype.update = PlayerFox.prototype.update;
 PlayerFoxFour.prototype.parseUpd = PlayerFox.prototype.parseUpd;
@@ -44,15 +39,9 @@ PlayerFoxFour.prototype.criticalHit = PlayerFox.prototype.criticalHit;
 PlayerFoxFour.prototype.explode = PlayerFox.prototype.explode;
 PlayerFoxFour.prototype.fall = PlayerFox.prototype.fall;
 
-PlayerFoxFour.prototype.blip = function() {
-  this.effects.push(NxFx.fox.alt.delta.blip.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
-  this.blipCooldown = PlayerFox.BLIP_POWER_MAX;
-};
+PlayerFoxFour.prototype.blip = PlayerFox.prototype.blip;
 
-PlayerFoxFour.prototype.dash = function() {
-  this.effects.push(NxFx.fox.alt.delta.dash.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
-  this.dashCooldown += PlayerFox.DASH_POWER_ADD;
-};
+PlayerFoxFour.prototype.dash = PlayerFox.prototype.dash;
 
 PlayerFoxFour.prototype.taunt = PlayerFox.prototype.taunt;
 
