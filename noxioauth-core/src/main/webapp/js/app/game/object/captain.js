@@ -144,6 +144,8 @@ PlayerCaptain.prototype.setHeight = PlayerObject.prototype.setHeight;
 
 PlayerCaptain.prototype.setLook = PlayerObject.prototype.setLook;
 PlayerCaptain.prototype.setSpeed = PlayerObject.prototype.setSpeed;
+
+PlayerCaptain.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerCaptain.prototype.getDraw = function(geometry, decals, lights, bounds) {
   PlayerObject.prototype.getDraw.call(this, geometry, decals, lights, bounds);
   if(this.chargeTimer>0 && !this.hide) {

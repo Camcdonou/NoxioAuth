@@ -91,6 +91,8 @@ PlayerMarthVoice.prototype.setHeight = PlayerMarth.prototype.setHeight;
 
 PlayerMarthVoice.prototype.setLook = PlayerMarth.prototype.setLook;
 PlayerMarthVoice.prototype.setSpeed = PlayerMarth.prototype.setSpeed;
+
+PlayerMarthVoice.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerMarthVoice.prototype.getDraw = PlayerMarth.prototype.getDraw;
 
 PlayerMarthVoice.prototype.destroy = PlayerMarth.prototype.destroy;

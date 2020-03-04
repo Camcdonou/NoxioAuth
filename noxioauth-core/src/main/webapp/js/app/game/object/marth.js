@@ -156,6 +156,8 @@ PlayerMarth.prototype.setHeight = PlayerObject.prototype.setHeight;
 
 PlayerMarth.prototype.setLook = PlayerObject.prototype.setLook;
 PlayerMarth.prototype.setSpeed = PlayerObject.prototype.setSpeed;
+
+PlayerMarth.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerMarth.prototype.getDraw = PlayerObject.prototype.getDraw;
 
 PlayerMarth.prototype.destroy = PlayerObject.prototype.destroy;

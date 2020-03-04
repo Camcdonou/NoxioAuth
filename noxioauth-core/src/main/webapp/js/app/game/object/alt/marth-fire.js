@@ -78,6 +78,8 @@ PlayerMarthFire.prototype.setHeight = PlayerMarth.prototype.setHeight;
 
 PlayerMarthFire.prototype.setLook = PlayerMarth.prototype.setLook;
 PlayerMarthFire.prototype.setSpeed = PlayerMarth.prototype.setSpeed;
+
+PlayerMarthFire.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerMarthFire.prototype.getDraw = PlayerMarth.prototype.getDraw;
 
 PlayerMarthFire.prototype.destroy = PlayerMarth.prototype.destroy;

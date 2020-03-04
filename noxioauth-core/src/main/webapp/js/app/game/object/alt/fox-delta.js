@@ -58,6 +58,8 @@ PlayerFoxDelta.prototype.setHeight = PlayerFox.prototype.setHeight;
 
 PlayerFoxDelta.prototype.setLook = PlayerFox.prototype.setLook;
 PlayerFoxDelta.prototype.setSpeed = PlayerFox.prototype.setSpeed;
+
+PlayerFoxDelta.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerFoxDelta.prototype.getDraw = PlayerFox.prototype.getDraw;
 
 PlayerFoxDelta.prototype.destroy = PlayerFox.prototype.destroy;

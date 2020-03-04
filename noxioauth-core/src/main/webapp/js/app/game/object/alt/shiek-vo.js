@@ -64,6 +64,8 @@ PlayerShiekVoice.prototype.setHeight = PlayerShiek.prototype.setHeight;
 
 PlayerShiekVoice.prototype.setLook = PlayerShiek.prototype.setLook;
 PlayerShiekVoice.prototype.setSpeed = PlayerShiek.prototype.setSpeed;
+
+PlayerShiekVoice.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerShiekVoice.prototype.getDraw = PlayerShiek.prototype.getDraw;
 
 PlayerShiekVoice.prototype.destroy = PlayerShiek.prototype.destroy;

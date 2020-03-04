@@ -74,6 +74,8 @@ PlayerCaptainVoice.prototype.setHeight = PlayerCaptain.prototype.setHeight;
 
 PlayerCaptainVoice.prototype.setLook = PlayerCaptain.prototype.setLook;
 PlayerCaptainVoice.prototype.setSpeed = PlayerCaptain.prototype.setSpeed;
+
+PlayerCaptainVoice.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerCaptainVoice.prototype.getDraw = PlayerCaptain.prototype.getDraw;
 
 PlayerCaptainVoice.prototype.destroy = PlayerObject.prototype.destroy;

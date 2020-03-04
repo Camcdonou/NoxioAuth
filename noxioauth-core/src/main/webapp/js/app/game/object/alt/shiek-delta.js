@@ -73,6 +73,8 @@ PlayerShiekDelta.prototype.setHeight = PlayerShiek.prototype.setHeight;
 
 PlayerShiekDelta.prototype.setLook = PlayerShiek.prototype.setLook;
 PlayerShiekDelta.prototype.setSpeed = PlayerShiek.prototype.setSpeed;
+
+PlayerShiekDelta.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerShiekDelta.prototype.getDraw = PlayerShiek.prototype.getDraw;
 
 PlayerShiekDelta.prototype.destroy = PlayerShiek.prototype.destroy;

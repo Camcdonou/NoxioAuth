@@ -52,6 +52,8 @@ PlayerPuffRound.prototype.setHeight = PlayerPuff.prototype.setHeight;
 
 PlayerPuffRound.prototype.setLook = PlayerPuff.prototype.setLook;
 PlayerPuffRound.prototype.setSpeed = PlayerPuff.prototype.setSpeed;
+
+PlayerPuffRound.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerPuffRound.prototype.getDraw = PlayerPuff.prototype.getDraw;
 
 PlayerPuffRound.prototype.destroy = PlayerPuff.prototype.destroy;

@@ -62,10 +62,12 @@ PlayerFoxFour.prototype.setHeight = PlayerFox.prototype.setHeight;
 
 PlayerFoxFour.prototype.setLook = PlayerFox.prototype.setLook;
 PlayerFoxFour.prototype.setSpeed = PlayerFox.prototype.setSpeed;
+
+PlayerFoxFour.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerFoxFour.prototype.getDraw = function(geometry, decals, lights, bounds) {
   PlayerFox.prototype.getDraw.call(this, geometry, decals, lights, bounds);
   var playerUniformData = [
-    {name: "transform", data: [this.pos.x, this.pos.y, this.height]},
+    {name: "transform", data: [this.pos.x, this.pos.y, this.height-.5]},
     {name: "rotation", data: 0.0},
     {name: "scale", data: 1.0}
   ];

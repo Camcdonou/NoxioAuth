@@ -57,6 +57,8 @@ PlayerFoxRainbow.prototype.setHeight = PlayerFox.prototype.setHeight;
 
 PlayerFoxRainbow.prototype.setLook = PlayerFox.prototype.setLook;
 PlayerFoxRainbow.prototype.setSpeed = PlayerFox.prototype.setSpeed;
+
+PlayerFoxRainbow.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerFoxRainbow.prototype.getDraw = PlayerFox.prototype.getDraw;
 
 PlayerFoxRainbow.prototype.destroy = PlayerFox.prototype.destroy;

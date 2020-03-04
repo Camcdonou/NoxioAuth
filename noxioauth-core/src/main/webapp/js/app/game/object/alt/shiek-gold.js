@@ -73,6 +73,8 @@ PlayerShiekGold.prototype.setHeight = PlayerShiek.prototype.setHeight;
 
 PlayerShiekGold.prototype.setLook = PlayerShiek.prototype.setLook;
 PlayerShiekGold.prototype.setSpeed = PlayerShiek.prototype.setSpeed;
+
+PlayerShiekGold.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerShiekGold.prototype.getDraw = PlayerShiek.prototype.getDraw;
 
 PlayerShiekGold.prototype.destroy = PlayerShiek.prototype.destroy;

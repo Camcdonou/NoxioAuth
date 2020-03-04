@@ -84,6 +84,8 @@ PlayerPuffVoice.prototype.setHeight = PlayerPuff.prototype.setHeight;
 
 PlayerPuffVoice.prototype.setLook = PlayerPuff.prototype.setLook;
 PlayerPuffVoice.prototype.setSpeed = PlayerPuff.prototype.setSpeed;
+
+PlayerPuffVoice.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerPuffVoice.prototype.getDraw = PlayerPuff.prototype.getDraw;
 
 PlayerPuffVoice.prototype.destroy = PlayerPuff.prototype.destroy;

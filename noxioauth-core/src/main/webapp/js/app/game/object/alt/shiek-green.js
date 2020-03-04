@@ -76,6 +76,8 @@ PlayerShiekGreen.prototype.setHeight = PlayerShiek.prototype.setHeight;
 
 PlayerShiekGreen.prototype.setLook = PlayerShiek.prototype.setLook;
 PlayerShiekGreen.prototype.setSpeed = PlayerShiek.prototype.setSpeed;
+
+PlayerShiekGreen.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerShiekGreen.prototype.getDraw = PlayerShiek.prototype.getDraw;
 
 PlayerShiekGreen.prototype.destroy = PlayerShiek.prototype.destroy;

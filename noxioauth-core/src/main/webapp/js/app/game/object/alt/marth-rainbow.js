@@ -74,6 +74,8 @@ PlayerMarthRainbow.prototype.setHeight = PlayerMarth.prototype.setHeight;
 
 PlayerMarthRainbow.prototype.setLook = PlayerMarth.prototype.setLook;
 PlayerMarthRainbow.prototype.setSpeed = PlayerMarth.prototype.setSpeed;
+
+PlayerMarthRainbow.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerMarthRainbow.prototype.getDraw = PlayerMarth.prototype.getDraw;
 
 PlayerMarthRainbow.prototype.destroy = PlayerMarth.prototype.destroy;

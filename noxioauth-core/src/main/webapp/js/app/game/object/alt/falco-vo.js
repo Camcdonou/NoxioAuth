@@ -71,6 +71,8 @@ PlayerFalcoVoice.prototype.setHeight = PlayerFalco.prototype.setHeight;
 
 PlayerFalcoVoice.prototype.setLook = PlayerFalco.prototype.setLook;
 PlayerFalcoVoice.prototype.setSpeed = PlayerFalco.prototype.setSpeed;
+
+PlayerFalcoVoice.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerFalcoVoice.prototype.getDraw = PlayerFalco.prototype.getDraw;
 
 PlayerFalcoVoice.prototype.destroy = PlayerFalco.prototype.destroy;

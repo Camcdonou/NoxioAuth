@@ -64,6 +64,8 @@ PlayerCaptainGold.prototype.setHeight = PlayerCaptain.prototype.setHeight;
 
 PlayerCaptainGold.prototype.setLook = PlayerCaptain.prototype.setLook;
 PlayerCaptainGold.prototype.setSpeed = PlayerCaptain.prototype.setSpeed;
+
+PlayerCaptainGold.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerCaptainGold.prototype.getDraw = PlayerCaptain.prototype.getDraw;
 
 PlayerCaptainGold.prototype.destroy = PlayerObject.prototype.destroy;

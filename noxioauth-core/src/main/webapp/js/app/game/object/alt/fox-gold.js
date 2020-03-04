@@ -58,6 +58,8 @@ PlayerFoxGold.prototype.setHeight = PlayerFox.prototype.setHeight;
 
 PlayerFoxGold.prototype.setLook = PlayerFox.prototype.setLook;
 PlayerFoxGold.prototype.setSpeed = PlayerFox.prototype.setSpeed;
+
+PlayerFoxGold.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerFoxGold.prototype.getDraw = PlayerFox.prototype.getDraw;
 
 PlayerFoxGold.prototype.destroy = PlayerFox.prototype.destroy;

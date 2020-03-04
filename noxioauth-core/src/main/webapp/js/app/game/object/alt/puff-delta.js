@@ -52,6 +52,8 @@ PlayerPuffDelta.prototype.setHeight = PlayerPuff.prototype.setHeight;
 
 PlayerPuffDelta.prototype.setLook = PlayerPuff.prototype.setLook;
 PlayerPuffDelta.prototype.setSpeed = PlayerPuff.prototype.setSpeed;
+
+PlayerPuffDelta.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerPuffDelta.prototype.getDraw = PlayerPuff.prototype.getDraw;
 
 PlayerPuffDelta.prototype.destroy = PlayerPuff.prototype.destroy;

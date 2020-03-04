@@ -75,6 +75,8 @@ PlayerMarthDelta.prototype.setHeight = PlayerMarth.prototype.setHeight;
 
 PlayerMarthDelta.prototype.setLook = PlayerMarth.prototype.setLook;
 PlayerMarthDelta.prototype.setSpeed = PlayerMarth.prototype.setSpeed;
+
+PlayerMarthDelta.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerMarthDelta.prototype.getDraw = PlayerMarth.prototype.getDraw;
 
 PlayerMarthDelta.prototype.destroy = PlayerMarth.prototype.destroy;

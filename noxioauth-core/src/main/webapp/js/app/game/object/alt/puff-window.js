@@ -76,6 +76,8 @@ PlayerPuffWindow.prototype.setHeight = PlayerPuff.prototype.setHeight;
 
 PlayerPuffWindow.prototype.setLook = PlayerPuff.prototype.setLook;
 PlayerPuffWindow.prototype.setSpeed = PlayerPuff.prototype.setSpeed;
+
+PlayerPuffWindow.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerPuffWindow.prototype.getDraw = PlayerPuff.prototype.getDraw;
 
 PlayerPuffWindow.prototype.destroy = PlayerPuff.prototype.destroy;

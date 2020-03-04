@@ -61,6 +61,8 @@ PlayerFalcoGold.prototype.setHeight = PlayerFalco.prototype.setHeight;
 
 PlayerFalcoGold.prototype.setLook = PlayerFalco.prototype.setLook;
 PlayerFalcoGold.prototype.setSpeed = PlayerFalco.prototype.setSpeed;
+
+PlayerFalcoGold.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerFalcoGold.prototype.getDraw = PlayerFalco.prototype.getDraw;
 
 PlayerFalcoGold.prototype.destroy = PlayerFalco.prototype.destroy;

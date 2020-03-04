@@ -61,6 +61,8 @@ PlayerFalcoDelta.prototype.setHeight = PlayerFalco.prototype.setHeight;
 
 PlayerFalcoDelta.prototype.setLook = PlayerFalco.prototype.setLook;
 PlayerFalcoDelta.prototype.setSpeed = PlayerFalco.prototype.setSpeed;
+
+PlayerFalcoDelta.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerFalcoDelta.prototype.getDraw = PlayerFalco.prototype.getDraw;
 
 PlayerFalcoDelta.prototype.destroy = PlayerFalco.prototype.destroy;

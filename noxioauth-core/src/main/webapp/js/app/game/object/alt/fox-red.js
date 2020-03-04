@@ -57,6 +57,8 @@ PlayerFoxRed.prototype.setHeight = PlayerFox.prototype.setHeight;
 
 PlayerFoxRed.prototype.setLook = PlayerFox.prototype.setLook;
 PlayerFoxRed.prototype.setSpeed = PlayerFox.prototype.setSpeed;
+
+PlayerFoxRed.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerFoxRed.prototype.getDraw = PlayerFox.prototype.getDraw;
 
 PlayerFoxRed.prototype.destroy = PlayerFox.prototype.destroy;

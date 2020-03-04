@@ -75,6 +75,8 @@ PlayerMarthGold.prototype.setHeight = PlayerMarth.prototype.setHeight;
 
 PlayerMarthGold.prototype.setLook = PlayerMarth.prototype.setLook;
 PlayerMarthGold.prototype.setSpeed = PlayerMarth.prototype.setSpeed;
+
+PlayerMarthGold.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerMarthGold.prototype.getDraw = PlayerMarth.prototype.getDraw;
 
 PlayerMarthGold.prototype.destroy = PlayerMarth.prototype.destroy;

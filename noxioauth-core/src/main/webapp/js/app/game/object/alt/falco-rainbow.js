@@ -59,6 +59,8 @@ PlayerFalcoRainbow.prototype.setHeight = PlayerFalco.prototype.setHeight;
 
 PlayerFalcoRainbow.prototype.setLook = PlayerFalco.prototype.setLook;
 PlayerFalcoRainbow.prototype.setSpeed = PlayerFalco.prototype.setSpeed;
+
+PlayerFalcoRainbow.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerFalcoRainbow.prototype.getDraw = PlayerFalco.prototype.getDraw;
 
 PlayerFalcoRainbow.prototype.destroy = PlayerFalco.prototype.destroy;

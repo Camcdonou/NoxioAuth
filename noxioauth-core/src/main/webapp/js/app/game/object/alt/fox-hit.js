@@ -57,6 +57,8 @@ PlayerFoxHit.prototype.setHeight = PlayerFox.prototype.setHeight;
 
 PlayerFoxHit.prototype.setLook = PlayerFox.prototype.setLook;
 PlayerFoxHit.prototype.setSpeed = PlayerFox.prototype.setSpeed;
+
+PlayerFoxHit.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerFoxHit.prototype.getDraw = PlayerFox.prototype.getDraw;
 
 PlayerFoxHit.prototype.destroy = PlayerFox.prototype.destroy;

@@ -72,6 +72,8 @@ PlayerShiekRainbow.prototype.setHeight = PlayerShiek.prototype.setHeight;
 
 PlayerShiekRainbow.prototype.setLook = PlayerShiek.prototype.setLook;
 PlayerShiekRainbow.prototype.setSpeed = PlayerShiek.prototype.setSpeed;
+
+PlayerShiekRainbow.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerShiekRainbow.prototype.getDraw = PlayerShiek.prototype.getDraw;
 
 PlayerShiekRainbow.prototype.destroy = PlayerShiek.prototype.destroy;

@@ -184,7 +184,9 @@ PlayerObject.prototype.criticalHit = function() {
 };
 
 PlayerObject.prototype.explode = function() {
-  this.game.putEffect(NxFx.player.explode.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  var expl = NxFx.player.shatter.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+  expl.particles[0].obj.colorS = this.getColor();
+  this.game.putEffect(expl);
 };
 
 PlayerObject.prototype.fall = function() {
@@ -207,17 +209,20 @@ PlayerObject.prototype.setSpeed = function(speed) {
   this.speed = speed;
 };
 
+PlayerObject.prototype.getColor = function() {
+  var colors = util.kalide.getColorsAuto(this.color, this.team);
+  if(colors.length > 1) {
+    var ind = Math.floor(this.game.frame/128)%(colors.length);
+    return util.vec3.lerp(colors[ind], colors[ind+1<colors.length?ind+1:0], (this.game.frame%128)/128);
+  }
+  return colors[0];
+};
+
 PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
   var exbounds = util.matrix.expandPolygon(bounds, this.cullRadius);
   if(util.intersection.pointPoly(this.pos, exbounds)) {
-    var colors, color, dcolor;
-    colors = util.kalide.getColorsAuto(this.color, this.team);
-    if(colors.length > 1) {
-      var ind = Math.floor(this.game.frame/128)%(colors.length);
-      color = util.vec3.lerp(colors[ind], colors[ind+1<colors.length?ind+1:0], (this.game.frame%128)/128);
-    }
-    else { color = colors[0]; }
-    dcolor = this.team === -1 && this.color === 0 ? util.vec3.make(1, 1, 1) : color; // Make decal white for default boys.
+    var color = this.getColor();
+    var dcolor = this.team === -1 && this.color === 0 ? util.vec3.make(1, 1, 1) : color; // Make decal white for default boys.
     color = util.vec3.lerp(color, util.vec3.make(1.0, 1.0, 1.0), this.glow); // Mix that glow in~
     
     this.targetCircle.setColor(util.vec3.toVec4(dcolor, 1));
@@ -225,7 +230,7 @@ PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
     var playerUniformData = [
       {name: "transform", data: [this.pos.x, this.pos.y, this.height]},
       {name: "color", data: util.vec3.toArray(color)},
-      {name: "rotation", data: 0.0},
+      {name: "angle", data: [0., 0., 0.]},
       {name: "scale", data: 1.0}
     ];
     geometry.push({model: this.model, material: this.material, uniforms: playerUniformData});

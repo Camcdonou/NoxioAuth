@@ -66,6 +66,8 @@ PlayerFalcoBlack.prototype.setHeight = PlayerFalco.prototype.setHeight;
 
 PlayerFalcoBlack.prototype.setLook = PlayerFalco.prototype.setLook;
 PlayerFalcoBlack.prototype.setSpeed = PlayerFalco.prototype.setSpeed;
+
+PlayerFalcoBlack.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerFalcoBlack.prototype.getDraw = PlayerFalco.prototype.getDraw;
 
 PlayerFalcoBlack.prototype.destroy = PlayerFalco.prototype.destroy;

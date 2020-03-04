@@ -64,6 +64,8 @@ PlayerCaptainDelta.prototype.setHeight = PlayerCaptain.prototype.setHeight;
 
 PlayerCaptainDelta.prototype.setLook = PlayerCaptain.prototype.setLook;
 PlayerCaptainDelta.prototype.setSpeed = PlayerCaptain.prototype.setSpeed;
+
+PlayerCaptainDelta.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerCaptainDelta.prototype.getDraw = PlayerCaptain.prototype.getDraw;
 
 PlayerCaptainDelta.prototype.destroy = PlayerObject.prototype.destroy;

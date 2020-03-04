@@ -57,6 +57,7 @@ NxFx.hit = {
 
 /* global ParticleAirJump */
 /* global ParticleBloodSplat */
+/* global ParticleShatter */
 NxFx.player = {
   jump: new EffectDefinition(
     "Player-Jump", util.vec3.make(0, 0, 0), 0, true,
@@ -77,12 +78,19 @@ NxFx.player = {
       {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/land0.wav", "character/generic/land1.wav", "character/generic/land2.wav"], 0.25, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
-  explode: new EffectDefinition(
-    "Player-Explode", util.vec3.make(0, 0, 0.25), 0, false,
+  bloodSplat: new EffectDefinition(
+    "Player-BloodSplat", util.vec3.make(0, 0, 0.25), 0, false,
     [
       {class: ParticleBloodSplat, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: false, delay: 0},
       {class: Decal, params: ["<game *>", "character.generic.decal.bloodsplat", "<vec3 pos>", util.vec3.make(0.0, 0.0, 1.0), 1.5, Math.random()*6.28319 /* @TODO: fixed random */, util.vec4.make(1, 1, 1, 1), 2, 450, 150], attachment: false, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", ["multi/impact/impact0.wav", "multi/impact/impact1.wav", "multi/impact/impact2.wav"], 0.5, 0.0, "effect"], attachment: false, delay: 0}
+    ]
+  ),
+  shatter: new EffectDefinition(
+    "Player-Shatter", util.vec3.make(0, 0, 0), 0 , false,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.make(1., 1., 1., .25), util.vec4.make(1., 1., 1., 0.)], [1.25, 2.15], 18, "fast"], attachment: true, delay: 0},
+      {class: ParticleShatter, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", util.vec4.make(1., 1., 1., 1.), util.vec4.make(1., 1., 1., .75)], attachment: false, delay: 0}
     ]
   ),
   fall: new EffectDefinition(

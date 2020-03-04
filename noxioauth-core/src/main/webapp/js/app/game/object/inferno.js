@@ -91,6 +91,7 @@ PlayerInferno.prototype.setHeight = PlayerObject.prototype.setHeight;
 PlayerInferno.prototype.setLook = PlayerObject.prototype.setLook;
 PlayerInferno.prototype.setSpeed = PlayerObject.prototype.setSpeed;
 
+PlayerInferno.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerInferno.prototype.getDraw = PlayerObject.prototype.getDraw;
 
 PlayerInferno.prototype.destroy = PlayerObject.prototype.destroy;

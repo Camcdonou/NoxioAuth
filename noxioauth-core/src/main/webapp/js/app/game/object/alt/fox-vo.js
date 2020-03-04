@@ -56,6 +56,8 @@ PlayerFoxVoice.prototype.setHeight = PlayerFox.prototype.setHeight;
 
 PlayerFoxVoice.prototype.setLook = PlayerFox.prototype.setLook;
 PlayerFoxVoice.prototype.setSpeed = PlayerFox.prototype.setSpeed;
+
+PlayerFoxVoice.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerFoxVoice.prototype.getDraw = PlayerFox.prototype.getDraw;
 
 PlayerFoxVoice.prototype.destroy = PlayerFox.prototype.destroy;

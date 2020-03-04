@@ -94,14 +94,14 @@ Map.prototype.collideVec3 = function(pos, vel) {
     var ihd = util.vec2.normalize(util.vec2.inverse(util.vec2.subtract(hit.intersection, pos))); // Inverse Hit Directino
     var dp = util.vec2.dot(hit.normal, ihd);
     var ref = util.vec2.normalize(util.vec2.subtract(util.vec2.scale(hit.normal, 2*dp), ihd)); // Reflection normal
-    return {intersection: util.vec2.toVec3(hit.intersection, to.z), normal: util.vec2.toVec3(hit.normal, 0.0), reflect: util.vec2.toVec3(ref, vel.z)}; // @TODO: height factor && normal is wrong
+    return {grounded: false, intersection: util.vec2.toVec3(hit.intersection, to.z), normal: util.vec2.toVec3(hit.normal, 0.0), reflect: util.vec2.toVec3(ref, vel.z)}; // @TODO: height factor && normal is wrong
   }
   
   var grounded = false;
   for(var i=0;i<this.collision.floor.length;i++) {
     if(util.intersection.pointPoly(to, this.collision.floor[i].v)) { grounded = true; break; } 
   }
-  if(to.z <= 0.0 && grounded) { return {intersection: {x: to.x, y: to.y, z: 0.0}, normal: {x: 0.0, y: 0.0, z: 1.0}, reflect: util.vec3.normalize(util.vec3.make(vel.x, vel.y, -vel.z))}; }
+  if(to.z <= 0.0 && grounded) { return {grounded: true, intersection: {x: to.x, y: to.y, z: 0.0}, normal: {x: 0.0, y: 0.0, z: 1.0}, reflect: util.vec3.normalize(util.vec3.make(vel.x, vel.y, -vel.z))}; }
   
   return undefined;
 };

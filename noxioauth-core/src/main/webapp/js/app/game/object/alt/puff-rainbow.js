@@ -69,6 +69,8 @@ PlayerPuffRainbow.prototype.setHeight = PlayerPuff.prototype.setHeight;
 
 PlayerPuffRainbow.prototype.setLook = PlayerPuff.prototype.setLook;
 PlayerPuffRainbow.prototype.setSpeed = PlayerPuff.prototype.setSpeed;
+
+PlayerPuffRainbow.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerPuffRainbow.prototype.getDraw = PlayerPuff.prototype.getDraw;
 
 PlayerPuffRainbow.prototype.destroy = PlayerPuff.prototype.destroy;

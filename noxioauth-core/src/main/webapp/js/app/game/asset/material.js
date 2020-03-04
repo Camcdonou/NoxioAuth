@@ -423,6 +423,24 @@ Asset.prototype.material.character.generic.decal.bloodsplatsmall = {
   texture1: "character/generic/decal/bloodsplatsmallnormal",
 };
 
+/* Source File: grey.mat */
+Asset.prototype.material.character.generic.grey = {
+  name: "character.generic.grey",
+  shader: "player",
+  shadow: "true",
+  texture0: "character/generic/grey",
+  texture1: "character/generic/normal",
+};
+
+/* Source File: white.mat */
+Asset.prototype.material.character.generic.white = {
+  name: "character.generic.white",
+  shader: "player",
+  shadow: "true",
+  texture0: "character/generic/white",
+  texture1: "character/generic/normal",
+};
+
 /* Source File: star.mat */
 Asset.prototype.material.character.generic.effect.star = {
   name: "character.generic.effect.star",

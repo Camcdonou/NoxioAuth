@@ -70,6 +70,8 @@ PlayerPuffGold.prototype.setHeight = PlayerPuff.prototype.setHeight;
 
 PlayerPuffGold.prototype.setLook = PlayerPuff.prototype.setLook;
 PlayerPuffGold.prototype.setSpeed = PlayerPuff.prototype.setSpeed;
+
+PlayerPuffGold.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerPuffGold.prototype.getDraw = PlayerPuff.prototype.getDraw;
 
 PlayerPuffGold.prototype.destroy = PlayerPuff.prototype.destroy;

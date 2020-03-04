@@ -63,6 +63,8 @@ PlayerCaptainRainbow.prototype.setHeight = PlayerCaptain.prototype.setHeight;
 
 PlayerCaptainRainbow.prototype.setLook = PlayerCaptain.prototype.setLook;
 PlayerCaptainRainbow.prototype.setSpeed = PlayerCaptain.prototype.setSpeed;
+
+PlayerCaptainRainbow.prototype.getColor = PlayerObject.prototype.getColor;
 PlayerCaptainRainbow.prototype.getDraw = PlayerCaptain.prototype.getDraw;
 
 PlayerCaptainRainbow.prototype.destroy = PlayerObject.prototype.destroy;
