@@ -131,7 +131,7 @@ function CustomMenu() {
         {name: "Respawn", id: "respawn_time", type: "sec"},
         {name: "Auto-Balance", id: "auto_balance", type: "bool"}
       ]
-    },
+    }
 //    {
 //      name: "Bomb",
 //      id: "bomb",
@@ -175,7 +175,7 @@ function CustomMenu() {
       players: "16"
     },
     {
-      name: "Cache 404",
+      name: "404",
       id: "area",
       players: "6"
     },
@@ -201,23 +201,33 @@ function CustomMenu() {
     },
     {
       name: "Last Location",
-      id: "last",
+      id: "location",
       players: "8"
     },
     {
       name: "Penultimate Platform",
-      id: "pen",
+      id: "platform",
       players: "10"
     },
     {
       name: "Prerequisite Point",
-      id: "pre",
+      id: "point",
       players: "5"
+    },
+    {
+      name: "Primary Position",
+      id: "position",
+      players: "8"
     },
     {
       name: "Unearth",
       id: "unearth",
       players: "8"
+    },
+    {
+      name: "Veritable Vector",
+      id: "vector",
+      players: "6"
     },
     {
       name: "War Ground",
