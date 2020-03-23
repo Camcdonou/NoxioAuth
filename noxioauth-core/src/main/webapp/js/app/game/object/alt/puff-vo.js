@@ -20,7 +20,7 @@ PlayerPuffVoice.prototype.ui = PlayerPuff.prototype.ui;
 
 PlayerPuffVoice.prototype.air = function() {
   PlayerPuff.prototype.air.call(this);
-  this.effects.push(NxFx.puff.alt.voice.air.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.effects.push(NxFx.puff.alt.voice.jump.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
 PlayerPuffVoice.prototype.jump = function() {

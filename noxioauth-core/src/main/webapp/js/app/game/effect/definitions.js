@@ -490,18 +490,6 @@ NxFx.hit.alt.fire = {
   )
 };
 
-NxFx.hit.alt.critical = {
-  window: new EffectDefinition(
-    "Hit-Critical-Window", util.vec3.make(0, 0, 0.25), 0, true,
-    [
-      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.make(1,1,1,1), util.vec4.make(1,1,1,0)], [1.75, 2.5], 30, "fast"], attachment: true, delay: 0},
-      {class: ParticleCrit, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", util.vec4.make(1,1,1,1)], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/puff/xp4.wav"], 0.5, 0.0, "effect"], attachment: true, delay: 0}
-    ]
-  )
-};
-
-
 NxFx.fox.alt = {};
 
 /* global PlayerFoxRed */
@@ -1123,13 +1111,13 @@ NxFx.puff.alt.window = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerPuff.REST_LIGHT, util.vec4.copy3(PlayerPuff.REST_LIGHT, 0.0)], [1.25, 2.15], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleSleep, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/xp2.wav", 0.3, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/xp2.wav", 0.2, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   wake: new EffectDefinition(
     "Puff-Window-Wake", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/xp3.wav", 0.3, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/xp3.wav", 0.25, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   charge: new EffectDefinition(
@@ -1165,7 +1153,13 @@ NxFx.puff.alt.window = {
   hit: new EffectDefinition(
     "Puff-Window-Hit", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/xp0.wav", 1.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/xp0.wav", 0.55, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  die: new EffectDefinition(
+    "Puff-Window-Die", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/xp4.wav", 0.55, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
 };

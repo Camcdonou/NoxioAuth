@@ -32,11 +32,20 @@ PlayerPuffWindow.prototype.stunElectric = PlayerPuff.prototype.stunElectric;
 PlayerPuffWindow.prototype.stunFire = PlayerPuff.prototype.stunFire;
 
 PlayerPuffWindow.prototype.criticalHit = function() {
-  this.effects.push(NxFx.hit.alt.critical.window.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  PlayerPuff.prototype.explode.call(this);
+  this.effects.push(NxFx.puff.alt.window.hit.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
-PlayerPuffWindow.prototype.explode = PlayerPuff.prototype.explode;
-PlayerPuffWindow.prototype.fall = PlayerPuff.prototype.fall;
+PlayerPuffWindow.prototype.explode = function() {
+  PlayerPuff.prototype.explode.call(this);
+  var deathSound = NxFx.puff.alt.window.die.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+  this.game.putEffect(deathSound);
+};
+
+PlayerPuffWindow.prototype.fall = function() {
+  PlayerPuff.prototype.fall.call(this);
+  this.effects.push(NxFx.puff.alt.window.die.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
 
 PlayerPuffWindow.prototype.rest = function() {
   this.restEffect = NxFx.puff.alt.window.rest.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));

@@ -35,6 +35,8 @@ PlayerInferno.prototype.parseUpd = PlayerObject.prototype.parseUpd;
 
 PlayerInferno.prototype.effectSwitch = function(e) {
   switch(e) {
+    case "atk" : { return true; }
+    case "mov" : { return true; }
     default : { return PlayerObject.prototype.effectSwitch.call(this, e); }
   }
 };
