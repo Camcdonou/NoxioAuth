@@ -13,27 +13,19 @@ function Display(game) {
   this.frame = 0;                         // Used by some shaders as a uniform to animate things @TODO: link to this.game.frame counter instead
   this.camera = new Camera();
   
-  if(!this.initWebGL()) { main.menu.error.showError("WebGL Error", "Your browser does not appear to support WebGL."); main.net.close(); }
-};
-
-Display.prototype.initFallback = function() {
-  /* Reset Canvas */
-  this.gl = undefined;
-  this.container.innerHTML = "<!-- Fallback Mode --><canvas id='canvas' width='320' height='240'>Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.</canvas>";
-  this.window = document.getElementById("canvas");
-  this.game.window = this.window;
+  try {
+    if(!this.initWebGL()) { main.menu.error.showError("WebGL Error", "Your browser does not appear to support WebGL."); main.net.close(); }
+  }
+  catch(ex) { main.menu.error.showErrorException("WebGL Error", "Exception while initializing WebGL: " + ex.message, ex.stack); main.net.close(); }
 };
 
 Display.prototype.initWebGL = function() {
-  try { 
-    this.gl = this.window.getContext("webgl", {antialias: false});
-    if(!this.gl) { return false; }
-    return this.setupWebGL();
-  }
-  catch(ex) { main.menu.error.showErrorException("WebGL Error", "Exception while initializing WebGL: " + ex.message, ex.stack); return false; }
+  this.gl = this.window.getContext("webgl", {antialias: false});
+  if(!this.gl) { return false; }
+  return this.setupWebGL();
 };
 
-/* Returns boolean. If false then WebGL failed to setup and we should setup fallback rendering. */
+/* Returns boolean. If false then WebGL failed to setup properly */
 Display.prototype.setupWebGL = function() {
   var gl = this.gl; /* Sanity Save */
   gl.viewport(0, 0, this.window.width, this.window.height); // Resize to canvas
@@ -194,7 +186,7 @@ Display.prototype.createMaterial = function(source) {
   return true;
 };
 
-/* Returns boolean. If false then failed to setup shaders and we fallback to 2D. */
+/* Returns boolean. If false then failed to create model. */
 Display.prototype.createModel = function(source) {
   var gl = this.gl; // Sanity Save
   
@@ -742,18 +734,6 @@ Display.prototype.sortGeometry = function(geometry) {
     }
   }
   return geomSorted;
-};
-
-/* Draws a 2D fallback render if WebGL fails to initialize */
-Display.prototype.drawFallback = function() {
-  var context = this.window.getContext('2d');
-  context.clearRect(0, 0, this.window.width, this.window.height); /* Clear Canvas */
-  context.fillStyle = '#ffffff';
-  context.fillRect(0, 0, this.window.width, this.window.height);
-  context.font = '24px Calibri';
-  context.textAlign = 'center';
-  context.fillStyle = '#e17fb0';
-  context.fillText("Your browser does not support WebGL.", this.window.width/2, (this.window.height/2));
 };
 
 /* Returns a texture by path. If texture is not found then returns default. */

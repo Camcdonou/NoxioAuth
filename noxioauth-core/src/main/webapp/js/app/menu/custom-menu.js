@@ -185,16 +185,6 @@ function CustomMenu() {
       players: "4"
     },
     {
-      name: "Dig",
-      id: "dig",
-      players: "4"
-    },
-    {
-      name: "Excavate",
-      id: "excavate",
-      players: "16"
-    },
-    {
       name: "Final Destination",
       id: "final",
       players: "4"
@@ -220,11 +210,6 @@ function CustomMenu() {
       players: "8"
     },
     {
-      name: "Unearth",
-      id: "unearth",
-      players: "8"
-    },
-    {
       name: "Veritable Vector",
       id: "vector",
       players: "6"
@@ -233,6 +218,21 @@ function CustomMenu() {
       name: "War Ground",
       id: "war",
       players: "10"
+    },
+    {
+      name: "Dig",
+      id: "dig",
+      players: "4"
+    },
+    {
+      name: "Unearth",
+      id: "unearth",
+      players: "8"
+    },
+    {
+      name: "Excavate",
+      id: "excavate",
+      players: "16"
     }
   ];
 };

@@ -40,7 +40,7 @@ Gauss.prototype.init = function() {
   catch(ex) { main.menu.warning.show("WebGL Error: \n" + "Exception while initializing WebGL: \n" + ex.message); console.error(ex.stack); }
 };
 
-/* Returns boolean. If false then WebGL failed to setup and we should setup fallback rendering. */
+/* Returns boolean. If false then WebGL failed to setup. */
 Gauss.prototype.setupWebGL = function() {
   var gl = this.gl; /* Sanity Save */
   this.window.width = this.container.clientWidth;                                   // Does not enforce aspect ratio so it can be made ultra widescreen if desired.
@@ -91,7 +91,6 @@ Gauss.prototype.draw = function() {
   if(!this.loaded) { this.loading(); }
   else if(!(this.container.clientWidth < 1 || this.container.clientHeight < 1)) {        // Only draw when visible
     if(this.gl) { this.drawSpace(); }
-    else { this.drawFallback(); }
   }
   
   /* Base Benchmark */
@@ -191,10 +190,6 @@ Gauss.prototype.drawSpace = function() {
   gl.depthMask(true);                       // Reenable depth write after UI draw
   gl.enable(gl.DEPTH_TEST);                 // Reenable after UI Draw
   gl.disable(gl.BLEND);                     // Disable transparency
-};
-
-Gauss.prototype.drawFallback = function() {
-  
 };
 
 Gauss.prototype.show = function() {
@@ -331,7 +326,7 @@ Gauss.prototype.createShader = function(source) {
   return new Shader(source.name, shaderProgram, attributes, uniforms);
 };
 
-/* Returns boolean. If false then failed to setup shaders and we fallback to 2D. */
+/* Returns boolean. If false then failed to create model. */
 Gauss.prototype.createModel = function(source) {
   var gl = this.gl; // Sanity Save
   
