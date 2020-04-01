@@ -25,6 +25,8 @@ PlayerShiekVoice.prototype.ui = PlayerShiek.prototype.ui;
 PlayerShiekVoice.prototype.air  = PlayerShiek.prototype.air;
 PlayerShiekVoice.prototype.jump = PlayerShiek.prototype.jump;
 PlayerShiekVoice.prototype.land = PlayerShiek.prototype.land;
+PlayerShiekVoice.prototype.toss = PlayerObject.prototype.toss;
+PlayerShiekVoice.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerShiekVoice.prototype.stun = PlayerShiek.prototype.stun;
 

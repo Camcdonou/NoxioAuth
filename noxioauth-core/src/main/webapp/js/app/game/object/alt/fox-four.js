@@ -29,6 +29,8 @@ PlayerFoxFour.prototype.ui = PlayerFox.prototype.ui;
 PlayerFoxFour.prototype.air  = PlayerFox.prototype.air;
 PlayerFoxFour.prototype.jump = PlayerFox.prototype.jump;
 PlayerFoxFour.prototype.land = PlayerFox.prototype.land;
+PlayerFoxFour.prototype.toss = PlayerObject.prototype.toss;
+PlayerFoxFour.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerFoxFour.prototype.stun = PlayerFox.prototype.stun;
 PlayerFoxFour.prototype.stunGeneric = PlayerFox.prototype.stunGeneric;

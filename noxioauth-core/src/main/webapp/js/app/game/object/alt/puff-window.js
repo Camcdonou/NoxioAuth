@@ -20,6 +20,8 @@ PlayerPuffWindow.prototype.ui = PlayerPuff.prototype.ui;
 PlayerPuffWindow.prototype.air  = PlayerPuff.prototype.air;
 PlayerPuffWindow.prototype.jump = PlayerPuff.prototype.jump;
 PlayerPuffWindow.prototype.land = PlayerPuff.prototype.land;
+PlayerPuffWindow.prototype.toss = PlayerObject.prototype.toss;
+PlayerPuffWindow.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerPuffWindow.prototype.stun = function() {
   PlayerPuff.prototype.stun.call(this);

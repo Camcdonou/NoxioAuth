@@ -21,6 +21,8 @@ PlayerPuffDelta.prototype.ui = PlayerPuff.prototype.ui;
 PlayerPuffDelta.prototype.air  = PlayerPuff.prototype.air;
 PlayerPuffDelta.prototype.jump = PlayerPuff.prototype.jump;
 PlayerPuffDelta.prototype.land = PlayerPuff.prototype.land;
+PlayerPuffDelta.prototype.toss = PlayerObject.prototype.toss;
+PlayerPuffDelta.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerPuffDelta.prototype.stun = PlayerPuff.prototype.stun;
 

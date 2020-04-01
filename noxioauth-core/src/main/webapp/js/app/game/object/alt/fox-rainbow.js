@@ -29,6 +29,8 @@ PlayerFoxRainbow.prototype.ui = PlayerFox.prototype.ui;
 PlayerFoxRainbow.prototype.air  = PlayerFox.prototype.air;
 PlayerFoxRainbow.prototype.jump = PlayerFox.prototype.jump;
 PlayerFoxRainbow.prototype.land = PlayerFox.prototype.land;
+PlayerFoxRainbow.prototype.toss = PlayerObject.prototype.toss;
+PlayerFoxRainbow.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerFoxRainbow.prototype.stun = PlayerFox.prototype.stun;
 PlayerFoxRainbow.prototype.stunGeneric = PlayerFox.prototype.stunGeneric;

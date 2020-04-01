@@ -29,6 +29,8 @@ PlayerFoxHit.prototype.ui = PlayerFox.prototype.ui;
 PlayerFoxHit.prototype.air  = PlayerFox.prototype.air;
 PlayerFoxHit.prototype.jump = PlayerFox.prototype.jump;
 PlayerFoxHit.prototype.land = PlayerFox.prototype.land;
+PlayerFoxHit.prototype.toss = PlayerObject.prototype.toss;
+PlayerFoxHit.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerFoxHit.prototype.stun = PlayerFox.prototype.stun;
 PlayerFoxHit.prototype.stunGeneric = PlayerFox.prototype.stunGeneric;

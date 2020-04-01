@@ -25,6 +25,8 @@ PlayerFalcoDelta.prototype.ui = PlayerFalco.prototype.ui;
 PlayerFalcoDelta.prototype.air  = PlayerFalco.prototype.air;
 PlayerFalcoDelta.prototype.jump = PlayerFalco.prototype.jump;
 PlayerFalcoDelta.prototype.land = PlayerFalco.prototype.land;
+PlayerFalcoDelta.prototype.toss = PlayerObject.prototype.toss;
+PlayerFalcoDelta.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerFalcoDelta.prototype.stun = PlayerFalco.prototype.stun;
 

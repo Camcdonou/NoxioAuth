@@ -21,6 +21,8 @@ PlayerMarthDelta.prototype.ui = PlayerMarth.prototype.ui;
 PlayerMarthDelta.prototype.air  = PlayerMarth.prototype.air;
 PlayerMarthDelta.prototype.jump = PlayerMarth.prototype.jump;
 PlayerMarthDelta.prototype.land = PlayerMarth.prototype.land;
+PlayerMarthDelta.prototype.toss = PlayerObject.prototype.toss;
+PlayerMarthDelta.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerMarthDelta.prototype.stun = PlayerMarth.prototype.stun;
 PlayerMarthDelta.prototype.stunGeneric = PlayerMarth.prototype.stunGeneric;

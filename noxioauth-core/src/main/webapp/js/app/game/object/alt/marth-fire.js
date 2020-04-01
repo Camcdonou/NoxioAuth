@@ -24,6 +24,8 @@ PlayerMarthFire.prototype.ui = PlayerMarth.prototype.ui;
 PlayerMarthFire.prototype.air  = PlayerMarth.prototype.air;
 PlayerMarthFire.prototype.jump = PlayerMarth.prototype.jump;
 PlayerMarthFire.prototype.land = PlayerMarth.prototype.land;
+PlayerMarthFire.prototype.toss = PlayerObject.prototype.toss;
+PlayerMarthFire.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerMarthFire.prototype.stun = PlayerMarth.prototype.stun;
 PlayerMarthFire.prototype.stunGeneric = PlayerMarth.prototype.stunGeneric;

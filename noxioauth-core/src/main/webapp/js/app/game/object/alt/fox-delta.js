@@ -30,6 +30,8 @@ PlayerFoxDelta.prototype.ui = PlayerFox.prototype.ui;
 PlayerFoxDelta.prototype.air  = PlayerFox.prototype.air;
 PlayerFoxDelta.prototype.jump = PlayerFox.prototype.jump;
 PlayerFoxDelta.prototype.land = PlayerFox.prototype.land;
+PlayerFoxDelta.prototype.toss = PlayerObject.prototype.toss;
+PlayerFoxDelta.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerFoxDelta.prototype.stun = PlayerFox.prototype.stun;
 PlayerFoxDelta.prototype.stunGeneric = PlayerFox.prototype.stunGeneric;

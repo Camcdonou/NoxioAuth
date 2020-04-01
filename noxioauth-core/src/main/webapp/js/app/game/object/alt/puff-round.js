@@ -21,6 +21,8 @@ PlayerPuffRound.prototype.ui = PlayerPuff.prototype.ui;
 PlayerPuffRound.prototype.air  = PlayerPuff.prototype.air;
 PlayerPuffRound.prototype.jump = PlayerPuff.prototype.jump;
 PlayerPuffRound.prototype.land = PlayerPuff.prototype.land;
+PlayerPuffRound.prototype.toss = PlayerObject.prototype.toss;
+PlayerPuffRound.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerPuffRound.prototype.stun = PlayerPuff.prototype.stun;
 

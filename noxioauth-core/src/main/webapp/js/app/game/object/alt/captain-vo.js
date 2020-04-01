@@ -29,6 +29,8 @@ PlayerCaptainVoice.prototype.jump = function() {
 };
 
 PlayerCaptainVoice.prototype.land = PlayerCaptain.prototype.land;
+PlayerCaptainVoice.prototype.toss = PlayerObject.prototype.toss;
+PlayerCaptainVoice.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerCaptainVoice.prototype.stun = function() {
   PlayerCaptain.prototype.stun.call(this);

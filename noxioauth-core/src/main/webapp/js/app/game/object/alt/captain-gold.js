@@ -21,6 +21,8 @@ PlayerCaptainGold.prototype.ui = PlayerCaptain.prototype.ui;
 PlayerCaptainGold.prototype.air  = PlayerCaptain.prototype.air;
 PlayerCaptainGold.prototype.jump = PlayerCaptain.prototype.jump;
 PlayerCaptainGold.prototype.land = PlayerCaptain.prototype.land;
+PlayerCaptainGold.prototype.toss = PlayerObject.prototype.toss;
+PlayerCaptainGold.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerCaptainGold.prototype.stun = PlayerCaptain.prototype.stun;
 

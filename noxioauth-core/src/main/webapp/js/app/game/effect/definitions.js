@@ -90,7 +90,20 @@ NxFx.player = {
     "Player-Shatter", util.vec3.make(0, 0, 0), 0 , false,
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.make(1., 1., 1., .25), util.vec4.make(1., 1., 1., 0.)], [1.25, 2.15], 18, "fast"], attachment: true, delay: 0},
-      {class: ParticleShatter, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", util.vec4.make(1., 1., 1., 1.), util.vec4.make(1., 1., 1., .75)], attachment: false, delay: 0}
+      {class: ParticleShatter, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", util.vec4.make(1., 1., 1., 1.), util.vec4.make(1., 1., 1., .75)], attachment: false, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/shatter0.wav", "character/generic/shatter1.wav", "character/generic/shatter2.wav"], 1.0, 0.0, "effect"], attachment: false, delay: 0}
+    ]
+  ),
+  pickup: new EffectDefinition(
+    "Player-Pickup", util.vec3.make(0, 0, 0), 0 , true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/pickup0.wav"], 0.5, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  toss: new EffectDefinition(
+    "Player-Toss", util.vec3.make(0, 0, 0), 0 , true,
+    [
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/toss0.wav"], 0.5, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   fall: new EffectDefinition(

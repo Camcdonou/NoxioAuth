@@ -29,6 +29,8 @@ PlayerFalcoBlack.prototype.ui = PlayerFalco.prototype.ui;
 PlayerFalcoBlack.prototype.air  = PlayerFalco.prototype.air;
 PlayerFalcoBlack.prototype.jump = PlayerFalco.prototype.jump;
 PlayerFalcoBlack.prototype.land = PlayerFalco.prototype.land;
+PlayerFalcoBlack.prototype.toss = PlayerObject.prototype.toss;
+PlayerFalcoBlack.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerFalcoBlack.prototype.stun = PlayerFalco.prototype.stun;
 

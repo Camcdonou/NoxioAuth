@@ -20,6 +20,8 @@ PlayerMarthRainbow.prototype.ui = PlayerMarth.prototype.ui;
 PlayerMarthRainbow.prototype.air  = PlayerMarth.prototype.air;
 PlayerMarthRainbow.prototype.jump = PlayerMarth.prototype.jump;
 PlayerMarthRainbow.prototype.land = PlayerMarth.prototype.land;
+PlayerMarthRainbow.prototype.toss = PlayerObject.prototype.toss;
+PlayerMarthRainbow.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerMarthRainbow.prototype.stun = PlayerMarth.prototype.stun;
 PlayerMarthRainbow.prototype.stunGeneric = PlayerMarth.prototype.stunGeneric;

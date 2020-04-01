@@ -29,6 +29,8 @@ PlayerMarthVoice.prototype.jump = function() {
 };
 
 PlayerMarthVoice.prototype.land = PlayerMarth.prototype.land;
+PlayerMarthVoice.prototype.toss = PlayerObject.prototype.toss;
+PlayerMarthVoice.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerMarthVoice.prototype.stun = function() {
   PlayerMarth.prototype.stun.call(this);

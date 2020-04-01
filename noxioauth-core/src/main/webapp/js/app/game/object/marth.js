@@ -109,6 +109,8 @@ PlayerMarth.prototype.stunFire = PlayerObject.prototype.stunFire;
 PlayerMarth.prototype.criticalHit = PlayerObject.prototype.criticalHit;
 PlayerMarth.prototype.explode = PlayerObject.prototype.explode;
 PlayerMarth.prototype.fall = PlayerObject.prototype.fall;
+PlayerMarth.prototype.toss = PlayerObject.prototype.toss;
+PlayerMarth.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerMarth.prototype.slash = function() {
   this.effects.push(NxFx.marth.light.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.look, 0.0)));

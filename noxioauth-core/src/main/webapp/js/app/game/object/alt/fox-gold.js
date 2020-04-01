@@ -30,6 +30,8 @@ PlayerFoxGold.prototype.ui = PlayerFox.prototype.ui;
 PlayerFoxGold.prototype.air  = PlayerFox.prototype.air;
 PlayerFoxGold.prototype.jump = PlayerFox.prototype.jump;
 PlayerFoxGold.prototype.land = PlayerFox.prototype.land;
+PlayerFoxGold.prototype.toss = PlayerObject.prototype.toss;
+PlayerFoxGold.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerFoxGold.prototype.stun = PlayerFox.prototype.stun;
 PlayerFoxGold.prototype.stunGeneric = PlayerFox.prototype.stunGeneric;

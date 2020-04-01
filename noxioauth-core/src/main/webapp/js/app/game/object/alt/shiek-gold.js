@@ -25,6 +25,8 @@ PlayerShiekGold.prototype.ui = PlayerShiek.prototype.ui;
 PlayerShiekGold.prototype.air  = PlayerShiek.prototype.air;
 PlayerShiekGold.prototype.jump = PlayerShiek.prototype.jump;
 PlayerShiekGold.prototype.land = PlayerShiek.prototype.land;
+PlayerShiekGold.prototype.toss = PlayerObject.prototype.toss;
+PlayerShiekGold.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerShiekGold.prototype.stun = PlayerShiek.prototype.stun;
 

@@ -25,6 +25,8 @@ PlayerFalcoGold.prototype.ui = PlayerFalco.prototype.ui;
 PlayerFalcoGold.prototype.air  = PlayerFalco.prototype.air;
 PlayerFalcoGold.prototype.jump = PlayerFalco.prototype.jump;
 PlayerFalcoGold.prototype.land = PlayerFalco.prototype.land;
+PlayerFalcoGold.prototype.toss = PlayerObject.prototype.toss;
+PlayerFalcoGold.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerFalcoGold.prototype.stun = PlayerFalco.prototype.stun;
 

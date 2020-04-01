@@ -21,6 +21,8 @@ PlayerMarthGold.prototype.ui = PlayerMarth.prototype.ui;
 PlayerMarthGold.prototype.air  = PlayerMarth.prototype.air;
 PlayerMarthGold.prototype.jump = PlayerMarth.prototype.jump;
 PlayerMarthGold.prototype.land = PlayerMarth.prototype.land;
+PlayerMarthGold.prototype.toss = PlayerObject.prototype.toss;
+PlayerMarthGold.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerMarthGold.prototype.stun = PlayerMarth.prototype.stun;
 PlayerMarthGold.prototype.stunGeneric = PlayerMarth.prototype.stunGeneric;

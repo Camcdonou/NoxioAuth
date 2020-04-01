@@ -21,6 +21,8 @@ PlayerPuffGold.prototype.ui = PlayerPuff.prototype.ui;
 PlayerPuffGold.prototype.air  = PlayerPuff.prototype.air;
 PlayerPuffGold.prototype.jump = PlayerPuff.prototype.jump;
 PlayerPuffGold.prototype.land = PlayerPuff.prototype.land;
+PlayerPuffGold.prototype.toss = PlayerObject.prototype.toss;
+PlayerPuffGold.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerPuffGold.prototype.stun = PlayerPuff.prototype.stun;
 

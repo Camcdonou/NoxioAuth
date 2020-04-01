@@ -25,6 +25,8 @@ PlayerShiekDelta.prototype.ui = PlayerShiek.prototype.ui;
 PlayerShiekDelta.prototype.air  = PlayerShiek.prototype.air;
 PlayerShiekDelta.prototype.jump = PlayerShiek.prototype.jump;
 PlayerShiekDelta.prototype.land = PlayerShiek.prototype.land;
+PlayerShiekDelta.prototype.toss = PlayerObject.prototype.toss;
+PlayerShiekDelta.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerShiekDelta.prototype.stun = PlayerShiek.prototype.stun;
 

@@ -21,6 +21,8 @@ PlayerCaptainDelta.prototype.ui = PlayerCaptain.prototype.ui;
 PlayerCaptainDelta.prototype.air  = PlayerCaptain.prototype.air;
 PlayerCaptainDelta.prototype.jump = PlayerCaptain.prototype.jump;
 PlayerCaptainDelta.prototype.land = PlayerCaptain.prototype.land;
+PlayerCaptainDelta.prototype.toss = PlayerObject.prototype.toss;
+PlayerCaptainDelta.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerCaptainDelta.prototype.stun = PlayerCaptain.prototype.stun;
 

@@ -65,6 +65,8 @@ PlayerInferno.prototype.jump = function() {
 };
 
 PlayerInferno.prototype.land = PlayerObject.prototype.land;
+PlayerInferno.prototype.toss = PlayerObject.prototype.toss;
+PlayerInferno.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerInferno.prototype.stun = function() {
   PlayerObject.prototype.stun.call(this);

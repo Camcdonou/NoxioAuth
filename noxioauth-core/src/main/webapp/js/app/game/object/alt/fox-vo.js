@@ -30,6 +30,8 @@ PlayerFoxVoice.prototype.ui = PlayerFox.prototype.ui;
 PlayerFoxVoice.prototype.air  = PlayerFox.prototype.air;
 PlayerFoxVoice.prototype.jump = PlayerFox.prototype.jump;
 PlayerFoxVoice.prototype.land = PlayerFox.prototype.land;
+PlayerFoxVoice.prototype.toss = PlayerObject.prototype.toss;
+PlayerFoxVoice.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerFoxVoice.prototype.stun = PlayerFox.prototype.stun;
 PlayerFoxVoice.prototype.stunGeneric = PlayerFox.prototype.stunGeneric;

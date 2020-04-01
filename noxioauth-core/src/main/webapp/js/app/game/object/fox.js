@@ -70,6 +70,8 @@ PlayerFox.prototype.stunFire = PlayerObject.prototype.stunFire;
 PlayerFox.prototype.criticalHit = PlayerObject.prototype.criticalHit;
 PlayerFox.prototype.explode = PlayerObject.prototype.explode;
 PlayerFox.prototype.fall = PlayerObject.prototype.fall;
+PlayerFox.prototype.toss = PlayerObject.prototype.toss;
+PlayerFox.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerFox.prototype.blip = function() {
   this.effects.push(NxFx.fox.blip.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));

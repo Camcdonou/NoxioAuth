@@ -23,6 +23,8 @@ PlayerFalcoRainbow.prototype.ui = PlayerFalco.prototype.ui;
 PlayerFalcoRainbow.prototype.air  = PlayerFalco.prototype.air;
 PlayerFalcoRainbow.prototype.jump = PlayerFalco.prototype.jump;
 PlayerFalcoRainbow.prototype.land = PlayerFalco.prototype.land;
+PlayerFalcoRainbow.prototype.toss = PlayerObject.prototype.toss;
+PlayerFalcoRainbow.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerFalcoRainbow.prototype.stun = PlayerFalco.prototype.stun;
 

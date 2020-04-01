@@ -81,6 +81,8 @@ PlayerShiek.prototype.stunFire = PlayerObject.prototype.stunFire;
 PlayerShiek.prototype.criticalHit = PlayerObject.prototype.criticalHit;
 PlayerShiek.prototype.explode = PlayerObject.prototype.explode;
 PlayerShiek.prototype.fall = PlayerObject.prototype.fall;
+PlayerShiek.prototype.toss = PlayerObject.prototype.toss;
+PlayerShiek.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerShiek.prototype.blip = function() {
   this.effects.push(NxFx.fox.blip.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));

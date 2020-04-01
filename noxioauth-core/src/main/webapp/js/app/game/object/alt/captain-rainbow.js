@@ -20,6 +20,8 @@ PlayerCaptainRainbow.prototype.ui = PlayerCaptain.prototype.ui;
 PlayerCaptainRainbow.prototype.air  = PlayerCaptain.prototype.air;
 PlayerCaptainRainbow.prototype.jump = PlayerCaptain.prototype.jump;
 PlayerCaptainRainbow.prototype.land = PlayerCaptain.prototype.land;
+PlayerCaptainRainbow.prototype.toss = PlayerObject.prototype.toss;
+PlayerCaptainRainbow.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerCaptainRainbow.prototype.stun = PlayerCaptain.prototype.stun;
 

@@ -107,6 +107,8 @@ PlayerCaptain.prototype.stunFire = PlayerObject.prototype.stunFire;
 PlayerCaptain.prototype.criticalHit = PlayerObject.prototype.criticalHit;
 PlayerCaptain.prototype.explode = PlayerObject.prototype.explode;
 PlayerCaptain.prototype.fall = PlayerObject.prototype.fall;
+PlayerCaptain.prototype.toss = PlayerObject.prototype.toss;
+PlayerCaptain.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerCaptain.prototype.charge = function() {
   this.chargeEffect = NxFx.captain.charge.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));

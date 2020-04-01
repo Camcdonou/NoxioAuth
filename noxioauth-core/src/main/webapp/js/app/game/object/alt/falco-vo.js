@@ -29,6 +29,8 @@ PlayerFalcoVoice.prototype.jump = function() {
 };
 
 PlayerFalcoVoice.prototype.land = PlayerFalco.prototype.land;
+PlayerFalcoVoice.prototype.toss = PlayerObject.prototype.toss;
+PlayerFalcoVoice.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerFalcoVoice.prototype.stun = function() {
   PlayerFalco.prototype.stun.call(this);

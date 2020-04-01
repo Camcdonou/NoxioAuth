@@ -24,6 +24,8 @@ PlayerShiekBlack.prototype.ui = PlayerShiek.prototype.ui;
 PlayerShiekBlack.prototype.air  = PlayerShiek.prototype.air;
 PlayerShiekBlack.prototype.jump = PlayerShiek.prototype.jump;
 PlayerShiekBlack.prototype.land = PlayerShiek.prototype.land;
+PlayerShiekBlack.prototype.toss = PlayerObject.prototype.toss;
+PlayerShiekBlack.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerShiekBlack.prototype.stun = PlayerShiek.prototype.stun;
 

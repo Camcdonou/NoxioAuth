@@ -103,6 +103,8 @@ PlayerObject.prototype.effectSwitch = function(e) {
     case "air" : { this.air(); return true; }
     case "jmp" : { this.jump(); return true; }
     case "lnd" : { this.land(); return true; }
+    case "tos" : { this.toss(); return true; }
+    case "pik" : { this.pickup(); return true; }
     case "stn" : { this.stun(); return true; }
     case "tnt" : { this.taunt(); return true; }
     case "obj" : { this.objective = true; this.color = util.kalide.compressColors(2, 4, 5, 6, 8); return true; }
@@ -124,6 +126,14 @@ PlayerObject.prototype.jump = function() {
 
 PlayerObject.prototype.land = function() {
   this.effects.push(NxFx.player.land.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+
+PlayerObject.prototype.pickup = function() {
+  this.effects.push(NxFx.player.pickup.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+
+PlayerObject.prototype.toss = function() {
+  this.effects.push(NxFx.player.toss.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
 PlayerObject.prototype.stun = function() {

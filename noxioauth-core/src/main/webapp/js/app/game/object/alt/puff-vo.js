@@ -29,6 +29,8 @@ PlayerPuffVoice.prototype.jump = function() {
 };
 
 PlayerPuffVoice.prototype.land = PlayerPuff.prototype.land;
+PlayerPuffVoice.prototype.toss = PlayerObject.prototype.toss;
+PlayerPuffVoice.prototype.pickup = PlayerObject.prototype.pickup;
 
 PlayerPuffVoice.prototype.stun = function() {
   PlayerPuff.prototype.stun.call(this);
