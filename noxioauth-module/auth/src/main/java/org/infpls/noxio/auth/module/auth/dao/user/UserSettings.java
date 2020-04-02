@@ -18,7 +18,7 @@ public class UserSettings {
   public UserSettings(final String uid) {
     this.uid = uid;
     volume = new Volume(.9f, .5f, .75f, .75f, .75f, .75f);
-    graphics = new Graphics(1f, 1f, 1f, 2048, false);
+    graphics = new Graphics(1f, 1f, 1f, 2048, false, true);
     control = new Control(false, 70, 68, 32, 84, 83, 81);
     game = new Game(0, 0, 0, null, null, false, null, 1);
     toggle = new Toggle(false, false, false, false, false);
@@ -40,7 +40,8 @@ public class UserSettings {
       ((BigDecimal)data.get("GFXUPUI")).floatValue(),
       ((BigDecimal)data.get("GFXUPSKY")).floatValue(),
       (int)data.get("GFXSHADOWSIZE"),
-      (boolean)data.get("GFXSAFEMODE")
+      (boolean)data.get("GFXSAFEMODE"),
+      (boolean)data.get("GFXBLOOM")
     );
     control = new Control(
       (boolean)data.get("CONENABLEGAMEPAD"),
@@ -75,7 +76,7 @@ public class UserSettings {
   public UserSettings(final UserSettings source, final UserSettings edited) {
     this.uid = source.uid;
     volume = new Volume(edited.volume.master, edited.volume.music, edited.volume.voice, edited.volume.announcer, edited.volume.ui, edited.volume.fx);
-    graphics = new Graphics(edited.graphics.upGame, edited.graphics.upUi, edited.graphics.upSky, edited.graphics.shadowSize, edited.graphics.safeMode);
+    graphics = new Graphics(edited.graphics.upGame, edited.graphics.upUi, edited.graphics.upSky, edited.graphics.shadowSize, edited.graphics.safeMode, edited.graphics.bloom);
     control = new Control(edited.control.enableGamepad, edited.control.actionA, edited.control.actionB, edited.control.jump, edited.control.taunt, edited.control.toss, edited.control.scoreboard);
     game = new Game(edited.game.color, edited.game.redColor, edited.game.blueColor, edited.game.customMessageA, edited.game.customMessageB, edited.game.useCustomSound, source.game.customSoundFile, edited.game.lagComp);
     toggle = new Toggle(edited.toggle.disableAlts, edited.toggle.disableCustomSound, edited.toggle.disableColor, edited.toggle.disableLog, edited.toggle.disableMeter);
@@ -96,13 +97,14 @@ public class UserSettings {
   public class Graphics {
     public final float upGame, upUi, upSky;
     public final int shadowSize;
-    public final boolean safeMode;
-    public Graphics(float ug, float uu, float us, int ss, boolean sm) {
+    public final boolean safeMode, bloom;
+    public Graphics(float ug, float uu, float us, int ss, boolean sm, boolean bl) {
       upGame = Math.min(8f, Math.max(.25f, ug));
       upUi = Math.min(8f, Math.max(.25f, uu));
       upSky = Math.min(8f, Math.max(.25f, us));
       shadowSize = Math.min(4096, Math.max(128, ss));
       safeMode = sm;
+      bloom = bl;
     }
   }
   

@@ -246,14 +246,15 @@ NoxioGame.prototype.update = function(tick) {
   /* === DEBUG BLOCK START ==================== */  
   this.ui.debug.setText(
     "WHO[ " + main.net.user + "@" + main.net.game.state.info.name + "@" + main.net.game.info.name + " ]\n-\n" +
-    "S[ " + (this.debug.sAvg).toFixed(2) + "ms ] C[ " + (this.debug.cAvg).toFixed(2) + "ms ] D[ " + (this.debug.dAvg).toFixed(2) + "ms ]\n-\n" +
-    "FPS[ " + (this.debug.fAvg).toFixed(2) + " ] PING[ " + this.ping + "ms ]\n" +
-    "ASSET[ " + this.display.models.length + "," + this.display.materials.length + "," + this.display.shaders.length + "," + this.display.textures.length +" ] FBO[ 4 ]\n" +
+    "S[ " + (this.debug.sAvg).toFixed(2) + "ms ] C[ " + (this.debug.cAvg).toFixed(2) + "ms ] D[ " + (this.debug.dAvg).toFixed(2) + "ms ]\n" +
+    "FRAME  [ " + this.frame + " ] DELTA [ " + this.delta + " ]\n",
+    "FPS[ " + (this.debug.fAvg).toFixed(2) + " ] PING[ " + this.ping + "ms ]\n-\n" +
+    "ASSET[ " + this.display.models.length + "," + this.display.materials.length + "," + this.display.shaders.length + "," + this.display.textures.length +" ] FBO[ 5 ]\n" +
     "SHADOW [ " + this.display.fbo.shadow.fb.width + "," + this.display.fbo.shadow.fb.height + " ]\n" +
     "WORLD  [ " + this.display.fbo.world.fb.width + "," + this.display.fbo.world.fb.height + " ]\n" +
     "SKY    [ " + this.display.fbo.sky.fb.width + "," + this.display.fbo.sky.fb.height + " ]\n" +
-    "UI     [ " + this.display.fbo.ui.fb.width + "," + this.display.fbo.ui.fb.height + " ]\n-\n" +
-    "FRAME  [ " + this.frame + " ] DELTA [ " + this.delta + " ]"
+    "UI     [ " + this.display.fbo.ui.fb.width + "," + this.display.fbo.ui.fb.height + " ]\n" +
+    "BLOOM  [ " + this.display.fbo.bloom.fb.width + "," + this.display.fbo.bloom.fb.height + " ]\n"
   );
   /* === DEBUG BLOCK END ==================== */
 };

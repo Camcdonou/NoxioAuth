@@ -46,9 +46,10 @@ Display.prototype.setupWebGL = function() {
   )) { return false; }
   
   if(!gl.getExtension('OES_standard_derivatives')) { return false; }
+  if(!gl.getExtension('WEBGL_depth_texture')) { return false; }
 
   this.shadow = {size: main.settings.graphics.shadowSize};
-  this.upscale = {sky: main.settings.graphics.upSky, world: main.settings.graphics.upGame, ui: main.settings.graphics.upUi};
+  this.upscale = {sky: main.settings.graphics.upSky, world: main.settings.graphics.upGame, ui: main.settings.graphics.upUi, bloom: 1.};
   
   this.textures = [];
   this.cubes = [];
@@ -58,9 +59,12 @@ Display.prototype.setupWebGL = function() {
   this.fbo = {};
   
   var maxUniform = gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS);
+  var maxTexture = gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS);
   if(maxUniform < 64) { main.menu.error.showError("GLSL returned MAX_VERTEX_UNIFORM_VECTORS as : " + maxUniform); return false; }
+  if(maxTexture < 16) { main.menu.error.showError("GLSL returned MAX_VERTEX_TEXTURE_IMAGE_UNITS as : " + maxTexture); return false; }
   this.PL_UNIFORM_MAX = maxUniform * 0.33; this.LL_UNIFORM_MAX = maxUniform * 0.33;
-  console.log("##DEBUG GLSL UNIFORM MAX: " + maxUniform); /* @DEBUG */
+  console.log("##GLSL UNIFORM MAX: " + maxUniform); /* @DEBUG */
+  console.log("##GLSL TEXTURE MAX: " + maxTexture);
   
   if(!this.createTexture("multi/default")) { return false; }
   if(!this.createCube(["multi/cube0","multi/cube1","multi/cube2","multi/cube3","multi/cube4","multi/cube5"])) { return false; }
@@ -69,6 +73,7 @@ Display.prototype.setupWebGL = function() {
   if(!this.createMaterial(this.game.asset.material.multi.shadow)) { return false; }
   if(!this.createMaterial(this.game.asset.material.multi.shadowmask)) { return false; }
   if(!this.createMaterial(this.game.asset.material.multi.post_msaa)) { return false; }
+  if(!this.createMaterial(this.game.asset.material.multi.post_msaa_bloom)) { return false; }
   if(!this.createMaterial(this.game.asset.material.ui.calibri)) { return false; }
   
   if(!this.createModel(this.game.asset.model.multi.box)) { return false; }
@@ -78,10 +83,17 @@ Display.prototype.setupWebGL = function() {
   if(!this.createFramebuffer("sky", this.upscale.sky)) { return false; }
   if(!this.createFramebuffer("world", this.upscale.world)) { return false; }
   if(!this.createFramebuffer("ui", this.upscale.ui)) { return false; }
+  if(!this.createFramebuffer("bloom", this.upscale.bloom)) { return false; }
 
   /* @TODO: @DEBUG: Used by js/app/game/ui/debug.js exclusively. */
   this.shadowDebugMat = new Material("~SHADOW_DEBUG_MATERIAL", this.getShader("simpletrans"), {texture0: this.fbo.shadow.tex}, false);
+  this.bloomDebugMat = new Material("~BLOOM_DEBUG_MATERIAL", this.getShader("simpletrans"), {texture0: this.fbo.bloom.tex}, false);
+  this.worldDepthDebugMat = new Material("~WORLD_DEPTH_DEBUG_MATERIAL", this.getShader("simpletrans"), {texture0: this.fbo.world.depth}, false);
+  this.bloomDepthDebugMat = new Material("~BLOOM_DEPTH_DEBUG_MATERIAL", this.getShader("simpletrans"), {texture0: this.fbo.bloom.depth}, false);
   this.materials.push(this.shadowDebugMat);
+  this.materials.push(this.bloomDebugMat);
+  this.materials.push(this.worldDepthDebugMat);
+  this.materials.push(this.bloomDepthDebugMat);
   /* ----------------------------------------------------      */
   
   return true;
@@ -172,6 +184,7 @@ Display.prototype.createShader = function(source) {
 /* Returns boolean. If returns false then failed to create material. If returns true then material was created and added to materials array. */
 Display.prototype.createMaterial = function(source) {
   var shader = this.getShader(source.shader);
+  var bloomShader = source.bloom==="false"?false:this.getShader(source.bloom);
   var texture = {};
   var cube;
   if(source.texture0) { texture.texture0 = this.getTexture(source.texture0); }
@@ -181,7 +194,7 @@ Display.prototype.createMaterial = function(source) {
   if(source.texture4) { texture.texture4 = this.getTexture(source.texture4); }
   if(source.cube) { cube = this.getCube(source.cube); }
   
-  this.materials.push(new Material(source.name, shader, texture, cube, source.shadow));
+  this.materials.push(new Material(source.name, shader, texture, cube, source.shadow, bloomShader));
   
   return true;
 };
@@ -252,18 +265,20 @@ Display.prototype.createFramebuffer = function(name, upscale) {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, fb.width, fb.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);  // No mipmaps generated on FBOs
   
-  var rb = gl.createRenderbuffer();
-  gl.bindRenderbuffer(gl.RENDERBUFFER, rb);
-  gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, fb.width, fb.height);
+  var depth = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, depth);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, fb.width, fb.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_SHORT, null);
+
   gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
-  gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, rb);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depth, 0);
   
   if(gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) { return false; }
   
-  this.fbo[name] = {fb: fb, rb: rb, tex: new RenderTexture(tex), upscale: upscale};
+  this.fbo[name] = {fb: fb, tex: new RenderTexture(tex), depth: new RenderTexture(depth), upscale: upscale};
   
   gl.bindTexture(gl.TEXTURE_2D, null);
-  gl.bindRenderbuffer(gl.RENDERBUFFER, null);
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   
   return true;
@@ -284,10 +299,10 @@ Display.prototype.updateFramebuffer = function(name) {
     
     gl.bindTexture(gl.TEXTURE_2D, fbo.tex.glTexture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, fbo.fb.width, fbo.fb.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-    gl.bindRenderbuffer(gl.RENDERBUFFER, fbo.rb);
-    gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, fbo.fb.width, fbo.fb.height);
+    gl.bindTexture(gl.TEXTURE_2D, fbo.depth.glTexture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, fbo.fb.width, fbo.fb.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_SHORT, null);
     gl.bindTexture(gl.TEXTURE_2D, null);
-    gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+
   }
 };
 
@@ -305,7 +320,8 @@ Display.prototype.draw = function() {
   this.updateFramebuffer("world");
   this.updateFramebuffer("ui");
   this.updateFramebuffer("sky");
-  
+  this.updateFramebuffer("bloom");
+
   /* Generate all matrices for the render */
   var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, this.camera.fov, this.window.width/this.window.height, this.camera.near, this.camera.far); // Perspective
   var MOVEMATRIX = mat4.create();
@@ -370,6 +386,8 @@ Display.prototype.draw = function() {
   /* Sort geometry by shader -> material -> draws */
   var mapGeomSorted = this.sortGeometry(mapGeom);
   var objGeomSorted = this.sortGeometry(objGeom);
+  
+  var bloomGeomSorted = this.sortBloomGeometry(mapGeom);
   
   /* === Draw Geometry to Shadow FBO ===================================================================================== */
   /* ===================================================================================================================== */
@@ -542,6 +560,43 @@ Display.prototype.draw = function() {
   gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable world framebuffer
   gl.disable(gl.BLEND);                     // Disable Transparency 
   
+  
+    
+  /* === Draw Bloom ====================================================================================================== */
+  /* ===================================================================================================================== */
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.bloom.fb);                                                      // Enable bloom framebuffer
+  gl.viewport(0, 0, (this.window.width*this.fbo.bloom.upscale), (this.window.height*this.fbo.bloom.upscale)); // Resize viewport to window size
+  gl.clearColor(0.0, 0.0, 0.0, 0.0);                                                                          // Clear black backdrop
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);                                                        // Clear Color and Depth from previous draw.
+  gl.enable(gl.BLEND);                                                                                        // Enable Transparency 
+  gl.depthMask(true);                                                                                         // Always write depth for bloom
+  var uniformData = [
+    {name: "Pmatrix", data: PROJMATRIX},
+    {name: "Vmatrix", data: VIEWMATRIX},
+    {name: "Mmatrix", data: MOVEMATRIX},
+    {name: "frame", data: this.frame}
+  ];
+  for(var i=0;i<bloomGeomSorted.length;i++) {                                       // Draws geometry with bloom enabled materials
+    var bloomGroup = bloomGeomSorted[i];
+    bloomGroup.bloom.enable(gl);
+    bloomGroup.bloom.applyUniforms(gl, uniformData);
+    bloomGroup.bloom.applyUniforms(gl, uniformLightData);
+    for(var j=0;j<bloomGroup.materials.length;j++) {
+      var materialGroup = bloomGroup.materials[j];
+      materialGroup.material.enable(gl, true);
+      for(var k=0;k<materialGroup.draws.length;k++) {
+        var draw = materialGroup.draws[k];
+        bloomGroup.bloom.applyUniforms(gl, draw.uniforms);
+        draw.model.draw(gl, bloomGroup.bloom);
+      }
+      materialGroup.material.disable(gl);
+    }
+    bloomGroup.bloom.disable(gl);
+  }
+  gl.depthMask(true);                       // Enable writing to depth buffer
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable world framebuffer
+  gl.disable(gl.BLEND);                     // Disable Transparency 
+  
   /* === Draw Sky ======================================================================================================== */
   /* ===================================================================================================================== */
   gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.sky.fb);                                                    // Enable Sky framebuffer
@@ -663,8 +718,11 @@ Display.prototype.draw = function() {
   gl.disable(gl.DEPTH_TEST);                                // Disable depth testing for post Draw
   this.fbo.world.tex.enable(gl, 6);                         // Enable world FBO render texture
   this.fbo.ui.tex.enable(gl, 7);                            // Enable ui FBO render texture
-  this.fbo.sky.tex.enable(gl, 8);                            // Enable sky FBO render texture
-  var renderMaterial = this.getMaterial("multi.post_msaa");
+  this.fbo.sky.tex.enable(gl, 8);                           // Enable sky FBO render texture
+  this.fbo.bloom.tex.enable(gl, 9);                         // Enable bloom FBO render texture
+  this.fbo.world.depth.enable(gl, 10);                      // Enable world depth FBO render texture
+  this.fbo.bloom.depth.enable(gl, 11);                      // Enable bloom depth FBO render texture
+  var renderMaterial = main.settings.graphics.bloom?this.getMaterial("multi.post_msaa_bloom"):this.getMaterial("multi.post_msaa");
   var renderShader = renderMaterial.shader;
   var sheetModel = this.getModel("multi.sheet");
   
@@ -673,16 +731,22 @@ Display.prototype.draw = function() {
   var VIEWMATRIX_POST = mat4.create();
   var TEXTURE_PROP = [this.window.width/this.fbo.world.fb.width, this.window.height/this.fbo.world.fb.height, (this.fbo.world.fb.height-(this.window.height*this.fbo.world.upscale))/this.fbo.world.fb.height,
                       this.window.width/this.fbo.ui.fb.width, this.window.height/this.fbo.ui.fb.height, (this.fbo.ui.fb.height-(this.window.height*this.fbo.ui.upscale))/this.fbo.ui.fb.height,
-                      this.window.width/this.fbo.sky.fb.width, this.window.height/this.fbo.sky.fb.height, (this.fbo.sky.fb.height-(this.window.height*this.fbo.sky.upscale))/this.fbo.sky.fb.height];
+                      this.window.width/this.fbo.sky.fb.width, this.window.height/this.fbo.sky.fb.height, (this.fbo.sky.fb.height-(this.window.height*this.fbo.sky.upscale))/this.fbo.sky.fb.height,
+                      this.window.width/this.fbo.bloom.fb.width, this.window.height/this.fbo.bloom.fb.height, (this.fbo.bloom.fb.height-(this.window.height*this.fbo.bloom.upscale))/this.fbo.bloom.fb.height];
   var uniformDataPost = [
     {name: "Pmatrix", data: PROJMATRIX_POST},
     {name: "Vmatrix", data: VIEWMATRIX_POST},
     {name: "textureProp", data: TEXTURE_PROP},
     {name: "resolution", data: [(this.window.width*this.fbo.world.upscale), (this.window.width*this.fbo.world.upscale)]},
-    {name: "upscale", data: [this.fbo.world.upscale, this.fbo.ui.upscale, this.fbo.sky.upscale]},
+    {name: "upscale", data: [this.fbo.world.upscale, this.fbo.ui.upscale, this.fbo.sky.upscale, this.fbo.bloom.upscale]},
+    {name: "bloomTexel", data: [1./this.fbo.bloom.fb.width, 1./this.fbo.bloom.fb.height]},
+    {name: "bloomScale", data: Math.max(.25, Math.min(1.5, 15./this.camera.zoom))},
     {name: "texture6", data: 6},
     {name: "texture7", data: 7},
-    {name: "texture8", data: 8}
+    {name: "texture8", data: 8},
+    {name: "texture9", data: 9},
+    {name: "texture10", data: 10},
+    {name: "texture11", data: 11}
   ];
   
   renderShader.enable(gl);
@@ -695,7 +759,10 @@ Display.prototype.draw = function() {
   gl.enable(gl.DEPTH_TEST);           // Reenable depth testing after post draw
   this.fbo.world.tex.disable(gl, 6);  // Disable world FBO render texture
   this.fbo.ui.tex.disable(gl, 7);     // Disable ui FBO render texture
-  this.fbo.sky.tex.enable(gl, 8);     // Disable sky FBO render texture 
+  this.fbo.sky.tex.disable(gl, 8);     // Disable sky FBO render texture 
+  this.fbo.bloom.tex.disable(gl, 9);     // Disable bloom FBO render texture 
+  this.fbo.world.depth.disable(gl, 10);    // Disable world depth FBO render texture 
+  this.fbo.bloom.depth.disable(gl, 11);    // Disable bloom depth FBO render texture 
   
   gl.flush();
 };
@@ -723,6 +790,43 @@ Display.prototype.sortGeometry = function(geometry) {
     if(!materialGroup) {
       materialGroup = {material: geom.material, draws: []};
       shaderGroup.materials.push(materialGroup);
+    }
+    materialGroup.draws.push({model: geom.model, uniforms: geom.uniforms});
+  }
+  for(var i=0,j=0;j<geomSorted.length;i++,j++) {
+    if(geomSorted[i].materials[0].material.castShadow === 0) {
+      var spl = geomSorted.splice(i, 1)[0];
+      geomSorted.push(spl);
+      i--;
+    }
+  }
+  return geomSorted;
+};
+
+Display.prototype.sortBloomGeometry = function(geometry) {
+  var geomSorted = [];
+  for(var i=0;i<geometry.length;i++) {
+    var geom = geometry[i];
+    if(!geom.material.bloom) { continue; }
+    var bloomGroup = undefined;
+    for(var j=0;j<geomSorted.length;j++) {
+      if(geomSorted[j].bloom.name === geom.material.bloom.name) {
+        bloomGroup = geomSorted[j];
+      }
+    }
+    if(!bloomGroup) {
+      bloomGroup = {bloom: geom.material.bloom, materials: []};
+      geomSorted.push(bloomGroup);
+    }
+    var materialGroup = undefined;
+    for(var j=0;j<bloomGroup.materials.length;j++) {
+      if(bloomGroup.materials[j].material.name === geom.material.name) {
+        materialGroup = bloomGroup.materials[j];
+      }
+    }
+    if(!materialGroup) {
+      materialGroup = {material: geom.material, draws: []};
+      bloomGroup.materials.push(materialGroup);
     }
     materialGroup.draws.push({model: geom.model, uniforms: geom.uniforms});
   }
@@ -829,8 +933,8 @@ Display.prototype.settingsChanged = function() {
     this.shadow.size = main.settings.graphics.shadowSize;
     var deleteFBO = function(fbo) {
       gl.deleteFramebuffer(fbo.fb);
-      gl.deleteRenderbuffer(fbo.rb);
       gl.deleteTexture(fbo.tex.glTexture);
+      if(fbo.depth) { gl.deleteTexture(fbo.depth.glTexture); }
     };
     deleteFBO(this.fbo.shadow);
     this.createShadowFramebuffer("shadow", this.shadow.size);
@@ -850,13 +954,14 @@ Display.prototype.destroy = function() {
   this.textures = [];
   var deleteFBO = function(fbo) {
     gl.deleteFramebuffer(fbo.fb);
-    gl.deleteRenderbuffer(fbo.rb);
     gl.deleteTexture(fbo.tex.glTexture);
+    if(fbo.depth) { gl.deleteTexture(fbo.depth.glTexture); }
   };
   deleteFBO(this.fbo.shadow);
   deleteFBO(this.fbo.world);
   deleteFBO(this.fbo.ui);
   deleteFBO(this.fbo.sky);
+  deleteFBO(this.fbo.bloom);
   this.fbo = {};
   
   /* Clear canvas so when we load a game the last frame of the previous game dosen't show. */

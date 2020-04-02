@@ -15,7 +15,7 @@ Auth.prototype.establish = function(socket) {
     window.location.host,
     "infernoplus.com",
     "localhost:7001",
-    "68.32.112.73:7001",
+    "68.35.135.107:7001",
     "10.0.0.253:7001"
   ];
   

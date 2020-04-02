@@ -25,8 +25,8 @@ DebugUI.prototype.refresh = function() {
   var swhite = util.vec4.make(1.0, 1.0, 1.0, 1.0);
   
   var w = 512-8;
-  var h = 256;
-  var t = 512;
+  var h = 512;
+  var t = 768;
   var s = 18;
   var p = 32;
   var a = 4;
@@ -46,6 +46,9 @@ DebugUI.prototype.generate = function() {
   var parent = this;
   var colorMat = this.game.display.getMaterial("ui.color");                // Basic color material
   var shadowMat = this.game.display.getMaterial("~SHADOW_DEBUG_MATERIAL"); // Special material for drawing shadow map, used only here for debug purposes
+  var bloomMat = this.game.display.getMaterial("~BLOOM_DEBUG_MATERIAL");   // Special material for drawing bloom map, used only here for debug purposes
+  var worldDepthMat = this.game.display.getMaterial("~WORLD_DEPTH_DEBUG_MATERIAL"); // You get the idea...
+  var bloomDepthMat = this.game.display.getMaterial("~BLOOM_DEPTH_DEBUG_MATERIAL");
   var fontMat  = this.game.display.getMaterial("ui.calibri");              // Font material
   var fontName = "Calibri";                                                // Name of this font for text rendering
   
@@ -74,6 +77,16 @@ DebugUI.prototype.generate = function() {
   var s = 18;
   var p = 32;
   var a = 8;
+    
+  this.bloomDebug = {
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(w-512,h), util.vec2.make(256,256), swhite, bloomMat)],
+      text:  []
+    },
+    step: function(imp, state, window) { return false; },
+    isHovered: false
+  };
+  container.add(this.bloomDebug);
   
   this.shadowDebug = {
     neutral: {
@@ -84,6 +97,28 @@ DebugUI.prototype.generate = function() {
     isHovered: false
   };
   container.add(this.shadowDebug);
+  
+  h += 256;
+  
+  this.worldDepthDebug = {
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(w-512,h), util.vec2.make(256,256), swhite, worldDepthMat)],
+      text:  []
+    },
+    step: function(imp, state, window) { return false; },
+    isHovered: false
+  };
+  container.add(this.worldDepthDebug);
+  
+  this.bloomDepthDebug = {
+    neutral: {
+      block: [new GenericUIBlock(util.vec2.make(w-256,h), util.vec2.make(256,256), swhite, bloomDepthMat)],
+      text:  []
+    },
+    step: function(imp, state, window) { return false; },
+    isHovered: false
+  };
+  container.add(this.bloomDepthDebug);
   
   h += 256;
   

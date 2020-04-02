@@ -106,8 +106,8 @@ GraphicUI.prototype.generate = function() {
   });
   h += s+s;
   
-  var gq, mq, kq, sq;
-  var gnxt, mnxt, knxt, snxt;
+  var gq, mq, kq, sq, bq;
+  var gnxt, mnxt, knxt, snxt, bnxt;
   var sets = main.settings.graphics;
   switch(sets.upGame) {
     case 0.5 :  { gq = "Low"; gnxt = 1.0; break; }
@@ -129,12 +129,15 @@ GraphicUI.prototype.generate = function() {
     case 4096 :  { sq = "Ultra"; snxt = 512; break; }
     default  : { sq = "Normal";snxt = 2048; break; }
   }
+  if(sets.bloom) { bq = "On"; bnxt = false; }
+  else { bq = "Off"; bnxt = true; }
   
   var SPEC = [
     {nam: "Game Quality", txt: gq, fld: "upGame", nxt: gnxt},
     {nam: "Menu Quality", txt: mq, fld: "upUi", nxt: mnxt},
     {nam: "Sky Quality", txt: kq, fld: "upSky", nxt: knxt},
-    {nam: "Shadow Quality", txt: sq, fld: "shadowSize", nxt: snxt}
+    {nam: "Shadow Quality", txt: sq, fld: "shadowSize", nxt: snxt},
+    {nam: "Bloom", txt: bq, fld: "bloom", nxt: bnxt}
   ];
   
   for(var i=0;i<SPEC.length;i++) {
@@ -163,7 +166,7 @@ GraphicUI.prototype.generate = function() {
         sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
       },
       step: protoOnClick,
-      onClick: function() {parent.regen = true; parent.changed; sets[this.fld] = this.nxtVal; },
+      onClick: function() {parent.regen = true; parent.changed = true; sets[this.fld] = this.nxtVal; },
       fld: SPEC[i].fld,
       nxtVal: SPEC[i].nxt,
       isHovered: false
