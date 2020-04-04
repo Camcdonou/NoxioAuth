@@ -12,7 +12,27 @@ function Camera() {
   this.far = 64.0;
   
   this.interp = {pos: this.pos, rot: this.rot, zoom: 0.0};
+  
+  //Camera shake vals
+  this.lowFreqMagnitude = 0.;
+  this.lowFreqTimer = 0;
+  this.lowFreqMult = util.vec2.make(1., 1.);
 }
+
+/* This is a quick hack to implement camera shake. This whole class should really be refactored. */
+/* Many classes still directly read from camera.pos, while a few have been edited to use calcPos(). This is really oofy and bad @TODO: */
+Camera.prototype.calcPos = function() {
+  var shakeX = (1.-(Math.sin((this.lowFreqTimer/1.27)+0.524)*2.))*this.lowFreqMagnitude;
+  var shakeY = (1.-(Math.sin(((this.lowFreqTimer+3)/1.64)+0.524)*2.))*this.lowFreqMagnitude;
+  return util.vec3.add(this.pos, util.vec3.make(this.lowFreqMult.x*shakeX,this.lowFreqMult.y*shakeY,0.));
+};
+
+Camera.prototype.lowFrequencyShake = function(mag) {
+  if(this.lowFreqMagnitude > mag) { return; }
+  this.lowFreqMagnitude = mag;
+  this.lowFreqTimer = 1;
+  this.lowFreqMult = util.vec2.make(((Math.random()*0.33)+0.66)*(Math.random()>.5?1.:-1.), ((Math.random()*0.33)+0.66)*(Math.random()>.5?1.:-1.));
+};
 
 /* End all interpolation of camera values and jump straight to final */
 Camera.prototype.immediate = function() {
@@ -28,6 +48,9 @@ Camera.prototype.immediate = function() {
 
 /* Do interpolation of camera values */
 Camera.prototype.update = function() {
+  this.lowFreqTimer++;
+  this.lowFreqMagnitude *= .73;
+  
   var INTERP_RATE = 0.33;
   var CAMERA_MIN_ZOOM = 5.0;
   var CAMERA_MAX_ZOOM = 50.0;

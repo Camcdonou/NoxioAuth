@@ -323,13 +323,14 @@ Display.prototype.draw = function() {
   this.updateFramebuffer("bloom");
 
   /* Generate all matrices for the render */
+  var camPos = this.camera.calcPos();
   var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, this.camera.fov, this.window.width/this.window.height, this.camera.near, this.camera.far); // Perspective
   var MOVEMATRIX = mat4.create();
     mat4.translate(MOVEMATRIX, MOVEMATRIX, [0.0, 0.0, -this.camera.zoom]);
     mat4.rotate(MOVEMATRIX, MOVEMATRIX, this.camera.rot.x, [1.0, 0.0, 0.0]);
     mat4.rotate(MOVEMATRIX, MOVEMATRIX, this.camera.rot.y, [0.0, 1.0, 0.0]);
     mat4.rotate(MOVEMATRIX, MOVEMATRIX, this.camera.rot.z, [0.0, 0.0, 1.0]);
-    mat4.translate(MOVEMATRIX, MOVEMATRIX, [this.camera.pos.x, this.camera.pos.y, this.camera.pos.z]);
+    mat4.translate(MOVEMATRIX, MOVEMATRIX, [camPos.x, camPos.y, camPos.z]);
   var VIEWMATRIX = mat4.create();
   var DEROTATEMATRIX = mat4.create();
     mat4.rotate(DEROTATEMATRIX, DEROTATEMATRIX, this.camera.rot.x, [1.0, 0.0, 0.0]);

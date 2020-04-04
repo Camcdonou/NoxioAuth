@@ -516,6 +516,12 @@ NoxioGame.prototype.putEffect = function(effect) {
   this.effects.push(effect);
 };
 
+/* When an object has a camera shake effect it calls this method. If the object is our current player we apply that camera shake to the camera. */
+/* If the object is not our current player we ignore it. */
+NoxioGame.prototype.putCameraShake = function(object, magnitude) {
+  if(object === this.getObject(this.control)) { this.display.camera.lowFrequencyShake(magnitude); }
+};
+
 NoxioGame.prototype.draw = function() {
   var now = util.time.now();
   

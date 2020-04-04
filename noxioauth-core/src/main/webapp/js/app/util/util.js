@@ -391,6 +391,7 @@ util.line2.normal = function(A) {
 /* ======================================================================================== */
 
 util.matrix.unprojection = function(window, camera, cursor, depth) {
+  var camPos = camera.calcPos(); // Camera shake added
   var VIEWPORT = [0, 0, window.width, window.height];
   var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, camera.fov, window.width/window.height, camera.near, camera.far); // Perspective
   var MOVEMATRIX = mat4.create();
@@ -398,7 +399,7 @@ util.matrix.unprojection = function(window, camera, cursor, depth) {
     mat4.rotate(MOVEMATRIX, MOVEMATRIX, camera.rot.x, [1.0, 0.0, 0.0]);
     mat4.rotate(MOVEMATRIX, MOVEMATRIX, camera.rot.y, [0.0, 1.0, 0.0]);
     mat4.rotate(MOVEMATRIX, MOVEMATRIX, camera.rot.z, [0.0, 0.0, 1.0]);
-    mat4.translate(MOVEMATRIX, MOVEMATRIX, [camera.pos.x, camera.pos.y, camera.pos.z]);
+    mat4.translate(MOVEMATRIX, MOVEMATRIX, [camPos.x, camPos.y, camPos.z]);
   var VIEWMATRIX = mat4.create();
   var MV = mat4.create(); mat4.multiply(MV, VIEWMATRIX, MOVEMATRIX);
 
@@ -413,6 +414,7 @@ util.matrix.unprojection = function(window, camera, cursor, depth) {
 };
 
 util.matrix.projection = function(window, camera, coord) {
+  var camPos = camera.calcPos(); // Camera shake added
   var VIEWPORT = [0, 0, window.width, window.height];
   var PROJMATRIX = mat4.create(); mat4.perspective(PROJMATRIX, camera.fov, window.width/window.height, camera.near, camera.far); // Perspective
   var MOVEMATRIX = mat4.create();
@@ -420,7 +422,7 @@ util.matrix.projection = function(window, camera, coord) {
     mat4.rotate(MOVEMATRIX, MOVEMATRIX, camera.rot.x, [1.0, 0.0, 0.0]);
     mat4.rotate(MOVEMATRIX, MOVEMATRIX, camera.rot.y, [0.0, 1.0, 0.0]);
     mat4.rotate(MOVEMATRIX, MOVEMATRIX, camera.rot.z, [0.0, 0.0, 1.0]);
-    mat4.translate(MOVEMATRIX, MOVEMATRIX, [camera.pos.x, camera.pos.y, camera.pos.z]);
+    mat4.translate(MOVEMATRIX, MOVEMATRIX, [camPos.x, camPos.y, camPos.z]);
   var VIEWMATRIX = mat4.create();
   var MV = mat4.create(); mat4.multiply(MV, VIEWMATRIX, MOVEMATRIX);
   var MVP = mat4.create(); mat4.multiply(MVP, PROJMATRIX, MV);

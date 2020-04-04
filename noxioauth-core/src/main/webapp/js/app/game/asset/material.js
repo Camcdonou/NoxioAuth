@@ -429,6 +429,15 @@ Asset.prototype.material.multi.debug = {
   bloom: "false",
 };
 
+/* Source File: altretro.mat */
+Asset.prototype.material.character.generic.ui.altretro = {
+  name: "character.generic.ui.altretro",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/generic/ui/alt_retro",
+};
+
 /* Source File: iconlarge.mat */
 Asset.prototype.material.character.generic.ui.iconlarge = {
   name: "character.generic.ui.iconlarge",
@@ -436,6 +445,60 @@ Asset.prototype.material.character.generic.ui.iconlarge = {
   shadow: "false",
   bloom: "false",
   texture0: "character/generic/ui/icon_lg",
+};
+
+/* Source File: altcolor.mat */
+Asset.prototype.material.character.generic.ui.altcolor = {
+  name: "character.generic.ui.altcolor",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/generic/ui/alt_color",
+};
+
+/* Source File: altvoice.mat */
+Asset.prototype.material.character.generic.ui.altvoice = {
+  name: "character.generic.ui.altvoice",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/generic/ui/alt_voice",
+};
+
+/* Source File: altrainbow.mat */
+Asset.prototype.material.character.generic.ui.altrainbow = {
+  name: "character.generic.ui.altrainbow",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/generic/ui/alt_rainbow",
+};
+
+/* Source File: altflame.mat */
+Asset.prototype.material.character.generic.ui.altflame = {
+  name: "character.generic.ui.altflame",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/generic/ui/alt_flame",
+};
+
+/* Source File: altdark.mat */
+Asset.prototype.material.character.generic.ui.altdark = {
+  name: "character.generic.ui.altdark",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/generic/ui/alt_dark",
+};
+
+/* Source File: altgold.mat */
+Asset.prototype.material.character.generic.ui.altgold = {
+  name: "character.generic.ui.altgold",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/generic/ui/alt_gold",
 };
 
 /* Source File: meterstub.mat */

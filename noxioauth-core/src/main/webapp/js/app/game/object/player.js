@@ -38,6 +38,11 @@ function PlayerObject(game, oid, pos, permutation, team, color) {
   this.targetCircle = new Decal(this.game, "character.generic.decal.targetcircle", util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), util.vec3.make(0.0, 0.0, 1.0), 1.1, angle, util.vec4.make(1,1,1,1), 15, 0, 0);
 };
 
+PlayerObject.CAMERA_SHAKE_LIGHT = 0.075;
+PlayerObject.CAMERA_SHAKE_MEDIUM = 0.1;
+PlayerObject.CAMERA_SHAKE_HEAVY = 0.25;
+PlayerObject.CAMERA_SHAKE_CRITICAL = 0.45;
+
 PlayerObject.prototype.update = function(data) {
   /* Apply update data to object */
   this.parseUpd(data);
@@ -109,6 +114,10 @@ PlayerObject.prototype.effectSwitch = function(e) {
     case "tnt" : { this.taunt(); return true; }
     case "obj" : { this.objective = true; this.color = util.kalide.compressColors(2, 4, 5, 6, 8); return true; }
     case "jbo" : { this.objective = false; this.color = 0; return true; }
+    case "csa" : { this.game.putCameraShake(this, PlayerObject.CAMERA_SHAKE_LIGHT); return true; }
+    case "csb" : { this.game.putCameraShake(this, PlayerObject.CAMERA_SHAKE_MEDIUM); return true; }
+    case "csc" : { this.game.putCameraShake(this, PlayerObject.CAMERA_SHAKE_HEAVY); return true; }
+    case "csd" : { this.game.putCameraShake(this, PlayerObject.CAMERA_SHAKE_CRITICAL); return true; }
     default : { main.menu.warning.show("Invalid effect value: '" + e + "' @ Player.js :: effectSwitch()"); return false; }
   }
 };
@@ -137,7 +146,7 @@ PlayerObject.prototype.toss = function() {
 };
 
 PlayerObject.prototype.stun = function() {
-  
+
 };
 
 PlayerObject.prototype.stunGeneric = function(perm) {
