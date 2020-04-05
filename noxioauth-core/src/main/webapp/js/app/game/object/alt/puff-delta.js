@@ -35,6 +35,7 @@ PlayerPuffDelta.prototype.explode = PlayerPuff.prototype.explode;
 PlayerPuffDelta.prototype.fall = PlayerPuff.prototype.fall;
 
 PlayerPuffDelta.prototype.rest = PlayerPuff.prototype.rest;
+PlayerPuffDelta.prototype.restHit = PlayerPuff.prototype.restHit;
 
 PlayerPuffDelta.prototype.wake = PlayerPuff.prototype.wake;
 

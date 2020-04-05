@@ -41,6 +41,8 @@ PlayerPuffGold.prototype.rest = function() {
   this.restCooldown = PlayerPuff.REST_SLEEP_LENGTH;
 };
 
+PlayerPuffGold.prototype.restHit = PlayerPuff.prototype.restHit;
+
 PlayerPuffGold.prototype.wake = function() {
   this.effects.push(NxFx.puff.alt.gold.wake.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };

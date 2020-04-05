@@ -35,6 +35,7 @@ PlayerPuffRound.prototype.explode = PlayerPuff.prototype.explode;
 PlayerPuffRound.prototype.fall = PlayerPuff.prototype.fall;
 
 PlayerPuffRound.prototype.rest = PlayerPuff.prototype.rest;
+PlayerPuffRound.prototype.restHit = PlayerPuff.prototype.restHit;
 
 PlayerPuffRound.prototype.wake = PlayerPuff.prototype.wake;
 

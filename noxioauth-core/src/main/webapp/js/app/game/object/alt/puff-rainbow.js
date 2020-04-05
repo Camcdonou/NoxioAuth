@@ -40,6 +40,8 @@ PlayerPuffRainbow.prototype.rest = function() {
   this.restCooldown = PlayerPuff.REST_SLEEP_LENGTH;
 };
 
+PlayerPuffRainbow.prototype.restHit = PlayerPuff.prototype.restHit;
+
 PlayerPuffRainbow.prototype.wake = function() {
   this.effects.push(NxFx.puff.alt.rainbow.wake.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };

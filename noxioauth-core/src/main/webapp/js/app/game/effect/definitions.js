@@ -219,6 +219,7 @@ NxFx.shiek = {
 /* global ParticlePuffDash */
 /* global ParticlePuffSlap */
 /* global ParticlePuffWave */
+/* global ParticlePuffShockwave */
 NxFx.puff = {
   rest: new EffectDefinition(
     "Puff-Rest", util.vec3.make(0.1, -0.2, 0.55), 0, true,
@@ -226,6 +227,13 @@ NxFx.puff = {
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerPuff.REST_LIGHT, util.vec4.copy3(PlayerPuff.REST_LIGHT, 0.0)], [1.25, 2.15], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleSleep, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", "character/puff/rest0.wav", 0.8, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  shockwave: new EffectDefinition(
+    "Puff-Shockwave", util.vec3.make(0.1, -0.2, 0.55), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerPuff.REST_LIGHT, util.vec4.copy3(PlayerPuff.REST_LIGHT, 0.0)], [1.25, 3.55], 7, "fast"], attachment: true, delay: 0},
+      {class: ParticlePuffShockwave, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerPuff.COLORA, PlayerPuff.COLORB], attachment: true, delay: 0}
     ]
   ),
   wake: new EffectDefinition(

@@ -46,6 +46,7 @@ PlayerPuff.prototype.parseUpd = PlayerObject.prototype.parseUpd;
 PlayerPuff.prototype.effectSwitch = function(e) {
   switch(e) {
     case "atk" : { this.rest(); break; }
+    case "rht" : { this.restHit(); break; }
     case "wak" : { this.wake(); break; }
     case "mov" : { this.poundChannel(); break; }
     case "pnd" : { this.poundDash(); break; }
@@ -91,6 +92,10 @@ PlayerPuff.prototype.rest = function() {
   this.effects.push(this.restEffect);
   this.effects.push(NxFx.puff.wave.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec3.make(0, 0, 0)));
   this.restCooldown = PlayerPuff.REST_SLEEP_LENGTH;
+};
+
+PlayerPuff.prototype.restHit = function() {
+  this.effects.push(NxFx.puff.shockwave.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec3.make(0, 0, 0)));
 };
 
 PlayerPuff.prototype.wake = function() {
