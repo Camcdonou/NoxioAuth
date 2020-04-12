@@ -28,7 +28,7 @@ function PlayerObject(game, oid, pos, permutation, team, color) {
   this.moveSpeed = 0.0375; this.jumpHeight = 0.175; this.cullRadius = 1.5;
   
   /* State */
-  this.glow = 0.0;          // Scalar from 0 to 1, used to shift color to white for things like marths counter
+  this.glow = 0.0;          // Scalar from 0 to 1, used to shift color to white for things like quads counter
   this.objective = false;   // If this is flagged then this played is considered a gametype "objective" and will be globally visible and marked.
 
   /* Timers */

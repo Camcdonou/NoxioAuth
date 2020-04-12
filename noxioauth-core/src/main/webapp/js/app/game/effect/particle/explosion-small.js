@@ -11,7 +11,7 @@ function ParticleExplosionSmall(game, pos, vel) {
 ParticleExplosionSmall.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   
-  var explodeMat = this.game.display.getMaterial("character.shiek.effect.explode");
+  var explodeMat = this.game.display.getMaterial("character.voxel.effect.explode");
   
   var white = function(){ return {x: 0.65, y: 0.75, z: 1.0, w: 0.95}; };
   

@@ -14,7 +14,7 @@ function ParticleReady(game, pos, vel, colorA, colorB) {
 ParticleReady.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   
-  var shockwaveMat = this.game.display.getMaterial("character.marth.effect.shockwaveGround");
+  var shockwaveMat = this.game.display.getMaterial("character.quad.effect.shockwaveGround");
 
   var parent = this;
   var colorA = function() { return util.vec4.copy3(parent.colorA, 0.75); };

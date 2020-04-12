@@ -2,7 +2,7 @@
 /* global main */
 /* global util */
 /* global Function */
-/* global PlayerFox, PlayerFalco, PlayerShiek, PlayerMarth, PlayerPuff, PlayerInferno, PlayerCaptain */
+/* global PlayerBox, PlayerCrate, PlayerVoxel, PlayerQuad, PlayerBlock, PlayerInferno, PlayerCargo */
 
 /* Define Game Packet Handler Class */
 function PackHand(game) {
@@ -59,12 +59,12 @@ PackHand.prototype.createObject = function(data) {
   var objs = this.game.objects;
   switch(type) {
     /* Player Classes :: These use permutation dictionaries */
-    case "box" : { objs.push(new (Function.prototype.bind.apply(PlayerFox.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
-    case "crt" : { objs.push(new (Function.prototype.bind.apply(PlayerFalco.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
-    case "qua" : { objs.push(new (Function.prototype.bind.apply(PlayerMarth.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
-    case "vox" : { objs.push(new (Function.prototype.bind.apply(PlayerShiek.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
-    case "blk" : { objs.push(new (Function.prototype.bind.apply(PlayerPuff.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
-    case "crg" : { objs.push(new (Function.prototype.bind.apply(PlayerCaptain.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "box" : { objs.push(new (Function.prototype.bind.apply(PlayerBox.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "crt" : { objs.push(new (Function.prototype.bind.apply(PlayerCrate.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "qua" : { objs.push(new (Function.prototype.bind.apply(PlayerQuad.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "vox" : { objs.push(new (Function.prototype.bind.apply(PlayerVoxel.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "blk" : { objs.push(new (Function.prototype.bind.apply(PlayerBlock.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "crg" : { objs.push(new (Function.prototype.bind.apply(PlayerCargo.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
     case "inf" : { objs.push(new (Function.prototype.bind.apply(PlayerInferno.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
     /* Gameplay Object Classes :: These do not use permutation dictionaries */
     case "flg" : { this.game.objects.push(new FlagObject(this.game, oid, pos, permutation, team, color)); break; }

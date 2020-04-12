@@ -116,7 +116,7 @@ Gauss.prototype.loading = function() {
             "Your browser failed the base performance benchmark for 20XX.</br>" +
             "This generally means that Hardware Acceleration is disabled on your browser.</br>" +
             "Please enable Hardware Acceleration and refresh the page.</br></br>" +
-            "If this issue continues try switching to an officially supported browser: <i>Google Chrome</i> or <i>Mozilla Firefox</i></br></br>" +
+            "If this issue continues try switching to an officially supported browser: <i>Google Chrome</i> or <i>Mozilla Firebox</i></br></br>" +
             "This message can also sometimes be erronesouly flagged by minimizing/switching tabs.</br>"
           );
         }
@@ -349,7 +349,7 @@ Gauss.prototype.status = function() {
       "Warning!",
       "Your browser does not appear to have Hardware Accereration enabled or your browser does not support WebGL.</br>" +
       "20XX requires Hardware Acceleration to run. Please enable it and refresh the page.</br></br>" +
-      "If this issue continues try switching to an officially supported browser: <i>Google Chrome</i> or <i>Mozilla Firefox</i>"
+      "If this issue continues try switching to an officially supported browser: <i>Google Chrome</i> or <i>Mozilla Firebox</i>"
     ); return;
   }
 };

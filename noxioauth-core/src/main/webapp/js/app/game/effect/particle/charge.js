@@ -10,9 +10,9 @@ function ParticleCharge(game, pos, vel) {
 
 ParticleCharge.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
-  var flareModel = this.game.display.getModel("character.falco.effect.flareGround");
+  var flareModel = this.game.display.getModel("character.crate.effect.flareGround");
   
-  var blipMat = this.game.display.getMaterial("character.falco.effect.charge");
+  var blipMat = this.game.display.getMaterial("character.crate.effect.charge");
   
   var white = function(){ return {x: 1.0, y: 1.0, z: 1.0, w: 0.25}; };
   

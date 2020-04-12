@@ -14,7 +14,7 @@ function ParticleSlash(game, pos, vel, colorA, colorB) {
 ParticleSlash.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   
-  var slashMat = this.game.display.getMaterial("character.marth.effect.slash");
+  var slashMat = this.game.display.getMaterial("character.quad.effect.slash");
   
   var parent = this;
   var colorA = function() { return util.vec4.copy3(parent.colorA, 1.0); };

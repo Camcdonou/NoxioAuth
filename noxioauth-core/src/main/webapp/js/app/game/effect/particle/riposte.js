@@ -15,9 +15,9 @@ ParticleRiposte.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   var sheetVert = this.game.display.getModel("multi.sheetVert");
   
-  var shockwaveMat = this.game.display.getMaterial("character.marth.effect.shockwave");
-  var riposteMat = this.game.display.getMaterial("character.marth.effect.riposte");
-  var slashMat = this.game.display.getMaterial("character.marth.effect.slash");
+  var shockwaveMat = this.game.display.getMaterial("character.quad.effect.shockwave");
+  var riposteMat = this.game.display.getMaterial("character.quad.effect.riposte");
+  var slashMat = this.game.display.getMaterial("character.quad.effect.slash");
   
   var parent = this;
   var colorA = function() { return util.vec4.copy3(parent.colorA, 1.0); };

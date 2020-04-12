@@ -14,10 +14,10 @@ function ParticleBlip(game, pos, vel, colorA, colorB) {
 ParticleBlip.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   
-  var flashMat = this.game.display.getMaterial("character.fox.effect.flash");
-  var initMat = this.game.display.getMaterial("character.fox.effect.initial");
-  var blipMat = this.game.display.getMaterial("character.fox.effect.blip");
-  var sparkMat = this.game.display.getMaterial("character.fox.effect.spark");
+  var flashMat = this.game.display.getMaterial("character.box.effect.flash");
+  var initMat = this.game.display.getMaterial("character.box.effect.initial");
+  var blipMat = this.game.display.getMaterial("character.box.effect.blip");
+  var sparkMat = this.game.display.getMaterial("character.box.effect.spark");
   
   var parent = this;
   var colorA = function() { return util.vec4.copy(parent.colorA); };

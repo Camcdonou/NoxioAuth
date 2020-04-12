@@ -21,7 +21,7 @@ ParticleShatter.prototype.create = function() {
   
   var sparkMat = this.game.display.getMaterial("multi.hit.spark");
   var flashMat = this.game.display.getMaterial("multi.hit.critflare");
-  var splitMat = this.game.display.getMaterial("character.fox.effect.spark");
+  var splitMat = this.game.display.getMaterial("character.box.effect.spark");
   
   var whiteMat = this.game.display.getMaterial("character.generic.white");
   var greyMat = this.game.display.getMaterial("character.generic.grey");

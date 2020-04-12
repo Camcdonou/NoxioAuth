@@ -15,8 +15,8 @@ ParticleDash.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   var part2x = this.game.display.getModel("multi.fx.part2x");
   
-  var shockwaveMat = this.game.display.getMaterial("character.fox.effect.shockwave");
-  var speedLineMat = this.game.display.getMaterial("character.fox.effect.speedline");
+  var shockwaveMat = this.game.display.getMaterial("character.box.effect.shockwave");
+  var speedLineMat = this.game.display.getMaterial("character.box.effect.speedline");
   var sparkMat = this.game.display.getMaterial("multi.hit.spark");
   
   var parent = this;

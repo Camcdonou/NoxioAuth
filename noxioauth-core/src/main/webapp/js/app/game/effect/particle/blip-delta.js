@@ -14,10 +14,10 @@ function ParticleBlipDelta(game, pos, vel, colorA, colorB) {
 ParticleBlipDelta.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   
-  var flashMat = this.game.display.getMaterial("character.fox.effect.flashDelta");
-  var initMat = this.game.display.getMaterial("character.fox.effect.initialDelta");
-  var blipMat = this.game.display.getMaterial("character.fox.effect.blipDelta");
-  var sparkMat = this.game.display.getMaterial("character.fox.effect.spark");
+  var flashMat = this.game.display.getMaterial("character.box.effect.flashDelta");
+  var initMat = this.game.display.getMaterial("character.box.effect.initialDelta");
+  var blipMat = this.game.display.getMaterial("character.box.effect.blipDelta");
+  var sparkMat = this.game.display.getMaterial("character.box.effect.spark");
   
   var parent = this;
   var colorA = function() { return util.vec4.copy(parent.colorA); };

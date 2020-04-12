@@ -12,7 +12,7 @@ function AFK() {
   
   document.onmousemove = ff;
   document.addEventListener("mousewheel", ff, false); // IE9, Chrome, Safari, Opera
-  document.addEventListener("DOMMouseScroll", ff, false); // Firefox
+  document.addEventListener("DOMMouseScroll", ff, false); // Firebox
   document.onkeydown = ff;
   document.addEventListener('touchmove', ff, true);
 }

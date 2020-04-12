@@ -11,7 +11,7 @@ function Input(game) {
   this.window.onmousedown = function(event) { main.game.input.mouse.event(event, true); event.preventDefault(); return false; };
   this.window.onmouseup = function(event) { main.game.input.mouse.event(event, false); event.preventDefault(); return false; };
   this.window.addEventListener("mousewheel", function(event) { main.game.input.mouse.wheel(event); event.preventDefault(); return false; }, false); // IE9, Chrome, Safari, Opera
-  this.window.addEventListener("DOMMouseScroll", function(event) { main.game.input.mouse.wheel(event); event.preventDefault(); return false; }, false); // Firefox
+  this.window.addEventListener("DOMMouseScroll", function(event) { main.game.input.mouse.wheel(event); event.preventDefault(); return false; }, false); // Firebox
   document.onkeyup = function(event) { main.game.input.keyboard.event(event, false); event.preventDefault(); event.preventDefault(); return false; };
   document.onkeydown = function(event) { main.game.input.keyboard.event(event, true); event.preventDefault(); event.preventDefault(); return false; };
   
@@ -111,7 +111,7 @@ Input.prototype.destroy = function() {
   this.window.onmousedown=function() {};
   this.window.onmouseup=function() {};
   this.window.removeEventListener("mousewheel", main.game.input.mouse.wheel, false); // IE9, Chrome, Safari, Opera
-  this.window.removeEventListener("DOMMouseScroll", main.game.input.mouse.wheel, false); // Firefox
+  this.window.removeEventListener("DOMMouseScroll", main.game.input.mouse.wheel, false); // Firebox
   document.onkeyup = function() {};
   document.onkeydown = function() {};
   document.removeEventListener('touchstart', this.touchEvt, true);

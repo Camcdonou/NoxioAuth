@@ -19,28 +19,28 @@ Asset.prototype.material.character.generic = {};
 Asset.prototype.material.character.generic.ui = {};
 Asset.prototype.material.character.generic.decal = {};
 Asset.prototype.material.character.generic.effect = {};
-Asset.prototype.material.character.puff = {};
-Asset.prototype.material.character.puff.ui = {};
-Asset.prototype.material.character.puff.effect = {};
-Asset.prototype.material.character.falco = {};
-Asset.prototype.material.character.falco.ui = {};
-Asset.prototype.material.character.falco.effect = {};
-Asset.prototype.material.character.marth = {};
-Asset.prototype.material.character.marth.ui = {};
-Asset.prototype.material.character.marth.effect = {};
-Asset.prototype.material.character.captain = {};
-Asset.prototype.material.character.captain.ui = {};
-Asset.prototype.material.character.captain.decal = {};
-Asset.prototype.material.character.captain.effect = {};
-Asset.prototype.material.character.shiek = {};
-Asset.prototype.material.character.shiek.ui = {};
-Asset.prototype.material.character.shiek.effect = {};
+Asset.prototype.material.character.crate = {};
+Asset.prototype.material.character.crate.ui = {};
+Asset.prototype.material.character.crate.effect = {};
+Asset.prototype.material.character.block = {};
+Asset.prototype.material.character.block.ui = {};
+Asset.prototype.material.character.block.effect = {};
+Asset.prototype.material.character.voxel = {};
+Asset.prototype.material.character.voxel.ui = {};
+Asset.prototype.material.character.voxel.effect = {};
+Asset.prototype.material.character.box = {};
+Asset.prototype.material.character.box.ui = {};
+Asset.prototype.material.character.box.decal = {};
+Asset.prototype.material.character.box.effect = {};
+Asset.prototype.material.character.quad = {};
+Asset.prototype.material.character.quad.ui = {};
+Asset.prototype.material.character.quad.effect = {};
+Asset.prototype.material.character.cargo = {};
+Asset.prototype.material.character.cargo.ui = {};
+Asset.prototype.material.character.cargo.decal = {};
+Asset.prototype.material.character.cargo.effect = {};
 Asset.prototype.material.character.inferno = {};
 Asset.prototype.material.character.inferno.ui = {};
-Asset.prototype.material.character.fox = {};
-Asset.prototype.material.character.fox.ui = {};
-Asset.prototype.material.character.fox.decal = {};
-Asset.prototype.material.character.fox.effect = {};
 Asset.prototype.material.sky = {};
 Asset.prototype.material.sky.vapor = {};
 Asset.prototype.material.sky.final = {};
@@ -596,85 +596,213 @@ Asset.prototype.material.character.generic.effect.blooddrop = {
 };
 
 /* Source File: iconlarge.mat */
-Asset.prototype.material.character.puff.ui.iconlarge = {
-  name: "character.puff.ui.iconlarge",
+Asset.prototype.material.character.crate.ui.iconlarge = {
+  name: "character.crate.ui.iconlarge",
   shader: "simpletrans",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/ui/icon_lg",
+  texture0: "character/crate/ui/icon_lg",
 };
 
-/* Source File: meterrest.mat */
-Asset.prototype.material.character.puff.ui.meterrest = {
-  name: "character.puff.ui.meterrest",
+/* Source File: meterdash.mat */
+Asset.prototype.material.character.crate.ui.meterdash = {
+  name: "character.crate.ui.meterdash",
   shader: "simpletrans",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/ui/meterrest",
+  texture0: "character/crate/ui/meterdash",
 };
 
-/* Source File: meterpound.mat */
-Asset.prototype.material.character.puff.ui.meterpound = {
-  name: "character.puff.ui.meterpound",
+/* Source File: meterblip.mat */
+Asset.prototype.material.character.crate.ui.meterblip = {
+  name: "character.crate.ui.meterblip",
   shader: "simpletrans",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/ui/meterpound",
-};
-
-/* Source File: puff.mat */
-Asset.prototype.material.character.puff.puff = {
-  name: "character.puff.puff",
-  shader: "player",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/puff/puff",
-  texture1: "character/puff/puff_normal",
+  texture0: "character/crate/ui/meterblip",
 };
 
 /* Source File: reverse.mat */
-Asset.prototype.material.character.puff.reverse = {
-  name: "character.puff.reverse",
+Asset.prototype.material.character.crate.reverse = {
+  name: "character.crate.reverse",
   shader: "player",
   shadow: "true",
   bloom: "false",
-  texture0: "character/puff/reverse",
-  texture1: "character/puff/puff_normal",
+  texture0: "character/crate/reverse",
+  texture1: "character/crate/crate_normal",
+};
+
+/* Source File: crate.mat */
+Asset.prototype.material.character.crate.crate = {
+  name: "character.crate.crate",
+  shader: "player",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/crate/crate",
+  texture1: "character/crate/crate_normal",
 };
 
 /* Source File: gold.mat */
-Asset.prototype.material.character.puff.gold = {
-  name: "character.puff.gold",
+Asset.prototype.material.character.crate.gold = {
+  name: "character.crate.gold",
   shader: "playershiny",
   shadow: "true",
   bloom: "false",
-  texture0: "character/puff/puff",
-  texture1: "character/puff/puff_normal",
-  texture2: "character/puff/gold",
+  texture0: "character/crate/crate",
+  texture1: "character/crate/crate_normal",
+  texture2: "character/crate/gold",
   cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
 
 /* Source File: delta.mat */
-Asset.prototype.material.character.puff.delta = {
-  name: "character.puff.delta",
+Asset.prototype.material.character.crate.delta = {
+  name: "character.crate.delta",
   shader: "playerdelta",
   shadow: "true",
   bloom: "false",
-  texture0: "character/puff/puff",
-  texture1: "character/puff/puff_normal",
+  texture0: "character/crate/crate",
+  texture1: "character/crate/crate_normal",
   cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
 
 /* Source File: shockwave.mat */
-Asset.prototype.material.character.puff.effect.shockwave = {
-  name: "character.puff.effect.shockwave",
+Asset.prototype.material.character.crate.effect.shockwave = {
+  name: "character.crate.effect.shockwave",
+  shader: "effect2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/crate/effect/shockwave",
+};
+
+/* Source File: blastRB.mat */
+Asset.prototype.material.character.crate.effect.blastRB = {
+  name: "character.crate.effect.blastRB",
+  shader: "particleRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/crate/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: shockwaveRB.mat */
+Asset.prototype.material.character.crate.effect.shockwaveRB = {
+  name: "character.crate.effect.shockwaveRB",
+  shader: "effectRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/crate/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: flashRB.mat */
+Asset.prototype.material.character.crate.effect.flashRB = {
+  name: "character.crate.effect.flashRB",
+  shader: "particleRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/crate/effect/flash",
+  texture1: "multi/red_low",
+  texture2: "multi/red_high",
+};
+
+/* Source File: blast.mat */
+Asset.prototype.material.character.crate.effect.blast = {
+  name: "character.crate.effect.blast",
+  shader: "particle2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/crate/effect/shockwave",
+};
+
+/* Source File: flash.mat */
+Asset.prototype.material.character.crate.effect.flash = {
+  name: "character.crate.effect.flash",
+  shader: "particle",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/crate/effect/flash",
+};
+
+/* Source File: block.mat */
+Asset.prototype.material.character.block.block = {
+  name: "character.block.block",
+  shader: "player",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/block/block",
+  texture1: "character/block/block_normal",
+};
+
+/* Source File: iconlarge.mat */
+Asset.prototype.material.character.block.ui.iconlarge = {
+  name: "character.block.ui.iconlarge",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/block/ui/icon_lg",
+};
+
+/* Source File: meterrest.mat */
+Asset.prototype.material.character.block.ui.meterrest = {
+  name: "character.block.ui.meterrest",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/block/ui/meterrest",
+};
+
+/* Source File: meterpound.mat */
+Asset.prototype.material.character.block.ui.meterpound = {
+  name: "character.block.ui.meterpound",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/block/ui/meterpound",
+};
+
+/* Source File: reverse.mat */
+Asset.prototype.material.character.block.reverse = {
+  name: "character.block.reverse",
+  shader: "player",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/block/reverse",
+  texture1: "character/block/block_normal",
+};
+
+/* Source File: gold.mat */
+Asset.prototype.material.character.block.gold = {
+  name: "character.block.gold",
+  shader: "playershiny",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/block/block",
+  texture1: "character/block/block_normal",
+  texture2: "character/block/gold",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
+
+/* Source File: delta.mat */
+Asset.prototype.material.character.block.delta = {
+  name: "character.block.delta",
+  shader: "playerdelta",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/block/block",
+  texture1: "character/block/block_normal",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
+
+/* Source File: shockwave.mat */
+Asset.prototype.material.character.block.effect.shockwave = {
+  name: "character.block.effect.shockwave",
   shader: "effect",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/effect/shockwave",
+  texture0: "character/block/effect/shockwave",
 };
 
 /* Source File: line.mat */
-Asset.prototype.material.character.puff.effect.line = {
-  name: "character.puff.effect.line",
+Asset.prototype.material.character.block.effect.line = {
+  name: "character.block.effect.line",
   shader: "particlemodel",
   shadow: "false",
   bloom: "false",
@@ -682,90 +810,90 @@ Asset.prototype.material.character.puff.effect.line = {
 };
 
 /* Source File: dash.mat */
-Asset.prototype.material.character.puff.effect.dash = {
-  name: "character.puff.effect.dash",
+Asset.prototype.material.character.block.effect.dash = {
+  name: "character.block.effect.dash",
   shader: "particlesprite",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/effect/dash",
+  texture0: "character/block/effect/dash",
 };
 
 /* Source File: restwave.mat */
-Asset.prototype.material.character.puff.effect.restwave = {
-  name: "character.puff.effect.restwave",
+Asset.prototype.material.character.block.effect.restwave = {
+  name: "character.block.effect.restwave",
   shader: "effect",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/effect/hitwave",
+  texture0: "character/block/effect/hitwave",
 };
 
 /* Source File: sleepRB.mat */
-Asset.prototype.material.character.puff.effect.sleepRB = {
-  name: "character.puff.effect.sleepRB",
+Asset.prototype.material.character.block.effect.sleepRB = {
+  name: "character.block.effect.sleepRB",
   shader: "particleRB",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/effect/z",
+  texture0: "character/block/effect/z",
   texture1: "multi/red_low",
   texture2: "multi/red_high",
 };
 
 /* Source File: smokeRB.mat */
-Asset.prototype.material.character.puff.effect.smokeRB = {
-  name: "character.puff.effect.smokeRB",
+Asset.prototype.material.character.block.effect.smokeRB = {
+  name: "character.block.effect.smokeRB",
   shader: "particleRB",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/effect/smoke",
+  texture0: "character/block/effect/smoke",
   texture1: "multi/red_low",
   texture2: "multi/red_high",
 };
 
 /* Source File: hit.mat */
-Asset.prototype.material.character.puff.effect.hit = {
-  name: "character.puff.effect.hit",
+Asset.prototype.material.character.block.effect.hit = {
+  name: "character.block.effect.hit",
   shader: "particle",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/effect/hit",
+  texture0: "character/block/effect/hit",
 };
 
 /* Source File: hitRB.mat */
-Asset.prototype.material.character.puff.effect.hitRB = {
-  name: "character.puff.effect.hitRB",
+Asset.prototype.material.character.block.effect.hitRB = {
+  name: "character.block.effect.hitRB",
   shader: "particleRB",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/effect/hit",
+  texture0: "character/block/effect/hit",
   texture1: "multi/red_low",
   texture2: "multi/red_high",
 };
 
 /* Source File: shockwaveRB.mat */
-Asset.prototype.material.character.puff.effect.shockwaveRB = {
-  name: "character.puff.effect.shockwaveRB",
+Asset.prototype.material.character.block.effect.shockwaveRB = {
+  name: "character.block.effect.shockwaveRB",
   shader: "effectRB",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/effect/shockwave",
+  texture0: "character/block/effect/shockwave",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
 };
 
 /* Source File: dashRB.mat */
-Asset.prototype.material.character.puff.effect.dashRB = {
-  name: "character.puff.effect.dashRB",
+Asset.prototype.material.character.block.effect.dashRB = {
+  name: "character.block.effect.dashRB",
   shader: "particlespriteRB",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/effect/dash",
+  texture0: "character/block/effect/dash",
   texture1: "multi/red_low",
   texture2: "multi/red_high",
 };
 
 /* Source File: lineRB.mat */
-Asset.prototype.material.character.puff.effect.lineRB = {
-  name: "character.puff.effect.lineRB",
+Asset.prototype.material.character.block.effect.lineRB = {
+  name: "character.block.effect.lineRB",
   shader: "particlemodelRB",
   shadow: "false",
   bloom: "false",
@@ -775,666 +903,781 @@ Asset.prototype.material.character.puff.effect.lineRB = {
 };
 
 /* Source File: restwaveRB.mat */
-Asset.prototype.material.character.puff.effect.restwaveRB = {
-  name: "character.puff.effect.restwaveRB",
+Asset.prototype.material.character.block.effect.restwaveRB = {
+  name: "character.block.effect.restwaveRB",
   shader: "effectRB",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/effect/hitwave",
+  texture0: "character/block/effect/hitwave",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
 };
 
 /* Source File: smoke.mat */
-Asset.prototype.material.character.puff.effect.smoke = {
-  name: "character.puff.effect.smoke",
+Asset.prototype.material.character.block.effect.smoke = {
+  name: "character.block.effect.smoke",
   shader: "particle",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/effect/smoke",
+  texture0: "character/block/effect/smoke",
 };
 
 /* Source File: hitwaveRB.mat */
-Asset.prototype.material.character.puff.effect.hitwaveRB = {
-  name: "character.puff.effect.hitwaveRB",
+Asset.prototype.material.character.block.effect.hitwaveRB = {
+  name: "character.block.effect.hitwaveRB",
   shader: "particleRB",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/effect/hitwave",
+  texture0: "character/block/effect/hitwave",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
 };
 
 /* Source File: hitwave.mat */
-Asset.prototype.material.character.puff.effect.hitwave = {
-  name: "character.puff.effect.hitwave",
+Asset.prototype.material.character.block.effect.hitwave = {
+  name: "character.block.effect.hitwave",
   shader: "particle",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/effect/hitwave",
+  texture0: "character/block/effect/hitwave",
 };
 
 /* Source File: sleep.mat */
-Asset.prototype.material.character.puff.effect.sleep = {
-  name: "character.puff.effect.sleep",
+Asset.prototype.material.character.block.effect.sleep = {
+  name: "character.block.effect.sleep",
   shader: "particle",
   shadow: "false",
   bloom: "false",
-  texture0: "character/puff/effect/z",
+  texture0: "character/block/effect/z",
+};
+
+/* Source File: voxel.mat */
+Asset.prototype.material.character.voxel.voxel = {
+  name: "character.voxel.voxel",
+  shader: "player",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/voxel/voxel",
+  texture1: "character/voxel/voxel_normal",
 };
 
 /* Source File: iconlarge.mat */
-Asset.prototype.material.character.falco.ui.iconlarge = {
-  name: "character.falco.ui.iconlarge",
+Asset.prototype.material.character.voxel.ui.iconlarge = {
+  name: "character.voxel.ui.iconlarge",
   shader: "simpletrans",
   shadow: "false",
   bloom: "false",
-  texture0: "character/falco/ui/icon_lg",
-};
-
-/* Source File: meterdash.mat */
-Asset.prototype.material.character.falco.ui.meterdash = {
-  name: "character.falco.ui.meterdash",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/falco/ui/meterdash",
+  texture0: "character/voxel/ui/icon_lg",
 };
 
 /* Source File: meterblip.mat */
-Asset.prototype.material.character.falco.ui.meterblip = {
-  name: "character.falco.ui.meterblip",
+Asset.prototype.material.character.voxel.ui.meterblip = {
+  name: "character.voxel.ui.meterblip",
   shader: "simpletrans",
   shadow: "false",
   bloom: "false",
-  texture0: "character/falco/ui/meterblip",
+  texture0: "character/voxel/ui/meterblip",
 };
 
 /* Source File: reverse.mat */
-Asset.prototype.material.character.falco.reverse = {
-  name: "character.falco.reverse",
+Asset.prototype.material.character.voxel.reverse = {
+  name: "character.voxel.reverse",
   shader: "player",
   shadow: "true",
   bloom: "false",
-  texture0: "character/falco/reverse",
-  texture1: "character/falco/falco_normal",
+  texture0: "character/voxel/reverse",
+  texture1: "character/voxel/voxel_normal",
 };
 
 /* Source File: gold.mat */
-Asset.prototype.material.character.falco.gold = {
-  name: "character.falco.gold",
+Asset.prototype.material.character.voxel.gold = {
+  name: "character.voxel.gold",
   shader: "playershiny",
   shadow: "true",
   bloom: "false",
-  texture0: "character/falco/falco",
-  texture1: "character/falco/falco_normal",
-  texture2: "character/falco/gold",
-  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
-
-/* Source File: falco.mat */
-Asset.prototype.material.character.falco.falco = {
-  name: "character.falco.falco",
-  shader: "player",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/falco/falco",
-  texture1: "character/falco/falco_normal",
-};
-
-/* Source File: delta.mat */
-Asset.prototype.material.character.falco.delta = {
-  name: "character.falco.delta",
-  shader: "playerdelta",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/falco/falco",
-  texture1: "character/falco/falco_normal",
-  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
-
-/* Source File: shockwave.mat */
-Asset.prototype.material.character.falco.effect.shockwave = {
-  name: "character.falco.effect.shockwave",
-  shader: "effect2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/falco/effect/shockwave",
-};
-
-/* Source File: blastRB.mat */
-Asset.prototype.material.character.falco.effect.blastRB = {
-  name: "character.falco.effect.blastRB",
-  shader: "particleRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/falco/effect/shockwave",
-  texture1: "multi/rainbow_low",
-  texture2: "multi/rainbow_high",
-};
-
-/* Source File: shockwaveRB.mat */
-Asset.prototype.material.character.falco.effect.shockwaveRB = {
-  name: "character.falco.effect.shockwaveRB",
-  shader: "effectRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/falco/effect/shockwave",
-  texture1: "multi/rainbow_low",
-  texture2: "multi/rainbow_high",
-};
-
-/* Source File: flashRB.mat */
-Asset.prototype.material.character.falco.effect.flashRB = {
-  name: "character.falco.effect.flashRB",
-  shader: "particleRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/falco/effect/flash",
-  texture1: "multi/red_low",
-  texture2: "multi/red_high",
-};
-
-/* Source File: blast.mat */
-Asset.prototype.material.character.falco.effect.blast = {
-  name: "character.falco.effect.blast",
-  shader: "particle2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/falco/effect/shockwave",
-};
-
-/* Source File: flash.mat */
-Asset.prototype.material.character.falco.effect.flash = {
-  name: "character.falco.effect.flash",
-  shader: "particle",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/falco/effect/flash",
-};
-
-/* Source File: metercounter.mat */
-Asset.prototype.material.character.marth.ui.metercounter = {
-  name: "character.marth.ui.metercounter",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/marth/ui/metercounter",
-};
-
-/* Source File: iconlarge.mat */
-Asset.prototype.material.character.marth.ui.iconlarge = {
-  name: "character.marth.ui.iconlarge",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/marth/ui/icon_lg",
-};
-
-/* Source File: meterslash.mat */
-Asset.prototype.material.character.marth.ui.meterslash = {
-  name: "character.marth.ui.meterslash",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/marth/ui/meterslash",
-};
-
-/* Source File: reverse.mat */
-Asset.prototype.material.character.marth.reverse = {
-  name: "character.marth.reverse",
-  shader: "player",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/marth/reverse",
-  texture1: "character/marth/marth_normal",
-};
-
-/* Source File: marth.mat */
-Asset.prototype.material.character.marth.marth = {
-  name: "character.marth.marth",
-  shader: "player",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/marth/marth",
-  texture1: "character/marth/marth_normal",
-};
-
-/* Source File: gold.mat */
-Asset.prototype.material.character.marth.gold = {
-  name: "character.marth.gold",
-  shader: "playershiny",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/marth/marth",
-  texture1: "character/marth/marth_normal",
-  texture2: "character/marth/gold",
+  texture0: "character/voxel/voxel",
+  texture1: "character/voxel/voxel_normal",
+  texture2: "character/voxel/gold",
   cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
 
 /* Source File: delta.mat */
-Asset.prototype.material.character.marth.delta = {
-  name: "character.marth.delta",
+Asset.prototype.material.character.voxel.delta = {
+  name: "character.voxel.delta",
   shader: "playerdelta",
   shadow: "true",
   bloom: "false",
-  texture0: "character/marth/marth",
-  texture1: "character/marth/marth_normal",
-  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
-
-/* Source File: shockwave.mat */
-Asset.prototype.material.character.marth.effect.shockwave = {
-  name: "character.marth.effect.shockwave",
-  shader: "particle2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/marth/effect/shockwave",
-};
-
-/* Source File: shockwaveGroundRB.mat */
-Asset.prototype.material.character.marth.effect.shockwaveGroundRB = {
-  name: "character.marth.effect.shockwaveGroundRB",
-  shader: "effectRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/marth/effect/shockwave",
-  texture1: "multi/rainbow_low",
-  texture2: "multi/rainbow_high",
-};
-
-/* Source File: slashRB.mat */
-Asset.prototype.material.character.marth.effect.slashRB = {
-  name: "character.marth.effect.slashRB",
-  shader: "effect_slashRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/marth/effect/slashmask",
-  texture1: "character/marth/effect/slashgrad",
-  texture2: "multi/rainbow_low",
-  texture3: "multi/rainbow_high",
-};
-
-/* Source File: riposteRB.mat */
-Asset.prototype.material.character.marth.effect.riposteRB = {
-  name: "character.marth.effect.riposteRB",
-  shader: "effect_slashRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/marth/effect/ripostemask",
-  texture1: "character/marth/effect/slashgrad",
-  texture2: "multi/rainbow_low",
-  texture3: "multi/rainbow_high",
-};
-
-/* Source File: shockwaveGround.mat */
-Asset.prototype.material.character.marth.effect.shockwaveGround = {
-  name: "character.marth.effect.shockwaveGround",
-  shader: "effect2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/marth/effect/shockwave",
-};
-
-/* Source File: slash.mat */
-Asset.prototype.material.character.marth.effect.slash = {
-  name: "character.marth.effect.slash",
-  shader: "effect_slash",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/marth/effect/slashmask",
-  texture1: "character/marth/effect/slashgrad",
-};
-
-/* Source File: riposte.mat */
-Asset.prototype.material.character.marth.effect.riposte = {
-  name: "character.marth.effect.riposte",
-  shader: "effect_slash",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/marth/effect/ripostemask",
-  texture1: "character/marth/effect/slashgrad",
-};
-
-/* Source File: shockwaveRB.mat */
-Asset.prototype.material.character.marth.effect.shockwaveRB = {
-  name: "character.marth.effect.shockwaveRB",
-  shader: "particleRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/marth/effect/shockwave",
-  texture1: "multi/rainbow_low",
-  texture2: "multi/rainbow_high",
-};
-
-/* Source File: iconlarge.mat */
-Asset.prototype.material.character.captain.ui.iconlarge = {
-  name: "character.captain.ui.iconlarge",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/captain/ui/icon_lg",
-};
-
-/* Source File: meterkick.mat */
-Asset.prototype.material.character.captain.ui.meterkick = {
-  name: "character.captain.ui.meterkick",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/captain/ui/meterkick",
-};
-
-/* Source File: meterpunch.mat */
-Asset.prototype.material.character.captain.ui.meterpunch = {
-  name: "character.captain.ui.meterpunch",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/captain/ui/meterpunch",
-};
-
-/* Source File: indicator.mat */
-Asset.prototype.material.character.captain.decal.indicator = {
-  name: "character.captain.decal.indicator",
-  shader: "decal_glow",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/captain/decal/indicator",
-};
-
-/* Source File: captain.mat */
-Asset.prototype.material.character.captain.captain = {
-  name: "character.captain.captain",
-  shader: "player",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/captain/captain",
-  texture1: "character/captain/captain_normal",
-};
-
-/* Source File: reverse.mat */
-Asset.prototype.material.character.captain.reverse = {
-  name: "character.captain.reverse",
-  shader: "player",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/captain/reverse",
-  texture1: "character/captain/captain_normal",
-};
-
-/* Source File: gold.mat */
-Asset.prototype.material.character.captain.gold = {
-  name: "character.captain.gold",
-  shader: "playershiny",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/captain/captain",
-  texture1: "character/captain/captain_normal",
-  texture2: "character/captain/gold",
-  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
-
-/* Source File: delta.mat */
-Asset.prototype.material.character.captain.delta = {
-  name: "character.captain.delta",
-  shader: "playerdelta",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/captain/captain",
-  texture1: "character/captain/captain_normal",
-  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
-
-/* Source File: shockwave.mat */
-Asset.prototype.material.character.captain.effect.shockwave = {
-  name: "character.captain.effect.shockwave",
-  shader: "effect2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/captain/effect/shockwave",
-};
-
-/* Source File: blastRB.mat */
-Asset.prototype.material.character.captain.effect.blastRB = {
-  name: "character.captain.effect.blastRB",
-  shader: "particleRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/captain/effect/shockwave",
-  texture1: "multi/rainbow_low",
-  texture2: "multi/rainbow_high",
-};
-
-/* Source File: rayRB.mat */
-Asset.prototype.material.character.captain.effect.rayRB = {
-  name: "character.captain.effect.rayRB",
-  shader: "particlemodelRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/captain/effect/ray",
-  texture1: "multi/red_low",
-  texture2: "multi/red_high",
-};
-
-/* Source File: shockwaveRB.mat */
-Asset.prototype.material.character.captain.effect.shockwaveRB = {
-  name: "character.captain.effect.shockwaveRB",
-  shader: "effectRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/captain/effect/shockwave",
-  texture1: "multi/rainbow_low",
-  texture2: "multi/rainbow_high",
-};
-
-/* Source File: flashRB.mat */
-Asset.prototype.material.character.captain.effect.flashRB = {
-  name: "character.captain.effect.flashRB",
-  shader: "particleRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/captain/effect/flash",
-  texture1: "multi/rainbow_low",
-  texture2: "multi/rainbow_high",
-};
-
-/* Source File: ray.mat */
-Asset.prototype.material.character.captain.effect.ray = {
-  name: "character.captain.effect.ray",
-  shader: "particlemodel",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/captain/effect/ray",
-};
-
-/* Source File: blast.mat */
-Asset.prototype.material.character.captain.effect.blast = {
-  name: "character.captain.effect.blast",
-  shader: "particle2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/captain/effect/shockwave",
-};
-
-/* Source File: flash.mat */
-Asset.prototype.material.character.captain.effect.flash = {
-  name: "character.captain.effect.flash",
-  shader: "particle",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/captain/effect/flash",
-};
-
-/* Source File: iconlarge.mat */
-Asset.prototype.material.character.shiek.ui.iconlarge = {
-  name: "character.shiek.ui.iconlarge",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/shiek/ui/icon_lg",
-};
-
-/* Source File: meterblip.mat */
-Asset.prototype.material.character.shiek.ui.meterblip = {
-  name: "character.shiek.ui.meterblip",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/shiek/ui/meterblip",
-};
-
-/* Source File: reverse.mat */
-Asset.prototype.material.character.shiek.reverse = {
-  name: "character.shiek.reverse",
-  shader: "player",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/shiek/reverse",
-  texture1: "character/shiek/shiek_normal",
-};
-
-/* Source File: gold.mat */
-Asset.prototype.material.character.shiek.gold = {
-  name: "character.shiek.gold",
-  shader: "playershiny",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/shiek/shiek",
-  texture1: "character/shiek/shiek_normal",
-  texture2: "character/shiek/gold",
-  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
-
-/* Source File: shiek.mat */
-Asset.prototype.material.character.shiek.shiek = {
-  name: "character.shiek.shiek",
-  shader: "player",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/shiek/shiek",
-  texture1: "character/shiek/shiek_normal",
-};
-
-/* Source File: delta.mat */
-Asset.prototype.material.character.shiek.delta = {
-  name: "character.shiek.delta",
-  shader: "playerdelta",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/shiek/shiek",
-  texture1: "character/shiek/shiek_normal",
+  texture0: "character/voxel/voxel",
+  texture1: "character/voxel/voxel_normal",
   cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
 
 /* Source File: markwaveRB.mat */
-Asset.prototype.material.character.shiek.effect.markwaveRB = {
-  name: "character.shiek.effect.markwaveRB",
+Asset.prototype.material.character.voxel.effect.markwaveRB = {
+  name: "character.voxel.effect.markwaveRB",
   shader: "effectRB",
   shadow: "false",
   bloom: "false",
-  texture0: "character/shiek/effect/markwave",
+  texture0: "character/voxel/effect/markwave",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
 };
 
 /* Source File: explode.mat */
-Asset.prototype.material.character.shiek.effect.explode = {
-  name: "character.shiek.effect.explode",
+Asset.prototype.material.character.voxel.effect.explode = {
+  name: "character.voxel.effect.explode",
   shader: "particle",
   shadow: "false",
   bloom: "false",
-  texture0: "character/shiek/effect/tempexplode",
+  texture0: "character/voxel/effect/tempexplode",
 };
 
 /* Source File: shockwave.mat */
-Asset.prototype.material.character.shiek.effect.shockwave = {
-  name: "character.shiek.effect.shockwave",
+Asset.prototype.material.character.voxel.effect.shockwave = {
+  name: "character.voxel.effect.shockwave",
   shader: "effect",
   shadow: "false",
   bloom: "false",
-  texture0: "character/shiek/effect/shockwave",
+  texture0: "character/voxel/effect/shockwave",
 };
 
 /* Source File: line.mat */
-Asset.prototype.material.character.shiek.effect.line = {
-  name: "character.shiek.effect.line",
+Asset.prototype.material.character.voxel.effect.line = {
+  name: "character.voxel.effect.line",
   shader: "particlemodel",
   shadow: "false",
   bloom: "false",
-  texture0: "character/shiek/effect/line",
+  texture0: "character/voxel/effect/line",
 };
 
 /* Source File: markwave.mat */
-Asset.prototype.material.character.shiek.effect.markwave = {
-  name: "character.shiek.effect.markwave",
+Asset.prototype.material.character.voxel.effect.markwave = {
+  name: "character.voxel.effect.markwave",
   shader: "effect2tone",
   shadow: "false",
   bloom: "false",
-  texture0: "character/shiek/effect/markwave",
+  texture0: "character/voxel/effect/markwave",
 };
 
 /* Source File: markRB.mat */
-Asset.prototype.material.character.shiek.effect.markRB = {
-  name: "character.shiek.effect.markRB",
+Asset.prototype.material.character.voxel.effect.markRB = {
+  name: "character.voxel.effect.markRB",
   shader: "effectRB",
   shadow: "false",
   bloom: "false",
-  texture0: "character/shiek/effect/mark",
+  texture0: "character/voxel/effect/mark",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
 };
 
 /* Source File: shockwaveRB.mat */
-Asset.prototype.material.character.shiek.effect.shockwaveRB = {
-  name: "character.shiek.effect.shockwaveRB",
+Asset.prototype.material.character.voxel.effect.shockwaveRB = {
+  name: "character.voxel.effect.shockwaveRB",
   shader: "effectRB",
   shadow: "false",
   bloom: "false",
-  texture0: "character/shiek/effect/shockwave",
+  texture0: "character/voxel/effect/shockwave",
   texture1: "multi/rainbow_low",
   texture2: "multi/rainbow_high",
 };
 
 /* Source File: flashRB.mat */
-Asset.prototype.material.character.shiek.effect.flashRB = {
-  name: "character.shiek.effect.flashRB",
+Asset.prototype.material.character.voxel.effect.flashRB = {
+  name: "character.voxel.effect.flashRB",
   shader: "particleRB",
   shadow: "false",
   bloom: "false",
-  texture0: "character/shiek/effect/flash",
+  texture0: "character/voxel/effect/flash",
   texture1: "multi/red_low",
   texture2: "multi/red_high",
 };
 
 /* Source File: lineRB.mat */
-Asset.prototype.material.character.shiek.effect.lineRB = {
-  name: "character.shiek.effect.lineRB",
+Asset.prototype.material.character.voxel.effect.lineRB = {
+  name: "character.voxel.effect.lineRB",
   shader: "particlemodelRB",
   shadow: "false",
   bloom: "false",
-  texture0: "character/shiek/effect/line",
+  texture0: "character/voxel/effect/line",
   texture1: "multi/red_high",
   texture2: "multi/white",
 };
 
 /* Source File: smoke.mat */
-Asset.prototype.material.character.shiek.effect.smoke = {
-  name: "character.shiek.effect.smoke",
+Asset.prototype.material.character.voxel.effect.smoke = {
+  name: "character.voxel.effect.smoke",
   shader: "particle",
   shadow: "false",
   bloom: "false",
-  texture0: "character/shiek/effect/smoke",
+  texture0: "character/voxel/effect/smoke",
 };
 
 /* Source File: mark.mat */
-Asset.prototype.material.character.shiek.effect.mark = {
-  name: "character.shiek.effect.mark",
+Asset.prototype.material.character.voxel.effect.mark = {
+  name: "character.voxel.effect.mark",
   shader: "effect",
   shadow: "false",
   bloom: "false",
-  texture0: "character/shiek/effect/mark",
+  texture0: "character/voxel/effect/mark",
 };
 
 /* Source File: flash.mat */
-Asset.prototype.material.character.shiek.effect.flash = {
-  name: "character.shiek.effect.flash",
+Asset.prototype.material.character.voxel.effect.flash = {
+  name: "character.voxel.effect.flash",
   shader: "particle",
   shadow: "false",
   bloom: "false",
-  texture0: "character/shiek/effect/flash",
+  texture0: "character/voxel/effect/flash",
+};
+
+/* Source File: hat.mat */
+Asset.prototype.material.character.box.hat = {
+  name: "character.box.hat",
+  shader: "default",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/box/hat",
+  texture1: "multi/normal",
+};
+
+/* Source File: iconlarge.mat */
+Asset.prototype.material.character.box.ui.iconlarge = {
+  name: "character.box.ui.iconlarge",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/ui/icon_lg",
+};
+
+/* Source File: meterdash.mat */
+Asset.prototype.material.character.box.ui.meterdash = {
+  name: "character.box.ui.meterdash",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/ui/meterdash",
+};
+
+/* Source File: meterblip.mat */
+Asset.prototype.material.character.box.ui.meterblip = {
+  name: "character.box.ui.meterblip",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/ui/meterblip",
+};
+
+/* Source File: reverse.mat */
+Asset.prototype.material.character.box.reverse = {
+  name: "character.box.reverse",
+  shader: "player",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/box/reverse",
+  texture1: "character/box/box_normal",
+};
+
+/* Source File: box.mat */
+Asset.prototype.material.character.box.box = {
+  name: "character.box.box",
+  shader: "player",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/box/box",
+  texture1: "character/box/box_normal",
+};
+
+/* Source File: gold.mat */
+Asset.prototype.material.character.box.gold = {
+  name: "character.box.gold",
+  shader: "playershiny",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/box/box",
+  texture1: "character/box/box_normal",
+  texture2: "character/box/gold",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
+
+/* Source File: delta.mat */
+Asset.prototype.material.character.box.delta = {
+  name: "character.box.delta",
+  shader: "playerdelta",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/box/box",
+  texture1: "character/box/box_normal",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
+
+/* Source File: shockwave.mat */
+Asset.prototype.material.character.box.effect.shockwave = {
+  name: "character.box.effect.shockwave",
+  shader: "effect2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/shockwave",
+};
+
+/* Source File: sparkRB.mat */
+Asset.prototype.material.character.box.effect.sparkRB = {
+  name: "character.box.effect.sparkRB",
+  shader: "particleRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/spark",
+  texture1: "multi/red_low",
+  texture2: "multi/red_high",
+};
+
+/* Source File: hitA.mat */
+Asset.prototype.material.character.box.effect.hitA = {
+  name: "character.box.effect.hitA",
+  shader: "particle2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/hit_a",
+};
+
+/* Source File: flashDelta.mat */
+Asset.prototype.material.character.box.effect.flashDelta = {
+  name: "character.box.effect.flashDelta",
+  shader: "particle2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/flash_delta",
+};
+
+/* Source File: blipDelta.mat */
+Asset.prototype.material.character.box.effect.blipDelta = {
+  name: "character.box.effect.blipDelta",
+  shader: "particle2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/blip_delta",
+};
+
+/* Source File: speedline.mat */
+Asset.prototype.material.character.box.effect.speedline = {
+  name: "character.box.effect.speedline",
+  shader: "particle2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/speedline",
+};
+
+/* Source File: initialRB.mat */
+Asset.prototype.material.character.box.effect.initialRB = {
+  name: "character.box.effect.initialRB",
+  shader: "particleRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/blip_init",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: spark.mat */
+Asset.prototype.material.character.box.effect.spark = {
+  name: "character.box.effect.spark",
+  shader: "particle2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/spark",
+};
+
+/* Source File: speedlineRB.mat */
+Asset.prototype.material.character.box.effect.speedlineRB = {
+  name: "character.box.effect.speedlineRB",
+  shader: "particleRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/speedline",
+  texture1: "multi/red_low",
+  texture2: "multi/white",
+};
+
+/* Source File: shockwaveRB.mat */
+Asset.prototype.material.character.box.effect.shockwaveRB = {
+  name: "character.box.effect.shockwaveRB",
+  shader: "particleRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: flashRB.mat */
+Asset.prototype.material.character.box.effect.flashRB = {
+  name: "character.box.effect.flashRB",
+  shader: "particleRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/flash",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: blipRB.mat */
+Asset.prototype.material.character.box.effect.blipRB = {
+  name: "character.box.effect.blipRB",
+  shader: "particleRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/blip",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: hitB.mat */
+Asset.prototype.material.character.box.effect.hitB = {
+  name: "character.box.effect.hitB",
+  shader: "particle2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/hit_b",
+};
+
+/* Source File: initialDelta.mat */
+Asset.prototype.material.character.box.effect.initialDelta = {
+  name: "character.box.effect.initialDelta",
+  shader: "particle2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/blip_init_delta",
+};
+
+/* Source File: initial.mat */
+Asset.prototype.material.character.box.effect.initial = {
+  name: "character.box.effect.initial",
+  shader: "particle2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/blip_init",
+};
+
+/* Source File: flash.mat */
+Asset.prototype.material.character.box.effect.flash = {
+  name: "character.box.effect.flash",
+  shader: "particle2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/flash",
+};
+
+/* Source File: blip.mat */
+Asset.prototype.material.character.box.effect.blip = {
+  name: "character.box.effect.blip",
+  shader: "particle2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/box/effect/blip",
+};
+
+/* Source File: metercounter.mat */
+Asset.prototype.material.character.quad.ui.metercounter = {
+  name: "character.quad.ui.metercounter",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/quad/ui/metercounter",
+};
+
+/* Source File: iconlarge.mat */
+Asset.prototype.material.character.quad.ui.iconlarge = {
+  name: "character.quad.ui.iconlarge",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/quad/ui/icon_lg",
+};
+
+/* Source File: meterslash.mat */
+Asset.prototype.material.character.quad.ui.meterslash = {
+  name: "character.quad.ui.meterslash",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/quad/ui/meterslash",
+};
+
+/* Source File: quad.mat */
+Asset.prototype.material.character.quad.quad = {
+  name: "character.quad.quad",
+  shader: "player",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/quad/quad",
+  texture1: "character/quad/quad_normal",
+};
+
+/* Source File: reverse.mat */
+Asset.prototype.material.character.quad.reverse = {
+  name: "character.quad.reverse",
+  shader: "player",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/quad/reverse",
+  texture1: "character/quad/quad_normal",
+};
+
+/* Source File: gold.mat */
+Asset.prototype.material.character.quad.gold = {
+  name: "character.quad.gold",
+  shader: "playershiny",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/quad/quad",
+  texture1: "character/quad/quad_normal",
+  texture2: "character/quad/gold",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
+
+/* Source File: delta.mat */
+Asset.prototype.material.character.quad.delta = {
+  name: "character.quad.delta",
+  shader: "playerdelta",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/quad/quad",
+  texture1: "character/quad/quad_normal",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
+
+/* Source File: shockwave.mat */
+Asset.prototype.material.character.quad.effect.shockwave = {
+  name: "character.quad.effect.shockwave",
+  shader: "particle2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/quad/effect/shockwave",
+};
+
+/* Source File: shockwaveGroundRB.mat */
+Asset.prototype.material.character.quad.effect.shockwaveGroundRB = {
+  name: "character.quad.effect.shockwaveGroundRB",
+  shader: "effectRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/quad/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: slashRB.mat */
+Asset.prototype.material.character.quad.effect.slashRB = {
+  name: "character.quad.effect.slashRB",
+  shader: "effect_slashRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/quad/effect/slashmask",
+  texture1: "character/quad/effect/slashgrad",
+  texture2: "multi/rainbow_low",
+  texture3: "multi/rainbow_high",
+};
+
+/* Source File: riposteRB.mat */
+Asset.prototype.material.character.quad.effect.riposteRB = {
+  name: "character.quad.effect.riposteRB",
+  shader: "effect_slashRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/quad/effect/ripostemask",
+  texture1: "character/quad/effect/slashgrad",
+  texture2: "multi/rainbow_low",
+  texture3: "multi/rainbow_high",
+};
+
+/* Source File: shockwaveGround.mat */
+Asset.prototype.material.character.quad.effect.shockwaveGround = {
+  name: "character.quad.effect.shockwaveGround",
+  shader: "effect2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/quad/effect/shockwave",
+};
+
+/* Source File: slash.mat */
+Asset.prototype.material.character.quad.effect.slash = {
+  name: "character.quad.effect.slash",
+  shader: "effect_slash",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/quad/effect/slashmask",
+  texture1: "character/quad/effect/slashgrad",
+};
+
+/* Source File: riposte.mat */
+Asset.prototype.material.character.quad.effect.riposte = {
+  name: "character.quad.effect.riposte",
+  shader: "effect_slash",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/quad/effect/ripostemask",
+  texture1: "character/quad/effect/slashgrad",
+};
+
+/* Source File: shockwaveRB.mat */
+Asset.prototype.material.character.quad.effect.shockwaveRB = {
+  name: "character.quad.effect.shockwaveRB",
+  shader: "particleRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/quad/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: iconlarge.mat */
+Asset.prototype.material.character.cargo.ui.iconlarge = {
+  name: "character.cargo.ui.iconlarge",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/cargo/ui/icon_lg",
+};
+
+/* Source File: meterkick.mat */
+Asset.prototype.material.character.cargo.ui.meterkick = {
+  name: "character.cargo.ui.meterkick",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/cargo/ui/meterkick",
+};
+
+/* Source File: meterpunch.mat */
+Asset.prototype.material.character.cargo.ui.meterpunch = {
+  name: "character.cargo.ui.meterpunch",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/cargo/ui/meterpunch",
+};
+
+/* Source File: indicator.mat */
+Asset.prototype.material.character.cargo.decal.indicator = {
+  name: "character.cargo.decal.indicator",
+  shader: "decal_glow",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/cargo/decal/indicator",
+};
+
+/* Source File: reverse.mat */
+Asset.prototype.material.character.cargo.reverse = {
+  name: "character.cargo.reverse",
+  shader: "player",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/cargo/reverse",
+  texture1: "character/cargo/cargo_normal",
+};
+
+/* Source File: cargo.mat */
+Asset.prototype.material.character.cargo.cargo = {
+  name: "character.cargo.cargo",
+  shader: "player",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/cargo/cargo",
+  texture1: "character/cargo/cargo_normal",
+};
+
+/* Source File: gold.mat */
+Asset.prototype.material.character.cargo.gold = {
+  name: "character.cargo.gold",
+  shader: "playershiny",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/cargo/cargo",
+  texture1: "character/cargo/cargo_normal",
+  texture2: "character/cargo/gold",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
+
+/* Source File: delta.mat */
+Asset.prototype.material.character.cargo.delta = {
+  name: "character.cargo.delta",
+  shader: "playerdelta",
+  shadow: "true",
+  bloom: "false",
+  texture0: "character/cargo/cargo",
+  texture1: "character/cargo/cargo_normal",
+  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
+
+/* Source File: shockwave.mat */
+Asset.prototype.material.character.cargo.effect.shockwave = {
+  name: "character.cargo.effect.shockwave",
+  shader: "effect2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/cargo/effect/shockwave",
+};
+
+/* Source File: blastRB.mat */
+Asset.prototype.material.character.cargo.effect.blastRB = {
+  name: "character.cargo.effect.blastRB",
+  shader: "particleRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/cargo/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: rayRB.mat */
+Asset.prototype.material.character.cargo.effect.rayRB = {
+  name: "character.cargo.effect.rayRB",
+  shader: "particlemodelRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/cargo/effect/ray",
+  texture1: "multi/red_low",
+  texture2: "multi/red_high",
+};
+
+/* Source File: shockwaveRB.mat */
+Asset.prototype.material.character.cargo.effect.shockwaveRB = {
+  name: "character.cargo.effect.shockwaveRB",
+  shader: "effectRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/cargo/effect/shockwave",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: flashRB.mat */
+Asset.prototype.material.character.cargo.effect.flashRB = {
+  name: "character.cargo.effect.flashRB",
+  shader: "particleRB",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/cargo/effect/flash",
+  texture1: "multi/rainbow_low",
+  texture2: "multi/rainbow_high",
+};
+
+/* Source File: ray.mat */
+Asset.prototype.material.character.cargo.effect.ray = {
+  name: "character.cargo.effect.ray",
+  shader: "particlemodel",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/cargo/effect/ray",
+};
+
+/* Source File: blast.mat */
+Asset.prototype.material.character.cargo.effect.blast = {
+  name: "character.cargo.effect.blast",
+  shader: "particle2tone",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/cargo/effect/shockwave",
+};
+
+/* Source File: flash.mat */
+Asset.prototype.material.character.cargo.effect.flash = {
+  name: "character.cargo.effect.flash",
+  shader: "particle",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/cargo/effect/flash",
 };
 
 /* Source File: iconlarge.mat */
@@ -1454,249 +1697,6 @@ Asset.prototype.material.character.inferno.inferno = {
   bloom: "false",
   texture0: "character/inferno/inferno",
   texture1: "character/inferno/inferno_normal",
-};
-
-/* Source File: hat.mat */
-Asset.prototype.material.character.fox.hat = {
-  name: "character.fox.hat",
-  shader: "default",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/fox/hat",
-  texture1: "multi/normal",
-};
-
-/* Source File: iconlarge.mat */
-Asset.prototype.material.character.fox.ui.iconlarge = {
-  name: "character.fox.ui.iconlarge",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/ui/icon_lg",
-};
-
-/* Source File: meterdash.mat */
-Asset.prototype.material.character.fox.ui.meterdash = {
-  name: "character.fox.ui.meterdash",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/ui/meterdash",
-};
-
-/* Source File: meterblip.mat */
-Asset.prototype.material.character.fox.ui.meterblip = {
-  name: "character.fox.ui.meterblip",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/ui/meterblip",
-};
-
-/* Source File: fox.mat */
-Asset.prototype.material.character.fox.fox = {
-  name: "character.fox.fox",
-  shader: "player",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/fox/fox",
-  texture1: "character/fox/fox_normal",
-};
-
-/* Source File: reverse.mat */
-Asset.prototype.material.character.fox.reverse = {
-  name: "character.fox.reverse",
-  shader: "player",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/fox/reverse",
-  texture1: "character/fox/fox_normal",
-};
-
-/* Source File: gold.mat */
-Asset.prototype.material.character.fox.gold = {
-  name: "character.fox.gold",
-  shader: "playershiny",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/fox/fox",
-  texture1: "character/fox/fox_normal",
-  texture2: "character/fox/gold",
-  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
-
-/* Source File: delta.mat */
-Asset.prototype.material.character.fox.delta = {
-  name: "character.fox.delta",
-  shader: "playerdelta",
-  shadow: "true",
-  bloom: "false",
-  texture0: "character/fox/fox",
-  texture1: "character/fox/fox_normal",
-  cube: ["multi/reflect/space0","multi/reflect/space1","multi/reflect/space2","multi/reflect/space3","multi/reflect/space4","multi/reflect/space5",],};
-
-/* Source File: shockwave.mat */
-Asset.prototype.material.character.fox.effect.shockwave = {
-  name: "character.fox.effect.shockwave",
-  shader: "effect2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/shockwave",
-};
-
-/* Source File: sparkRB.mat */
-Asset.prototype.material.character.fox.effect.sparkRB = {
-  name: "character.fox.effect.sparkRB",
-  shader: "particleRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/spark",
-  texture1: "multi/red_low",
-  texture2: "multi/red_high",
-};
-
-/* Source File: hitA.mat */
-Asset.prototype.material.character.fox.effect.hitA = {
-  name: "character.fox.effect.hitA",
-  shader: "particle2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/hit_a",
-};
-
-/* Source File: flashDelta.mat */
-Asset.prototype.material.character.fox.effect.flashDelta = {
-  name: "character.fox.effect.flashDelta",
-  shader: "particle2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/flash_delta",
-};
-
-/* Source File: blipDelta.mat */
-Asset.prototype.material.character.fox.effect.blipDelta = {
-  name: "character.fox.effect.blipDelta",
-  shader: "particle2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/blip_delta",
-};
-
-/* Source File: speedline.mat */
-Asset.prototype.material.character.fox.effect.speedline = {
-  name: "character.fox.effect.speedline",
-  shader: "particle2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/speedline",
-};
-
-/* Source File: initialRB.mat */
-Asset.prototype.material.character.fox.effect.initialRB = {
-  name: "character.fox.effect.initialRB",
-  shader: "particleRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/blip_init",
-  texture1: "multi/rainbow_low",
-  texture2: "multi/rainbow_high",
-};
-
-/* Source File: spark.mat */
-Asset.prototype.material.character.fox.effect.spark = {
-  name: "character.fox.effect.spark",
-  shader: "particle2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/spark",
-};
-
-/* Source File: speedlineRB.mat */
-Asset.prototype.material.character.fox.effect.speedlineRB = {
-  name: "character.fox.effect.speedlineRB",
-  shader: "particleRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/speedline",
-  texture1: "multi/red_low",
-  texture2: "multi/white",
-};
-
-/* Source File: shockwaveRB.mat */
-Asset.prototype.material.character.fox.effect.shockwaveRB = {
-  name: "character.fox.effect.shockwaveRB",
-  shader: "particleRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/shockwave",
-  texture1: "multi/rainbow_low",
-  texture2: "multi/rainbow_high",
-};
-
-/* Source File: flashRB.mat */
-Asset.prototype.material.character.fox.effect.flashRB = {
-  name: "character.fox.effect.flashRB",
-  shader: "particleRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/flash",
-  texture1: "multi/rainbow_low",
-  texture2: "multi/rainbow_high",
-};
-
-/* Source File: blipRB.mat */
-Asset.prototype.material.character.fox.effect.blipRB = {
-  name: "character.fox.effect.blipRB",
-  shader: "particleRB",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/blip",
-  texture1: "multi/rainbow_low",
-  texture2: "multi/rainbow_high",
-};
-
-/* Source File: hitB.mat */
-Asset.prototype.material.character.fox.effect.hitB = {
-  name: "character.fox.effect.hitB",
-  shader: "particle2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/hit_b",
-};
-
-/* Source File: initialDelta.mat */
-Asset.prototype.material.character.fox.effect.initialDelta = {
-  name: "character.fox.effect.initialDelta",
-  shader: "particle2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/blip_init_delta",
-};
-
-/* Source File: initial.mat */
-Asset.prototype.material.character.fox.effect.initial = {
-  name: "character.fox.effect.initial",
-  shader: "particle2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/blip_init",
-};
-
-/* Source File: flash.mat */
-Asset.prototype.material.character.fox.effect.flash = {
-  name: "character.fox.effect.flash",
-  shader: "particle2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/flash",
-};
-
-/* Source File: blip.mat */
-Asset.prototype.material.character.fox.effect.blip = {
-  name: "character.fox.effect.blip",
-  shader: "particle2tone",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/fox/effect/blip",
 };
 
 /* Source File: grid.mat */

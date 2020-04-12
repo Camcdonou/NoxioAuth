@@ -11,9 +11,9 @@ function ParticleSmoke(game, pos, vel) {
 ParticleSmoke.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   
-  var smokeMat = this.game.display.getMaterial("character.shiek.effect.smoke");
-  var shockwaveMat = this.game.display.getMaterial("character.shiek.effect.shockwave");
-  var flashMat = this.game.display.getMaterial("character.shiek.effect.flash");
+  var smokeMat = this.game.display.getMaterial("character.voxel.effect.smoke");
+  var shockwaveMat = this.game.display.getMaterial("character.voxel.effect.shockwave");
+  var flashMat = this.game.display.getMaterial("character.voxel.effect.flash");
   
   var white = function(){ return {x: 1.0, y: 1.0, z: 1.0, w: 1.25}; };
   var lightwhite = function(){ return {x: 1.0, y: 1.0, z: 1.0, w: 0.5}; };

@@ -14,7 +14,7 @@ function ParticleMark(game, pos, vel, colorA, colorB) {
 ParticleMark.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   
-  var markMat = this.game.display.getMaterial("character.shiek.effect.mark");
+  var markMat = this.game.display.getMaterial("character.voxel.effect.mark");
 
   var parent = this;
   var colorA = function() { return util.vec4.copy3(parent.colorA, 0.5); };

@@ -11,7 +11,7 @@ function ParticleSleep(game, pos, vel) {
 ParticleSleep.prototype.create = function() {
   var square = this.game.display.getModel("multi.square");
   
-  var sleepMat = this.game.display.getMaterial("character.puff.effect.sleep");
+  var sleepMat = this.game.display.getMaterial("character.block.effect.sleep");
   
   var rainbow = [
     function() { return util.vec4.make(0.631,0.435,0.706,1.0); },
