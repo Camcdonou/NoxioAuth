@@ -83,7 +83,7 @@ Auth.prototype.handlePacket = function(packet) {
     case "s04" : { main.setStats(packet.stats); break; } /* User Stats Update */
     case "s05" : { main.unlocks.load(packet.unlocks); break; } /* User Unlocks Update */
     case "s06" : { this.accountUpdate(packet); break; } /* Account info update */
-    case "s12" : { main.menu.connect.show("Login Failed", 1); main.menu.warning.show(packet.message); reset(1500); break; }
+    case "s12" : { main.menu.connect.show("Login Failed", 1); main.menu.warning.show(packet.message); reset(3500); break; }
     case "s45" : { main.menu.warning.show(packet.message); break; } /* Global message from admin */
     case "x00" : { main.menu.error.showError("Connection Error", packet.message); main.close(); break; }
     case "x01" : { main.menu.error.showErrorException("Server Exception", packet.message, packet.trace); main.close(); break; }

@@ -8,11 +8,71 @@ th {
   font-weight: bold;
 }
 
+.admin-container {
+  margin: 8px 8px 8px 8px;
+  padding: 0 0 0 0;
+  
+  font-family: "Calibri", monospace;
+  color: rgba(255, 255, 255, 1.0);
+}
+
 .admin-control {
   
 }
 
+.admin-btn {
+  display: inline-block;
+  padding: 0px 12px 0px 12px;
+  margin: 0 0 0 0;
+
+  text-align: center;
+  font-size: 18px;
+  height: 20px;
+
+  background-color: rgba(255, 255, 255, 0.25) !IMPORTANT;
+  cursor: pointer;
+}
+
+
+.admin-btn:hover {
+  background-color: rgba(255, 255, 255, 1.0) !IMPORTANT;
+  color: rgba(0, 0, 0, 1.0);
+}
+
+.admin-inp {
+  display: inline-block;
+  
+  border: none;
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+  width: 450px;
+  height: 20px;
+  
+  font-size: 18px;
+  
+  text-align: center;
+  background:rgba(255,255,255,0.05);
+  color: rgba(255, 255, 255, 1.0);
+}
+
+.admin-inp:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 1.0);
+}
+
+.admin-inp::-webkit-input-placeholder {
+  color: rgba(255,255,255,0.65);
+}
+
 .admin-info {
-  height: 650px;
+  height: 600px;
   overflow: scroll;
+}
+
+.admin-table-date {
+  font-size: small;
+}
+
+.admin-table-tiny {
+  font-size: x-small;
 }

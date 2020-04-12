@@ -31,7 +31,7 @@ public class UserUnlocks {
     new Unlock(Key.CHAR_BLOCK, "Block", "Time for a nap.", Type.CHARACTER, 250, User.Type.SPEC, false),
     new Unlock(Key.CHAR_CARGO, "Cargo", "Punch.", Type.CHARACTER, 250, User.Type.SPEC, false),
     new Unlock(Key.CHAR_QUAD, "Quad", "Geometric concepts with swords.", Type.CHARACTER, 250, User.Type.SPEC, false),
-    new Unlock(Key.CHAR_INFERNO, "InfernoPlus", "Unsubscribed.", Type.CHARACTER, 123456789, User.Type.ADMIN, false),
+    new Unlock(Key.CHAR_INFERNO, "Plus", "Unsubscribed.", Type.CHARACTER, 123456789, User.Type.ADMIN, false),
     
     new Unlock(Key.ALT_BOXVO, "Talking Box", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
     new Unlock(Key.ALT_BOXRED, "Red Box", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),

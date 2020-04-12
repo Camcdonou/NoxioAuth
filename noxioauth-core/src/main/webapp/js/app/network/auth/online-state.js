@@ -85,6 +85,14 @@ OnlineState.prototype.adminBan = function(uid, length) {
   this.send({type: "o42", uid: uid, length: length});
 };
 
+OnlineState.prototype.adminNameChange = function(uid, name) {
+  this.send({type: "o46", uid: uid, name: name});
+};
+
+OnlineState.prototype.adminResetCustoms = function(uid) {
+  this.send({type: "o47", uid: uid});
+};
+
 OnlineState.prototype.adminSetUserType = function(uid, userType) {
   this.send({type: "o43", uid: uid, userType: userType});
 };

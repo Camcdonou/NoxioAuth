@@ -168,7 +168,7 @@ public class UserDao {
         "UPDATE USERS SET " +
         "UPDATED = NOW(), HASH = ?" +
         "WHERE UID=?",
-              sash, usr.uid
+          sash, usr.uid
       );
     }
     catch(DataAccessException ex) {
@@ -184,7 +184,7 @@ public class UserDao {
         "UPDATE USERS SET " +
         "UPDATED = NOW(), TYPE = ?" +
         "WHERE UID=?",
-              type.name(), uid
+          type.name(), uid
       );
     }
     catch(DataAccessException ex) {
@@ -200,7 +200,7 @@ public class UserDao {
         "UPDATE USERS SET " +
         "UPDATED = NOW(), SUPPORTER = ?" +
         "WHERE UID=?",
-              true, uid
+          true, uid
       );
     }
     catch(DataAccessException ex) {
@@ -216,12 +216,44 @@ public class UserDao {
         "UPDATE USERS SET " +
         "UPDATED = NOW(), SUSPENDUNTIL = ?" +
         "WHERE UID=?",
-              new Date(new Date().getTime() + length), uid
+          new Date(new Date().getTime() + length), uid
       );
     }
     catch(DataAccessException ex) {
       Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
-      throw new IOException("SQL Error during account type change.");
+      throw new IOException("SQL Error during account suspension.");
+    }
+  }
+  
+  /* Changes display name on user, does not affect actual login name */
+  public void setUserDisplayName(final String uid, final String name) throws IOException {
+    try {
+      dao.jdbc.update(
+        "UPDATE USERS SET " +
+        "UPDATED = NOW(), DISPLAY = ? " +
+        "WHERE UID=?",
+          name, uid
+      );
+    }
+    catch(DataAccessException ex) {
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
+      throw new IOException("SQL Error during account display name change.");
+    }
+  }
+  
+  /* Removes custom messages and sounds */
+  public void resetUserCustoms(final String uid) throws IOException {
+    try {
+      dao.jdbc.update(
+        "UPDATE SETTINGS SET " +
+        "GAMCUSTOMMESSAGEA = NULL, GAMCUSTOMMESSAGEB = NULL, GAMCUSTOMSOUNDFILE = NULL, GAMUSECUSTOMSOUND = FALSE " +
+        "WHERE UID=?",
+          uid
+      );
+    }
+    catch(DataAccessException ex) {
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
+      throw new IOException("SQL Error during account display name change.");
     }
   }
   
@@ -356,7 +388,10 @@ public class UserDao {
   public List<UserInfo> getAdminInfo() throws IOException {
     try {
       final List<Map<String,Object>> results = dao.jdbc.queryForList(
-        "SELECT UID, NAME, DISPLAY, EMAIL, TYPE, SUPPORTER, CREATED, UPDATED, LASTLOGIN, SUSPENDUNTIL FROM USERS"
+        "SELECT " + 
+        "USERS.UID, USERS.NAME, USERS.DISPLAY, USERS.EMAIL, USERS.TYPE, USERS.SUPPORTER, USERS.CREATED, USERS.UPDATED, USERS.LASTLOGIN, USERS.SUSPENDUNTIL, " +
+        "SETTINGS.GAMCUSTOMSOUNDFILE, SETTINGS.GAMCUSTOMMESSAGEA, SETTINGS.GAMCUSTOMMESSAGEB " +
+        "FROM USERS INNER JOIN SETTINGS ON USERS.UID=SETTINGS.UID"
       );
       List<UserInfo> users = new ArrayList();
       for(int i=0;i<results.size();i++) {

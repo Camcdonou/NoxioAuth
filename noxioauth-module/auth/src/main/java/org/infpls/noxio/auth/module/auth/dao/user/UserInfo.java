@@ -19,6 +19,8 @@ public class UserInfo {
   
   public final String uid;                   // Unique ID for user
   public final String name, display, email;  // User is always lower case
+  public final String customSound;           // Filename of custom sound file for this account. null/undefined if none exists
+  public final String customMsgA, customMsgB;// Custom win message strings
   
   private Type type;
   public final boolean supporter;            // Outside supporter flag
@@ -34,6 +36,9 @@ public class UserInfo {
     created = (Timestamp)data.get("CREATED");
     updated = (Timestamp)data.get("UPDATED");
     lastLogin = (Timestamp)data.get("LASTLOGIN");
+    customSound = (String)data.get("GAMCUSTOMSOUNDFILE");
+    customMsgA = (String)data.get("GAMCUSTOMMESSAGEA");
+    customMsgB = (String)data.get("GAMCUSTOMMESSAGEB");
     suspendUntil = data.get("SUSPENDUNTIL") != null ? (Timestamp)data.get("SUSPENDUNTIL") : null;
     
       try {

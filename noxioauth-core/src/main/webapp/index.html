@@ -4,15 +4,15 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="HandheldFriendly" content="true">
         <meta name="viewport" id="meta-zoom" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=0">
-        <link rel="icon" href="img/aes/icon.png?v=_1.0.1:301_">
-        <link rel="stylesheet" type="text/css" href="css/app.css?v=_1.0.1:301_">
-        <link rel="stylesheet" type="text/css" href="css/error.css?v=_1.0.1:301_">
-        <link rel="stylesheet" type="text/css" href="css/info.css?v=_1.0.1:301_">
-        <link rel="stylesheet" type="text/css" href="css/footer.css?v=_1.0.1:301_">
-        <link rel="stylesheet" type="text/css" href="css/buy.css?v=_1.0.1:301_">
-        <link rel="stylesheet" type="text/css" href="css/admin.css?v=_1.0.1:301_">
-        <link rel="stylesheet" type="text/css" href="css/custom.css?v=_1.0.1:301_">
-        <link rel="stylesheet" type="text/css" href="css/gauss.css?v=_1.0.1:301_">
+        <link rel="icon" href="img/aes/icon.png?v=_1.0.1:315_">
+        <link rel="stylesheet" type="text/css" href="css/app.css?v=_1.0.1:315_">
+        <link rel="stylesheet" type="text/css" href="css/error.css?v=_1.0.1:315_">
+        <link rel="stylesheet" type="text/css" href="css/info.css?v=_1.0.1:315_">
+        <link rel="stylesheet" type="text/css" href="css/footer.css?v=_1.0.1:315_">
+        <link rel="stylesheet" type="text/css" href="css/buy.css?v=_1.0.1:315_">
+        <link rel="stylesheet" type="text/css" href="css/admin.css?v=_1.0.1:315_">
+        <link rel="stylesheet" type="text/css" href="css/custom.css?v=_1.0.1:315_">
+        <link rel="stylesheet" type="text/css" href="css/gauss.css?v=_1.0.1:315_">
         <script>
           /* Prevent phones from zooming screen. The webapp handles this. */
           document.addEventListener('touchmove', function(event) {
@@ -249,20 +249,37 @@
         </div>
       </div>
       
-      <div id="admin" class="menu-container" style="display: none">
+      <div id="admin" class="admin-container" style="display: none">
         <div id="admin-control" class="admin-control">
-          <input id="admin-control-uid" class="inp" type="text" placeholder="UID"/>
-          <input id="admin-control-ban-length" class="inp" type="text" placeholder="Ban length (MILLISECONDS)"/>
-          <div id="admin-control-ban" class="menu sub btn">Banhammer</div>
-          <div id="admin-control-free" class="menu sub btn">Make Free</div>
-          <div id="admin-control-lite" class="menu sub btn">Make Lite</div>
-          <div id="admin-control-full" class="menu sub btn">Make Full</div>
-          <div id="admin-control-mod" class="menu sub btn">Make Mod</div>
-          <div id="admin-control-support" class="menu sub btn">Make Patreon Supporter</div>
+          <div>
+            <input id="admin-control-uid" class="admin-inp" type="text" placeholder="UID of account to edit"/>
+          </div>
+          <div>
+            <input id="admin-control-ban-length" class="admin-inp" type="text" placeholder="Ban length (milliseconds)"/>
+            <div id="admin-control-ban" class="admin-btn">Banhammer</div>
+          </div>
+          <div>
+            <input id="admin-control-name-input" class="admin-inp" type="text" placeholder="New name"/>
+            <div id="admin-control-name" class="admin-btn">Change Display Name</div>
+            <div id="admin-control-reset" class="admin-btn">Remove Custom Sound/Message</div>
+          </div>
+          <div>
+            <div id="admin-control-free" class="admin-btn">Make Free</div>
+            <div id="admin-control-lite" class="admin-btn">Make Lite</div>
+            <div id="admin-control-full" class="admin-btn">Make Full</div>
+            <div id="admin-control-mod" class="admin-btn">Make Mod</div>
+            <div id="admin-control-support" class="admin-btn">Make Patreon Supporter</div>
+          </div>
         </div>
         <div id="admin-info" class="admin-info">...</div>
-        <input id="admin-control-msg" class="inp" type="text" placeholder="Message"/>
-        <div id="admin-control-send" class="menu sub btn">Send Global Message</div>
+        <div>
+          <input id="admin-control-msg" class="admin-inp" type="text" placeholder="Message"/>
+          <div id="admin-control-send" class="admin-btn">Send Global Message</div>
+        </div>
+        <div>
+          <div id="admin-control-back" class="admin-btn">Back</div>
+          <div id="admin-control-refresh" class="admin-btn">Refresh</div>
+        </div>
       </div>
       
       <!-- Game Server Lobby -->
