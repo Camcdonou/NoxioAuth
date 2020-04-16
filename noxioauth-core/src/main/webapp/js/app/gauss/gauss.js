@@ -111,14 +111,7 @@ Gauss.prototype.loading = function() {
       setTimeout( function() {
         if(parent.frame < (29*5)) {
           parent.hide();
-          main.menu.info.show(
-            "Warning!",
-            "Your browser failed the base performance benchmark for 20XX.</br>" +
-            "This generally means that Hardware Acceleration is disabled on your browser.</br>" +
-            "Please enable Hardware Acceleration and refresh the page.</br></br>" +
-            "If this issue continues try switching to an officially supported browser: <i>Google Chrome</i> or <i>Mozilla Firebox</i></br></br>" +
-            "This message can also sometimes be erronesouly flagged by minimizing/switching tabs.</br>"
-          );
+          main.menu.warning.show("Background animations disabled due to low framerate.");
         }
       }, 5000);
     }

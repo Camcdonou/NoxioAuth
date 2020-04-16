@@ -17,13 +17,11 @@ import org.infpls.noxio.auth.module.auth.dao.user.User;
 import org.infpls.noxio.auth.module.auth.util.Oak;
 import org.infpls.noxio.auth.module.auth.util.Settable;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 public class PaymentDao {
   
   public static enum Item {
-    FULL("Full game purchase for 20xx.io. Includes all content.", 5f),
-    SPEC("Feature purchase for 20xx.io. Unlocks all extra features and customization options.", 3f);
+    SPEC("20xx.io Game Purchase. Unlocks extra features and customization options.", 5f);
     
     public final float price, tax;
     public final String description;
@@ -32,6 +30,8 @@ public class PaymentDao {
       this.price = new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue(); tax = new BigDecimal(price*TAX_RATE).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
     }
   }
+  
+  public final static int SPEC_CREDIT_BONUS = 100000;
   
   private final static float TAX_RATE = 0.09f; /* cancer */
   private final static String CURRENCY = "USD", INTENT = "sale";

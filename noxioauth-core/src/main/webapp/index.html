@@ -4,15 +4,15 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="HandheldFriendly" content="true">
         <meta name="viewport" id="meta-zoom" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=0">
-        <link rel="icon" href="img/aes/icon.png?v=_1.0.1:315_">
-        <link rel="stylesheet" type="text/css" href="css/app.css?v=_1.0.1:315_">
-        <link rel="stylesheet" type="text/css" href="css/error.css?v=_1.0.1:315_">
-        <link rel="stylesheet" type="text/css" href="css/info.css?v=_1.0.1:315_">
-        <link rel="stylesheet" type="text/css" href="css/footer.css?v=_1.0.1:315_">
-        <link rel="stylesheet" type="text/css" href="css/buy.css?v=_1.0.1:315_">
-        <link rel="stylesheet" type="text/css" href="css/admin.css?v=_1.0.1:315_">
-        <link rel="stylesheet" type="text/css" href="css/custom.css?v=_1.0.1:315_">
-        <link rel="stylesheet" type="text/css" href="css/gauss.css?v=_1.0.1:315_">
+        <link rel="icon" href="img/aes/icon.png?v=_1.0.1:335_">
+        <link rel="stylesheet" type="text/css" href="css/app.css?v=_1.0.1:335_">
+        <link rel="stylesheet" type="text/css" href="css/error.css?v=_1.0.1:335_">
+        <link rel="stylesheet" type="text/css" href="css/info.css?v=_1.0.1:335_">
+        <link rel="stylesheet" type="text/css" href="css/footer.css?v=_1.0.1:335_">
+        <link rel="stylesheet" type="text/css" href="css/buy.css?v=_1.0.1:335_">
+        <link rel="stylesheet" type="text/css" href="css/admin.css?v=_1.0.1:335_">
+        <link rel="stylesheet" type="text/css" href="css/custom.css?v=_1.0.1:335_">
+        <link rel="stylesheet" type="text/css" href="css/gauss.css?v=_1.0.1:335_">
         <script>
           /* Prevent phones from zooming screen. The webapp handles this. */
           document.addEventListener('touchmove', function(event) {
@@ -45,6 +45,9 @@
         <div class="footer-btn" id="footer-support" onclick="main.menu.info.show('Support', 'Having trouble? Drop us an email at support@20xx.io')">Support</div>
         <!--<div class="footer-btn" id="footer-forget">Forgot Username</div> @TODO: -->
         <div class="footer-btn" id="footer-reset" onclick="main.menu.reset.showRequest()">Reset Password</div>
+        <div class="footer-btn" id="footer-tos" onclick="window.open('./tos.html')">Terms & Privacy</div>
+        <div class="footer-btn" id="footer-rules" onclick="window.open('./rules.html')">Rules</div>
+        <div class="footer-btn" id="footer-faq" onclick="window.open('./faq.html')">FAQ</div>
       </div>
       
       <!-- Rank Display -->
@@ -108,7 +111,7 @@
           <div id="auth-create-password-b" class="menu sub fld"><input id="auth-create-password-b-input" class="inp" type="password" placeholder="Confirm Password"/></div>
           <div id="auth-create-create" class="menu sub btn ico-blip" onclick="main.menu.auth.items.create.onEnter()"></div>
         <div id="auth-about" class="menu cat" onclick="main.menu.auth.items.about.show()">About</div>
-          <div id="auth-about-about" class="menu sub about">Noxio/20XX | _VER | © InfernoPlus</div>
+          <div id="auth-about-about" class="menu sub about">Noxio/20XX.io  _VER  © InfernoPlus 2020</div>
       </div>
       <div id="auth-link" class="link" style="display: none">
         <div class="link-twit" onclick="window.open('https://twitter.com/Inferbro')"></div>
@@ -229,20 +232,13 @@
       <!-- Buy Menu -->
       <div id="buy" class="menu-container" style="display: none">
         <div class="buy-cont">
-          <div class="buy-cont-left">
-            <div class="buy-title">Full Membership</div>
-            <div class="buy-text">Unlocks <b>everything.</b><br/><br/>
-              You also gain a &icon& next to your name to show your support for 20xx!<br/>
+            <div class="buy-title">Purchase Game</div>
+            <div class="buy-text">Unlocks all special features, customization options, and characters.<br/><br/>
+            You also gain a bonus of ###### credits which you can use to unlock alternate characters and 
+            you gain a <span class="buy-ico"></span> next to your name to show your support for 20xx.io!<br/>
             </div>
-            <div id="buy-full" class="buy-price" onclick="main.menu.buy.buyFull()">$5 single payment</div>
-          </div>
-          <div class="buy-cont-right">
-            <div class="buy-title">Lite Membership</div>
-            <div class="buy-text">Unlocks all special features, customization options, and basic characters.<br/><br/>
-              You also gain a &icon& next to your name to show your support for 20xx!<br/>
-            </div>
-            <div id="buy-lite" class="buy-price" onclick="main.menu.buy.buyLite()">$3 single payment</div>
-          </div>
+            <div class="buy-price">$5.00 USD</div>
+            <div id="buy-game" class="buy-checkout" onclick="main.menu.buy.buyGame()"></div>
         </div>
         <div class="buy-sub-cont">
           <div id="buy-back" class="buy-btn" onclick="main.menu.buy.back()">Back</div>
@@ -293,7 +289,7 @@
         <div class="right-container">
           <div class="menu ref"><span class="ico-ref" onclick="main.menu.lobby.list.refresh()"> ↺ </span></div>
           <div class='menu lob'>Join</div>
-          <div id="lobby-list-container"></div>
+          <div id="lobby-list-container" class="lob-list"></div>
         </div>
       </div>
       

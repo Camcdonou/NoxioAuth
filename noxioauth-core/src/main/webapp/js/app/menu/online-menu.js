@@ -119,7 +119,7 @@ function OnlineMenu() {
 OnlineMenu.prototype.showMotd = function() {
   if(!this.motd) { return; }
   if(!main.net.guest) { /*main.menu.info.show("","");*/ }
-  else { main.menu.info.show("Welcome", "You are logged in as a guest.</br>Your progress and settings will <b>not</b> be saved when you quit.</br></br>You can hit 'Quickmatch' to jump straight into a match or use the server browser to find one for yourself. Have fun!"); }
+  else { main.menu.info.show("Welcome", "You are logged in as a guest.</br>Your progress and settings will <b>not</b> be saved when you quit.</br></br>You can hit 'Quickmatch' to jump straight into a match or use the server browser to find one for yourself.</br></br><small>By continuing to use this site you agree to our <span class='tos-btn' onclick=\"window.open('./tos.html')\">Terms of Service & Privacy Policy</span></small>"); }
   this.motd = false;
 };
 

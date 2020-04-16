@@ -203,7 +203,7 @@ public class AuthUser {
   "    <a style='color:#c6d4df;' href='https://www.20xx.io/nxc/auth/verify/$$USER$$/$$CODE$$'>$$CODE$$</a></span>\n" +
   "  <div style='font-size:18px; padding:0px 8px 0px 8px; color:#c6d4df;'>Your username is:</div>\n" +
   "  <span style='font-size:32px;background-color:#6c6e70; color:#c6d4df; font-weight: bold; margin:0px 8px 0px 8px;'>$$USER$$</span>\n" +
-  "  <div style='font-size:12px; padding:0px 8px 0px 8px; color:#c6d4df;'>By activating your account you agree to our terms of service which can be found at 20xx.io/nxc/tos.html</div>\n" +
+  "  <div style='font-size:12px; padding:0px 8px 0px 8px; color:#c6d4df;'>By activating your account you agree to our privacy policy and terms of service which can be found at 20xx.io/nxc/tos.html</div>\n" +
   "  <div style='background-color:#0d1e33; color:#0d1e33; font-size:32px;'>_</div>\n" +
   " </div>\n" +
   "</div>\n" +

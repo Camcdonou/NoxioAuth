@@ -241,6 +241,22 @@ public class UserDao {
     }
   }
   
+  /* Changes adds credits to a users account */
+  public void addUserCredits(final String uid, final int amount) throws IOException {
+    try {
+      dao.jdbc.update(
+        "UPDATE STATS SET " +
+        "CREDITS = CREDITS + ? " +
+        "WHERE UID=?",
+          amount, uid
+      );
+    }
+    catch(DataAccessException ex) {
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
+      throw new IOException("SQL Error while adding credits to user.");
+    }
+  }
+  
   /* Removes custom messages and sounds */
   public void resetUserCustoms(final String uid) throws IOException {
     try {
@@ -253,7 +269,7 @@ public class UserDao {
     }
     catch(DataAccessException ex) {
       Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
-      throw new IOException("SQL Error during account display name change.");
+      throw new IOException("SQL Error while resetting user customs.");
     }
   }
   

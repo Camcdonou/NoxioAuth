@@ -4,8 +4,7 @@
 function BuyMenu() {
   this.element = document.getElementById("buy");
   this.button = {
-    full: document.getElementById("buy-full"),
-    lite: document.getElementById("buy-lite")
+    game: document.getElementById("buy-game")
   };
 };
 
@@ -13,18 +12,13 @@ BuyMenu.prototype.back = function() {
   main.menu.online.show();
 };
 
-BuyMenu.prototype.buyFull = function() {
-  main.net.auth.state.requestPayment("FULL");
-};
-
-BuyMenu.prototype.buyLite = function() {
+BuyMenu.prototype.buyGame = function() {
   main.net.auth.state.requestPayment("SPEC");
 };
 
 /* Disables buttons to buy something you already have */
 BuyMenu.prototype.updateButtons = function() {
-  if(main.net.type >= 2) { this.button.full.onclick=function(){}; this.button.full.innerHTML = "Purchased"; }
-  if(main.net.type >= 1) { this.button.lite.onclick=function(){}; this.button.lite.innerHTML = "Purchased"; }
+  if(main.net.type >= 1) { this.button.game.onclick=function(){}; this.button.full.innerHTML = "Purchased"; }
 };
 
 BuyMenu.prototype.show = function() {

@@ -38,8 +38,11 @@ public class PaymentController {
       if(nt != null) {
         Oak.log(Oak.Type.TRANSACTION, Oak.Level.INFO, "Payment processed for: " + nt.uid + "::" + nt.tid);
         switch(nt.getItem()) {
-          case SPEC : { dao.getUserDao().setUserType(nt.uid, User.Type.SPEC); break; }
-          case FULL : { dao.getUserDao().setUserType(nt.uid, User.Type.FULL); break; }
+          case SPEC : {
+            dao.getUserDao().setUserType(nt.uid, User.Type.SPEC);
+            dao.getUserDao().addUserCredits(nt.uid, PaymentDao.SPEC_CREDIT_BONUS);
+            break;
+          }
           default : { throw new IOException("Item ENUM missing function case -> PaymentController::process()"); }
         }
         final User user = dao.getUserDao().getUserByUid(nt.uid);

@@ -110,7 +110,6 @@ public class NoxioSession {
     if(item == null) { return null; }
     switch(item) {
       case SPEC : { if(User.Type.SPEC.level <= user.getType().level) { return null; } break; }
-      case FULL : { if(User.Type.FULL.level <= user.getType().level) { return null; } break; }
       default : { throw new IOException("Invalid Item ENUM -> NoxioSession::doPayment()"); }
     }
 
@@ -121,7 +120,9 @@ public class NoxioSession {
   public void postPayment() throws IOException {
     user = dao.getUserDao().getUserByName(user.name);
     unlocks = dao.getUserDao().getUserUnlocks(user.uid);
+    stats = dao.getUserDao().getUserStats(user.uid);
     sendPacket(new PacketS06(user.name, sid, user.display, user.getType(), unlocks));
+    sendPacket(new PacketS04(stats));
   }
   
   public void recordStats(final PacketH01.Stats nuStats) {
@@ -201,7 +202,7 @@ public class NoxioSession {
   public class UserData {
     public final String uid;                   // Unique ID for user
     public final String name, display;         // User is always lower case
-    public final User.Type type;                    // User type (see table in noxioauth User.java)
+    public final User.Type type;               // User type (see table in noxioauth User.java)
     public final boolean supporter;            // Outside supporter flag
 
     public final UserSettings settings;
