@@ -25,7 +25,7 @@ ThumbTouchUI.prototype.refresh = function() {
   
   var container = new UIContainer({x: '/', y: '/'});
 
-  var s = 180;
+  var s = 120;
   
   if(parent.game.thumb.id === undefined) { return; }
   

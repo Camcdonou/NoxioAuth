@@ -42,7 +42,7 @@ MenuTouchUI.prototype.generate = function() {
   
   var w = 512;
   var h = 0;
-  var s = 48;
+  var s = 32;
   var p = 32;
   var a = 8;
   

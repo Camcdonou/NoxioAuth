@@ -38,7 +38,7 @@ MeterTouchUI.prototype.generate = function() {
 
   var container = new UIContainer({x: '-', y: '+'});
   
-  var s = 128;
+  var s = 98;
   var h = 0;
   
   var protoOnTouch = function(imp, state, window) {

@@ -11,7 +11,7 @@ function PlayerVoxel(game, oid, pos, team, color) {
   
   this.model = this.game.display.getModel("character.voxel.voxel");
   this.material = this.game.display.getMaterial("character.voxel.voxel");
-  this.icon = this.game.display.getMaterial("character.voxel.ui.iconlarge");
+  this.icon = this.game.display.getMaterial("character.voxel.ui.iconsmall");
   
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.735;
@@ -26,8 +26,8 @@ function PlayerVoxel(game, oid, pos, team, color) {
 
   /* UI */
   this.uiMeters = [
-    {type: "bar", iconMat: this.game.display.getMaterial("character.voxel.ui.meterblip"), length: 12, scalar: 1.0},
-    {type: "bar", iconMat: this.game.display.getMaterial("character.generic.ui.meterstub"), length: 8, scalar: 0.0}
+    {type: "bar", iconMat: this.game.display.getMaterial("character.generic.ui.metera"), length: 12, scalar: 1.0},
+    {type: "bar", iconMat: this.game.display.getMaterial("character.generic.ui.meterb"), length: 8, scalar: 0.0}
   ];
 };
 

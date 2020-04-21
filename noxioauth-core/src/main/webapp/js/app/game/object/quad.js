@@ -11,7 +11,7 @@ function PlayerQuad(game, oid, pos, team, color) {
   
   this.model = this.game.display.getModel("character.generic.generic");
   this.material = this.game.display.getMaterial("character.quad.quad");
-  this.icon = this.game.display.getMaterial("character.quad.ui.iconlarge");
+  this.icon = this.game.display.getMaterial("character.quad.ui.iconsmall");
   
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.725;
@@ -30,8 +30,8 @@ function PlayerQuad(game, oid, pos, team, color) {
 
   /* UI */
   this.uiMeters = [
-    {type: "dbr", iconMat: this.game.display.getMaterial("character.quad.ui.meterslash"), length: 16, scalara: 1.0, scalarb: 1.0},
-    {type: "bcc", iconMat: this.game.display.getMaterial("character.quad.ui.metercounter"), length: 14, scalar: 0.0, count: 0, max: PlayerQuad.SLASH_COMBO_LENGTH}
+    {type: "dbr", iconMat: this.game.display.getMaterial("character.generic.ui.metera"), length: 16, scalara: 1.0, scalarb: 1.0},
+    {type: "bcc", iconMat: this.game.display.getMaterial("character.generic.ui.meterb"), length: 14, scalar: 0.0, count: 0, max: PlayerQuad.SLASH_COMBO_LENGTH}
   ];
 };
 

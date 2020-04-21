@@ -11,7 +11,7 @@ function PlayerBox(game, oid, pos, team, color) {
   
   this.model = this.game.display.getModel("character.box.box");
   this.material = this.game.display.getMaterial("character.box.box");
-  this.icon = this.game.display.getMaterial("character.box.ui.iconlarge");
+  this.icon = this.game.display.getMaterial("character.box.ui.iconsmall");
   
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.725;
@@ -25,8 +25,8 @@ function PlayerBox(game, oid, pos, team, color) {
   
   /* UI */
   this.uiMeters = [
-    {type: "bar", iconMat: this.game.display.getMaterial("character.box.ui.meterblip"), length: 16, scalar: 1.0},
-    {type: "bar", iconMat: this.game.display.getMaterial("character.box.ui.meterdash"), length: 14, scalar: 1.0}
+    {type: "bar", iconMat: this.game.display.getMaterial("character.generic.ui.metera"), length: 16, scalar: 1.0},
+    {type: "bar", iconMat: this.game.display.getMaterial("character.generic.ui.meterb"), length: 14, scalar: 1.0}
   ];
 };
 

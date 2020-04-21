@@ -11,7 +11,7 @@ function PlayerCargo(game, oid, pos, team, color) {
   
   this.model = this.game.display.getModel("character.generic.generic");
   this.material = this.game.display.getMaterial("character.cargo.cargo");
-  this.icon = this.game.display.getMaterial("character.cargo.ui.iconlarge");
+  this.icon = this.game.display.getMaterial("character.cargo.ui.iconsmall");
     
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.725;
@@ -33,8 +33,8 @@ function PlayerCargo(game, oid, pos, team, color) {
   
   /* UI */
   this.uiMeters = [
-    {type: "bar", iconMat: this.game.display.getMaterial("character.cargo.ui.meterkick"), length: 16, scalar: 1.0},
-    {type: "bar", iconMat: this.game.display.getMaterial("character.cargo.ui.meterpunch"), length: 14, scalar: 0.0}
+    {type: "bar", iconMat: this.game.display.getMaterial("character.generic.ui.metera"), length: 16, scalar: 1.0},
+    {type: "bar", iconMat: this.game.display.getMaterial("character.generic.ui.meterb"), length: 14, scalar: 0.0}
   ];
 };
 

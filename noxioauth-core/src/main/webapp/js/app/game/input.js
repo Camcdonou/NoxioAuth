@@ -74,6 +74,17 @@ Input.prototype.touch = {
 };
 
 Input.prototype.touch.event = function(event) {
+  /* Attempt to go fullscreen, for phones */
+  if (this.input.window.requestFullscreen) {
+    this.input.window.requestFullscreen();
+  } else if (this.input.window.mozRequestFullScreen) { /* Firefox */
+    this.input.window.mozRequestFullScreen();
+  } else if (this.input.window.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+    this.input.window.webkitRequestFullscreen();
+  } else if (this.input.window.msRequestFullscreen) { /* IE/Edge */
+    this.input.window.msRequestFullscreen();
+  }
+  
   var last = this.pos;
   this.pos = [];
   for(var i=0;i<event.touches.length;i++) {
@@ -107,6 +118,16 @@ Input.prototype.popInputs = function() {
 };
 
 Input.prototype.destroy = function() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.mozCancelFullScreen) { /* Firefox */
+    document.mozCancelFullScreen();
+  } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) { /* IE/Edge */
+    document.msExitFullscreen();
+  }
+  
   this.window.onmousemove=function() {};
   this.window.onmousedown=function() {};
   this.window.onmouseup=function() {};

@@ -33,7 +33,7 @@ public class UserUnlocks {
     new Unlock(Key.CHAR_QUAD, "Quad", "Geometric concepts with swords.", Type.CHARACTER, 250, User.Type.SPEC, false),
     new Unlock(Key.CHAR_INFERNO, "Plus", "Unsubscribed.", Type.CHARACTER, 123456789, User.Type.ADMIN, false),
     
-    new Unlock(Key.ALT_BOXVO, "Talking Box", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
+    new Unlock(Key.ALT_BOXVO, "Talking Box", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, true),
     new Unlock(Key.ALT_BOXRED, "Red Box", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
     new Unlock(Key.ALT_BOXRAINBOW, "Rainbow Box", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
     new Unlock(Key.ALT_BOXGOLD, "Solid Gold Box", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
@@ -52,7 +52,7 @@ public class UserUnlocks {
     new Unlock(Key.ALT_CRATEBLACK, "Blackflame Crate", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
     new Unlock(Key.ALT_CRATELOOT, "Loot Crate", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, true),
     
-    new Unlock(Key.ALT_VOXVO, "Talking Voxel", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
+    new Unlock(Key.ALT_VOXVO, "Talking Voxel", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, true),
     new Unlock(Key.ALT_VOXGREEN, "Green Voxel", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
     new Unlock(Key.ALT_VOXRAINBOW, "Rainbow Voxel", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
     new Unlock(Key.ALT_VOXGOLD, "Solid Gold Voxel", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
@@ -68,7 +68,7 @@ public class UserUnlocks {
     new Unlock(Key.ALT_QUADLEGEND, "Undying Quad", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, true),
     new Unlock(Key.ALT_QUADRUNE, "Rune Quad", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, true),
     
-    new Unlock(Key.ALT_BLOCKVO, "Talking Block", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
+    new Unlock(Key.ALT_BLOCKVO, "Talking Block", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, true),
     new Unlock(Key.ALT_BLOCKRAINBOW, "Rainbow Block", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
     new Unlock(Key.ALT_BLOCKGOLD, "Solid Gold Block", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
     new Unlock(Key.ALT_BLOCKDELTA, "Delta Block", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
@@ -83,7 +83,7 @@ public class UserUnlocks {
     new Unlock(Key.ALT_CARGORAINBOW, "Rainbow Block", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
     new Unlock(Key.ALT_CARGOGOLD, "Solid Gold Cargo", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
     new Unlock(Key.ALT_CARGODELTA, "Delta Block", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
-    new Unlock(Key.ALT_CARGOBLACK, "Blackflame Cargo", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, false),
+    new Unlock(Key.ALT_CARGOBLACK, "Blackflame Cargo", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, true),
     new Unlock(Key.ALT_CARGOMINE, "Minecargo", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, true),
     new Unlock(Key.ALT_CARGORETRO, "Retro Cargo", "Descriptions describe things.", Type.ALTERNATE, 100000, User.Type.FULL, true),
         

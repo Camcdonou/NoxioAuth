@@ -429,6 +429,15 @@ Asset.prototype.material.multi.debug = {
   bloom: "false",
 };
 
+/* Source File: althat.mat */
+Asset.prototype.material.character.generic.ui.althat = {
+  name: "character.generic.ui.althat",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/generic/ui/alt_hat",
+};
+
 /* Source File: altretro.mat */
 Asset.prototype.material.character.generic.ui.altretro = {
   name: "character.generic.ui.altretro",
@@ -447,6 +456,24 @@ Asset.prototype.material.character.generic.ui.iconlarge = {
   texture0: "character/generic/ui/icon_lg",
 };
 
+/* Source File: metera.mat */
+Asset.prototype.material.character.generic.ui.metera = {
+  name: "character.generic.ui.metera",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/generic/ui/meter_a",
+};
+
+/* Source File: altround.mat */
+Asset.prototype.material.character.generic.ui.altround = {
+  name: "character.generic.ui.altround",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/generic/ui/alt_round",
+};
+
 /* Source File: altcolor.mat */
 Asset.prototype.material.character.generic.ui.altcolor = {
   name: "character.generic.ui.altcolor",
@@ -454,6 +481,33 @@ Asset.prototype.material.character.generic.ui.altcolor = {
   shadow: "false",
   bloom: "false",
   texture0: "character/generic/ui/alt_color",
+};
+
+/* Source File: iconsmall.mat */
+Asset.prototype.material.character.generic.ui.iconsmall = {
+  name: "character.generic.ui.iconsmall",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/generic/ui/icon_lg",
+};
+
+/* Source File: althit.mat */
+Asset.prototype.material.character.generic.ui.althit = {
+  name: "character.generic.ui.althit",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/generic/ui/alt_hit",
+};
+
+/* Source File: altdelta.mat */
+Asset.prototype.material.character.generic.ui.altdelta = {
+  name: "character.generic.ui.altdelta",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/generic/ui/alt_delta",
 };
 
 /* Source File: altvoice.mat */
@@ -490,6 +544,15 @@ Asset.prototype.material.character.generic.ui.altdark = {
   shadow: "false",
   bloom: "false",
   texture0: "character/generic/ui/alt_dark",
+};
+
+/* Source File: meterb.mat */
+Asset.prototype.material.character.generic.ui.meterb = {
+  name: "character.generic.ui.meterb",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/generic/ui/meter_b",
 };
 
 /* Source File: altgold.mat */
@@ -604,22 +667,13 @@ Asset.prototype.material.character.crate.ui.iconlarge = {
   texture0: "character/crate/ui/icon_lg",
 };
 
-/* Source File: meterdash.mat */
-Asset.prototype.material.character.crate.ui.meterdash = {
-  name: "character.crate.ui.meterdash",
+/* Source File: iconsmall.mat */
+Asset.prototype.material.character.crate.ui.iconsmall = {
+  name: "character.crate.ui.iconsmall",
   shader: "simpletrans",
   shadow: "false",
   bloom: "false",
-  texture0: "character/crate/ui/meterdash",
-};
-
-/* Source File: meterblip.mat */
-Asset.prototype.material.character.crate.ui.meterblip = {
-  name: "character.crate.ui.meterblip",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/crate/ui/meterblip",
+  texture0: "character/crate/ui/icon_sm",
 };
 
 /* Source File: reverse.mat */
@@ -742,22 +796,13 @@ Asset.prototype.material.character.block.ui.iconlarge = {
   texture0: "character/block/ui/icon_lg",
 };
 
-/* Source File: meterrest.mat */
-Asset.prototype.material.character.block.ui.meterrest = {
-  name: "character.block.ui.meterrest",
+/* Source File: iconsmall.mat */
+Asset.prototype.material.character.block.ui.iconsmall = {
+  name: "character.block.ui.iconsmall",
   shader: "simpletrans",
   shadow: "false",
   bloom: "false",
-  texture0: "character/block/ui/meterrest",
-};
-
-/* Source File: meterpound.mat */
-Asset.prototype.material.character.block.ui.meterpound = {
-  name: "character.block.ui.meterpound",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/block/ui/meterpound",
+  texture0: "character/block/ui/icon_sm",
 };
 
 /* Source File: reverse.mat */
@@ -970,13 +1015,13 @@ Asset.prototype.material.character.voxel.ui.iconlarge = {
   texture0: "character/voxel/ui/icon_lg",
 };
 
-/* Source File: meterblip.mat */
-Asset.prototype.material.character.voxel.ui.meterblip = {
-  name: "character.voxel.ui.meterblip",
+/* Source File: iconsmall.mat */
+Asset.prototype.material.character.voxel.ui.iconsmall = {
+  name: "character.voxel.ui.iconsmall",
   shader: "simpletrans",
   shadow: "false",
   bloom: "false",
-  texture0: "character/voxel/ui/meterblip",
+  texture0: "character/voxel/ui/icon_sm",
 };
 
 /* Source File: reverse.mat */
@@ -1147,22 +1192,13 @@ Asset.prototype.material.character.box.ui.iconlarge = {
   texture0: "character/box/ui/icon_lg",
 };
 
-/* Source File: meterdash.mat */
-Asset.prototype.material.character.box.ui.meterdash = {
-  name: "character.box.ui.meterdash",
+/* Source File: iconsmall.mat */
+Asset.prototype.material.character.box.ui.iconsmall = {
+  name: "character.box.ui.iconsmall",
   shader: "simpletrans",
   shadow: "false",
   bloom: "false",
-  texture0: "character/box/ui/meterdash",
-};
-
-/* Source File: meterblip.mat */
-Asset.prototype.material.character.box.ui.meterblip = {
-  name: "character.box.ui.meterblip",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/box/ui/meterblip",
+  texture0: "character/box/ui/icon_sm",
 };
 
 /* Source File: reverse.mat */
@@ -1371,15 +1407,6 @@ Asset.prototype.material.character.box.effect.blip = {
   texture0: "character/box/effect/blip",
 };
 
-/* Source File: metercounter.mat */
-Asset.prototype.material.character.quad.ui.metercounter = {
-  name: "character.quad.ui.metercounter",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/quad/ui/metercounter",
-};
-
 /* Source File: iconlarge.mat */
 Asset.prototype.material.character.quad.ui.iconlarge = {
   name: "character.quad.ui.iconlarge",
@@ -1389,13 +1416,13 @@ Asset.prototype.material.character.quad.ui.iconlarge = {
   texture0: "character/quad/ui/icon_lg",
 };
 
-/* Source File: meterslash.mat */
-Asset.prototype.material.character.quad.ui.meterslash = {
-  name: "character.quad.ui.meterslash",
+/* Source File: iconsmall.mat */
+Asset.prototype.material.character.quad.ui.iconsmall = {
+  name: "character.quad.ui.iconsmall",
   shader: "simpletrans",
   shadow: "false",
   bloom: "false",
-  texture0: "character/quad/ui/meterslash",
+  texture0: "character/quad/ui/icon_sm",
 };
 
 /* Source File: quad.mat */
@@ -1532,22 +1559,13 @@ Asset.prototype.material.character.cargo.ui.iconlarge = {
   texture0: "character/cargo/ui/icon_lg",
 };
 
-/* Source File: meterkick.mat */
-Asset.prototype.material.character.cargo.ui.meterkick = {
-  name: "character.cargo.ui.meterkick",
+/* Source File: iconsmall.mat */
+Asset.prototype.material.character.cargo.ui.iconsmall = {
+  name: "character.cargo.ui.iconsmall",
   shader: "simpletrans",
   shadow: "false",
   bloom: "false",
-  texture0: "character/cargo/ui/meterkick",
-};
-
-/* Source File: meterpunch.mat */
-Asset.prototype.material.character.cargo.ui.meterpunch = {
-  name: "character.cargo.ui.meterpunch",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/cargo/ui/meterpunch",
+  texture0: "character/cargo/ui/icon_sm",
 };
 
 /* Source File: indicator.mat */
@@ -1687,6 +1705,15 @@ Asset.prototype.material.character.inferno.ui.iconlarge = {
   shadow: "false",
   bloom: "false",
   texture0: "character/inferno/ui/icon_lg",
+};
+
+/* Source File: iconsmall.mat */
+Asset.prototype.material.character.inferno.ui.iconsmall = {
+  name: "character.inferno.ui.iconsmall",
+  shader: "simpletrans",
+  shadow: "false",
+  bloom: "false",
+  texture0: "character/inferno/ui/icon_sm",
 };
 
 /* Source File: inferno.mat */
