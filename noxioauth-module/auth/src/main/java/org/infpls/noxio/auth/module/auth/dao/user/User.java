@@ -52,7 +52,7 @@ public class User {
     this.display = display;
     email = null;
     hash = null;
-    type = Type.SPEC; /* @TODO: for testing only! Change back to free later. */
+    type = Type.FREE;
     supporter = false;
     created = null;
     updated = null;

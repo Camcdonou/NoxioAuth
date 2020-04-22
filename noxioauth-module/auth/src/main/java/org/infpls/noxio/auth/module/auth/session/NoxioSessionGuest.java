@@ -46,6 +46,15 @@ public class NoxioSessionGuest extends NoxioSession {
     settings = new UserSettings((String)null);
     stats = new UserStats();
     unlocks = new UserUnlocks();
+    /* Randomly unlock a second character for guests */
+    final int r = (int)(Math.random()*5.);
+    switch(r) {
+      case 1 : { unlocks.unlock(UserUnlocks.Key.CHAR_VOXEL); break; }
+      case 2 : { unlocks.unlock(UserUnlocks.Key.CHAR_QUAD); break; }
+      case 3 : { unlocks.unlock(UserUnlocks.Key.CHAR_BLOCK); break; }
+      case 4 : { unlocks.unlock(UserUnlocks.Key.CHAR_CARGO); break; }
+      default : { unlocks.unlock(UserUnlocks.Key.CHAR_CRATE); break; }
+    }
     if(user == null || settings == null || stats == null || unlocks == null) { close("Fatal error during login. Please contact support."); return; }
     sendPacket(new PacketS01(user.name, sid, user.display, user.getType(), isGuest(), settings, stats, unlocks));
     sessionState.destroy();

@@ -113,7 +113,7 @@ GameUI.prototype.step = function(tch, imp, state, window) {
     this.meterTouch.setVisible(tch&&!ded&&!gam);
     this.thumb.setVisible(tch&&!ded&&!gam);
     this.announce.setVisible(this.flags.announce);
-    this.score.setVisible(this.flags.score||ded||gam);
+    this.score.setVisible(this.flags.score||(ded&&!tch)||gam);
     this.debug.setVisible(this.flags.debug);
     this.respawn.setVisible((this.flags.respawn||(ded&&!gam))&&!tch&&!this.showTutorial);
     this.respawnTouch.setVisible((this.flags.respawn||(ded&&!gam))&&tch);

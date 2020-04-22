@@ -75,9 +75,8 @@ public class UserDao {
       );
       dao.jdbc.update(
         "INSERT into UNLOCKS ( " +
-        "UID, UPDATED, " +
-        "CHAR_BOX, CHAR_CRATE " +
-        ") VALUES ( ?, NOW(), true, true )",
+        "UID, UPDATED " +
+        ") VALUES ( ?, NOW() )",
               uid
       );
     }

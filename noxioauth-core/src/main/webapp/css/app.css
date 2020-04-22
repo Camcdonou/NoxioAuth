@@ -57,7 +57,7 @@ body {
 }
 
 .tos-btn {
-  background-color: rgba(255, 255, 255, 0.0) !IMPORTANT;
+  background-color: rgba(255, 255, 255, 0.25) !IMPORTANT;
   cursor: pointer;
 }
 
@@ -472,6 +472,7 @@ serv {
   color: rgba(255, 255, 255, 1.0);
   font-size: 18px;
   margin-left: 4px;
+  margin-right: 8px;
 }
 
 .stat-cont-left {

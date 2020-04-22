@@ -1,0 +1,98 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  margin-top: 30px;
+  
+  font-family: "Calibri", monospace;
+  background-color: rgba(0, 0, 0, 1.0);
+  color: rgba(255, 255, 255, 1.0);
+  
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.top {
+  position: fixed;
+  top: 0px;
+  
+  font-size: 26px;
+  font-weight: bold;
+  
+  width: 100%;
+  height: 30px;
+  
+  color: rgba(0, 0, 0, 1.0);
+  background-color: rgba(255, 255, 255, 1.0);
+  
+  padding-left: 16px;
+}
+
+.side {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 256px;
+  height: 100%;
+  margin-top: 30px;
+  padding-top: 8px;
+    
+  border-right: solid 3px rgba(255, 255, 255, 1.0);
+}
+
+.btn {
+  display: block;
+  font-style: normal;
+  text-decoration: none;
+  font-weight: bold;
+  
+  padding-left: 18px;
+  
+  background-color: rgba(0, 0, 0, 1.0);
+  color: rgba(255, 255, 255, 1.0);
+
+  cursor: pointer;
+}
+
+.btn:hover {
+  color: rgba(0, 0, 0, 1.0);
+  background-color: rgba(255, 255, 255, 1.0);
+}
+
+.mid {
+  margin-left: 256px;
+}
+
+.hed {
+  font-weight: bold;
+  font-size: large;
+  
+  color: rgba(0, 0, 0, 1.0);
+  background-color: rgba(255, 255, 255, 1.0);
+  
+  padding-left: 16px;
+}
+
+.txt {
+  margin-left: 16px;
+  margin-top: 8px;
+}
+
+.lnk {
+  background-color: rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+}
+
+.lnk:hover {
+  background-color: rgba(255, 255, 255, 1.0);
+  color: rgba(0, 0, 0, 1.0);
+}
+
+.blt {
+  margin-top: 8px;
+  font-size: large;
+  margin-left: 32px;
+}
+
+.anc {
+  height: 30px;
+}

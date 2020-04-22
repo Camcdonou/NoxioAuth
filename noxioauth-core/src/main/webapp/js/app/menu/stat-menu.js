@@ -41,33 +41,31 @@ function StatMenu() {
       {name: "Time On Hill", val: "hillControl"}
     ],
     multi: [
-      {name: "Double Kills", val: "mkx02"},
-      {name: "Triple Kills", val: "mkx03"},
-      {name: "X", val: "mkx04"},
-      {name: "X", val: "mkx05"},
-      {name: "X", val: "mkx06"},
-      {name: "X", val: "mkx07"},
-      {name: "X", val: "mkx08"},
-      {name: "X", val: "mkx09"},
-      {name: "X", val: "mkx10"},
-      {name: "X", val: "mkx11"},
-      {name: "X", val: "mkx12"},
-      {name: "X", val: "mkx13"},
-      {name: "X", val: "mkx14"},
-      {name: "X", val: "mkx15"},
-      {name: "X", val: "mkx16"},
-      {name: "X", val: "mkx17"},
-      {name: "X", val: "mkx18"},
-      {name: "X", val: "mkx19"},
-      {name: "X", val: "mkx20"}
+      {name: "Double Kill", val: "mkx02"},
+      {name: "Triple Kill", val: "mkx03"},
+      {name: "Quadra Kill", val: "mkx04"},
+      {name: "Ultra Kill", val: "mkx05"},
+      {name: "Mega Kill", val: "mkx06"},
+      {name: "Giga Kill", val: "mkx07"},
+      {name: "Killamity", val: "mkx08"},
+      {name: "Killtrocity", val: "mkx09"},
+      {name: "Killtastrophe", val: "mkx10"},
+      {name: "Killpocalypse", val: "mkx11"},
+      {name: "Killsplosion", val: "mkx12"},
+      {name: "Killnado", val: "mkx13"},
+      {name: "Killcumcision", val: "mkx14"},
+      {name: "Uh...", val: "mkx15"},
+      {name: "Stop", val: "mkx16"},
+      {name: "Please", val: "mkx17"},
+      {name: "You Monster", val: "mkx18"}
     ],
     spree: [
-      {name: "Killing Sprees", val: "ksx05"},
-      {name: "Riots Run", val: "ksx10"},
-      {name: "X", val: "ksx15"},
-      {name: "X", val: "ksx20"},
-      {name: "X", val: "ksx25"},
-      {name: "X", val: "ksx30"}
+      {name: "Rampage", val: "ksx05"},
+      {name: "Untouchable", val: "ksx10"},
+      {name: "Impossible", val: "ksx15"},
+      {name: "Invincible", val: "ksx20"},
+      {name: "Inconceivable", val: "ksx25"},
+      {name: "Godlike", val: "ksx30"}
     ]
   };
 };
@@ -88,6 +86,8 @@ StatMenu.prototype.generateList = function(type){
   var l = "";
   var r = "";
   for(var i=0;i<lst.length;i++) {
+    if(type === "multi" && main.stats[lst[i].val] === 0 && i > 5) { break; } // Hides the ridiculous multikills unless you have them.
+    if(type === "spree" && main.stats[lst[i].val] === 0 && i > 3) { break; } // Hides the ridiculous killstreaks unless you have them.
     l += "<div class='stat-name'>" + lst[i].name + "</div>";
     r += "<div class='stat-val'>" + main.stats[lst[i].val] + "</div>";
   }
