@@ -53,6 +53,7 @@ FlagObject.prototype.update = function(data) {
       case "hexrb" : { this.stunElectric("rainbow"); return true; }
       case "hf" : { this.stunFire(); return true; }
       case "hfxp" : { this.stunFire("purple"); return true; }
+      case "hfxu" : { this.stunFire("blue"); return true; }
       case "hfxb" : { this.stunFire("black"); return true; }
       case "hfxrb" : { this.stunFire("rainbow"); return true; }
       case "hfxrt" : { this.stunFire("retro"); return true; }

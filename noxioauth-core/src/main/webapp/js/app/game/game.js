@@ -123,7 +123,8 @@ NoxioGame.prototype.generateCache = function() {
 NoxioGame.prototype.loading = function() {
   if(this.ready) { return; }
   var r = true;
-  var loadScreen = "<div class='unselectable load-head'>Loading...</div> <div style='width: 100%;'>";
+  var loadScreen = "<div style='text-align: center; width: 100%; text-justify: distribute;'>";
+  loadScreen += "<div class='load-head'>Loading...</div>";
   for(var i=0;i<this.display.textures.length;i++) {
     if(!this.display.textures[i].ready) { loadScreen += "<span class='unselectable load-item'>" + this.display.textures[i].path + "</span>"; r = false; }
     else { loadScreen += "<span class='load-item-inverse'>" + this.display.textures[i].path + "</span>"; }
@@ -247,7 +248,7 @@ NoxioGame.prototype.update = function(tick) {
   this.ui.debug.setText(
     "WHO[ " + main.net.user + "@" + main.net.game.state.info.name + "@" + main.net.game.info.name + " ]\n-\n" +
     "S[ " + (this.debug.sAvg).toFixed(2) + "ms ] C[ " + (this.debug.cAvg).toFixed(2) + "ms ] D[ " + (this.debug.dAvg).toFixed(2) + "ms ]\n" +
-    "FRAME  [ " + this.frame + " ] DELTA [ " + this.delta + " ]\n",
+    "FRAME  [ " + this.frame + " ] DELTA [ " + this.delta + " ]\n" +
     "FPS[ " + (this.debug.fAvg).toFixed(2) + " ] PING[ " + this.ping + "ms ]\n-\n" +
     "ASSET[ " + this.display.models.length + "," + this.display.materials.length + "," + this.display.shaders.length + "," + this.display.textures.length +" ] FBO[ 5 ]\n" +
     "SHADOW [ " + this.display.fbo.shadow.fb.width + "," + this.display.fbo.shadow.fb.height + " ]\n" +

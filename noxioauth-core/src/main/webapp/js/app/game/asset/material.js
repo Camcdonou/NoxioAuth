@@ -12,7 +12,6 @@ Asset.prototype.material.object.target = {};
 Asset.prototype.material.ui = {};
 Asset.prototype.material.ui.tutorial = {};
 Asset.prototype.material.multi = {};
-Asset.prototype.material.multi.hitbox = {};
 Asset.prototype.material.multi.hit = {};
 Asset.prototype.material.character = {};
 Asset.prototype.material.character.generic = {};
@@ -30,7 +29,6 @@ Asset.prototype.material.character.voxel.ui = {};
 Asset.prototype.material.character.voxel.effect = {};
 Asset.prototype.material.character.box = {};
 Asset.prototype.material.character.box.ui = {};
-Asset.prototype.material.character.box.decal = {};
 Asset.prototype.material.character.box.effect = {};
 Asset.prototype.material.character.quad = {};
 Asset.prototype.material.character.quad.ui = {};
@@ -45,7 +43,6 @@ Asset.prototype.material.sky = {};
 Asset.prototype.material.sky.vapor = {};
 Asset.prototype.material.sky.final = {};
 Asset.prototype.material.sky.gold = {};
-Asset.prototype.material.sky.orbit = {};
 Asset.prototype.material.map = {};
 Asset.prototype.material.map.tin = {};
 Asset.prototype.material.map.copper = {};
@@ -137,15 +134,6 @@ Asset.prototype.material.ui.king = {
   texture0: "ui/king",
 };
 
-/* Source File: lockIconLarge.mat */
-Asset.prototype.material.ui.lockIconLarge = {
-  name: "ui.lockIconLarge",
-  shader: "simpletrans",
-  shadow: "false",
-  bloom: "false",
-  texture0: "ui/lock",
-};
-
 /* Source File: ultimate.mat */
 Asset.prototype.material.ui.ultimate = {
   name: "ui.ultimate",
@@ -233,15 +221,6 @@ Asset.prototype.material.multi.shadowmask = {
   shader: "shadowmask",
   shadow: "true",
   bloom: "false",
-};
-
-/* Source File: hitbox.mat */
-Asset.prototype.material.multi.hitbox.hitbox = {
-  name: "multi.hitbox.hitbox",
-  shader: "effect",
-  shadow: "false",
-  bloom: "false",
-  texture0: "multi/hitbox/hitbox",
 };
 
 /* Source File: sparkRB.mat */
@@ -397,27 +376,11 @@ Asset.prototype.material.multi.default = {
   texture1: "multi/normal",
 };
 
-/* Source File: post.mat */
-Asset.prototype.material.multi.post = {
-  name: "multi.post",
-  shader: "post",
-  shadow: "false",
-  bloom: "false",
-};
-
 /* Source File: shadow.mat */
 Asset.prototype.material.multi.shadow = {
   name: "multi.shadow",
   shader: "shadow",
   shadow: "true",
-  bloom: "false",
-};
-
-/* Source File: post_fxaa.mat */
-Asset.prototype.material.multi.post_fxaa = {
-  name: "multi.post_fxaa",
-  shader: "post_fxaa",
-  shadow: "false",
   bloom: "false",
 };
 
@@ -1066,15 +1029,6 @@ Asset.prototype.material.character.voxel.effect.markwaveRB = {
   texture2: "multi/rainbow_high",
 };
 
-/* Source File: explode.mat */
-Asset.prototype.material.character.voxel.effect.explode = {
-  name: "character.voxel.effect.explode",
-  shader: "particle",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/voxel/effect/tempexplode",
-};
-
 /* Source File: shockwave.mat */
 Asset.prototype.material.character.voxel.effect.shockwave = {
   name: "character.voxel.effect.shockwave",
@@ -1144,15 +1098,6 @@ Asset.prototype.material.character.voxel.effect.lineRB = {
   texture0: "character/voxel/effect/line",
   texture1: "multi/red_high",
   texture2: "multi/white",
-};
-
-/* Source File: smoke.mat */
-Asset.prototype.material.character.voxel.effect.smoke = {
-  name: "character.voxel.effect.smoke",
-  shader: "particle",
-  shadow: "false",
-  bloom: "false",
-  texture0: "character/voxel/effect/smoke",
 };
 
 /* Source File: mark.mat */
@@ -1788,17 +1733,6 @@ Asset.prototype.material.sky.final.inner = {
   texture2: "sky/final/mask",
 };
 
-/* Source File: nebula.mat */
-Asset.prototype.material.sky.final.nebula = {
-  name: "sky.final.nebula",
-  shader: "finalspace",
-  shadow: "false",
-  bloom: "false",
-  texture0: "sky/final/nebula_multi",
-  texture1: "sky/final/nebula_color",
-  texture2: "sky/final/mask",
-};
-
 /* Source File: void.mat */
 Asset.prototype.material.sky.gold.void = {
   name: "sky.gold.void",
@@ -1824,15 +1758,6 @@ Asset.prototype.material.sky.gold.sky = {
   shadow: "false",
   bloom: "false",
   texture0: "sky/gold/sky",
-};
-
-/* Source File: earth.mat */
-Asset.prototype.material.sky.orbit.earth = {
-  name: "sky.orbit.earth",
-  shader: "finalspace",
-  shadow: "false",
-  bloom: "false",
-  texture0: "sky/final/earth",
 };
 
 /* Source File: metal_rough.mat */

@@ -69,6 +69,8 @@ PlayerQuadDelta.prototype.riposte = function() {
   this.counterCooldown = 5;
 };
 
+PlayerQuadDelta.prototype.riposteHit = PlayerQuad.prototype.riposteHit;
+
 PlayerQuadDelta.prototype.taunt = PlayerQuad.prototype.taunt;
 
 PlayerQuadDelta.prototype.setPos = PlayerQuad.prototype.setPos;

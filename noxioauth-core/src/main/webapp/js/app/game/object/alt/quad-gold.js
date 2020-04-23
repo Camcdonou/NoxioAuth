@@ -69,6 +69,8 @@ PlayerQuadGold.prototype.riposte = function() {
   this.counterCooldown = 5;
 };
 
+PlayerQuadGold.prototype.riposteHit = PlayerQuad.prototype.riposteHit;
+
 PlayerQuadGold.prototype.taunt = PlayerQuad.prototype.taunt;
 
 PlayerQuadGold.prototype.setPos = PlayerQuad.prototype.setPos;

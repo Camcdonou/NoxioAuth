@@ -53,7 +53,6 @@ RespawnTouchUI.prototype.generate = function() {
   var fontName = "Calibri";                                           // Name of this font for text rendering
 
   // Materials and ids used for character select icons, organized into groups
-  var LOCKEDMAT = this.game.display.getMaterial("ui.lockIconLarge");
   var SPEC = [];
   if(main.unlocks.has("CHAR_INFERNO")) { SPEC.push([
     {id: "inf_n", mat: this.game.display.getMaterial("character.inferno.ui.iconlarge"), lock: !main.unlocks.has("CHAR_INFERNO")}

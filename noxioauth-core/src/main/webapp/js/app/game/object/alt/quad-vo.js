@@ -87,6 +87,8 @@ PlayerQuadVoice.prototype.taunt = function() {
   this.effects.push(NxFx.quad.alt.voice.taunt.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
+PlayerQuadVoice.prototype.riposteHit = PlayerQuad.prototype.riposteHit;
+
 PlayerQuadVoice.prototype.setPos = PlayerQuad.prototype.setPos;
 PlayerQuadVoice.prototype.setVel = PlayerQuad.prototype.setVel;
 PlayerQuadVoice.prototype.setHeight = PlayerQuad.prototype.setHeight;

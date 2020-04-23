@@ -218,28 +218,6 @@ Asset.prototype.shader.effect = {
   fragment: "precision mediump float;\n\nuniform sampler2D texture0;\n\nuniform vec4 color;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 tex = texture2D(texture0, vUV.st)*color;\n  gl_FragColor = tex;\n}\n",
 };
 
-/* Source File: post_fxaag */
-Asset.prototype.shader.post_fxaa = {
-  name: "post_fxaa",
-  attributes: [
-    {type: "vec3", name: "position"},
-    {type: "vec3", name: "texcoord"},
-  ],
-  uniforms: [
-    {type: "mat4", name: "Pmatrix"},
-    {type: "mat4", name: "Vmatrix"},
-    {type: "vec3", name: "textureProp"},
-    {type: "vec2", name: "resolution"},
-    {type: "float", name: "upscale"},
-    {type: "sampler2D", name: "texture6"},
-    {type: "sampler2D", name: "texture7"},
-    {type: "vec3", name: "textureProp"},
-    {type: "vec2", name: "resolution"},
-  ],
-  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\n\nuniform vec3 textureProp; //Proportions relative to FBO texture size\nuniform vec2 resolution;\nuniform float upscale;\n\nvarying vec2 vUV;\n\nvarying vec2 v_rgbNW;\nvarying vec2 v_rgbNE;\nvarying vec2 v_rgbSW;\nvarying vec2 v_rgbSE;\nvarying vec2 v_rgbM;\n\nvoid texcoords(vec2 fragCoord, vec2 resolution,\n			out vec2 v_rgbNW, out vec2 v_rgbNE,\n			out vec2 v_rgbSW, out vec2 v_rgbSE,\n			out vec2 v_rgbM) {\n	vec2 inverseVP = 1.0 / resolution.xy;\n	v_rgbNW = (fragCoord + vec2(-1.0, -1.0)) * inverseVP;\n	v_rgbNE = (fragCoord + vec2(1.0, -1.0)) * inverseVP;\n	v_rgbSW = (fragCoord + vec2(-1.0, 1.0)) * inverseVP;\n	v_rgbSE = (fragCoord + vec2(1.0, 1.0)) * inverseVP;\n	v_rgbM = vec2(fragCoord * inverseVP);\n}\n\nvoid main(void) {\n  vUV = vec2(texcoord.s, (-1.0*texcoord.t))*textureProp.st; /* @FIXME Unknown why we need to render inverse y coords */\n  vUV.t -= textureProp.z;\n  vUV = vUV*upscale;\n\n  texcoords(vUV*resolution, resolution, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);\n\n  gl_Position = Pmatrix*Vmatrix*vec4(position,1.0);\n}\n",
-  fragment: "precision mediump float;\n\n/**\nBasic FXAA implementation based on the code on geeks3d.com with the\nmodification that the texture2DLod stuff was removed since it's\nunsupported by WebGL.\n--\nFrom:\nhttps://github.com/mitsuhiko/webgl-meincraft\nCopyright (c) 2011 by Armin Ronacher.\nSome rights reserved.\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are\nmet:\n    * Redistributions of source code must retain the above copyright\n      notice, this list of conditions and the following disclaimer.\n    * Redistributions in binary form must reproduce the above\n      copyright notice, this list of conditions and the following\n      disclaimer in the documentation and/or other materials provided\n      with the distribution.\n    * The names of the contributors may not be used to endorse or\n      promote products derived from this software without specific\n      prior written permission.\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\nLIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR\nA PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT\nOWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,\nSPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT\nLIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,\nDATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY\nTHEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\nOF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n*/\n\n#ifndef FXAA_REDUCE_MIN\n    #define FXAA_REDUCE_MIN   (1.0/ 128.0)\n#endif\n#ifndef FXAA_REDUCE_MUL\n    #define FXAA_REDUCE_MUL   (1.0 / 8.0)\n#endif\n#ifndef FXAA_SPAN_MAX\n    #define FXAA_SPAN_MAX     8.0\n#endif\n\n//optimized version for mobile, where dependent \n//texture reads can be a bottleneck\nvec4 fxaa(sampler2D tex, vec2 fragCoord, vec2 resolution,\n            vec2 v_rgbNW, vec2 v_rgbNE, \n            vec2 v_rgbSW, vec2 v_rgbSE, \n            vec2 v_rgbM) {\n    vec4 color;\n    mediump vec2 inverseVP = vec2(1.0 / resolution.x, 1.0 / resolution.y);\n    vec3 rgbNW = texture2D(tex, v_rgbNW).xyz;\n    vec3 rgbNE = texture2D(tex, v_rgbNE).xyz;\n    vec3 rgbSW = texture2D(tex, v_rgbSW).xyz;\n    vec3 rgbSE = texture2D(tex, v_rgbSE).xyz;\n    vec4 texColor = texture2D(tex, v_rgbM);\n    vec3 rgbM  = texColor.xyz;\n    vec3 luma = vec3(0.299, 0.587, 0.114);\n    float lumaNW = dot(rgbNW, luma);\n    float lumaNE = dot(rgbNE, luma);\n    float lumaSW = dot(rgbSW, luma);\n    float lumaSE = dot(rgbSE, luma);\n    float lumaM  = dot(rgbM,  luma);\n    float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));\n    float lumaMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)));\n    \n    mediump vec2 dir;\n    dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));\n    dir.y =  ((lumaNW + lumaSW) - (lumaNE + lumaSE));\n    \n    float dirReduce = max((lumaNW + lumaNE + lumaSW + lumaSE) *\n                          (0.25 * FXAA_REDUCE_MUL), FXAA_REDUCE_MIN);\n    \n    float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);\n    dir = min(vec2(FXAA_SPAN_MAX, FXAA_SPAN_MAX),\n              max(vec2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX),\n              dir * rcpDirMin)) * inverseVP;\n    \n    vec3 rgbA = 0.5 * (\n        texture2D(tex, fragCoord * inverseVP + dir * (1.0 / 3.0 - 0.5)).xyz +\n        texture2D(tex, fragCoord * inverseVP + dir * (2.0 / 3.0 - 0.5)).xyz);\n    vec3 rgbB = rgbA * 0.5 + 0.25 * (\n        texture2D(tex, fragCoord * inverseVP + dir * -0.5).xyz +\n        texture2D(tex, fragCoord * inverseVP + dir * 0.5).xyz);\n\n    float lumaB = dot(rgbB, luma);\n    if ((lumaB < lumaMin) || (lumaB > lumaMax))\n        color = vec4(rgbA, texColor.a);\n    else\n        color = vec4(rgbB, texColor.a);\n    return color;\n}\n\nuniform sampler2D texture6;\nuniform sampler2D texture7;\n\nuniform vec3 textureProp; //Proportions relative to FBO texture size\nuniform vec2 resolution;\n\nvarying vec2 vUV;\n\nvarying vec2 v_rgbNW;\nvarying vec2 v_rgbNE;\nvarying vec2 v_rgbSW;\nvarying vec2 v_rgbSE;\nvarying vec2 v_rgbM;\n\nvoid main(void) {\n  vec4 world = fxaa(texture6, vUV*resolution, resolution, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);\n  vec4 ui = texture2D(texture7, vUV);\n  vec4 color = ((1.0 - ui.a) * world) + (ui * ui.a);\n  gl_FragColor = vec4(color.rgb, 1.0);\n}\n",
-};
-
 /* Source File: post_msaag */
 Asset.prototype.shader.post_msaa = {
   name: "post_msaa",
@@ -660,25 +638,6 @@ Asset.prototype.shader.shadow = {
   fragment: "precision mediump float;\n\nvarying float vDepth;\n\nvoid main(void) {\n  gl_FragColor=vec4(vDepth, 0.,0.,1.);\n}\n",
 };
 
-/* Source File: postg */
-Asset.prototype.shader.post = {
-  name: "post",
-  attributes: [
-    {type: "vec3", name: "position"},
-    {type: "vec3", name: "texcoord"},
-  ],
-  uniforms: [
-    {type: "mat4", name: "Pmatrix"},
-    {type: "mat4", name: "Vmatrix"},
-    {type: "vec3[]", name: "textureProp"},
-    {type: "float[]", name: "upscale"},
-    {type: "sampler2D", name: "texture6"},
-    {type: "sampler2D", name: "texture7"},
-  ],
-  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\n\nuniform vec3 textureProp[2]; //Proportions relative to FBO texture size\nuniform float upscale[2];\n\nvarying vec2 vUVworld;\nvarying vec2 vUVui;\n\nvoid main(void) {\n  vUVworld = vec2(texcoord.s, (-1.0*texcoord.t))*textureProp[0].st; /* @FIXME Unknown why we need to render inverse y coords */\n  vUVworld = vUVworld*upscale[0];\n  vUVworld.t -= textureProp[0].z;\n\n  vUVui = vec2(texcoord.s, (-1.0*texcoord.t))*textureProp[1].st; /* @FIXME Unknown why we need to render inverse y coords */\n  vUVui = vUVui*upscale[1];\n  vUVui.t -= textureProp[1].z;\n\n  gl_Position = Pmatrix*Vmatrix*vec4(position,1.0);\n}\n",
-  fragment: "precision mediump float;\n\nuniform sampler2D texture6;\nuniform sampler2D texture7;\n\nvarying vec2 vUVworld;\nvarying vec2 vUVui;\n\nvoid main(void) {\n  vec4 world = texture2D(texture6, vUVworld);\n  vec4 ui = texture2D(texture7, vUVui);\n  vec4 color = ((1.0 - ui.a) * world) + (ui * ui.a);\n  gl_FragColor = vec4(color.rgb, 1.0);\n}\n",
-};
-
 /* Source File: skygoldcloudg */
 Asset.prototype.shader.skygoldcloud = {
   name: "skygoldcloud",
@@ -1023,29 +982,6 @@ Asset.prototype.shader.cube = {
   ],
   vertex: "precision mediump float;\nprecision mediump int;\n#define PI 3.1415926535897932384626433832795\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform int frame;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\nuniform float rotation;\nuniform float scale;\n\nvarying vec3 vPos;\nvarying vec2 vUV;\n\nvec3 rotateX(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float y = (a.y * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.y * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(a.x, y, z);\n}\n\nvec3 rotateY(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.z * sinDegrees);\n    float z = (a.x * -sinDegrees) + (a.z * cosDegrees);\n\n    return vec3(x, a.y, z);\n}\n\nvec3 rotateZ(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.y * sinDegrees);\n    float y = (a.x * -sinDegrees) + (a.y * cosDegrees);\n\n    return vec3(x, y, a.z);\n}\n\nvec3 rotate(vec3 a, vec3 b) {\n  vec3 c = rotateX(a, b.x);\n  c = rotateY(c, b.y);\n  c = rotateZ(c, b.z);\n  return c;\n}\n\n\nvoid main(void) {\n  /* Position */\n  float ff = float(frame);\n\n  vec3 fullRot = vec3(ff*.00023, ff*.00247, ff*.00353 + rotation);\n  float fullScale = scale * (1. + (.05*sin(ff*.00438)));\n\n  vPos = (rotate(position, fullRot)*fullScale)+transform;\n  vec4 cPos = vec4(vPos, 1.);\n\n  /* Texture Coordinates */\n  vUV=texcoord.st;\n\n  /* Final */\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
   fragment: "precision mediump float;\nprecision mediump int;\n#define PI 3.1415926535897932384626433832795\n\n/* Texture Samples */\nuniform sampler2D texture0;      // Mask\nuniform sampler2D texture1;      // Multi-Dif\n\n/* General */\nuniform int  frame;\nvarying vec3 vPos;\nvarying vec2 vUV;\n\nuniform vec2  cameraCenter;\nuniform vec3  eyeCenter;\nuniform vec3  eyeDirection;\n\nvoid main(void) {\n  /* Texture Samples */\n  float ff = float(frame);\n  vec2  gt = vec2(ff*0.00147, .5);\n  float texMask    = mix(texture2D(texture0, vUV).r, texture2D(texture0, vUV).b, sin(ff*.055));\n  float texGrad    = mix(texture2D(texture0, vUV).g, texture2D(texture0, vUV).a, sin(ff*.055));\n  float multiR     = texture2D(texture1, (1.375*vUV)+vec2(ff*0.00113, ff*0.00097)).r;\n  float multiG     = texture2D(texture1, (1.4*vUV)+vec2(-ff*0.00013, ff*0.00267)).g;\n  float multiB     = texture2D(texture1, (1.45*vUV)+vec2(ff*0.00211, -ff*0.00143)).b;\n  float multiA     = texture2D(texture1, (1.5*vUV)+(vec2(-ff*0.00171, -ff*0.00123))*-1.).r; /* Yeah I know... remind me to add an A channel to it */\n\n  float sum = multiR + multiG + multiB + multiA;\n  float plasGlow = pow(1.-(sin(sum*PI)*(1.-sin(sum*(PI/2.))*1.-sin(sum*(PI/3.)))), 16.);\n\n  vec4 colorA = vec4(1.0, 1.0, 1.0, 1.0);\n  vec4 colorB = vec4(vec3(min(1., max(0.0001, plasGlow))), 1.);\n  vec4 colorC = vec4(0.0, 0.0, 0.0, 1.0);\n\n  /* Finalize */\n  gl_FragColor = mix(mix(colorC, colorB, texGrad), colorA, texMask);\n}\n",
-};
-
-/* Source File: final_spaceg */
-Asset.prototype.shader.final_space = {
-  name: "final_space",
-  attributes: [
-    {type: "vec3", name: "position"},
-    {type: "vec3", name: "texcoord"},
-  ],
-  uniforms: [
-    {type: "mat4", name: "Pmatrix"},
-    {type: "mat4", name: "Vmatrix"},
-    {type: "vec3", name: "transform"},
-    {type: "vec2", name: "size"},
-    {type: "sampler2D", name: "texture0"},
-    {type: "sampler2D", name: "texture1"},
-    {type: "sampler2D", name: "texture2"},
-    {type: "sampler2D", name: "texture3"},
-    {type: "sampler2D", name: "texture4"},
-    {type: "int", name: "time"},
-  ],
-  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\n\nuniform vec3 transform;\nuniform vec2 size;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  vec4 cPos = vec4((position*vec3(size,1.0))+transform, 1.0);\n  vUV=texcoord;\n  gl_Position = Pmatrix*Vmatrix*cPos;\n}\n",
-  fragment: "precision mediump float;\n\nuniform sampler2D texture0;\nuniform sampler2D texture1;\nuniform sampler2D texture2;\nuniform sampler2D texture3;\nuniform sampler2D texture4;\n\nuniform int time;\n\nvarying vec3 vUV;\n\nvoid main(void) {\n  float ftime = float(time);  // No implicit casting in glsl. \n\n  /* Background */\n  vec3  samp0 = texture2D(texture0, vUV.st).rgb;\n  float samp1 = texture2D(texture2, (vUV.st*3.0+(vec2(0.00137*ftime, 0.00057*ftime)))).a;  \n  float samp2 = texture2D(texture3, (vUV.st*5.5+(vec2(-0.00023*ftime, -0.00015*ftime)))).r;\n  \n  float star = min(pow(samp2*2., 2.),1.)*0.5;\n  vec4 space = vec4(mix(samp0, vec3(star), samp1*star), 1.0);\n\n  /* Foreground */\n  float samp3a = texture2D(texture1, ((vUV.st*vec2(0.5,1.0))+vec2(-0.00047*ftime,0.0))).r;\n  float samp3b = texture2D(texture1, ((vUV.st*vec2(0.5,1.0))+vec2(-0.00083*ftime,0.0))).g;\n  float samp3c = texture2D(texture1, ((vUV.st*vec2(0.5,1.0))+vec2(-0.00016*ftime,0.0))).b;\n\n  vec3  samp4 = texture2D(texture2, (vUV.st+vec2(0.0023*ftime, -0.0037*ftime))).rgb;\n  float samp5 = texture2D(texture4, (vUV.st*1.5+(vec2(0.0043*ftime, -0.0025*ftime)))).r;\n  float samp6 = texture2D(texture4, (vUV.st*1.3+(vec2(-0.0023*ftime, 0.0033*ftime)))).g;\n  float samp7 = texture2D(texture4, (vUV.st*1.1+(vec2(-0.0026*ftime, -0.0015*ftime)))).b;\n  float samp8 = texture2D(texture4, (vUV.st*1.4+(vec2(0.0033*ftime, 0.0042*ftime)))).r;\n\n  vec4 lines = vec4(samp4, min(samp3a+samp3b+samp3c, 1.0)*((samp5/samp6)*(samp7/samp8)));\n\n  gl_FragColor = vec4(mix(space.rgb, lines.rgb, lines.a), 1.0);\n}\n",
 };
 
 /* Source File: particleg */

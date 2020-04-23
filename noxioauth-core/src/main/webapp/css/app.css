@@ -835,9 +835,11 @@ serv {
 
 .game-load {
   position: absolute;
-  margin: 8px 0px 0px 8px;
-  top: 8px;
-  left: 8px;
+  margin: 8px 8px 8px 8px;
+  top: 0px;
+  left: 0px;
+  overflow-x: hidden;
+  overflow-y: hidden;
   
   font-family: "Calibri", monospace;
   color: rgba(255, 255, 255, 1.0);
@@ -847,37 +849,39 @@ serv {
 }
 
 .load-head {
-    font-weight: bold;
-    font-family: "Calibri", monospace;
-    background-color: rgba(255, 255, 255, 0.0);
-    border: 2px solid rgba(255, 255, 255, 1.0);
-    font-size: 22px;
-    color: #FFFFFF;
-    margin: 0px 4px 4px 0px;
-    padding: 4px 4px 0px 4px;
-    display: inline-block;
+  font-family: "Calibri", monospace;
+  background-color: rgba(255, 255, 255, 1.0);
+  border: 2px solid rgba(255, 255, 255, 1.0);
+  font-size: 10px;
+  color: #000000;
+  margin: 0px 4px 4px 0px;
+  padding: 0px 4px 0px 4px;
+  display: block;
+  width: 100%;
 }
 
 .load-item {
   font-family: "Calibri", monospace;
   background-color: rgba(255, 255, 255, 0.0);
   border: 2px solid rgba(255, 255, 255, 1.0);
-  size: 12px;
+  font-size: 10px;
   color: #FFFFFF;
   margin: 0px 4px 4px 0px;
   padding: 0px 4px 0px 4px;
   display: inline-block;
+  width: 225px;
 }
 
 .load-item-inverse {
   font-family: "Calibri", monospace;
   background-color: rgba(255, 255, 255, 1.0);
   border: 2px solid rgba(255, 255, 255, 1.0);
-  size: 12px;
+  font-size: 10px;
   color: #000000;
   margin: 0px 4px 4px 0px;
   padding: 0px 4px 0px 4px;
   display: inline-block;
+  width: 225px;
 }
 
 

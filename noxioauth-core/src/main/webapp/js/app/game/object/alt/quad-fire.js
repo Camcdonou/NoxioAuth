@@ -72,6 +72,8 @@ PlayerQuadFire.prototype.riposte = function() {
   this.counterCooldown = 5;
 };
 
+PlayerQuadFire.prototype.riposteHit = PlayerQuad.prototype.riposteHit;
+
 PlayerQuadFire.prototype.taunt = PlayerQuad.prototype.taunt;
 
 PlayerQuadFire.prototype.setPos = PlayerQuad.prototype.setPos;

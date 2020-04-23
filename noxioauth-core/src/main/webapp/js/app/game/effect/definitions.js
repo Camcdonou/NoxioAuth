@@ -485,6 +485,14 @@ NxFx.hit.alt.fire = {
       {class: SpatialSoundInstance, params: ["<sound *>", ["multi/hit/fire0.wav", "multi/hit/fire1.wav", "multi/hit/fire2.wav"], 0.6, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
+  blue: new EffectDefinition(
+    "Hit-Fire-Blue", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerBoxDelta.COLOR_A, util.vec4.copy3(PlayerBoxDelta.COLOR_B, 0)], [1.75, 2.5], 30, "slow"], attachment: true, delay: 0},
+      {class: ParticleBurn, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBoxDelta.COLOR_A, PlayerBoxDelta.COLOR_B], attachment: true, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", ["multi/hit/fire0.wav", "multi/hit/fire1.wav", "multi/hit/fire2.wav"], 0.6, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
   black: new EffectDefinition(
     "Hit-Fire-Black", util.vec3.make(0, 0, 0.25), 0, true,
     [

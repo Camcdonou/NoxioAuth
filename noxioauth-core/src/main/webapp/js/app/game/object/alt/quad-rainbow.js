@@ -68,6 +68,8 @@ PlayerQuadRainbow.prototype.riposte = function() {
   this.counterCooldown = 5;
 };
 
+PlayerQuadRainbow.prototype.riposteHit = PlayerQuad.prototype.riposteHit;
+
 PlayerQuadRainbow.prototype.taunt = PlayerQuad.prototype.taunt;
 
 PlayerQuadRainbow.prototype.setPos = PlayerQuad.prototype.setPos;

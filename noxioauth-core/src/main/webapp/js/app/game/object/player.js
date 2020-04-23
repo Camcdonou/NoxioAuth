@@ -99,6 +99,7 @@ PlayerObject.prototype.effectSwitch = function(e) {
     case "hexrb" : { this.stunElectric("rainbow"); return true; }
     case "hf" : { this.stunFire(); return true; }
     case "hfxp" : { this.stunFire("purple"); return true; }
+    case "hfxu" : { this.stunFire("blue"); return true; }
     case "hfxb" : { this.stunFire("black"); return true; }
     case "hfxrb" : { this.stunFire("rainbow"); return true; }
     case "hfxrt" : { this.stunFire("retro"); return true; }
@@ -190,6 +191,7 @@ PlayerObject.prototype.stunFire = function(perm) {
   var v = util.vec2.toVec3(this.vel, this.vspeed);
   switch(perm) {
     case "purple" : { this.effects.push(NxFx.hit.alt.fire.purple.trigger(this.game, p, v)); break; }
+    case "blue" : { this.effects.push(NxFx.hit.alt.fire.blue.trigger(this.game, p, v)); break; }
     case "black" : { this.effects.push(NxFx.hit.alt.fire.black.trigger(this.game, p, v)); break; }
     case "rainbow" : { this.effects.push(NxFx.hit.alt.fire.rainbow.trigger(this.game, p, v)); break; }
     case "retro" : { break; }

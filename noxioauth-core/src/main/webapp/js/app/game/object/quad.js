@@ -78,6 +78,7 @@ PlayerQuad.prototype.effectSwitch = function(e) {
       case "cht" : { this.comboHit(); break; }
       case "cnt" : { this.counter(); break; }
       case "rip" : { this.riposte(); break; }
+      case "rht" : { this.riposteHit(); break; }
     default : { return PlayerObject.prototype.effectSwitch.call(this, e); }
   }
 };
@@ -146,6 +147,10 @@ PlayerQuad.prototype.counter = function() {
 PlayerQuad.prototype.riposte = function() {
   this.effects.push(NxFx.quad.riposte.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.counterDir, 0.0)));
   this.counterCooldown = 5;
+};
+
+PlayerQuad.prototype.riposteHit = function() {
+  this.effects.push(NxFx.block.shockwave.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec3.make(0, 0, 0))); // Copied from blocks rest hit
 };
 
 PlayerQuad.prototype.taunt = function() {
