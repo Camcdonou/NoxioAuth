@@ -93,7 +93,7 @@ Camera.prototype.getEye = function() {
 };
 
 Camera.prototype.getBounds = function(aspect) {
-  /* @FIXME inefficent. It should be possible to get 2 opposite corners and calcualte the rest of the polygon. That would be better. */
+  /** @FIXME inefficent. It should be possible to get 2 opposite corners and calcualte the rest of the polygon. That would be better. **/
   var a1 = util.matrix.unprojection({width: 1.0, height: aspect}, this, {x: 0.0, y: 0.0}, 0.0);
   var a2 = util.matrix.unprojection({width: 1.0, height: aspect}, this, {x: 0.0, y: 0.0}, 1.0);
   

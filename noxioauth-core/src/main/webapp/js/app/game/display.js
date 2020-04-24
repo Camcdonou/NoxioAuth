@@ -63,7 +63,7 @@ Display.prototype.setupWebGL = function() {
   if(maxUniform < 64) { main.menu.error.showError("GLSL returned MAX_VERTEX_UNIFORM_VECTORS as : " + maxUniform); return false; }
   if(maxTexture < 16) { main.menu.error.showError("GLSL returned MAX_VERTEX_TEXTURE_IMAGE_UNITS as : " + maxTexture); return false; }
   this.PL_UNIFORM_MAX = maxUniform * 0.33; this.LL_UNIFORM_MAX = maxUniform * 0.33;
-  console.log("##GLSL UNIFORM MAX: " + maxUniform); /* @DEBUG */
+  console.log("##GLSL UNIFORM MAX: " + maxUniform); /** @DEBUG **/
   console.log("##GLSL TEXTURE MAX: " + maxTexture);
   
   if(!this.createTexture("multi/default")) { return false; }
@@ -344,9 +344,9 @@ Display.prototype.draw = function() {
   var SHADOW_MAX_RADIUS = 12.0;                       // After this point everything is shadow. Prevents cheating via hacking camera around. (also a const in shaders, so change there as well if you change here)
   var sbnd = SHADOW_MAX_RADIUS+1.0;
   var sclip = (SHADOW_MAX_RADIUS+1.0)*2.0;
-  var PROJMATRIX_SHADOW = mat4.create(); mat4.ortho(PROJMATRIX_SHADOW, -sbnd, sbnd,-sbnd, sbnd, -sclip, sclip); /* @FIXME HARDCODED SIZE! NEEDS TO RESIZE TO VIEW FRUSTRUM */
-  var SMSIZE=1; /* @FIXME my understanding is that you have to do this calculation against the PROJ * LIGHT * TRANSFORM matrix. */
-  var OFFSET = vec3.create(); /* @FIXME we can probably ditch this since all it does is offset the camera position which we ditched from the draw call. */
+  var PROJMATRIX_SHADOW = mat4.create(); mat4.ortho(PROJMATRIX_SHADOW, -sbnd, sbnd,-sbnd, sbnd, -sclip, sclip); /** @FIXME HARDCODED SIZE! NEEDS TO RESIZE TO VIEW FRUSTRUM **/
+  var SMSIZE=1; /** @FIXME my understanding is that you have to do this calculation against the PROJ * LIGHT * TRANSFORM matrix. **/
+  var OFFSET = vec3.create(); /** @FIXME we can probably ditch this since all it does is offset the camera position which we ditched from the draw call. **/
     vec3.set(
       OFFSET,
       (Math.floor(this.camera.pos.x*SMSIZE)-(this.camera.pos.x*SMSIZE))/SMSIZE,

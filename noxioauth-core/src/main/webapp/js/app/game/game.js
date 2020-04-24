@@ -315,7 +315,7 @@ NoxioGame.prototype.doInputMouse = function(imp) {
       
       /* Control State Input */
       var near = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 0.0);
-      var far = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 1.0); /* @FIXME doing 2 unprojects is inefficent. Maybe calc camera center? */
+      var far = util.matrix.unprojection(this.window, this.display.camera, this.input.mouse.pos, 1.0); /** @FIXME doing 2 unprojects is inefficent. Maybe calc camera center? **/
       var floorPlane = {a: {x: 0.0, y: 0.0, z: 0.0}, b: {x: 1.0, y: 0.0, z: 0.0}, c: {x: 0.0, y: 1.0, z: 0.0}, n: {x: 0.0, y: 0.0, z: 1.0}};
       var result = util.intersection.linePlane({a: near, b: far}, floorPlane);
 

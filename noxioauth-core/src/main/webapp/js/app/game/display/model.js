@@ -9,7 +9,7 @@ function Model(name, vertexBuffer, indexBuffer, indexSize) {
   this.indexSize = indexSize;
 };
 
-/* @FIXME in theory we could optimize draws by having seperate bind() and draw() calls. Might consider it in the future. */
+/** @FIXME in theory we could optimize draws by having seperate bind() and draw() calls. Might consider it in the future. **/
 Model.prototype.draw = function(gl, shader) {
   gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
   if(shader.attributes.position) { gl.vertexAttribPointer(shader.attributes.position.location, 3, gl.FLOAT, false, 36, 0); } 

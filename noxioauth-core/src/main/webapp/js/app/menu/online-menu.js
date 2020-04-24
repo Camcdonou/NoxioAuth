@@ -115,7 +115,7 @@ function OnlineMenu() {
   };
 };
 
-/* @TODO set this up to show a server retrieved login message for general use */
+/** @TODO set this up to show a server retrieved login message for general use **/
 OnlineMenu.prototype.showMotd = function() {
   if(!this.motd) { return; }
   if(!main.net.guest) { /*main.menu.info.show("","");*/ }
