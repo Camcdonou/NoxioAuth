@@ -69,21 +69,21 @@ NxFx.player = {
     "Player-AirJump", util.vec3.make(0, 0, 0.01), 0, true,
     [
       {class: ParticleAirJump, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: false, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/air0.wav", "character/generic/air1.wav", "character/generic/air2.wav"], 0.4, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/air0.wav", "character/generic/air1.wav", "character/generic/air2.wav"], 0.35, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   land: new EffectDefinition(
     "Player-Land", util.vec3.make(0, 0, 0), 0, true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/land0.wav", "character/generic/land1.wav", "character/generic/land2.wav"], 0.25, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/land0.wav", "character/generic/land1.wav", "character/generic/land2.wav"], 0.2, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   bloodSplat: new EffectDefinition(
     "Player-BloodSplat", util.vec3.make(0, 0, 0.25), 0, false,
     [
       {class: ParticleBloodSplat, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: false, delay: 0},
-      {class: Decal, params: ["<game *>", "character.generic.decal.bloodsplat", "<vec3 pos>", util.vec3.make(0.0, 0.0, 1.0), 1.5, Math.random()*6.28319 /* @TODO: fixed random */, util.vec4.make(1, 1, 1, 1), 2, 450, 150], attachment: false, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", ["multi/impact/impact0.wav", "multi/impact/impact1.wav", "multi/impact/impact2.wav"], 0.5, 0.0, "effect"], attachment: false, delay: 0}
+      {class: Decal, params: ["<game *>", "character.generic.decal.bloodsplat", "<vec3 pos>", util.vec3.make(0.0, 0.0, 1.0), 1.5, Math.random()*6.28319 /* @TODO: fixed random */, util.vec4.make(1, 1, 1, 1), 2, 450, 150], attachment: false, delay: 0}
+      /*{class: SpatialSoundInstance, params: ["<sound *>", ["multi/impact/impact0.wav", "multi/impact/impact1.wav", "multi/impact/impact2.wav"], 0.5, 0.0, "effect"], attachment: false, delay: 0} */
     ]
   ),
   shatter: new EffectDefinition(
@@ -97,13 +97,13 @@ NxFx.player = {
   pickup: new EffectDefinition(
     "Player-Pickup", util.vec3.make(0, 0, 0), 0 , true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/pickup0.wav"], 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/pickup0.wav"], 0.3, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   toss: new EffectDefinition(
     "Player-Toss", util.vec3.make(0, 0, 0), 0 , true,
     [
-      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/toss0.wav"], 0.5, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/toss0.wav"], 0.3, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   fall: new EffectDefinition(
@@ -122,7 +122,7 @@ NxFx.box = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerBox.BLIP_COLOR_A, util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 0.75), util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleBlip, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBox.BLIP_COLOR_A, PlayerBox.BLIP_COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.35, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   dash: new EffectDefinition(
@@ -154,7 +154,7 @@ NxFx.crate = {
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerCrate.FIRE_COLOR_B, util.vec4.copy3(PlayerCrate.FIRE_COLOR_C, 0)], [2.6, 3.45], 25, "slow"], attachment: true, delay: 0},
       {class: ParticleCrateDash, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCrate.FIRE_COLOR_A, PlayerCrate.FIRE_COLOR_C], attachment: true, delay: 0},
       {class: ParticleBurn, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCrate.FIRE_COLOR_A, PlayerCrate.FIRE_COLOR_C], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/crate/dash1.wav", 0.7, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/crate/dash1.wav", 0.8, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
 };
@@ -208,7 +208,7 @@ NxFx.voxel = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerBox.BLIP_COLOR_A, util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 0.75), util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleVoxelRecall, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBox.BLIP_COLOR_A, PlayerBox.BLIP_COLOR_B], attachment: false, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/voxel/recall1.wav", 0.6, 0.0, "effect"], attachment: false, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/voxel/recall1.wav", 0.75, 0.0, "effect"], attachment: false, delay: 0}
     ]
   )
 };
@@ -528,7 +528,7 @@ NxFx.box.alt.red = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerBoxRed.BLIP_COLOR_A, util.vec4.copy3(PlayerBoxRed.BLIP_COLOR_B, 0.75), util.vec4.copy3(PlayerBoxRed.BLIP_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleBlip, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBoxRed.BLIP_COLOR_A, PlayerBoxRed.BLIP_COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.35, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   dash: new EffectDefinition(
@@ -550,7 +550,7 @@ NxFx.box.alt.rainbow = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerBoxRainbow.LIGHT_COLOR_A, util.vec4.copy3(PlayerBoxRainbow.LIGHT_COLOR_B, 0.75), util.vec4.copy3(PlayerBoxRainbow.LIGHT_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleBlipRainbow, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.35, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   dash: new EffectDefinition(
@@ -570,7 +570,7 @@ NxFx.box.alt.gold = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerBoxGold.BLIP_COLOR_A, util.vec4.copy3(PlayerBoxGold.BLIP_COLOR_B, 0.75), util.vec4.copy3(PlayerBoxGold.BLIP_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleBlip, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBoxGold.BLIP_COLOR_A, PlayerBoxGold.BLIP_COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.35, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   dash: new EffectDefinition(
@@ -591,7 +591,7 @@ NxFx.box.alt.delta = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerBoxDelta.COLOR_A, util.vec4.copy3(PlayerBoxDelta.COLOR_B, 0.75), util.vec4.copy3(PlayerBoxDelta.COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleBlipDelta, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBoxDelta.COLOR_A, PlayerBoxDelta.COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.35, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   dash: new EffectDefinition(
@@ -673,7 +673,7 @@ NxFx.crate.alt.orange = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerCrateOrange.BLIP_COLOR_A, util.vec4.copy3(PlayerCrateOrange.BLIP_COLOR_B, 0.75), util.vec4.copy3(PlayerCrateOrange.BLIP_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleBlip, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCrateOrange.BLIP_COLOR_A, PlayerCrateOrange.BLIP_COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.35, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
 };
@@ -697,7 +697,7 @@ NxFx.crate.alt.rainbow = {
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerBoxRainbow.LIGHT_COLOR_A, util.vec4.copy3(PlayerBoxRainbow.LIGHT_COLOR_B, 0)], [2.6, 3.45], 25, "slow"], attachment: true, delay: 0},
       {class: ParticleCrateDashRainbow, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0},
       {class: ParticleBurnRainbow, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/crate/dash1.wav", 0.7, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/crate/dash1.wav", 0.8, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
 };
@@ -718,7 +718,7 @@ NxFx.crate.alt.gold = {
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerBoxGold.BLIP_COLOR_B, util.vec4.copy3(PlayerBoxGold.BLIP_COLOR_A, 0)], [2.6, 3.45], 25, "slow"], attachment: true, delay: 0},
       {class: ParticleCrateDash, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBoxGold.BLIP_COLOR_A, PlayerBoxGold.BLIP_COLOR_B], attachment: true, delay: 0},
       {class: ParticleBurn, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBoxGold.BLIP_COLOR_A, PlayerBoxGold.BLIP_COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/crate/dash1.wav", 0.7, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/crate/dash1.wav", 0.8, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
 };
@@ -739,7 +739,7 @@ NxFx.crate.alt.delta = {
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerBoxDelta.COLOR_B, util.vec4.copy3(PlayerBoxDelta.COLOR_A, 0)], [2.6, 3.45], 25, "slow"], attachment: true, delay: 0},
       {class: ParticleCrateDash, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBoxDelta.COLOR_A, PlayerBoxDelta.COLOR_B], attachment: true, delay: 0},
       {class: ParticleBurn, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBoxDelta.COLOR_A, PlayerBoxDelta.COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/crate/dash1.wav", 0.7, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/crate/dash1.wav", 0.8, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
 };
@@ -751,7 +751,7 @@ NxFx.crate.alt.black = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerCrateBlack.LIGHT_COLOR_A, util.vec4.copy3(PlayerCrateBlack.LIGHT_COLOR_A, 0.75), util.vec4.copy3(PlayerCrateBlack.LIGHT_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleBlip, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCrateBlack.FX_COLOR_B, PlayerCrateBlack.FX_COLOR_A], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.35, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   charge: new EffectDefinition(
@@ -768,7 +768,7 @@ NxFx.crate.alt.black = {
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerCrateBlack.LIGHT_COLOR_A, util.vec4.copy3(PlayerCrateBlack.LIGHT_COLOR_B, 0)], [2.6, 3.45], 25, "slow"], attachment: true, delay: 0},
       {class: ParticleCrateDash, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCrateBlack.FX_COLOR_A, PlayerCrateBlack.FX_COLOR_B], attachment: true, delay: 0},
       {class: ParticleBurn, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCrateBlack.FX_COLOR_A, PlayerCrateBlack.FX_COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/crate/dash1.wav", 0.7, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/crate/dash1.wav", 0.8, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
 };
@@ -782,7 +782,7 @@ NxFx.voxel.alt.green = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [PlayerVoxelGreen.BLIP_COLOR_A, util.vec4.copy3(PlayerVoxelGreen.BLIP_COLOR_B, 0.75), util.vec4.copy3(PlayerVoxelGreen.BLIP_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
       {class: ParticleBlip, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerVoxelGreen.BLIP_COLOR_A, PlayerVoxelGreen.BLIP_COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.6, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/blip0.wav", 0.35, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   mark: new EffectDefinition(

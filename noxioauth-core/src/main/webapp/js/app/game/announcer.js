@@ -54,7 +54,7 @@ function Announcer(game) {
 Announcer.prototype.announce = function(code) {
   var parent = this;
   var longShort = function(path, msg, inv) { 
-    parent.announcements.push(parent.game.sound.getSound(path, 0.3, 0.0, "announcer"));
+    parent.announcements.push(parent.game.sound.getSound(path, 0.175, 0.0, "announcer"));
     if(msg) { parent.game.ui.announce.addLine(msg, inv); }
   };
   

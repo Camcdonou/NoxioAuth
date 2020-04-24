@@ -16,7 +16,7 @@ Sound.prototype.initWebAudio = function() {
     this.context = new ACc();
   }
   catch(ex) {
-    main.menu.warning.show("WebAudio not supported. Intializing fallback mode...");
+    main.menu.warning.show("WebAudio not supported.");
     return false;
   }
   
@@ -94,7 +94,7 @@ Sound.prototype.update = function() {
 
 /* Set Master Volume */
 Sound.prototype.updateVolume = function() {
-  this.masterVolume.gain.value = main.settings.volume.master;
+  this.masterVolume.gain.value = main.settings.volume.master*1.5; // The games volume is balanced kind of low. This is a quick hack to globally boost volume
   this.effectVolume.gain.value = main.settings.volume.fx;
   this.voiceVolume.gain.value = main.settings.volume.voice;
   this.announcerVolume.gain.value = main.settings.volume.announcer;
