@@ -165,6 +165,9 @@ public class AuthUser {
       }
   }
   
+  /* @TODO: Might be worth making sure that a pending reset is not more than a day old. Or something. */
+  /* Also include the username in the reset request so we have a key pair and its not just 1 random thing maybe? */
+  
   public static class AuthCreate {
     public final String user, hash, email;
     public AuthCreate(String user, String hash, String email) {
