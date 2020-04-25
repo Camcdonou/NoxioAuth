@@ -863,7 +863,7 @@ Asset.prototype.material.character.block.effect.hit = {
   shader: "particle",
   shadow: "false",
   bloom: "false",
-  texture0: "character/block/effect/hit",
+  texture0: "character/block/effect/cross",
 };
 
 /* Source File: hitRB.mat */
@@ -872,7 +872,7 @@ Asset.prototype.material.character.block.effect.hitRB = {
   shader: "particleRB",
   shadow: "false",
   bloom: "false",
-  texture0: "character/block/effect/hit",
+  texture0: "character/block/effect/cross",
   texture1: "multi/red_low",
   texture2: "multi/red_high",
 };

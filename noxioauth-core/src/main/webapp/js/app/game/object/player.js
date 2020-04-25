@@ -70,6 +70,7 @@ PlayerObject.prototype.parseUpd = function(data) {
   var look = util.vec2.parse(data.shift());
   var speed = parseFloat(data.shift());
   var name = data.shift();
+  var objective = parseInt(data.shift());
   var effects = data.shift().split(",");
   
   this.setPos(pos);
@@ -78,6 +79,7 @@ PlayerObject.prototype.parseUpd = function(data) {
   this.setLook(look);
   this.setSpeed(speed);
   this.name = !name ? undefined : name;
+  this.objective = objective;
   for(var i=0;i<effects.length-1;i++) {
     this.effectSwitch(effects[i]);
   }
@@ -113,8 +115,6 @@ PlayerObject.prototype.effectSwitch = function(e) {
     case "pik" : { this.pickup(); return true; }
     case "stn" : { this.stun(); return true; }
     case "tnt" : { this.taunt(); return true; }
-    case "obj" : { this.objective = true; this.color = util.kalide.compressColors(2, 4, 5, 6, 8); return true; }
-    case "jbo" : { this.objective = false; this.color = 0; return true; }
     case "csa" : { this.game.putCameraShake(this, PlayerObject.CAMERA_SHAKE_LIGHT); return true; }
     case "csb" : { this.game.putCameraShake(this, PlayerObject.CAMERA_SHAKE_MEDIUM); return true; }
     case "csc" : { this.game.putCameraShake(this, PlayerObject.CAMERA_SHAKE_HEAVY); return true; }
@@ -231,7 +231,7 @@ PlayerObject.prototype.setSpeed = function(speed) {
 };
 
 PlayerObject.prototype.getColor = function() {
-  var colors = util.kalide.getColorsAuto(this.color, this.team);
+  var colors = this.objective?this.color = util.kalide.getColorsAuto(util.kalide.compressColors(2, 4, 5, 6, 8), this.team):util.kalide.getColorsAuto(this.color, this.team);
   if(colors.length > 1) {
     var ind = Math.floor(this.game.frame/128)%(colors.length);
     return util.vec3.lerp(colors[ind], colors[ind+1<colors.length?ind+1:0], (this.game.frame%128)/128);

@@ -55,6 +55,7 @@ PlayerQuad.prototype.parseUpd = function(data) {
   var speed = parseFloat(data.shift());
   var name = data.shift();
   var counterDir = util.vec2.parse(data.shift());                               // This field is unique to quad so we have to override parseUpd for him.
+  var objective = parseInt(data.shift());
   var effects = data.shift().split(",");
   
   this.setPos(pos);
@@ -64,6 +65,7 @@ PlayerQuad.prototype.parseUpd = function(data) {
   this.setSpeed(speed);
   this.name = !name ? undefined : name;
   this.counterDir = counterDir;
+  this.objective = objective;
   for(var i=0;i<effects.length-1;i++) {
     this.effectSwitch(effects[i]);
   }

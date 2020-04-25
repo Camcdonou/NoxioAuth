@@ -31,7 +31,7 @@ public class PaymentDao {
     }
   }
   
-  public final static int SPEC_CREDIT_BONUS = 100000;
+  public final static int SPEC_CREDIT_BONUS = 25000;
   
   private final static float TAX_RATE = 0.09f; /* cancer */
   private final static String CURRENCY = "USD", INTENT = "sale";

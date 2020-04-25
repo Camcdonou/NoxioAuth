@@ -16,7 +16,7 @@ function Announcer(game) {
     gl   :: Gained the lead
     ll   :: Lost the lead
     btd  :: Betrayed   
-    btl  :: Betrayl
+    btl  :: Betrayal
     dm   :: Deathmatch
     em   :: Elimination
     kh   :: King

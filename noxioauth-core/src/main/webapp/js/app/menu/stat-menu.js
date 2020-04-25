@@ -25,7 +25,7 @@ function StatMenu() {
       {name: "Kills", val: "kill"},
       {name: "Deaths", val: "death"},
       {name: "Betrayed", val: "betrayed"},
-      {name: "Betrayls", val: "betrayl"},
+      {name: "Betrayals", val: "betrayl"}, /* Betryal is spelled wrong in most of my code & the database. I'm not fixing it. */
       {name: "First Blood", val: "firstBlood"},
       {name: "Kill Joys", val: "killJoy"},
       {name: "Reigns Ended", val: "endedReign"},

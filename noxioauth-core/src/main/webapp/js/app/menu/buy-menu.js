@@ -18,7 +18,7 @@ BuyMenu.prototype.buyGame = function() {
 
 /* Disables buttons to buy something you already have */
 BuyMenu.prototype.updateButtons = function() {
-  if(main.net.type >= 1) { this.button.game.onclick=function(){}; this.button.full.innerHTML = "Purchased"; }
+  if(main.net.type >= 1) { this.button.game.onclick=function(){}; this.button.game.innerHTML = "Purchased"; }
 };
 
 BuyMenu.prototype.show = function() {

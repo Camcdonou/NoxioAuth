@@ -132,7 +132,7 @@ PackHand.prototype.gameOver = function(data) {
   var sound = data.shift();
   
   this.game.ui.end.setTexts(head, foot);
-  if(sound) { this.game.sound.getSound(sound, 0.5, 0.0, "music").play(); }
+  if(sound) { this.game.sound.getSound(sound, 0.3, 0.0, "music").play(); }
   this.game.gameOver = true;
 };
 
