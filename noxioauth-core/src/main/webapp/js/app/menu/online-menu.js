@@ -88,7 +88,8 @@ function OnlineMenu() {
         document.getElementById("online-setting-1"),
 //        document.getElementById("online-setting-2"),
 //        document.getElementById("online-setting-3"),
-        document.getElementById("online-setting-4")
+        document.getElementById("online-setting-4"),
+        document.getElementById("online-setting-5")
       ]
     },
     buy: {
@@ -153,8 +154,8 @@ OnlineMenu.prototype.show = function() {
   this.items.server.show();
   main.menu.credit.show();
   main.menu.rank.show();
-  this.items.buy.element.style.display = main.net.guest ? "none" : "block";      // Hide buy menu on guests
-  this.items.admin.element.style.display = main.net.type < 3 ? "none" : "block"; // Hide admin menu unless mod or admin
+  this.items.buy.element.style.display = main.net.guest || main.net.type > 0 ? "none" : "block";    // Hide buy menu on guests or already purchased
+  this.items.admin.element.style.display = main.net.type < 3 ? "none" : "block";                    // Hide admin menu unless mod or admin
   this.visible = true;
   this.showEbeg();
   this.element.style.display = "block";

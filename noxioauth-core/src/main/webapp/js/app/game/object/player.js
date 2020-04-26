@@ -252,6 +252,7 @@ PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
       {name: "transform", data: [this.pos.x, this.pos.y, this.height]},
       {name: "color", data: util.vec3.toArray(color)},
       {name: "angle", data: [0., 0., 0.]},
+      {name: "rotation", data: 0},           // Shadows still use old 1f z-rotation. @TODO: Convert shadows over to "angle" 3f rotation 
       {name: "scale", data: 1.0}
     ];
     geometry.push({model: this.model, material: this.material, uniforms: playerUniformData});
