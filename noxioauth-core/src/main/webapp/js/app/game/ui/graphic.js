@@ -124,10 +124,11 @@ GraphicUI.prototype.generate = function() {
     default  : { kq = "Normal"; knxt = 0.25; break; }
   }
   switch(sets.shadowSize) {
+    case 16 :  { sq = "Off"; snxt = 512; break; }
     case 512 :  { sq = "Low"; snxt = 1024; break; }
     case 2048 :  { sq = "High"; snxt = 4096; break; }
-    case 4096 :  { sq = "Ultra"; snxt = 512; break; }
-    default  : { sq = "Normal";snxt = 2048; break; }
+    case 4096 :  { sq = "Ultra"; snxt = 16; break; }
+    default  : { sq = "Normal"; snxt = 2048; break; }
   }
   if(sets.bloom) { bq = "On"; bnxt = false; }
   else { bq = "Off"; bnxt = true; }

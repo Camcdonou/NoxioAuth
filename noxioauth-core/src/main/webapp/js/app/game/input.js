@@ -75,14 +75,16 @@ Input.prototype.touch = {
 
 Input.prototype.touch.event = function(event) {
   /* Attempt to go fullscreen, for phones */
-  if (this.input.window.requestFullscreen) {
-    this.input.window.requestFullscreen();
-  } else if (this.input.window.mozRequestFullScreen) { /* Firefox */
-    this.input.window.mozRequestFullScreen();
-  } else if (this.input.window.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-    this.input.window.webkitRequestFullscreen();
-  } else if (this.input.window.msRequestFullscreen) { /* IE/Edge */
-    this.input.window.msRequestFullscreen();
+  if(!this.input.window.fullscreen) {
+    if (this.input.window.requestFullscreen) {
+      this.input.window.requestFullscreen();
+    } else if (this.input.window.mozRequestFullScreen) { /* Firefox */
+      this.input.window.mozRequestFullScreen();
+    } else if (this.input.window.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+      this.input.window.webkitRequestFullscreen();
+    } else if (this.input.window.msRequestFullscreen) { /* IE/Edge */
+      this.input.window.msRequestFullscreen();
+    }
   }
   
   var last = this.pos;
@@ -118,14 +120,16 @@ Input.prototype.popInputs = function() {
 };
 
 Input.prototype.destroy = function() {
-  if (document.exitFullscreen) {
-    document.exitFullscreen();
-  } else if (document.mozCancelFullScreen) { /* Firefox */
-    document.mozCancelFullScreen();
-  } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
-    document.webkitExitFullscreen();
-  } else if (document.msExitFullscreen) { /* IE/Edge */
-    document.msExitFullscreen();
+  if(this.window.fullscreen) {
+    if (this.window.exitFullscreen) {
+      this.window.exitFullscreen();
+    } else if (this.window.mozCancelFullScreen) { /* Firefox */
+      this.window.mozCancelFullScreen();
+    } else if (this.window.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+      this.window.webkitExitFullscreen();
+    } else if (this.window.msExitFullscreen) { /* IE/Edge */
+      this.window.msExitFullscreen();
+    }
   }
   
   this.window.onmousemove=function() {};

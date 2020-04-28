@@ -388,61 +388,70 @@ Display.prototype.draw = function() {
   var mapGeomSorted = this.sortGeometry(mapGeom);
   var objGeomSorted = this.sortGeometry(objGeom);
   
-  var bloomGeomSorted = this.sortBloomGeometry(mapGeom);
+  if(main.settings.graphics.bloom) { var bloomGeomSorted = this.sortBloomGeometry(mapGeom); }
   
   /* === Draw Geometry to Shadow FBO ===================================================================================== */
   /* ===================================================================================================================== */
-  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.shadow.fb);                     // Enable shadow framebuffer
-  gl.viewport(0.0, 0.0, this.fbo.shadow.fb.width, this.fbo.shadow.fb.height); // Resize viewport to FBO texture
-  gl.clearColor(1.0, 0.0, 0.0, 1.0);                                          // red -> Z=Zfar on the shadow map
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  
-  
-  /* Setup & draw shadows for materials that cast full opaque shadows. */
-  var shadowMaterial = this.getMaterial("multi.shadow");
-  var shadowUniformData = [
-    {name: "Pmatrix", data: PROJMATRIX_SHADOW},
-    {name: "Lmatrix", data: LIGHTMATRIX},
-    {name: "Omatrix", data: OFFSETMATRIX}
-  ];
-  
-  shadowMaterial.shader.enable(gl);
-  shadowMaterial.shader.applyUniforms(gl, shadowUniformData);
-  shadowMaterial.enable(gl);
-  for(var i=0;i<geometry.length;i++) {
-    if(geometry[i].material.castShadow === 1) {
-      shadowMaterial.shader.applyUniforms(gl, geometry[i].uniforms);
-      geometry[i].model.draw(gl, shadowMaterial.shader);
+  if(main.settings.graphics.shadowSize > 16) {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.shadow.fb);                     // Enable shadow framebuffer
+    gl.viewport(0.0, 0.0, this.fbo.shadow.fb.width, this.fbo.shadow.fb.height); // Resize viewport to FBO texture
+    gl.clearColor(1.0, 0.0, 0.0, 1.0);                                          // red -> Z=Zfar on the shadow map
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+
+    /* Setup & draw shadows for materials that cast full opaque shadows. */
+    var shadowMaterial = this.getMaterial("multi.shadow");
+    var shadowUniformData = [
+      {name: "Pmatrix", data: PROJMATRIX_SHADOW},
+      {name: "Lmatrix", data: LIGHTMATRIX},
+      {name: "Omatrix", data: OFFSETMATRIX}
+    ];
+
+    shadowMaterial.shader.enable(gl);
+    shadowMaterial.shader.applyUniforms(gl, shadowUniformData);
+    shadowMaterial.enable(gl);
+    for(var i=0;i<geometry.length;i++) {
+      if(geometry[i].material.castShadow === 1) {
+        shadowMaterial.shader.applyUniforms(gl, geometry[i].uniforms);
+        geometry[i].model.draw(gl, shadowMaterial.shader);
+      }
     }
-  }
-  shadowMaterial.disable(gl);
-  shadowMaterial.shader.disable(gl);
-  
-  /* Setup & draw shadows for materials that cast masked shadows. */
-  var shadowMaskMaterial = this.getMaterial("multi.shadowmask");
-  var shadowMaskUniformData = [
-    {name: "Pmatrix", data: PROJMATRIX_SHADOW},
-    {name: "Lmatrix", data: LIGHTMATRIX},
-    {name: "Omatrix", data: OFFSETMATRIX},
-    {name: "texture0", data: 0}
-  ];
-  
-  shadowMaskMaterial.shader.enable(gl);
-  shadowMaskMaterial.shader.applyUniforms(gl, shadowMaskUniformData);
-  shadowMaskMaterial.enable(gl);
-  for(var i=0;i<geometry.length;i++) {
-    if(geometry[i].material.castShadow === 2) {
-      if(geometry[i].material.texture.texture0) { geometry[i].material.texture.texture0.enable(gl, 0); }
-      else { main.menu.warning.show("Material '" + geometry[i].material.name + "' was flagged for masked shadows but lacks a texture0 for masking."); }
-      shadowMaskMaterial.shader.applyUniforms(gl, geometry[i].uniforms);
-      geometry[i].model.draw(gl, shadowMaskMaterial.shader);
-      if(geometry[i].material.texture.texture0) { geometry[i].material.texture.texture0.disable(gl, 0); }
+    shadowMaterial.disable(gl);
+    shadowMaterial.shader.disable(gl);
+
+    /* Setup & draw shadows for materials that cast masked shadows. */
+    var shadowMaskMaterial = this.getMaterial("multi.shadowmask");
+    var shadowMaskUniformData = [
+      {name: "Pmatrix", data: PROJMATRIX_SHADOW},
+      {name: "Lmatrix", data: LIGHTMATRIX},
+      {name: "Omatrix", data: OFFSETMATRIX},
+      {name: "texture0", data: 0}
+    ];
+
+    shadowMaskMaterial.shader.enable(gl);
+    shadowMaskMaterial.shader.applyUniforms(gl, shadowMaskUniformData);
+    shadowMaskMaterial.enable(gl);
+    for(var i=0;i<geometry.length;i++) {
+      if(geometry[i].material.castShadow === 2) {
+        if(geometry[i].material.texture.texture0) { geometry[i].material.texture.texture0.enable(gl, 0); }
+        else { main.menu.warning.show("Material '" + geometry[i].material.name + "' was flagged for masked shadows but lacks a texture0 for masking."); }
+        shadowMaskMaterial.shader.applyUniforms(gl, geometry[i].uniforms);
+        geometry[i].model.draw(gl, shadowMaskMaterial.shader);
+        if(geometry[i].material.texture.texture0) { geometry[i].material.texture.texture0.disable(gl, 0); }
+      }
     }
+    shadowMaskMaterial.disable(gl);
+    shadowMaskMaterial.shader.disable(gl);
+
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null); //Disable frame buffer
   }
-  shadowMaskMaterial.disable(gl);
-  shadowMaskMaterial.shader.disable(gl);
-  
-  gl.bindFramebuffer(gl.FRAMEBUFFER, null); //Disable frame buffer
+  else {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.shadow.fb);                     // Enable shadow framebuffer
+    gl.viewport(0.0, 0.0, this.fbo.shadow.fb.width, this.fbo.shadow.fb.height); // Resize viewport to FBO texture
+    gl.clearColor(1.0, 0.0, 0.0, 1.0);                                          // red -> Z=Zfar on the shadow map
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);                                   //Disable frame buffer
+  }
 
   /* === Compile Dynamic Lighting Information ============================================================================ */
   /* ===================================================================================================================== */
@@ -565,38 +574,40 @@ Display.prototype.draw = function() {
     
   /* === Draw Bloom ====================================================================================================== */
   /* ===================================================================================================================== */
-  gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.bloom.fb);                                                      // Enable bloom framebuffer
-  gl.viewport(0, 0, (this.window.width*this.fbo.bloom.upscale), (this.window.height*this.fbo.bloom.upscale)); // Resize viewport to window size
-  gl.clearColor(0.0, 0.0, 0.0, 0.0);                                                                          // Clear black backdrop
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);                                                        // Clear Color and Depth from previous draw.
-  gl.enable(gl.BLEND);                                                                                        // Enable Transparency 
-  gl.depthMask(true);                                                                                         // Always write depth for bloom
-  var uniformData = [
-    {name: "Pmatrix", data: PROJMATRIX},
-    {name: "Vmatrix", data: VIEWMATRIX},
-    {name: "Mmatrix", data: MOVEMATRIX},
-    {name: "frame", data: this.frame}
-  ];
-  for(var i=0;i<bloomGeomSorted.length;i++) {                                       // Draws geometry with bloom enabled materials
-    var bloomGroup = bloomGeomSorted[i];
-    bloomGroup.bloom.enable(gl);
-    bloomGroup.bloom.applyUniforms(gl, uniformData);
-    bloomGroup.bloom.applyUniforms(gl, uniformLightData);
-    for(var j=0;j<bloomGroup.materials.length;j++) {
-      var materialGroup = bloomGroup.materials[j];
-      materialGroup.material.enable(gl, true);
-      for(var k=0;k<materialGroup.draws.length;k++) {
-        var draw = materialGroup.draws[k];
-        bloomGroup.bloom.applyUniforms(gl, draw.uniforms);
-        draw.model.draw(gl, bloomGroup.bloom);
+  if(main.settings.graphics.bloom) {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo.bloom.fb);                                                      // Enable bloom framebuffer
+    gl.viewport(0, 0, (this.window.width*this.fbo.bloom.upscale), (this.window.height*this.fbo.bloom.upscale)); // Resize viewport to window size
+    gl.clearColor(0.0, 0.0, 0.0, 0.0);                                                                          // Clear black backdrop
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);                                                        // Clear Color and Depth from previous draw.
+    gl.enable(gl.BLEND);                                                                                        // Enable Transparency 
+    gl.depthMask(true);                                                                                         // Always write depth for bloom
+    var uniformData = [
+      {name: "Pmatrix", data: PROJMATRIX},
+      {name: "Vmatrix", data: VIEWMATRIX},
+      {name: "Mmatrix", data: MOVEMATRIX},
+      {name: "frame", data: this.frame}
+    ];
+    for(var i=0;i<bloomGeomSorted.length;i++) {                                       // Draws geometry with bloom enabled materials
+      var bloomGroup = bloomGeomSorted[i];
+      bloomGroup.bloom.enable(gl);
+      bloomGroup.bloom.applyUniforms(gl, uniformData);
+      bloomGroup.bloom.applyUniforms(gl, uniformLightData);
+      for(var j=0;j<bloomGroup.materials.length;j++) {
+        var materialGroup = bloomGroup.materials[j];
+        materialGroup.material.enable(gl, true);
+        for(var k=0;k<materialGroup.draws.length;k++) {
+          var draw = materialGroup.draws[k];
+          bloomGroup.bloom.applyUniforms(gl, draw.uniforms);
+          draw.model.draw(gl, bloomGroup.bloom);
+        }
+        materialGroup.material.disable(gl);
       }
-      materialGroup.material.disable(gl);
+      bloomGroup.bloom.disable(gl);
     }
-    bloomGroup.bloom.disable(gl);
+    gl.depthMask(true);                       // Enable writing to depth buffer
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable world framebuffer
+    gl.disable(gl.BLEND);                     // Disable Transparency
   }
-  gl.depthMask(true);                       // Enable writing to depth buffer
-  gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable world framebuffer
-  gl.disable(gl.BLEND);                     // Disable Transparency 
   
   /* === Draw Sky ======================================================================================================== */
   /* ===================================================================================================================== */
@@ -764,6 +775,7 @@ Display.prototype.draw = function() {
   this.fbo.bloom.tex.disable(gl, 9);     // Disable bloom FBO render texture 
   this.fbo.world.depth.disable(gl, 10);    // Disable world depth FBO render texture 
   this.fbo.bloom.depth.disable(gl, 11);    // Disable bloom depth FBO render texture 
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null); // Disable post framebuffer
   
   gl.flush();
 };

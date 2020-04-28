@@ -210,10 +210,12 @@ NoxioGame.prototype.doUpdate = function(packet) {
   /* Update timers */
   if(this.respawnTimer>0) { this.respawnTimer--; }
   
+  this.frame++;
+};
+
+NoxioGame.prototype.doInput = function() {
   /* Process player input and send along to server */
   this.determineInput();
-  
-  this.frame++;
 };
 
 NoxioGame.prototype.update = function(tick) {
@@ -538,6 +540,7 @@ NoxioGame.prototype.draw = function() {
         this.doUpdate(packet);
         initial = false;
     }
+    this.queueInput = setTimeout(function() { if(main.inGame()) { main.game.doInput(); }}, 1);
                   /* DEBUG CTIME START */
                   /* */ this.debug.ctime.pop();
                   /* */ this.debug.ctime.unshift(util.time.now() - start);
@@ -589,6 +592,7 @@ NoxioGame.prototype.leave = function() {
 
 NoxioGame.prototype.destroy = function() {
   this.cancelAnimFrameFunc.call(window, this.nextFrame);
+  clearTimeout(this.queueInput);
   this.input.destroy();
   this.asset.destroy();
   this.display.destroy();
