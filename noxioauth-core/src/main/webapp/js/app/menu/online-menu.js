@@ -87,7 +87,7 @@ function OnlineMenu() {
       items: [
         document.getElementById("online-setting-1"),
 //        document.getElementById("online-setting-2"),
-//        document.getElementById("online-setting-3"),
+        document.getElementById("online-setting-3"),
         document.getElementById("online-setting-4"),
         document.getElementById("online-setting-5")
       ]

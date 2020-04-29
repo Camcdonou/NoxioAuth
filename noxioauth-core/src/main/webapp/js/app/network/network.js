@@ -44,7 +44,7 @@ Network.prototype.connect = function(user, pass) {
 
 /* Connects to specific game server */
 Network.prototype.connectGame = function(address, port) {
-  this.game.establish(address, port);
+  this.game.establish(address, port, false);
 };
 
 Network.prototype.connectGameAuto = function(servers) {
@@ -56,7 +56,7 @@ Network.prototype.connectGameAuto = function(servers) {
     $.ajax({
       url: "http://" + info.domain + ":" + info.port + "/nxg/info",
       type: 'GET',
-      timeout: 3500,
+      timeout: 10000,
       success: function(data) { results[ind] = data; results[ind].domain = servers[ind].domain; results[ind].ping = Date.now() - pingOut; },
       error: function() { results[ind] = undefined; }
     });
@@ -74,9 +74,8 @@ Network.prototype.connectGameAuto = function(servers) {
       if(results[i].ping < best.ping || (best.users < 1 && results[i].users >= 1)) { best = results[i]; }
     }
     if(!best) { main.menu.online.show(); main.menu.warn.show("Failed to find quick match..."); return; }
-    main.net.game.establish(best.domain, best.port);
-    main.net.game.auto = true;
-  }, 3500);
+    main.net.game.establish(best.domain, best.port, true);
+  }, 10000);
 };
 
 /* Checks ping of each game server then connects to the best one and puts you into a match */

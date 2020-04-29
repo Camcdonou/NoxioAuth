@@ -17,7 +17,6 @@ Main.prototype.init = function() {
   this.gauss.init();
   this.gauss.show();
   this.menu.init();
-  this.gauss.status();
   this.afk.init();
 };
 
@@ -33,7 +32,7 @@ Main.prototype.startGame = function(name, settings, map) {
     $.ajax({
       url: "http://" + main.net.game.address + ":" + main.net.game.port + "/nxg/map/" + map,
       type: 'GET',
-      timeout: 3000,
+      timeout: 10000,
       success: function(data) {
         main.game = new NoxioGame(name, settings, data);
         main.menu.game.show();

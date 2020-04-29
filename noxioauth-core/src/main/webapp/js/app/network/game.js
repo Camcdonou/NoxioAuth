@@ -8,14 +8,14 @@ function Game () {
   this.auto = false; // Quick match. If this is flagged true we will automatically select a lobby and join it once connected to a game server.
 };
 
-Game.prototype.establish = function(address, port) {
+Game.prototype.establish = function(address, port, auto) {
   if(main.net.sid === undefined) {
     main.menu.error.showError("Connection Error", "Client has no Session ID.");
     main.close();
     return;
   }
   
-  this.auto = false;
+  this.auto = !!auto;
   this.connect(address, port);
 };
 

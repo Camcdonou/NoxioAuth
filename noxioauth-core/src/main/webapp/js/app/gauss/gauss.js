@@ -12,6 +12,11 @@ function Gauss() {
   this.frame = 0;
   this.loaded = false;
   
+  this.performanceTimer = undefined;      // Timer testing to see how many frames are rendered over a short period
+  this.performanceFrame = 0;              // Number of frames rendered during performance test
+  this.performanceDelta = -1;             // MS Time we started performance test
+  this.performanceResult = 0;             // 0 = test running, 1 = pass, 2 = fail
+  
   this.requestAnimFrameFunc = (function() {
     return window.requestAnimationFrame         || 
            window.webkitRequestAnimationFrame   ||
@@ -86,15 +91,39 @@ Gauss.prototype.setupWebGL = function() {
 };
 
 Gauss.prototype.draw = function() {
-  this.window.width = this.container.clientWidth;                                   // Does not enforce aspect ratio so it can be made ultra widescreen if desired.
+  this.window.width = this.container.clientWidth;      // Does not enforce aspect ratio so it can be made ultra widescreen if desired.
   this.window.height = this.container.clientHeight;
-  if(!this.loaded) { this.loading(); }
-  else if(!(this.container.clientWidth < 1 || this.container.clientHeight < 1)) {        // Only draw when visible
-    if(this.gl) { this.drawSpace(); }
+  if(!this.loaded) { this.loading(); }                 // Skip draw till all assets are loaded
+  else if(this.gl && !document.hidden) {
+    this.drawSpace();
   }
   
   /* Base Benchmark */
   this.nextFrame = this.requestAnimFrameFunc.call(window, function() { main.gauss.draw(); }); // Javascript 🙄
+};
+
+Gauss.prototype.performance = function() {
+  if(this.performanceResult > 0) { this.performanceTimer = undefined; return; }
+    
+  if(!document.hidden) {
+    var now = util.time.now();
+    if(this.performanceDelta === -1) { this.performanceDelta = now; }
+    else if(this.performanceDelta + 3000 <= now) {
+      if(this.performanceFrame < (27*3)) {
+        this.performanceResult = 2;
+        this.hide();
+        main.menu.warning.show("Background animations disabled due to low framerate.");
+        this.failure();
+      }
+      else { this.performanceResult = 1; }
+    }
+  }
+  else {
+    this.performanceDelta = -1;
+    this.performanceFrame = 0;
+  }
+  
+  this.performanceTimer = setTimeout(function() { main.gauss.performance(); }, 10);
 };
 
 Gauss.prototype.loading = function() {
@@ -107,19 +136,13 @@ Gauss.prototype.loading = function() {
       this.tex.noise.ready
     ) {
       this.loaded = true;
-      var parent = this;
-      setTimeout( function() {
-        if(parent.frame < (29*5)) {
-          parent.hide();
-          main.menu.warning.show("Background animations disabled due to low framerate.");
-        }
-      }, 5000);
     }
 };
 
 Gauss.prototype.drawSpace = function() {
   var gl = this.gl;
   this.frame++;
+  this.performanceFrame++;
   
   /* === Draw Sky ======================================================================================================== */
   /* ===================================================================================================================== */
@@ -186,11 +209,15 @@ Gauss.prototype.drawSpace = function() {
 };
 
 Gauss.prototype.show = function() {
+  if(!this.gl || this.performanceResult === 2) { this.failure(); return; }
+  
   this.element.style.display = "block";
+  this.performance();
   this.nextFrame = this.requestAnimFrameFunc.call(window, function() { main.gauss.draw(); }); // Javascript 🙄
 };
 
 Gauss.prototype.hide = function() {
+  if(this.performanceTimer) { clearTimeout(this.performanceTimer); this.performanceTimer = undefined; }
   this.cancelAnimFrameFunc.call(window, this.nextFrame);
   this.element.style.display = "none";
 };
@@ -334,17 +361,14 @@ Gauss.prototype.createModel = function(source) {
   return new Model(source.name, vertexBuffer, indexBuffer, source.indices.length);
 };
 
-/* Checks to see if WebGL is supported and working, then benchmarks to make sure hardware acceleration is on. */
-/* If a problem is detected then the user is notified with a warning */
-Gauss.prototype.status = function() {
-  if(!this.gl) {
-    main.menu.info.show(
-      "Warning!",
-      "Your browser does not appear to have Hardware Accereration enabled or your browser does not support WebGL.</br>" +
-      "20XX requires Hardware Acceleration to run. Please enable it and refresh the page.</br></br>" +
-      "If this issue continues try switching to an officially supported browser: <i>Google Chrome</i> or <i>Mozilla Firebox</i>"
-    ); return;
-  }
+/* Called if something goes wrong and the browser can't properly render gauss */
+Gauss.prototype.failure = function() {
+  main.menu.info.show(
+    "Warning!",
+    "Your browser does not appear to have Hardware Accereration enabled or your browser does not support WebGL.</br>" +
+    "20XX requires Hardware Acceleration to run. Please enable it and refresh the page.</br></br>" +
+    "For further information please check the section on WebGL in the <span class=\"tos-btn\" onclick=\"window.open('./help.html')\">Help Document</span>."
+  );
 };
 
 /* ========================================================================== */
