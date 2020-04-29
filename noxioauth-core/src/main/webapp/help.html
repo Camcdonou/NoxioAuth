@@ -10,11 +10,11 @@
       <a href='#controls' class='btn'>Controls</a>
       <a href='#unlocks' class='btn'>Credits & Unlocks</a>
       <a href='#lagcomp' class='btn'>Lag Compensation Modes</a>
+      <a href='#framerate' class='btn'>Bad Framerates</a>
       <a href='#customsound' class='btn'>Custom Sounds</a>
       <a href='#loading' class='btn'>Loading Screen Freeze</a>
       <a href='#errorsa' class='btn'>WebGL & WebAudio Errors</a>
       <a href='#errorsb' class='btn'>Other Errors</a>
-      <a href='#framerate' class='btn'>Bad Framerates</a>
       <a href='#mobile' class='btn'>Mobile Support</a>
       <a href='#apple' class='btn'>Apple Products</a>
     </div>
@@ -31,7 +31,7 @@
       <div class='txt'>
         The game controls can be adjusted at any time by hitting escape and then selecting &#39;settings&#39; and then &#39;controls&#39;.<br>
         By default the controls are: <br>
-        &#9899; Escape - Open Menu
+        &#9899; Escape - Open Menu<br>
         &#9899; Right Click - Move character<br>
         &#9899; Space - Jump<br>
         &#9899; F - Ability #1<br>
@@ -42,25 +42,42 @@
         &#9899; Middle Click - Rotate Camera<br>
         &#9899; Scroll Wheel - Zoom<br>
         &#9899; Scroll Lock - Toggle UI<br>
+        While in spectator mode middle click will instead pan the camera.
       </div>
       
       <div id='unlocks' class='anc'></div>
       <div class='hed'>Credits & Unlocks</div>
       <div class='txt'>
         You can earn credits by playing matches. Your current credit total is displayed in the top right of the screen.<br>
-        Once you have earned a substantial number of credits you can then go back to the games menu and select the &#39;unlocks&#39; option.<br>
+        Once you have earned a substantial number of credits you can return to the main menu and select the &#39;unlocks&#39; option.<br>
         You can then use your credits to unlock characters, alternate character skins, or special game features.<br>
       </div>
       
       <div id='lagcomp' class='anc'></div>
       <div class='hed'>Lag Compensation Modes</div>
       <div class='txt'>
-        The lag compensation setting in the game settings adjusts the size of the frame buffer for the game.<br>
+        The lag compensation setting in the game settings adjusts the size of the tick buffer for the game.<br>
+        This setting is a tradeoff between smooth framerate and input responsiveness. The default is normal.<br>
         There are 4 modes:<br>
         &#9899; Immediate - No buffer. Can potentially make the game more responsive, but only if your connection to the game server is very good.<br>
-        &#9899; Normal - 1 frame buffer. This is recommended for most players.<br>
-        &#9899; Aggressive - 2 frame buffer. Use this if the game feels somewhat choppy.<br>
-        &#9899; Very Aggressive - 3 frame buffer. Use this if the game is very choppy.<br>
+        &#9899; Normal - 1 tick buffer. This is recommended for most players.<br>
+        &#9899; Aggressive - 2 tick buffer. Use this if the game feels somewhat choppy.<br>
+        &#9899; Very Aggressive - 3 tick buffer. Use this if the game is very choppy.<br>
+      </div>
+      
+      <div id='framerate' class='anc'></div>
+      <div class='hed'>Bad Framerates</div>
+      <div class='txt'>
+        If the framerate for the game is excessively bad, make absolutely sure that you have hardware acceleration turned on for your browser.<br>
+        If hardware acceleration is off the game will likely run at 1 or 2 fps. In chrome you can find that setting at:  &#39;chrome://settings/?search=hardware&#39;<br>
+        <br>
+        If the game still seems to be running poorly you may need to adjust the graphics settings in the game menu under &#39;settings&#39; and then &#39;graphics&#39;.<br>
+        Disabling bloom will usually improve performance drastically. You can also turn off shadows completely and lower the game render quality as well.<br>
+        If the games framerate is still consistently below 30, you can also try turning off the chat window in the game settings on the main menu.<br>
+        It also might be worth adjusting the &#39;Lag Compensation Mode&#39; setting as well. If your connection to the server is bad it will cause the game to run choppily.<br>
+        <br>
+        If none of this works it might be worth trying a different browser. Not all browsers implement the WebGL api the same way, and some handle it better than others.<br>
+        
       </div>
       
       <div id='customsound' class='anc'></div>
@@ -92,14 +109,7 @@
       <div class='txt'>
         If you encounter an error message that crashes/closes the game feel free to copy the info and email it to support@20xx.io<br>
       </div>
-      
-      <div id='framerate' class='anc'></div>
-      <div class='hed'>Bad Framerates</div>
-      <div class='txt'>
-        If the game appears to be running poorly you may need to adjust the graphics settings in the game menu under &#39;settings&#39; and then &#39;graphics&#39;.<br>
-        If that does work, then make sure that hardware acceleration is enabled in your browsers settings.<br>
-      </div>
-      
+            
       <div id='mobile' class='anc'></div>
       <div class='hed'>Mobile Support</div>
       <div class='txt'>

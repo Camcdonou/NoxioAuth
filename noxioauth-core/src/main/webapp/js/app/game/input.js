@@ -21,9 +21,9 @@ function Input(game) {
   document.addEventListener('touchmove', this.touchEvt, true);
   document.addEventListener('touchend', this.touchEvt, true);
   
-  this.mouse.input = this;    // Le sigh...
-  this.keyboard.input = this; // Hnnggg
-  this.touch.input = this; // Reeeeeeee
+  this.mouse.input = this;
+  this.keyboard.input = this;
+  this.touch.input = this; 
 };
 
 Input.prototype.mouse = {
@@ -75,15 +75,15 @@ Input.prototype.touch = {
 
 Input.prototype.touch.event = function(event) {
   /* Attempt to go fullscreen, for phones */
-  if(!this.input.window.fullscreen) {
-    if (this.input.window.requestFullscreen) {
-      this.input.window.requestFullscreen();
-    } else if (this.input.window.mozRequestFullScreen) { /* Firefox */
-      this.input.window.mozRequestFullScreen();
-    } else if (this.input.window.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-      this.input.window.webkitRequestFullscreen();
-    } else if (this.input.window.msRequestFullscreen) { /* IE/Edge */
-      this.input.window.msRequestFullscreen();
+  if(!(document.fullscreen || document.fullscreenElement)) {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else if (document.documentElement.mozRequestFullScreen) { /* Firefox */
+      document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+      document.documentElement.webkitRequestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) { /* IE/Edge */
+      document.documentElement.msRequestFullscreen();
     }
   }
   
@@ -120,15 +120,15 @@ Input.prototype.popInputs = function() {
 };
 
 Input.prototype.destroy = function() {
-  if(this.window.fullscreen) {
-    if (this.window.exitFullscreen) {
-      this.window.exitFullscreen();
-    } else if (this.window.mozCancelFullScreen) { /* Firefox */
-      this.window.mozCancelFullScreen();
-    } else if (this.window.webkitExitFullscreen) { /* Chrome, Safari and Opera */
-      this.window.webkitExitFullscreen();
-    } else if (this.window.msExitFullscreen) { /* IE/Edge */
-      this.window.msExitFullscreen();
+  if(document.fullscreen || document.fullscreenElement) {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) { /* Firefox */
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { /* IE/Edge */
+      document.msExitFullscreen();
     }
   }
   
