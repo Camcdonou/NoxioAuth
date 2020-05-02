@@ -1,5 +1,6 @@
 "use strict";
 /* global main */
+/* global util */
 
 /* Define Game UI Class */
 function GameUI(game) {
@@ -71,7 +72,8 @@ GameUI.prototype.hideKey = function() {
 
 /* Steps UI and returns true if imp input is absorbed by a UI element */
 /* Window is a Vec2 of the size, in pixels, of the game window for this draw */
-GameUI.prototype.step = function(tch, imp, state, window) {
+/* This step function is called *after* a frame is rendered during input handling. As such it is 1 frame behind generally */
+GameUI.prototype.inputStep = function(tch, imp, state, window) {
   /* Show or hide ui based on current flags */
   if(this.flags.main) {
     this.main.setVisible(this.sub === "main");
@@ -80,8 +82,6 @@ GameUI.prototype.step = function(tch, imp, state, window) {
     this.audio.setVisible(this.sub === "audio");
     this.control.setVisible(this.sub === "control");
     this.graphic.setVisible(this.sub === "graphic");
-    this.name.hide();
-    this.objective.hide();
     this.log.hide();
     this.credit.hide();
     this.meter.hide();
@@ -105,8 +105,6 @@ GameUI.prototype.step = function(tch, imp, state, window) {
     this.audio.hide();
     this.control.hide();
     this.graphic.hide();
-    this.name.setVisible(this.flags.name);
-    this.objective.setVisible(this.flags.objective);
     this.log.setVisible(this.flags.log&&!tch);
     this.credit.setVisible(this.flags.credit&&!tch);
     this.meter.setVisible(this.flags.meter&&!tch);
@@ -130,6 +128,34 @@ GameUI.prototype.step = function(tch, imp, state, window) {
     if(this.elements[i].step(imp, state, window)) { hit = true; }
   }
   return hit;
+};
+
+/* This step function is called before a frame draw. A such it only updates nameplates and objective markers. */
+GameUI.prototype.drawStep = function() {
+  if(this.flags.main) {
+    this.name.hide();
+    this.objective.hide();
+  }
+  else {
+    this.name.setVisible(this.flags.name);
+    this.objective.setVisible(this.flags.objective);
+  }
+  
+  /* Step ui and pass fake (blank) input */
+  for(var i=0;i<this.elements.length;i++) {
+    this.elements[i].step(
+      {
+        mouse: [],
+        keyboard: [],
+        touch: []
+      },
+      {
+        mouse: this.game.input.mouse,
+        keyboard: this.game.input.keyboard
+      },
+      util.vec2.make(this.game.display.window.width, this.game.display.window.height)
+    );
+  }
 };
 
 /* Displays tutorial if this.showTutorial is true */

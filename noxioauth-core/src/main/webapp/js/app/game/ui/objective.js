@@ -59,34 +59,34 @@ ObjectiveUI.prototype.generate = function() {
     if(obj.type() === "flg" && obj.onBase === 0 && !obj.hide) {
       var dist = util.vec2.distance(obj.pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
       var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
-      objectives.push({mat: flagMat, pos: util.vec2.toVec3(obj.pos, obj.height+1.0), team: obj.team, fade: fade, offset: 0});
+      objectives.push({mat: flagMat, pos: util.vec2.toVec3(obj.pos, obj.height+1.0), color: util.vec3.toVec4(obj.getColor(), 1.), fade: fade, offset: 0});
     }
     else if(obj.type() === "hil" && !obj.hide) {
       var dist = util.vec2.distance(obj.pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
       var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
-      objectives.push({mat: kingMat, pos: util.vec2.toVec3(obj.pos, obj.height+1.0), team: -1, fade: fade, offset: 0});
+      objectives.push({mat: kingMat, pos: util.vec2.toVec3(obj.pos, obj.height+1.0), color: util.vec3.toVec4(obj.getColor(), 1.), fade: fade, offset: 0});
     }
     else if(obj.type() === "zon" && !obj.hide) {
       var dist = util.vec2.distance(obj.pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
       var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
-      objectives.push({mat: zoneMat, pos: util.vec2.toVec3(obj.pos, obj.height+1.0), team: -1, fade: fade, offset: 0});
+      objectives.push({mat: zoneMat, pos: util.vec2.toVec3(obj.pos, obj.height+1.0), color: util.vec3.toVec4(obj.getColor(), 1.), fade: fade, offset: 0});
     }
-    else if(obj.type() === "bmb" && !obj.hide) {
-      if(!obj.armed) {
-        var dist = util.vec2.distance(obj.pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
-        var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
-        objectives.push({mat: bombMat, pos: util.vec2.toVec3(obj.pos, obj.height+1.0), team: -1, fade: fade, offset: 0});
-      }
-      else {
-        var dist = util.vec2.distance(obj.pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
-        var time = Math.ceil(obj.timer/30);
-        objectives.push({text: time + "", pos: util.vec2.toVec3(obj.pos, obj.height+1.0), team: -1, fade: 1, offset: 0});
-      }
-    }
+//    else if(obj.type() === "bmb" && !obj.hide) {
+//      if(!obj.armed) {
+//        var dist = util.vec2.distance(obj.pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
+//        var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
+//        objectives.push({mat: bombMat, pos: util.vec2.toVec3(obj.pos, obj.height+1.0), team: -1, fade: fade, offset: 0});
+//      }
+//      else {
+//        var dist = util.vec2.distance(obj.pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
+//        var time = Math.ceil(obj.timer/30);
+//        objectives.push({text: time + "", pos: util.vec2.toVec3(obj.pos, obj.height+1.0), team: -1, fade: 1, offset: 0});
+//      }
+//    }
     else if(obj.objective && !obj.hide) {
       var dist = util.vec2.distance(obj.pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
       var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
-      objectives.push({mat: ultMat, pos: util.vec2.toVec3(obj.pos, obj.height+1.0), team: -1, fade: fade, offset: 32});
+      objectives.push({mat: ultMat, pos: util.vec2.toVec3(obj.pos, obj.height+1.0), color: util.vec3.toVec4(obj.getColor(), 1.), fade: fade, offset: 32});
     }
   }
   
@@ -101,7 +101,7 @@ ObjectiveUI.prototype.generate = function() {
     var y = (Math.min(0.9, Math.max(0.1, ((screenCoord.y*0.5)+0.5))) * this.game.display.window.height) - (v) + objectives[i].offset;
     
     var bclr = util.vec4.copy(black); bclr.w *= objectives[i].fade;
-    var fclr = util.vec4.copy(objectives[i].team===-1?swhite:util.vec3.toVec4(util.kalide.getColorAuto(0, objectives[i].team), 1.)); fclr.w *= objectives[i].fade;
+    var fclr = objectives[i].color; fclr.w *= objectives[i].fade;
     if(objectives[i].mat) {
       container.add({
         neutral: {

@@ -282,7 +282,7 @@ NoxioGame.prototype.doInputMouse = function(imp) {
   var obj = this.getObject(this.control);
   
   /* Pass input to UI, if UI uses the input it will return true, in that case the input will not go through to the game */
-  var pass = this.ui.step(
+  var pass = this.ui.inputStep(
     false,
     imp,
     {
@@ -398,7 +398,7 @@ NoxioGame.prototype.doInputTouch = function(imp) {
   }
   
   /* Pass input to UI, if UI uses the input it will return true, in that case the input will not go through to the game */  
-  var pass = this.ui.step(
+  var pass = this.ui.inputStep(
     true,
     imp,
     {
@@ -549,6 +549,7 @@ NoxioGame.prototype.draw = function() {
                   /* DEBUG FPS START */
                   /* */ var start = util.time.now();
                   /* DEBUG FPS END */
+      this.ui.drawStep();                 // Update ui elements that track ingame objects (nameplates, objectives)
       this.display.draw();                // Draw game
       this.sound.update();                // Update 3d audio center            
                   /* DEBUG FPS START */

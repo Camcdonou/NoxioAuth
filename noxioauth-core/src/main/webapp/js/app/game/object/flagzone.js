@@ -29,16 +29,19 @@ FlagZoneObject.prototype.setPos = GameObject.prototype.setPos;
 FlagZoneObject.prototype.setVel = GameObject.prototype.setVel;
 FlagZoneObject.prototype.setHeight = GameObject.prototype.setHeight;
 
+FlagZoneObject.prototype.getColor = function() {
+  var colors = util.kalide.getColorsAuto(this.color, this.team);
+  if(colors.length > 1) {
+    var ind = Math.floor(this.game.frame/128)%(colors.length);
+    return util.vec3.lerp(colors[ind], colors[ind+1<colors.length?ind+1:0], (this.game.frame%128)/128);
+  }
+  return colors[0];
+};
+
 FlagZoneObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
   var exbounds = util.matrix.expandPolygon(bounds, this.cullRadius);
   if(util.intersection.pointPoly(this.pos, exbounds)) {
-    var colors, color;
-    colors = util.kalide.getColorsAuto(this.color, this.team);
-    if(colors.length > 1) {
-      var ind = Math.floor(this.game.frame/128)%(colors.length);
-      color = util.vec3.lerp(colors[ind], colors[ind+1<colors.length?ind+1:0], (this.game.frame%128)/128);
-    }
-    else { color = colors[0]; }
+    var color = this.getColor();
     
     var zoneUniformData = [
       {name: "transform", data: [this.pos.x, this.pos.y, 0]},

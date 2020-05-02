@@ -29,6 +29,10 @@ HillObject.prototype.setPos = GameObject.prototype.setPos;
 HillObject.prototype.setVel = GameObject.prototype.setVel;
 HillObject.prototype.setHeight = GameObject.prototype.setHeight;
 
+HillObject.prototype.getColor = function() {
+  return util.kalide.getColorsAuto(3, -1)[0];
+};
+
 HillObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
   var exbounds = util.matrix.expandPolygon(bounds, this.cullRadius);
   if(util.intersection.pointPoly(this.pos, exbounds)) {

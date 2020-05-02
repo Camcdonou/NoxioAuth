@@ -231,7 +231,7 @@ PlayerObject.prototype.setSpeed = function(speed) {
 };
 
 PlayerObject.prototype.getColor = function() {
-  var colors = this.objective?this.color = util.kalide.getColorsAuto(util.kalide.compressColors(2, 4, 5, 6, 8), this.team):util.kalide.getColorsAuto(this.color, this.team);
+  var colors = this.objective?util.kalide.getColorsAuto(util.kalide.compressColors(2, 4, 5, 6, 8), this.team):util.kalide.getColorsAuto(this.color, this.team);
   if(colors.length > 1) {
     var ind = Math.floor(this.game.frame/128)%(colors.length);
     return util.vec3.lerp(colors[ind], colors[ind+1<colors.length?ind+1:0], (this.game.frame%128)/128);
