@@ -142,8 +142,7 @@ GameUI.prototype.drawStep = function() {
   }
   
   /* Step ui and pass fake (blank) input */
-  for(var i=0;i<this.elements.length;i++) {
-    this.elements[i].step(
+  this.name.step(
       {
         mouse: [],
         keyboard: [],
@@ -151,11 +150,11 @@ GameUI.prototype.drawStep = function() {
       },
       {
         mouse: this.game.input.mouse,
-        keyboard: this.game.input.keyboard
+        keyboard: this.game.input.keyboard,
+        touch: []
       },
       util.vec2.make(this.game.display.window.width, this.game.display.window.height)
     );
-  }
 };
 
 /* Displays tutorial if this.showTutorial is true */
