@@ -12,8 +12,16 @@ function Input(game) {
   this.window.onmouseup = function(event) { main.game.input.mouse.event(event, false); event.preventDefault(); return false; };
   this.window.addEventListener("mousewheel", function(event) { main.game.input.mouse.wheel(event); event.preventDefault(); return false; }, false); // IE9, Chrome, Safari, Opera
   this.window.addEventListener("DOMMouseScroll", function(event) { main.game.input.mouse.wheel(event); event.preventDefault(); return false; }, false); // Firebox
-  document.onkeyup = function(event) { main.game.input.keyboard.event(event, false); event.preventDefault(); event.preventDefault(); return false; };
-  document.onkeydown = function(event) { main.game.input.keyboard.event(event, true); event.preventDefault(); event.preventDefault(); return false; };
+  document.onkeyup = function(event) {
+    main.game.input.keyboard.event(event, false);
+    if(event.keyCode !== 122) { event.preventDefault(); return false; } // Fullscreen man good
+    return true;
+  };
+  document.onkeydown = function(event) {
+    main.game.input.keyboard.event(event, true);
+    if(event.keyCode !== 122) { event.preventDefault(); return false; } // Fullscreen man good
+    return true;
+  };
   
   this.touchEvt = function(event) { main.game.input.touch.event(event); };
   

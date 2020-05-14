@@ -303,10 +303,12 @@ NoxioGame.prototype.doInputMouse = function(imp) {
   /* Global-Client Impulse Input */
   if(!this.inx27 && this.input.keyboard.keys[27]) { this.ui.menuKey(); } this.inx27 = this.input.keyboard.keys[27];    // Hardcoded Main Menu to ESC
   if(!this.inx145 && this.input.keyboard.keys[145]) { this.ui.hideKey(); } this.inx145 = this.input.keyboard.keys[145]; // Hardcoded Hide UI to ScrollLock
+  if(this.input.keyboard.keys[37]) { this.display.camera.addRot(util.vec3.make(0., 0., 0.0065));  }
+  else if(this.input.keyboard.keys[39]) { this.display.camera.addRot(util.vec3.make(0., 0., -0.0065));  }
   
   if(!pass) {
     /* Client Impulse Input */
-    this.display.camera.setZoom(this.input.mouse.spin*0.65);
+    this.display.camera.setZoom(Math.max(-1.75, Math.min(1.75, this.input.mouse.spin))*.65);
     
     /* Client State Input */
     this.ui.flags.score = !!this.input.keyboard.keys[main.settings.control.scoreboard];                                          //~

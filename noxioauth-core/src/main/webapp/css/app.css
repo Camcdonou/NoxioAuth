@@ -696,6 +696,22 @@ serv {
   background-color: rgba(255, 255, 255, 1.0);
 }
 
+.link-redi {
+  cursor: pointer;
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  background-image: url(../img/aes/reddit.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 28px 28px;
+}
+
+.link-redi:hover {
+  background-image: url(../img/aes/reddit-inv.png);
+  background-color: rgba(255, 255, 255, 1.0);
+}
+
 .link-patr {
   cursor: pointer;
   display: inline-block;

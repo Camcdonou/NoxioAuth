@@ -49,6 +49,7 @@ public class PaymentController {
         if(user == null) { throw new IOException("Account does not exist."); }
         final NoxioSession session = dao.getUserDao().getSessionByUser(user.name);
         if(session != null) { session.postPayment(); }
+        Oak.log(Oak.Type.TRANSACTION, Oak.Level.INFO, "Payment completed for uid: " + nt.uid);
         return new ResponseEntity(HttpStatus.OK);
       }
     }

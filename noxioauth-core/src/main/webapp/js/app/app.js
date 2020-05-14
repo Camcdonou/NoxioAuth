@@ -27,20 +27,29 @@ Main.prototype.setStats = function(stats) {
 };
 
 Main.prototype.startGame = function(name, settings, map) {
-  if(!this.inGame() && main.net.game.address) {
-    this.menu.connect.show("Downloading map file...", 0);
+  // Downloads map and starts game. Recursively retries if download fails @TODO: unknown bug causes download to fail rarely
+  var downloadAndStart = function(name, settings, address, port, map, attempt) {
+    if(attempt > 0) { main.menu.connect.show("Retrying..."); }
+    else { main.menu.connect.show("Downloading map file...", 0); }
+
     $.ajax({
-      url: "http://" + main.net.game.address + ":" + main.net.game.port + "/nxg/map/" + map,
+      url: "http://" + address + ":" + port + "/nxg/map/" + map,
       type: 'GET',
-      timeout: 10000,
+//      contentType: 'application/json',
+      timeout: 3000,
       success: function(data) {
         main.game = new NoxioGame(name, settings, data);
         main.menu.game.show();
       },
-      error: function() {
-        main.menu.error.showError("Map Error", "Server returned FNF(404) for map: " + map);
+      error: function(data) {
+        if(attempt > 2) { main.menu.error.showError("Map Error", "Failed to download map: " + map); console.log(data); /* @TODO: Remove this after fixing map download bug */ }
+        else { downloadAndStart(name, settings, address, port, map, attempt+1); }
       }
     });
+  };
+  
+  if(!this.inGame() && main.net.game.address) {
+    downloadAndStart(name, settings, main.net.game.address, main.net.game.port, map, 0);
   }
   else { this.menu.error.showError("State Error", "Attempted to start a game while a game was running."); this.close(); }
 };

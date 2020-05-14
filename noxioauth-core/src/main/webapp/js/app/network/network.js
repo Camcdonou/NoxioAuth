@@ -56,7 +56,7 @@ Network.prototype.connectGameAuto = function(servers) {
     $.ajax({
       url: "http://" + info.domain + ":" + info.port + "/nxg/info",
       type: 'GET',
-      timeout: 10000,
+      timeout: 3000,
       success: function(data) { results[ind] = data; results[ind].domain = servers[ind].domain; results[ind].ping = Date.now() - pingOut; },
       error: function() { results[ind] = undefined; }
     });
