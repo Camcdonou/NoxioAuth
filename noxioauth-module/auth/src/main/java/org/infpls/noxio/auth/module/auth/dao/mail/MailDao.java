@@ -21,7 +21,7 @@ public class MailDao {
   }
   
   /* Returns true if sent, false if not. */
-  public boolean send(final String to, final String subject, final String html, final String text) {
+  public boolean send(final String to, final String subject, final String text) {
     Authenticator authenticator = new Authenticator() {
         @Override
         protected PasswordAuthentication getPasswordAuthentication() {
@@ -37,7 +37,8 @@ public class MailDao {
       message.setSentDate(new Date());
       message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
       message.setSubject(subject);
-      message.setContent(mpMessage(text, html));
+      //message.setContent(mpMessage(text, html));
+      message.setText(text);
       message.addHeader("List-Unsubscribe","<https://20xx.io/nxc/unsubscribe>");
 
       Transport.send(message);

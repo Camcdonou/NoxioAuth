@@ -157,7 +157,7 @@ Display.prototype.createShader = function(source) {
 
   // If creating the shader program failed display error & return false
   if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-    main.menu.error.showErrorException("WebGL Error", "Unable to initialize the shader program: ", gl.getProgramInfoLog(shaderProgram));
+    main.menu.error.showErrorException("WebGL Error", "Unable to initialize the shader program: " + source.name, gl.getProgramInfoLog(shaderProgram));
     return false;
   }
   

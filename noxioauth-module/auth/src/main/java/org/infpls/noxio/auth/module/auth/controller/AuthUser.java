@@ -61,7 +61,7 @@ public class AuthUser {
         final String vc = ID.generate6();
         final String emcHTML = CREATE_EMAIL_CONTENT_HTML.replace("$$USER$$", user).replace("$$CODE$$", vc);
         final String emcTEXT = CREATE_EMAIL_CONTENT_TEXT.replace("$$USER$$", user).replace("$$CODE$$", vc);
-        if(dao.getMailDao().send(email, CREATE_EMAIL_SUBJECT, emcHTML, emcTEXT)) {         // Verification email has been sent successfully /* @TODO: blocking. */
+        if(dao.getMailDao().send(email, CREATE_EMAIL_SUBJECT, emcTEXT)) {         // Verification email has been sent successfully /* @TODO: blocking. */
           dao.getUserDao().createPending(user, hash, email, vc);
           return new ResponseEntity(HttpStatus.OK);
         }           
@@ -124,7 +124,7 @@ public class AuthUser {
         final String vc = ID.generate6();
         final String emcHTML = RESET_EMAIL_CONTENT_HTML.replace("$$USER$$", usr.name).replace("$$CODE$$", vc);
         final String emcTEXT = RESET_EMAIL_CONTENT_TEXT.replace("$$USER$$", usr.name).replace("$$CODE$$", vc);
-        if(dao.getMailDao().send(usr.email, RESET_EMAIL_SUBJECT, emcHTML, emcTEXT)) {
+        if(dao.getMailDao().send(usr.email, RESET_EMAIL_SUBJECT, emcTEXT)) {
           dao.getUserDao().createReset(user, email, vc);
           return new ResponseEntity(HttpStatus.OK);
         }
@@ -213,8 +213,7 @@ public class AuthUser {
   "</body>\n" +
   "</html>\n" +
   "";
-  private static final String CREATE_EMAIL_CONTENT_TEXT = "The Year Is 20XX . . .\n" +
-  "Thanks for joining 20XX.io. To finish creating your account copy the code below and enter it on the site.\n" +
+  private static final String CREATE_EMAIL_CONTENT_TEXT = "Thanks for joining 20XX.io. To finish creating your account copy the code below and enter it on the site.\n" +
   "\n" +
   "Your username is: $$USER$$\n" +
   "Copy this link to verify your account: https://www.20xx.io/nxc/auth/verify/$$USER$$/$$CODE$$" +
