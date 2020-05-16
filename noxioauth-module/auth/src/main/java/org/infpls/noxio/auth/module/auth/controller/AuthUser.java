@@ -216,8 +216,8 @@ public class AuthUser {
   private static final String CREATE_EMAIL_CONTENT_TEXT = "Thanks for joining 20XX.io. To finish creating your account copy the code below and enter it on the site.\n" +
   "\n" +
   "Your username is: $$USER$$\n" +
-  "Copy this link to verify your account: https://www.20xx.io/nxc/auth/verify/$$USER$$/$$CODE$$" +
-  "Now get out there and get destrudled!";
+  "Copy this link to verify your account: https://www.20xx.io/nxc/auth/verify/$$USER$$/$$CODE$$\n\n" +
+  "If this email showed up in spam please report it as 'not spam'. Thanks!";
 
   private static final String RESET_EMAIL_SUBJECT = "20xx.io Password Reset";
   private static final String RESET_EMAIL_CONTENT_HTML = "<html>\n" +
