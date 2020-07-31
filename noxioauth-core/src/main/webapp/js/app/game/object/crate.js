@@ -33,6 +33,7 @@ function PlayerCrate(game, oid, pos, team, color) {
 
 /* Constants */
 PlayerCrate.BLIP_POWER_MAX = 30;
+PlayerCrate.BLIP_REFUND_POWER = 5;
 PlayerCrate.DASH_COOLDOWN_LENGTH = 45;
 PlayerCrate.CHARGE_TIME_LENGTH = 20;
 PlayerCrate.FIRE_COLOR_A = util.vec4.make(1.0, 0.956, 0.490, 1.0);
@@ -48,6 +49,7 @@ PlayerCrate.prototype.effectSwitch = function(e) {
     case "atk" : { this.blip(); break; }
     case "mov" : { this.dash(); break; }
     case "chr" : { this.charge(); break; }
+    case "rfd" : { this.blipCooldown -= PlayerCrate.BLIP_REFUND_POWER; return true; } /* @TODO: inline to save time */
     default : { return PlayerObject.prototype.effectSwitch.call(this, e); }
   }
 };

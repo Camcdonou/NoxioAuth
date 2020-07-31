@@ -31,6 +31,7 @@ public class FileDao {
   
   @PostConstruct
   public void init() {
+    Settable.update(); // In some enviroments/java/tomcat/spring builds (unknown exact cause??) we can end up calling settable before it's ready
     final String path = Settable.getFilePath();
     final File fsDir = new File(path);
     if(fsDir.exists() && !fsDir.isDirectory()) { Oak.log(Oak.Type.SYSTEM, Oak.Level.ERR, "FileDao::init() - Filestore path is not a valid directory!"); }

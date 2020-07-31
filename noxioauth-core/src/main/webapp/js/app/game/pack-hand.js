@@ -2,7 +2,7 @@
 /* global main */
 /* global util */
 /* global Function */
-/* global PlayerBox, PlayerCrate, PlayerVoxel, PlayerQuad, PlayerBlock, PlayerInferno, PlayerCargo */
+/* global PlayerBox, PlayerCrate, PlayerVoxel, PlayerQuad, PlayerBlock, PlayerInferno, PlayerCargo, PlayerCube */
 
 /* Define Game Packet Handler Class */
 function PackHand(game) {
@@ -65,6 +65,7 @@ PackHand.prototype.createObject = function(data) {
     case "vox" : { objs.push(new (Function.prototype.bind.apply(PlayerVoxel.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
     case "blk" : { objs.push(new (Function.prototype.bind.apply(PlayerBlock.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
     case "crg" : { objs.push(new (Function.prototype.bind.apply(PlayerCargo.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "cub" : { objs.push(new (Function.prototype.bind.apply(PlayerCube.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
     case "inf" : { objs.push(new (Function.prototype.bind.apply(PlayerInferno.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
     /* Gameplay Object Classes :: These do not use permutation dictionaries */
     case "flg" : { this.game.objects.push(new FlagObject(this.game, oid, pos, permutation, team, color)); break; }

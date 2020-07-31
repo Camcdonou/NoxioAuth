@@ -150,7 +150,7 @@ Sound.prototype.getSound = function(path, gain, shift, type) {
   if(this.createSound(path)) { return this.getSound(path); }
   
   main.menu.warning.show("Failed to load sound: '" + path + "'");
-  return this.getSound("multi/default.wav");
+  return this.getSound("multi/default.wav", gain, shift, type);
 };
 
 /* Gets the sound at the path given. If it's not already loaded it loads it. If file not found returns default sound. */
@@ -173,7 +173,7 @@ Sound.prototype.getSpatialSound = function(path, gain, shift, type) {
   if(this.createSound(path)) { return this.getSpatialSound(path); }
   
   main.menu.warning.show("Failed to load sound: '" + path + "'");
-  return this.getSpatialSound("multi/default.wav");
+  return this.getSpatialSound("multi/default.wav", gain, shift, type);
 };
 
 /* Stop and unload all sounds */

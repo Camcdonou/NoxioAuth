@@ -4,16 +4,16 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="HandheldFriendly" content="true">
         <meta name="viewport" id="meta-zoom" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=0">
-        <link rel="icon" href="img/aes/icon.png?v=_1.1.1:479_">
-        <link rel="stylesheet" type="text/css" href="css/app.css?v=_1.1.1:479_">
-        <link rel="stylesheet" type="text/css" href="css/error.css?v=_1.1.1:479_">
-        <link rel="stylesheet" type="text/css" href="css/info.css?v=_1.1.1:479_">
-        <link rel="stylesheet" type="text/css" href="css/footer.css?v=_1.1.1:479_">
-        <link rel="stylesheet" type="text/css" href="css/setting.css?v=_1.1.1:479_">
-        <link rel="stylesheet" type="text/css" href="css/buy.css?v=_1.1.1:479_">
-        <link rel="stylesheet" type="text/css" href="css/admin.css?v=_1.1.1:479_">
-        <link rel="stylesheet" type="text/css" href="css/custom.css?v=_1.1.1:479_">
-        <link rel="stylesheet" type="text/css" href="css/gauss.css?v=_1.1.1:479_">
+        <link rel="icon" href="img/aes/icon.png?v=_1.1.2:520_">
+        <link rel="stylesheet" type="text/css" href="css/app.css?v=_1.1.2:520_">
+        <link rel="stylesheet" type="text/css" href="css/error.css?v=_1.1.2:520_">
+        <link rel="stylesheet" type="text/css" href="css/info.css?v=_1.1.2:520_">
+        <link rel="stylesheet" type="text/css" href="css/footer.css?v=_1.1.2:520_">
+        <link rel="stylesheet" type="text/css" href="css/setting.css?v=_1.1.2:520_">
+        <link rel="stylesheet" type="text/css" href="css/buy.css?v=_1.1.2:520_">
+        <link rel="stylesheet" type="text/css" href="css/admin.css?v=_1.1.2:520_">
+        <link rel="stylesheet" type="text/css" href="css/custom.css?v=_1.1.2:520_">
+        <link rel="stylesheet" type="text/css" href="css/gauss.css?v=_1.1.2:520_">
         <script>
           /* Prevent phones from zooming screen. The webapp handles this. */
           document.addEventListener('touchmove', function(event) {
@@ -47,6 +47,7 @@
         <!--<div class="footer-btn" id="footer-forget">Forgot Username</div> @TODO: -->
         <div class="footer-btn" id="footer-reset" onclick="main.menu.reset.showRequest()">Reset Password</div>
         <div class="footer-btn" id="footer-tos" onclick="window.open('./tos.html')">Terms & Privacy</div>
+        <div class="footer-btn" id="footer-rules" onclick="window.open('./patch.html')">Patch Notes</div>
         <div class="footer-btn" id="footer-rules" onclick="window.open('./rules.html')">Rules</div>
         <div class="footer-btn" id="footer-help" onclick="window.open('./help.html')">Help</div>
       </div>
@@ -502,6 +503,7 @@
       <script src="js/app/game/object/voxel.js"></script>
       <script src="js/app/game/object/block.js"></script>
       <script src="js/app/game/object/cargo.js"></script>
+      <script src="js/app/game/object/cube.js"></script>
       <script src="js/app/game/object/bomb.js"></script>
       <script src="js/app/game/object/flag.js"></script>
       <script src="js/app/game/object/hill.js"></script>
@@ -603,6 +605,8 @@
       <script src="js/app/game/effect/particle/cargo-punch-rainbow.js"></script>
       <script src="js/app/game/effect/particle/cargo-kick.js"></script>
       <script src="js/app/game/effect/particle/cargo-kick-rainbow.js"></script>
+      <script src="js/app/game/effect/particle/cube-charge.js"></script>
+      <script src="js/app/game/effect/particle/cube-detonate-blip.js"></script>
       <script src="js/app/game/effect/definitions.js"></script>
       
       <!-- Game Assets -->

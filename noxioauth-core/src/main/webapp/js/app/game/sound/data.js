@@ -17,13 +17,15 @@ function SoundData(context, path) {
 
 SoundData.prototype.onload = function(request, context) {
   var tmp = this; /* Anger... Rising... */
-  context.decodeAudioData(request.response, function(buffer) {
-    tmp.buffer = buffer;
-  }, tmp.onError);
-};
-
-SoundData.prototype.onError = function() {
-  
+  context.decodeAudioData(request.response,
+    function(buffer) {   // Success
+      tmp.buffer = buffer;
+    },
+    function() {  // Error
+      main.menu.warning.show("Failed to decode audio file: " + tmp.path);
+      tmp.buffer = main.game.sound.getSound("multi/default.wav", 1., 0., "ui").data.buffer; // @TODO: Hack! If audio fails to decode we go to default.wav's buffer
+    }
+  );
 };
 
 SoundData.prototype.ready = function() {
@@ -51,6 +53,5 @@ function CustomSoundData(context, path) {
 }
 
 CustomSoundData.prototype.onload = SoundData.prototype.onload;
-CustomSoundData.prototype.onError = SoundData.prototype.onError;
 CustomSoundData.prototype.ready = SoundData.prototype.ready;
 CustomSoundData.prototype.destroy = SoundData.prototype.destroy;

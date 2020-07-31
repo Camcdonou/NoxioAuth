@@ -31,8 +31,9 @@ function PlayerBox(game, oid, pos, team, color) {
 };
 
 /* Constants */
-PlayerBox.BLIP_POWER_MAX = 30;
-PlayerBox.DASH_POWER_ADD = 30;
+PlayerBox.BLIP_POWER_MAX = 35;
+PlayerBox.BLIP_REFUND_POWER = 5;
+PlayerBox.DASH_POWER_ADD = 35;
 PlayerBox.DASH_POWER_MAX = 60;
 PlayerBox.BLIP_COLOR_A = util.vec4.lerp(util.vec4.make(0.6666, 0.9058, 1.0, 1.0), util.vec4.make(1,1,1,1), 0.5);
 PlayerBox.BLIP_COLOR_B = util.vec4.make(0.4, 0.5450, 1.0, 1.0);
@@ -44,6 +45,7 @@ PlayerBox.prototype.effectSwitch = function(e) {
   switch(e) {
     case "atk" : { this.blip(); return true; }
     case "mov" : { this.dash(); return true; }
+    case "rfd" : { this.blipCooldown -= PlayerBox.BLIP_REFUND_POWER; return true; } /* @TODO: inline to save time */
     default : { return PlayerObject.prototype.effectSwitch.call(this, e); }
   }
 };

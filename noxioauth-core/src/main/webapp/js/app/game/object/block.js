@@ -32,7 +32,8 @@ function PlayerBlock(game, oid, pos, team, color) {
 };
 
 /* Constants */
-PlayerBlock.REST_SLEEP_LENGTH = 99;
+PlayerBlock.REST_SLEEP_LENGTH = 75;
+PlayerBlock.REST_REFUND_TIME = 30;
 PlayerBlock.POUND_COOLDOWN_LENGTH = 30;
 PlayerBlock.POUND_RADIUS = 0.45;
 PlayerBlock.POUND_OFFSET = 0.33;
@@ -52,6 +53,7 @@ PlayerBlock.prototype.effectSwitch = function(e) {
     case "pnd" : { this.poundDash(); break; }
     case "pnh" : { this.pound(); break; }
     case "slp" : { this.poundHit(); break; }
+    case "rfd" : { this.restCooldown -= PlayerBlock.REST_REFUND_TIME; return true; } /* @TODO: inline to save time */
     default : { return PlayerObject.prototype.effectSwitch.call(this, e); }
   }
 };
@@ -100,6 +102,7 @@ PlayerBlock.prototype.restHit = function() {
 
 PlayerBlock.prototype.wake = function() {
   this.effects.push(NxFx.block.wake.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  if(this.restEffect) { this.restEffect.destroy(); this.restEffect = undefined; }
 };
 
 PlayerBlock.prototype.poundChannel = function() {

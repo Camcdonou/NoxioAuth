@@ -36,12 +36,13 @@ function PlayerQuad(game, oid, pos, team, color) {
 };
 
 /* Constants */
-PlayerQuad.SLASH_COOLDOWN_LENGTH = 20;
+PlayerQuad.SLASH_COOLDOWN_LENGTH = 25;
 PlayerQuad.SLASH_COMBO_LENGTH = 3;
 PlayerQuad.SLASH_COMBO_DEGEN = 90;
+PlayerQuad.SLASH_REFUND_TIME = 5;
 PlayerQuad.COUNTER_COOLDOWN_LENGTH = 50;
 PlayerQuad.COUNTER_ACTIVE_LENGTH = 7;
-PlayerQuad.COUNTER_LAG_LENGTH = 35;
+PlayerQuad.COUNTER_LAG_LENGTH = 38;
 PlayerQuad.COLOR_A = util.vec4.make(1.0, 1.0, 1.0, 1.0);
 PlayerQuad.COLOR_B = util.vec4.make(0.55, 0.55, 1.0, 1.0);
 
@@ -81,6 +82,7 @@ PlayerQuad.prototype.effectSwitch = function(e) {
       case "cnt" : { this.counter(); break; }
       case "rip" : { this.riposte(); break; }
       case "rht" : { this.riposteHit(); break; }
+      case "rfd" : { this.slashCooldown -= PlayerQuad.SLASH_REFUND_TIME; return true; } /* @TODO: inline to save time */
     default : { return PlayerObject.prototype.effectSwitch.call(this, e); }
   }
 };

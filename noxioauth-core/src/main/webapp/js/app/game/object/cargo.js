@@ -40,9 +40,9 @@ function PlayerCargo(game, oid, pos, team, color) {
 
   /* Constants */
   PlayerCargo.PUNCH_COOLDOWN_LENGTH = 45;
-  PlayerCargo.PUNCH_CHARGE_LENGTH = 35;
+  PlayerCargo.PUNCH_CHARGE_LENGTH = 30;
   PlayerCargo.KICK_COOLDOWN_LENGTH = 60;
-  PlayerCargo.KICK_LENGTH = 7;
+  PlayerCargo.KICK_LENGTH = 5;
   PlayerCargo.KICK_RADIUS = 0.55;
   PlayerCargo.KICK_OFFSET = 0.05;
   PlayerCargo.PUNCH_HITBOX_SIZE = 0.65;

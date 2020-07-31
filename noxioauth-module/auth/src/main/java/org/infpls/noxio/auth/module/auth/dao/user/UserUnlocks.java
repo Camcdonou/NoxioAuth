@@ -10,7 +10,7 @@ import org.infpls.noxio.auth.module.auth.util.Oak;
 
 public class UserUnlocks { 
   public static enum Key {
-      CHAR_BOX, CHAR_CRATE, CHAR_VOXEL, CHAR_CARGO, CHAR_BLOCK, CHAR_QUAD, CHAR_INFERNO,
+      CHAR_BOX, CHAR_CRATE, CHAR_VOXEL, CHAR_CARGO, CHAR_BLOCK, CHAR_QUAD, CHAR_CUBE, CHAR_INFERNO,
       ALT_BOXVO, ALT_BOXRED, ALT_BOXRAINBOW, ALT_BOXGOLD, ALT_BOXDELTA, ALT_BOXHIT, ALT_BOXFOUR, ALT_BOXBLOOD, ALT_BOXLOOT,
       ALT_CRATEVO, ALT_CRATEORANGE, ALT_CRATERAINBOW, ALT_CRATEGOLD, ALT_CRATEDELTA, ALT_CRATEFIRE, ALT_CRATEBLACK, ALT_CRATELOOT,
       ALT_VOXVO, ALT_VOXGREEN, ALT_VOXRAINBOW, ALT_VOXGOLD, ALT_VOXDELTA, ALT_VOXBLACK, ALT_VOXLOOT,
@@ -31,6 +31,7 @@ public class UserUnlocks {
     new Unlock(Key.CHAR_BLOCK, "Block", "Time for a nap.", Type.CHARACTER, 500, User.Type.SPEC, false),
     new Unlock(Key.CHAR_CARGO, "Cargo", "Punch.", Type.CHARACTER, 500, User.Type.SPEC, false),
     new Unlock(Key.CHAR_QUAD, "Quad", "Geometric concepts with swords.", Type.CHARACTER, 500, User.Type.SPEC, false),
+    new Unlock(Key.CHAR_CUBE, "Cube", "Kaboom.", Type.CHARACTER, 5000, User.Type.SPEC, false),
     new Unlock(Key.CHAR_INFERNO, "Plus", "Unsubscribed.", Type.CHARACTER, 123456789, User.Type.ADMIN, false),
     
     new Unlock(Key.ALT_BOXVO, "Talking Box", "Descriptions describe things.", Type.ALTERNATE, 999999, User.Type.FULL, true),

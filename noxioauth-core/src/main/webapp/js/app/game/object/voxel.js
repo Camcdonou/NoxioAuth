@@ -34,6 +34,7 @@ function PlayerVoxel(game, oid, pos, team, color) {
 /* Constants */
 PlayerVoxel.FLASH_CHARGE_LENGTH = 7;
 PlayerVoxel.BLIP_POWER_MAX = 30;
+PlayerVoxel.BLIP_REFUND_POWER = 5;
 
 PlayerVoxel.prototype.update = function(data) {
   PlayerObject.prototype.update.call(this, data);
@@ -49,6 +50,7 @@ PlayerVoxel.prototype.effectSwitch = function(e) {
     case "fsh" : { this.recall(); break; }
     case "mrk" : { this.mark(); break; }
     case "nom" : { this.noMark(); break; }
+    case "rfd" : { this.blipCooldown -= PlayerVoxel.BLIP_REFUND_POWER; return true; } /* @TODO: inline to save time */
     default : { return PlayerObject.prototype.effectSwitch.call(this, e); }
   }
 };

@@ -184,18 +184,28 @@ public class NoxioSession {
   
   /* Error connection close */
   public void close(final String message) throws IOException {
-    Oak.log(Oak.Type.SESSION, Oak.Level.WARN, "Connection closed for user: '" + (loggedIn()?(isGuest()?"Guest":getUser()):"Not Logged In") + "' with message: " + message);
-    sendPacket(new PacketX00(message));
+    try {
+      Oak.log(Oak.Type.SESSION, Oak.Level.WARN, "Connection closed for user: '" + (loggedIn()?(isGuest()?"Guest":getUser()):"Not Logged In") + "' with message: " + message);
+      sendPacket(new PacketX00(message));
+    }
+    catch(Exception ex) {
+      Oak.log(Oak.Type.SESSION, Oak.Level.CRIT, "Sessionthread.close() threw exception to NoxioSession!", ex);
+    }
     webSocket.close(CloseStatus.NOT_ACCEPTABLE);
   }
   
   /* Exception connection close */
   public void close(final Exception ex) throws IOException {
-    Oak.log(Oak.Type.SESSION, Oak.Level.WARN, "Connection closed for user: '" + (loggedIn()?(isGuest()?"Guest":getUser()):"Not Logged In") + "' with Exception: ", ex);
-    StringWriter sw = new StringWriter();
-    PrintWriter pw = new PrintWriter(sw);
-    ex.printStackTrace(pw);
-    sendPacket(new PacketX01(ex.getMessage(), sw.toString()));
+    try {
+      Oak.log(Oak.Type.SESSION, Oak.Level.WARN, "Connection closed for user: '" + (loggedIn()?(isGuest()?"Guest":getUser()):"Not Logged In") + "' with Exception: ", ex);
+      StringWriter sw = new StringWriter();
+      PrintWriter pw = new PrintWriter(sw);
+      ex.printStackTrace(pw);
+      sendPacket(new PacketX01(ex.getMessage(), sw.toString()));
+    }
+    catch(Exception ex2) {
+      Oak.log(Oak.Type.SESSION, Oak.Level.CRIT, "Sessionthread.close() threw exception to NoxioSession!", ex2);
+    }
     webSocket.close(CloseStatus.NOT_ACCEPTABLE);
   }
   

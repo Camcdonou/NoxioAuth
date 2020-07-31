@@ -20,7 +20,7 @@ public class DaoContainer {
   public JdbcTemplate jdbc;
   @Autowired
   private FileDao fileDao;
-  
+
   private final UserDao userDao;
   private final MailDao mailDao;
   private final PaymentDao paymentDao;
