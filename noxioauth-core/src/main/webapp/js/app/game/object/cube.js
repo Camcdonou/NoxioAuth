@@ -35,9 +35,9 @@ function PlayerCube(game, oid, pos, team, color) {
 PlayerCube.BLIP_POWER_MAX = 30;
 PlayerCube.BLIP_REFUND_POWER = 5;
 PlayerCube.BLIP_POWER_MAX = 30;
-PlayerCube.BOMB_POWER_COST = 60;
-PlayerCube.BOMB_POWER_MAX = 120;
-PlayerCube.BOMB_FUSE_LENGTH = 50;
+PlayerCube.BOMB_POWER_COST = 50;
+PlayerCube.BOMB_POWER_MAX = 100;
+PlayerCube.BOMB_FUSE_LENGTH = 40;
 
 PlayerCube.prototype.update = function(data) {
   PlayerObject.prototype.update.call(this, data);
