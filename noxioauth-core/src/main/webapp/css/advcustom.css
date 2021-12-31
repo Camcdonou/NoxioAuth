@@ -1,0 +1,67 @@
+.adv-cstm-main {
+  font-family: Calibri, sans-serif;
+  color: white;
+  padding: 50px 0px 0px 12px;
+  background-color: rgba(0, 0, 0, 0.0);
+}
+
+.adv-cstm-btn {
+  display: inline-block;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 4px;
+  margin: 2px;
+  border: solid 1px white;
+}
+
+.adv-cstm-btn:hover {
+  background-color: rgba(255, 255, 255, 1.0);
+  color: rgba(0, 0, 0, 1.0);
+}
+
+.adv-cstm-input {
+  display: inline-block;
+  font-size: 16px;
+  padding: 2px;
+  padding-left: 4px;
+  margin-left: 2px;
+  border: solid 1px white;
+}
+
+.adv-cstm-input-field {
+  display: inline-block;
+  font-size: 14px;
+  background-color: rgba(255, 255, 255, 0.1);
+  width: 100px;
+  text-align: center;
+  color: white;
+  margin-left: 4px;
+}
+
+.adv-cstm-section {
+  margin: 2px;
+  border: solid 2px white;
+}
+
+.adv-cstm-section-head {
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: solid 1px white;
+  padding: 2px;
+
+  background-color: rgba(255, 255, 255, 1.0);
+  color: rgba(0, 0, 0, 1.0);
+}
+
+.adv-cstm-drop {
+  margin-left: 4px;
+  background-color: white;
+  color: black;
+}
+
+.adv-cstm-splt {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border-bottom: dashed 2px white;
+}

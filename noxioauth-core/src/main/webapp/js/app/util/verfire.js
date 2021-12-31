@@ -1,2 +1,2 @@
-/* _BUILD 524 */
-var _VER = function() { return "1.1.3:524"; };
+/* _BUILD 671 */
+var _VER = function() { return "2.0.0:671"; };

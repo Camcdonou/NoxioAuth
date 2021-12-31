@@ -19,6 +19,8 @@ PlayerBlockRainbow.prototype.ui = PlayerBlock.prototype.ui;
 
 PlayerBlockRainbow.prototype.air  = PlayerBlock.prototype.air;
 PlayerBlockRainbow.prototype.jump = PlayerBlock.prototype.jump;
+PlayerBlockRainbow.prototype.recover = PlayerObject.prototype.recover;
+PlayerBlockRainbow.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerBlockRainbow.prototype.land = PlayerBlock.prototype.land;
 PlayerBlockRainbow.prototype.toss = PlayerObject.prototype.toss;
 PlayerBlockRainbow.prototype.pickup = PlayerObject.prototype.pickup;

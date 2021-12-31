@@ -29,6 +29,8 @@ PlayerBoxDelta.prototype.ui = PlayerBox.prototype.ui;
 
 PlayerBoxDelta.prototype.air  = PlayerBox.prototype.air;
 PlayerBoxDelta.prototype.jump = PlayerBox.prototype.jump;
+PlayerBoxDelta.prototype.recover = PlayerObject.prototype.recover;
+PlayerBoxDelta.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerBoxDelta.prototype.land = PlayerBox.prototype.land;
 PlayerBoxDelta.prototype.toss = PlayerObject.prototype.toss;
 PlayerBoxDelta.prototype.pickup = PlayerObject.prototype.pickup;

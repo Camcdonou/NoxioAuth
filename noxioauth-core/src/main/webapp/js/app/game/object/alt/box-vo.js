@@ -29,6 +29,8 @@ PlayerBoxVoice.prototype.ui = PlayerBox.prototype.ui;
 
 PlayerBoxVoice.prototype.air  = PlayerBox.prototype.air;
 PlayerBoxVoice.prototype.jump = PlayerBox.prototype.jump;
+PlayerBoxVoice.prototype.recover = PlayerObject.prototype.recover;
+PlayerBoxVoice.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerBoxVoice.prototype.land = PlayerBox.prototype.land;
 PlayerBoxVoice.prototype.toss = PlayerObject.prototype.toss;
 PlayerBoxVoice.prototype.pickup = PlayerObject.prototype.pickup;

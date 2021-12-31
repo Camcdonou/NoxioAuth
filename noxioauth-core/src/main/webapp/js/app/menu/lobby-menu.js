@@ -53,8 +53,20 @@ function LobbyMenu() {
       element: document.getElementById("lobby-custom"),
       hide: hide,
       show: show,
-      onEnter: function() { main.menu.custom.show(); },
-      items: []
+      onEnter: function() { },
+      items: [
+        document.getElementById("lobby-custom-1"),
+        document.getElementById("lobby-custom-2")]
+    },
+    private: {
+      element: document.getElementById("lobby-private"),
+      hide: hide,
+      show: show,
+      onEnter: function() { tmp.privateJoin(); },
+      items: [
+        document.getElementById("lobby-private-pass"),
+        document.getElementById("lobby-private-enter")
+      ]
     },
     leave: {
       element: document.getElementById("lobby-leave"),
@@ -64,6 +76,11 @@ function LobbyMenu() {
       items: []
     }
   };
+};
+
+LobbyMenu.prototype.privateJoin = function() {
+  var lobnam = document.getElementById("lobby-private-pass-inp").value;
+  main.net.game.state.joinLobbyByName(lobnam);
 };
 
 /* Resizes main center container to fit double menu thing */
@@ -97,6 +114,7 @@ LobbyMenu.prototype.hide = function() {
 /* Hides all sub menus in this menu */
 LobbyMenu.prototype.hideAll = function() {
   this.items.custom.hide();
+  this.items.private.hide();
   this.items.leave.hide();
 };
 

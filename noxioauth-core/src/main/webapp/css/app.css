@@ -712,6 +712,22 @@ serv {
   background-color: rgba(255, 255, 255, 1.0);
 }
 
+.link-disc {
+  cursor: pointer;
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  background-image: url(../img/aes/discord.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 28px 28px;
+}
+
+.link-disc:hover {
+  background-image: url(../img/aes/discord-inv.png);
+  background-color: rgba(255, 255, 255, 1.0);
+}
+
 .link-patr {
   cursor: pointer;
   display: inline-block;

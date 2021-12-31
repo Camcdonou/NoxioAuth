@@ -2,6 +2,8 @@ package org.infpls.noxio.auth.module.auth.dao.file;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import org.infpls.noxio.auth.module.auth.util.ID;
 import org.infpls.noxio.auth.module.auth.util.Oak;
@@ -18,7 +20,8 @@ public class FileDao {
   private ResourceLoader resourceLoader;
   
   public static enum Type {
-    SOUND("/sound", ".wav");
+    SOUND("/sound", ".wav"),
+    MAP("/map", ".map");
     
     public final String path, ext;
     Type(String path, String ext) {
@@ -46,6 +49,10 @@ public class FileDao {
   
   public String putFile(Type t, MultipartFile f) {
     final String filename = ID.generate16();
+    return putFile(t, f, filename);
+  }
+  
+  public String putFile(Type t, MultipartFile f, String filename) {
     try {
       final File file = new File(Settable.getFilePath() + t.path + "/" + filename + t.ext);
       if(file.exists()) { throw new IOException("File unexpectedly exists. Abort!"); }
@@ -60,7 +67,7 @@ public class FileDao {
   }
   
   public boolean deleteFile(Type t, String fn) {
-    final File file = new File(Settable.getFilePath() + t.path + fn + t.ext);
+    final File file = new File(Settable.getFilePath() + t.path + "/" + fn + t.ext);
     if(!file.exists()) { return true; }
     return file.delete();
   }
@@ -68,5 +75,16 @@ public class FileDao {
   public Resource getFile(Type t, String fn) {
     Resource rsc = resourceLoader.getResource("file:" + Settable.getFilePath() + t.path + "/" + fn + t.ext);
     return rsc.exists() ? rsc : null;
+  }
+  
+  public List<Resource> getFiles(Type t) {
+    File f = new File(Settable.getFilePath() + t.path);
+    File[] files = f.listFiles();
+    List<Resource> rscs = new ArrayList();
+    for(int i=0;i<files.length;i++) {
+      Resource rsc = resourceLoader.getResource("file:" + files[i]);
+      rscs.add(rsc);
+    }
+    return rscs;
   }
 }

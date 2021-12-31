@@ -70,6 +70,8 @@ PlayerBlock.prototype.ui = function() {
 
 PlayerBlock.prototype.air  = PlayerObject.prototype.air;
 PlayerBlock.prototype.jump = PlayerObject.prototype.jump;
+PlayerBlock.prototype.recover = PlayerObject.prototype.recover;
+PlayerBlock.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerBlock.prototype.land = PlayerObject.prototype.land;
 
 PlayerBlock.prototype.stun = function() {

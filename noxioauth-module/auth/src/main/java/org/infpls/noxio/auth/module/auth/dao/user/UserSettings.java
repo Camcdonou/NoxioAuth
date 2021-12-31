@@ -18,7 +18,7 @@ public class UserSettings {
   public UserSettings(final String uid) {
     this.uid = uid;
     volume = new Volume(.9f, .5f, .75f, .75f, .75f, .75f);
-    graphics = new Graphics(1f, 1f, 1f, 2048, false, true);
+    graphics = new Graphics(1f, 1f, 1f, 2048, false, false);
     control = new Control(false, 70, 68, 32, 84, 83, 81);
     game = new Game(0, 0, 0, null, null, false, null, 1);
     toggle = new Toggle(false, false, false, false, false);

@@ -23,6 +23,8 @@ PlayerVoxelRainbow.prototype.ui = PlayerVoxel.prototype.ui;
 
 PlayerVoxelRainbow.prototype.air  = PlayerVoxel.prototype.air;
 PlayerVoxelRainbow.prototype.jump = PlayerVoxel.prototype.jump;
+PlayerVoxelRainbow.prototype.recover = PlayerObject.prototype.recover;
+PlayerVoxelRainbow.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerVoxelRainbow.prototype.land = PlayerVoxel.prototype.land;
 PlayerVoxelRainbow.prototype.toss = PlayerObject.prototype.toss;
 PlayerVoxelRainbow.prototype.pickup = PlayerObject.prototype.pickup;

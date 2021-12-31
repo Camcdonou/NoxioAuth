@@ -28,6 +28,9 @@ PlayerQuadVoice.prototype.jump = function() {
   this.effects.push(NxFx.quad.alt.voice.jump.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
+PlayerQuadVoice.prototype.recover = PlayerObject.prototype.recover;
+PlayerQuadVoice.prototype.recoverJump = PlayerObject.prototype.recoverJump;
+
 PlayerQuadVoice.prototype.land = PlayerQuad.prototype.land;
 PlayerQuadVoice.prototype.toss = PlayerObject.prototype.toss;
 PlayerQuadVoice.prototype.pickup = PlayerObject.prototype.pickup;

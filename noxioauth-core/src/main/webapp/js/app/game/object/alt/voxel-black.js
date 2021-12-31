@@ -23,6 +23,8 @@ PlayerVoxelBlack.prototype.ui = PlayerVoxel.prototype.ui;
 
 PlayerVoxelBlack.prototype.air  = PlayerVoxel.prototype.air;
 PlayerVoxelBlack.prototype.jump = PlayerVoxel.prototype.jump;
+PlayerVoxelBlack.prototype.recover = PlayerObject.prototype.recover;
+PlayerVoxelBlack.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerVoxelBlack.prototype.land = PlayerVoxel.prototype.land;
 PlayerVoxelBlack.prototype.toss = PlayerObject.prototype.toss;
 PlayerVoxelBlack.prototype.pickup = PlayerObject.prototype.pickup;

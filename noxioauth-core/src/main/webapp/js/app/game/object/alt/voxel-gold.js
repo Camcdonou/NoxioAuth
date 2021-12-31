@@ -24,6 +24,8 @@ PlayerVoxelGold.prototype.ui = PlayerVoxel.prototype.ui;
 
 PlayerVoxelGold.prototype.air  = PlayerVoxel.prototype.air;
 PlayerVoxelGold.prototype.jump = PlayerVoxel.prototype.jump;
+PlayerVoxelGold.prototype.recover = PlayerObject.prototype.recover;
+PlayerVoxelGold.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerVoxelGold.prototype.land = PlayerVoxel.prototype.land;
 PlayerVoxelGold.prototype.toss = PlayerObject.prototype.toss;
 PlayerVoxelGold.prototype.pickup = PlayerObject.prototype.pickup;

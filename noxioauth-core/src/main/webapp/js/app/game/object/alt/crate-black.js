@@ -28,6 +28,8 @@ PlayerCrateBlack.prototype.ui = PlayerCrate.prototype.ui;
 
 PlayerCrateBlack.prototype.air  = PlayerCrate.prototype.air;
 PlayerCrateBlack.prototype.jump = PlayerCrate.prototype.jump;
+PlayerCrateBlack.prototype.recover = PlayerObject.prototype.recover;
+PlayerCrateBlack.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerCrateBlack.prototype.land = PlayerCrate.prototype.land;
 PlayerCrateBlack.prototype.toss = PlayerObject.prototype.toss;
 PlayerCrateBlack.prototype.pickup = PlayerObject.prototype.pickup;

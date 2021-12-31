@@ -20,6 +20,8 @@ PlayerBlockGold.prototype.ui = PlayerBlock.prototype.ui;
 
 PlayerBlockGold.prototype.air  = PlayerBlock.prototype.air;
 PlayerBlockGold.prototype.jump = PlayerBlock.prototype.jump;
+PlayerBlockGold.prototype.recover = PlayerObject.prototype.recover;
+PlayerBlockGold.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerBlockGold.prototype.land = PlayerBlock.prototype.land;
 PlayerBlockGold.prototype.toss = PlayerObject.prototype.toss;
 PlayerBlockGold.prototype.pickup = PlayerObject.prototype.pickup;

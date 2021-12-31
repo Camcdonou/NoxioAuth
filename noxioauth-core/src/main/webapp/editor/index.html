@@ -1,0 +1,185 @@
+<html>
+    <head>
+        <title>Noxio Map Editor</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <link rel="stylesheet" type="text/css" href="css/app.css">
+    </head>
+    
+    <body ondragstart="return false;" ondrop="return false;">
+      <!-- Loading -->
+      <div id="load" class="unselectable">
+        <b>Hold on one sec fam...</b>
+      </div>
+      
+      <!-- File -->
+      <div id="file" style="display:none">
+        <b>Open Map File...</b>
+        <div><input type="file" id="file-input"/></div>
+        <div class="file-error" id="file-error">...</div>
+
+		<br><br><br><br>
+
+		<p>Download for stock maps, these are maps I made and should be good examples of how to build a map: <a href='./maps.zip'>DOWNLOAD</a><br>
+		Download for blank templates. These are blank maps which I use as my starting point for most maps: <a href='./templates.zip'>DOWNLOAD</a></p>
+		<br>
+		<p>This map editor is what I used to make maps for the game. It's not perfect and may have issues.<br>The maps are plain text and can be hand edited if needed. <i>(I have to do that occasionally haha)</i></p>
+		<br>
+		<p>Additionally, if you would like to add new textures, materials, models, or glsl shaders to use in a map you will have to contact me directly.<br>Twitter and Discord are fine. Compiling in new stuff takes a bit of effort though so please have all your assets prepared thoroughly.<br>I'm not going to make a production build just to add a meme jpeg.</p>
+      </div>
+      
+      <!-- Game -->
+      <div id="editor" class="unselectable" style="display:none">
+        <div id="panel-top" class="panel-top" oncontextmenu="return false">
+          <span class="toolbar-button-top" onclick="main.menu.editor.file.show()">File</span>
+          <span class="toolbar-button-top" onclick="main.menu.editor.properties.show()">Map Properties</span>
+          <span class="toolbar-button-top" onclick="main.menu.editor.tiles.show()">Edit Tiles</span>
+          <span class="toolbar-button-top" onclick="main.menu.editor.collision.show()">Edit Collision</span>
+          <span class="toolbar-button-top" onclick="main.menu.editor.doodad.show()">Edit Doodads</span>
+          <span class="toolbar-button-top" onclick="main.menu.editor.spawn.show()">Edit Spawns</span>
+          <span class="toolbar-button-top" onclick="main.menu.editor.palletetile.show()">Tile Pallete</span>
+          <span class="toolbar-button-top" onclick="main.menu.editor.palletedoodad.show()">Doodad Pallete</span>
+          <span class="toolbar-button-top">Resize Map</span>
+          <span class="toolbar-button-top" onclick="main.menu.editor.options.show()">Options</span>
+          <span class="toolbar-button-top" onclick="main.menu.editor.about.show()">About</span>
+        </div>
+        <div id="panel-left" class="panel-left" oncontextmenu="return false">
+          <div id="tool-file">
+            <div class="tool-button" onclick="main.menu.editor.file.save()">Save</div>
+            <div class="tool-button" onclick="main.menu.editor.file.reload()">Reload Editor</div>
+          </div>
+          <div id="tool-properties">
+            <div class="tool-header">Map Properties [RAW]</div>
+            <textarea class="tool-block" id="tool-properties-block"></textarea>
+            <div class="tool-button" onclick="main.menu.editor.properties.update()">Apply</div>
+          </div>
+          <div id="tool-tiles">...</div>
+          <div id="tool-collision">
+          <div class="tool-header">Collision</div>
+            <input id="tool-collision-floor-edit" onchange="main.menu.editor.collision.update()" type="radio" name="collision" value=0> Floor <svg height="16" width="16" style="float: right; margin-right: 16px"> <circle cx="8" cy="8" r="7" stroke="black" stroke-width="3" fill="blue" /></svg><input type="checkbox" id="tool-collision-floor-visible" onchange="main.menu.editor.collision.update()" style="float: right; margin-right: 16px"><br>
+            <input id="tool-collision-wall-edit"  onchange="main.menu.editor.collision.update()" type="radio" name="collision" value=1> Wall  <svg height="16" width="16" style="float: right; margin-right: 16px"> <circle cx="8" cy="8" r="7" stroke="black" stroke-width="3" fill="yellow" /></svg><input type="checkbox" id="tool-collision-wall-visible" onchange="main.menu.editor.collision.update()"  style="float: right; margin-right: 16px"><br>
+          </div>
+          <div id="tool-doodad">
+            <div class='tool-header' id="tool-doodad-nam">Selected: </div>
+            <div><span style='float: left'>Index</span> <span><input type="text" id="tool-doodad-ind" class="unstyle-inp" onchange="main.menu.editor.doodad.update()" style='float: right; width: 100px'/></span></div><br/>
+            <div><span style='float: left'>Position</span> <span><input type="text" id="tool-doodad-pos" class="unstyle-inp" onchange="main.menu.editor.doodad.update()" style='float: right; width: 100px'/></span></div><br/>
+            <div><span style='float: left'>Rotation</span> <span><input type="text" id="tool-doodad-rot" class="unstyle-inp" onchange="main.menu.editor.doodad.update()" style='float: right; width: 100px'/></span></div><br/>
+            <div><span style='float: left'>Scale</span> <span><input type="text" id="tool-doodad-scale" class="unstyle-inp" onchange="main.menu.editor.doodad.update()" style='float: right; width: 100px'/></span></div><br/>
+            <div class="tool-button" style="margin-top: 3px;" onclick="main.menu.editor.doodad.update()">Apply</div>
+            <div id="tool-doodad-block"></div>
+          </div>
+          <div id="tool-spawn">
+            <div class='tool-header' id="tool-spawn-name">Selected: </div>
+            <div><span style='float: left'>Type</span> <span><input type="text" id="tool-spawn-type" class="unstyle-inp" onchange="main.menu.editor.spawn.update()" style='float: right; width: 100px'/></span></div><br/>
+            <div><span style='float: left'>Team</span> <span><input type="text" id="tool-spawn-team" class="unstyle-inp" onchange="main.menu.editor.spawn.update()" style='float: right; width: 100px'/></span></div><br/>
+            <div><span style='float: left'>Position</span> <span><input type="text" id="tool-spawn-pos" class="unstyle-inp" onchange="main.menu.editor.spawn.update()" style='float: right; width: 100px'/></span></div><br/>
+            <textarea class="tool-block short" id="tool-spawn-block"></textarea>
+            <div class="tool-button" onclick="main.menu.editor.spawn.update()">Apply</div>
+          </div>
+          <div id="tool-pallete-tile">
+            <div class="tool-header">Tile Pallete [RAW]</div>
+            <textarea class="tool-block tall" id="tool-pallete-tile-block"></textarea>
+            <div class="tool-button" onclick="main.menu.editor.palletetile.update()">Apply</div>
+          </div>
+          <div id="tool-pallete-doodad">
+            <div class="tool-header">Doodad Pallete [RAW]</div>
+            <textarea class="tool-block tall" id="tool-pallete-doodad-block"></textarea>
+            <div class="tool-button" onclick="main.menu.editor.palletedoodad.update()">Apply</div>
+          </div>
+          <div id="tool-options">
+            <div class="tool-header">Grid Snap</div>
+            <input type="text" id="tool-options-snap" class="unstyle-inp" onchange="main.menu.editor.options.update()"/>
+          </div>
+          <div id="tool-about">
+            <div class="tool-header">About</div>
+            Main Hotkeys <br/>
+            g - Toggle Grid <br/>
+            c - Draw Collision <br/>
+            d - Draw Doodads <br/>
+            s - Draw Spawns <br/>
+            r - Rotate<br/>
+            <br/>
+            Collision Hotkeys <br/>
+            rmb - Select Point <br/>
+            lmb - Move Point <br/>
+            ctrl+rmb - Create Collision <br/>
+            ctrl+lmb - Add Point <br/>
+            del - Delete Point <br/>
+            ctrl+del - Delete Collision <br/>
+            <br/>
+            Doodad Hotkeys <br/>
+            rmb - Select Doodad <br/>
+            lmb - Move Doodad <br/>
+            ctrl+rmb - Create Doodad <br/>
+            ctrl+lmb - Rotate Doodad <br/>
+            del - Delete Doodad <br/>
+            pgup/pgdwn - Raise / Lower<br/>
+            <br/>
+            Spawn Hotkeys <br/>
+            rmb - Select Spawn <br/>
+            lmb - Move Spawn <br/>
+            ctrl+rmb - Create Spawn <br/>
+            ctrl+lmb - Rotate Spawn <br/>
+            del - Delete Spawn <br/>
+          </div>
+        </div>
+        <div id="canvas-container" class="editor-window unselectable" oncontextmenu="return false">
+          <canvas id="canvas" width="320" height="240">
+            Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.
+          </canvas>
+        </div>
+      </div>
+      
+      <!-- Libs -->
+      <script src="js/lib/jquery/jquery-3.1.1.min.js"></script>
+      <script src="js/lib/glmatrix/gl-matrix.js"></script>
+      <script src="js/lib/GLU/GLU.js"></script> <!-- @FIXME TEMP -->
+      
+      <!-- Util -->
+      <script src="js/app/util/util.js"></script>
+       
+      <!-- UI Frontend -->
+      <script src="js/app/editor/menu/menu.js"></script>
+      <script src="js/app/editor/menu/menu-file.js"></script>
+      <script src="js/app/editor/menu/menu-editor.js"></script>
+      <script src="js/app/editor/menu/tool-file.js"></script>
+      <script src="js/app/editor/menu/tool-properties.js"></script>
+      <script src="js/app/editor/menu/tool-tiles.js"></script>
+      <script src="js/app/editor/menu/tool-collision.js"></script>
+      <script src="js/app/editor/menu/tool-doodad.js"></script>
+      <script src="js/app/editor/menu/tool-spawn.js"></script>
+      <script src="js/app/editor/menu/tool-pallete-tile.js"></script>
+      <script src="js/app/editor/menu/tool-pallete-doodad.js"></script>
+      <script src="js/app/editor/menu/tool-options.js"></script>
+      <script src="js/app/editor/menu/tool-about.js"></script>
+      
+      <!-- IO -->
+      <script src="js/app/editor/file.js"></script>
+      
+      <!-- Editor -->
+      <script src="js/app/editor/editor.js"></script>
+      <script src="js/app/editor/map.js"></script>
+      <script src="js/app/editor/display.js"></script>
+      <script src="js/app/editor/display/camera.js"></script>
+      <script src="js/app/editor/display/light.js"></script>
+      <script src="js/app/editor/display/texture.js"></script>
+      <script src="js/app/editor/display/shader.js"></script>
+      <script src="js/app/editor/display/material.js"></script>
+      <script src="js/app/editor/display/model.js"></script>
+      <script src="js/app/editor/display/font.js"></script>
+      <script src="js/app/editor/display/line.js"></script>
+      <script src="js/app/editor/display/grid.js"></script>
+      <script src="js/app/editor/input.js"></script>
+    
+      <!-- Game Objects -->
+      
+      <!-- Game Assets -->
+      <script src="js/app/editor/asset/asset.js"></script>
+      <script src="js/app/editor/asset/shader.js"></script>
+      <script src="js/app/editor/asset/material.js"></script>
+      <script src="js/app/editor/asset/model.js"></script>
+      
+      <!-- Main Exec -->
+      <script src="js/app/app.js"></script>
+    </body>        
+</html>

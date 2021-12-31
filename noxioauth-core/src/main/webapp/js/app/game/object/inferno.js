@@ -30,6 +30,8 @@ function PlayerInferno(game, oid, pos, team, color) {
   ];
 };
 
+PlayerInferno.GROWTH_RATE = 1.05;
+
 PlayerInferno.prototype.update = PlayerObject.prototype.update;
 PlayerInferno.prototype.parseUpd = PlayerObject.prototype.parseUpd;
 
@@ -37,6 +39,8 @@ PlayerInferno.prototype.effectSwitch = function(e) {
   switch(e) {
     case "atk" : { return true; }
     case "mov" : { return true; }
+    case "scr" : { this.specialCrit(); return true; }
+    case "gro" : { this.grow(); return true; }
     default : { return PlayerObject.prototype.effectSwitch.call(this, e); }
   }
 };
@@ -53,12 +57,24 @@ PlayerInferno.prototype.ouch = function() {
   this.genCooldown = this.GEN_COOLDOWN_LENGTH;
 };
 
+PlayerInferno.prototype.specialCrit = function() {
+  var crt = NxFx.hit.critical.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed));
+  this.game.putEffect(crt);
+};
+
+PlayerInferno.prototype.grow = function() {
+  this.radius *= PlayerInferno.GROWTH_RATE;
+  this.cullRadius *= PlayerInferno.GROWTH_RATE;
+  this.scale *= PlayerInferno.GROWTH_RATE;
+};
+
 PlayerInferno.prototype.taunt = function() {
   this.effects.push(NxFx.inferno.taunt.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
 PlayerInferno.prototype.air  = PlayerObject.prototype.air;
-
+PlayerInferno.prototype.recover = PlayerObject.prototype.recover;
+PlayerInferno.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerInferno.prototype.jump = function() {
   PlayerObject.prototype.jump.call(this);
   this.effects.push(NxFx.inferno.jump.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));

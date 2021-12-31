@@ -20,6 +20,8 @@ PlayerBlockRound.prototype.ui = PlayerBlock.prototype.ui;
 
 PlayerBlockRound.prototype.air  = PlayerBlock.prototype.air;
 PlayerBlockRound.prototype.jump = PlayerBlock.prototype.jump;
+PlayerBlockRound.prototype.recover = PlayerObject.prototype.recover;
+PlayerBlockRound.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerBlockRound.prototype.land = PlayerBlock.prototype.land;
 PlayerBlockRound.prototype.toss = PlayerObject.prototype.toss;
 PlayerBlockRound.prototype.pickup = PlayerObject.prototype.pickup;

@@ -47,7 +47,7 @@ function NoxioGame(name, settings, map) {
   this.charSelect = "box";            // ID of character the player wants to play as.
   this.chatMsgOut = [];               // Chat messages to send to server on next doInput()
   this.touchMode = false;             // Flagged true if we are using touch screen based controls
-  this.lastDir = {x: 0.0, y: 1.0};    // Last valid move direction sent to server
+  this.lastTo = {x: 0.0, y: 1.0};    // Last valid move direction sent to server
   
   this.thumb = {id: undefined, origin: undefined, offset: undefined}; // Touch control thumbstick values
   this.tchAction = [];                                                // Hacky fix for touch controls
@@ -324,15 +324,14 @@ NoxioGame.prototype.doInputMouse = function(imp) {
       var result = util.intersection.linePlane({a: near, b: far}, floorPlane);
 
       if(result) { // Missed the floor plane.
-        var dir = util.vec2.subtract(result.intersection, obj.pos);
-        var mag = util.vec2.magnitude(dir);
-        var norm = util.vec2.normalize(dir);
+        /* EXPERIMENTAL CHANGE */
+        var to = result.intersection;
 
-        this.lastDir = norm;
-        if(this.input.mouse.rmb) { inputs.push("04;"+norm.x+","+norm.y+";"+Math.min(Math.max(mag/1.75, 0.33), 1.0)); }
-        else { inputs.push("01;"+norm.x+","+norm.y); }
+        this.lastTo = to;
+        if(this.input.mouse.rmb) { inputs.push("04;"+to.x+","+to.y); }
+        else { inputs.push("01;"+to.x+","+to.y); }
       }
-      else { inputs.push("01;"+this.lastDir.x+","+this.lastDir.y); }
+      else { inputs.push("01;"+this.lastTo.x+","+this.lastTo.y); }
       
       if(this.input.keyboard.keys[main.settings.control.jump]) { actions.push("jmp"); }
       if(this.input.keyboard.keys[main.settings.control.actionA]) { actions.push("atk"); }
@@ -357,7 +356,7 @@ NoxioGame.prototype.doInputMouse = function(imp) {
     else {
       /* Spectate State Input */
       if(this.input.mouse.rmb || this.forceSpawn) { this.forceSpawn = false; inputs.push("02;"+this.charSelect); }
-      inputs.push("01;"+this.lastDir.x+","+this.lastDir.y);
+      inputs.push("01;"+this.lastTo.x+","+this.lastTo.y);
       
       /* Move Camera */
       if(this.input.mouse.mmb) {
@@ -374,7 +373,7 @@ NoxioGame.prototype.doInputMouse = function(imp) {
   }
   else {
     /* Menu-Focus State Input */
-    inputs.push("01;"+this.lastDir.x+","+this.lastDir.y);
+    inputs.push("01;"+this.lastTo.x+","+this.lastTo.y);
   }
   
   /* Send Input */
@@ -447,19 +446,20 @@ NoxioGame.prototype.doInputTouch = function(imp) {
         var mag = util.vec2.magnitude(offset);
         var norm = util.vec2.rotate(util.vec2.multiply(util.vec2.normalize(offset), util.vec2.make(1., -1.)), this.display.camera.rot.z);
         var speed = mag/100;
+        var to = util.vec2.add(obj.pos, util.vec2.scale(norm, speed));
         
         this.thumb.offset = offset;
         
         if(speed > 0.01) {
-          inputs.push("04;"+norm.x+","+norm.y+";"+Math.min(Math.max(speed, 0.33), 1.0));
-          this.lastDir = norm;
+          inputs.push("04;"+to.x+","+to.y);
+          this.lastTo = to;
         }
         else {
-          inputs.push("01;"+this.lastDir.x+","+this.lastDir.y);
+          inputs.push("01;"+this.lastTo.x+","+this.lastTo.y);
         }
       }
       else {
-        inputs.push("01;"+this.lastDir.x+","+this.lastDir.y);
+        inputs.push("01;"+this.lastTo.x+","+this.lastTo.y);
       }
 
       for(var i=0;i<this.tchAction.length;i++) {
@@ -478,12 +478,12 @@ NoxioGame.prototype.doInputTouch = function(imp) {
     else {
       /* Spectate State Input */
       if(this.forceSpawn) { this.forceSpawn = false; inputs.push("02;"+this.charSelect); }
-      inputs.push("01;"+this.lastDir.x+","+this.lastDir.y);
+      inputs.push("01;"+this.lastTo.x+","+this.lastTo.y);
     }
   }
   else {
     /* Menu-Focus State Input */
-    inputs.push("01;"+this.lastDir.x+","+this.lastDir.y);
+    inputs.push("01;"+this.lastTo.x+","+this.lastTo.y);
   }
   
   /* Send Input */

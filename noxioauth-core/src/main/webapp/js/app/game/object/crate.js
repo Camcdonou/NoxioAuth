@@ -67,6 +67,8 @@ PlayerCrate.prototype.ui = function() {
 
 PlayerCrate.prototype.air  = PlayerObject.prototype.air;
 PlayerCrate.prototype.jump = PlayerObject.prototype.jump;
+PlayerCrate.prototype.recover = PlayerObject.prototype.recover;
+PlayerCrate.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerCrate.prototype.land = PlayerObject.prototype.land;
 
 PlayerCrate.prototype.stun = function() {

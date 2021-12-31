@@ -28,6 +28,8 @@ PlayerBoxRed.prototype.ui = PlayerBox.prototype.ui;
 
 PlayerBoxRed.prototype.air  = PlayerBox.prototype.air;
 PlayerBoxRed.prototype.jump = PlayerBox.prototype.jump;
+PlayerBoxRed.prototype.recover = PlayerObject.prototype.recover;
+PlayerBoxRed.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerBoxRed.prototype.land = PlayerBox.prototype.land;
 PlayerBoxRed.prototype.toss = PlayerObject.prototype.toss;
 PlayerBoxRed.prototype.pickup = PlayerObject.prototype.pickup;

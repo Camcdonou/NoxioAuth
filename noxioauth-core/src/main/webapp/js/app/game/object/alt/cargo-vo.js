@@ -28,6 +28,9 @@ PlayerCargoVoice.prototype.jump = function() {
   this.effects.push(NxFx.cargo.alt.voice.jump.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
+PlayerCargoVoice.prototype.recover = PlayerObject.prototype.recover;
+PlayerCargoVoice.prototype.recoverJump = PlayerObject.prototype.recoverJump;
+
 PlayerCargoVoice.prototype.land = PlayerCargo.prototype.land;
 PlayerCargoVoice.prototype.toss = PlayerObject.prototype.toss;
 PlayerCargoVoice.prototype.pickup = PlayerObject.prototype.pickup;

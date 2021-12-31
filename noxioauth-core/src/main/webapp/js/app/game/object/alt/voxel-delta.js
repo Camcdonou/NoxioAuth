@@ -24,6 +24,8 @@ PlayerVoxelDelta.prototype.ui = PlayerVoxel.prototype.ui;
 
 PlayerVoxelDelta.prototype.air  = PlayerVoxel.prototype.air;
 PlayerVoxelDelta.prototype.jump = PlayerVoxel.prototype.jump;
+PlayerVoxelDelta.prototype.recover = PlayerObject.prototype.recover;
+PlayerVoxelDelta.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerVoxelDelta.prototype.land = PlayerVoxel.prototype.land;
 PlayerVoxelDelta.prototype.toss = PlayerObject.prototype.toss;
 PlayerVoxelDelta.prototype.pickup = PlayerObject.prototype.pickup;

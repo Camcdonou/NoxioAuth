@@ -23,6 +23,8 @@ PlayerQuadFire.prototype.ui = PlayerQuad.prototype.ui;
 
 PlayerQuadFire.prototype.air  = PlayerQuad.prototype.air;
 PlayerQuadFire.prototype.jump = PlayerQuad.prototype.jump;
+PlayerQuadFire.prototype.recover = PlayerObject.prototype.recover;
+PlayerQuadFire.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerQuadFire.prototype.land = PlayerQuad.prototype.land;
 PlayerQuadFire.prototype.toss = PlayerObject.prototype.toss;
 PlayerQuadFire.prototype.pickup = PlayerObject.prototype.pickup;

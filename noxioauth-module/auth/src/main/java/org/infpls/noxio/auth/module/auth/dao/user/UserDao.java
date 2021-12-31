@@ -339,6 +339,28 @@ public class UserDao {
     return null;
   }
   
+  public List<UserStats> getLeaderboard(int max) throws IOException {
+    try {
+      final List<UserStats> res = new ArrayList();
+      final List<Map<String,Object>> results = dao.jdbc.queryForList(
+        "SELECT x.*, c.GLOBALCOUNT FROM (SELECT t.*, USERS.NAME, @rownum := @rownum + 1 AS RANK FROM STATS AS t INNER JOIN USERS ON t.UID=USERS.UID, (SELECT @rownum := 0) AS r ORDER BY LIFECREDITS DESC) AS x, (SELECT COUNT(*) AS GLOBALCOUNT FROM STATS) AS c WHERE GLOBALCOUNT<=?",
+        max
+      );
+      for(int i=0;i<results.size();i++) {
+        res.add(new UserStats(results.get(i)));
+      }
+      return res;
+    }
+    catch(DataAccessException ex) {
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
+      throw new IOException("SQL Error during user stats retrieval.");
+    }
+    catch(ClassCastException | NullPointerException ex) {
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
+      throw new IOException("SQL Error during user stats retrieval.");
+    }
+  }
+  
   public void saveUserStats(final UserStats us) throws IOException {
     try {
       dao.jdbc.update(

@@ -20,6 +20,8 @@ PlayerQuadGold.prototype.ui = PlayerQuad.prototype.ui;
 
 PlayerQuadGold.prototype.air  = PlayerQuad.prototype.air;
 PlayerQuadGold.prototype.jump = PlayerQuad.prototype.jump;
+PlayerQuadGold.prototype.recover = PlayerObject.prototype.recover;
+PlayerQuadGold.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerQuadGold.prototype.land = PlayerQuad.prototype.land;
 PlayerQuadGold.prototype.toss = PlayerObject.prototype.toss;
 PlayerQuadGold.prototype.pickup = PlayerObject.prototype.pickup;

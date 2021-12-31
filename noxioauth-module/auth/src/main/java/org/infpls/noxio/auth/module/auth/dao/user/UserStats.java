@@ -4,6 +4,7 @@ import java.util.Map;
 import org.infpls.noxio.auth.module.auth.session.PacketH01; /* @TODO: noxio shared package for this bit as well */
 
 public class UserStats {
+  public final String name;
   public final String uid;                   // Unique ID linking this to the user
   
   private int credits;
@@ -18,6 +19,7 @@ public class UserStats {
   
   /* SQL Database Constructor */
   public UserStats(final Map<String, Object> data) {
+    name = (String)data.get("NAME");
     uid = (String)data.get("UID");
     
     rank = (long)((double)data.get("RANK")); /* @TODO: I have no fucking clue y mysql returns the row number as a double. it make me angry. low priority bugfix */
@@ -75,6 +77,7 @@ public class UserStats {
   /* Adding new stats constructor */
   /* @TODO this constructor could be basically removed and instead have the database due the addition and return the resulting new stats */
   public UserStats(final UserStats a, final PacketH01.Stats b) {
+    name = null;
     uid = a.uid;
     
     rank = a.rank; globalCount = a.globalCount;
@@ -130,6 +133,7 @@ public class UserStats {
   
   /* Guest Default Constructor */
   public UserStats() {
+    name = null;
     uid = null;
     credits = 250;
     

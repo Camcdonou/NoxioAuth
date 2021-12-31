@@ -28,6 +28,9 @@ PlayerCrateVoice.prototype.jump = function() {
   this.effects.push(NxFx.crate.alt.voice.jump.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
+PlayerCrateVoice.prototype.recover = PlayerObject.prototype.recover;
+PlayerCrateVoice.prototype.recoverJump = PlayerObject.prototype.recoverJump;
+
 PlayerCrateVoice.prototype.land = PlayerCrate.prototype.land;
 PlayerCrateVoice.prototype.toss = PlayerObject.prototype.toss;
 PlayerCrateVoice.prototype.pickup = PlayerObject.prototype.pickup;

@@ -1,0 +1,160 @@
+html,body {
+  background-color: #AAAAAA;  
+  font-family: "Calibri", monospace;
+  
+  margin: 0px;
+  padding: 0px;
+  height: 100%;
+  width: 100%;
+}
+
+.file-error {
+  font-size: 75%;
+  background-color: #999999;  
+  border: 1px #444444 dotted;
+}
+
+.fullscreen {
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  
+  width: 100%;
+  height: 100%;
+}
+
+.panel-top {
+  width: -moz-calc(100% - 2px);
+  width: -webkit-calc(100% - 2px);
+  width: calc(100% - 2px);
+  height: 24px;
+
+  border: 1px solid #444444;
+  
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+
+.panel-left {
+  float: left;
+  width: 248px;
+  /*height: -moz-calc(100% - 50px);*/
+  /*height: -webkit-calc(100% - 50px);*/
+  /*height: calc(100% - 50px);*/
+  height: 95%;
+  
+  border: 1px solid #444444;
+  border-top-width: 0px;
+  
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.editor-window {
+  float: right;
+  width: -moz-calc(100% - 250px);
+  width: -webkit-calc(100% - 250px);
+  width: calc(100% - 250px);
+  /*height: -moz-calc(100% - 49px);*/
+  /*height: -webkit-calc(100% - 49px);*/
+  /*height: calc(100% - 49px);*/
+  height: 95%;
+  overflow: hidden;
+  
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  
+  background-color: #444444;
+}
+
+.unselectable {
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+}
+
+.toolbar-button-top {
+  font-weight: bold;
+  background-color: #999999;
+  
+  border: 1px solid #444444;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  
+  margin: 0px 0px 0px 0px;
+  padding: 0px 12px 0px 12px;
+  
+  cursor: pointer;
+}
+
+.toolbar-button-top:hover {
+  color: #FFFFFF;
+  background-color: #444444;
+}
+
+.tool-button {
+  font-weight: bold;
+  background-color: #999999;
+  
+  border: 1px solid #444444;
+  
+  margin: 0px 0px 0px 0px;
+  padding: 0px 12px 0px 12px;
+  
+  cursor: pointer;
+}
+
+.tool-button:hover {
+  color: #FFFFFF;
+  background-color: #444444;
+}
+
+.tool-header {
+  font-weight: bold;
+  
+  margin: 0px 0px 0px 0px;
+  padding: 0px 12px 0px 12px;
+}
+
+.tool-block {
+  background-color: #FFFFFF;
+  width: 100%;
+  height: 450px;
+  font-size: 65% !important;
+  
+  margin: 0px 0px 0px 0px;
+  
+  border: 1px solid #444444;
+  border-left-width: 0px;
+  border-right-width: 0px;
+}
+
+.sm { 
+  font-weight: lighter !important;
+  font-size: 80% !important;
+}
+
+.tall {
+  height: 85% !important;
+}
+
+.short {
+  height: 250px !important;
+}
+
+input { /* Firefux Please God */ }
+
+.unstyle-inp {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  height: 19px;
+}

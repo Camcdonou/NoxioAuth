@@ -20,6 +20,8 @@ PlayerQuadDelta.prototype.ui = PlayerQuad.prototype.ui;
 
 PlayerQuadDelta.prototype.air  = PlayerQuad.prototype.air;
 PlayerQuadDelta.prototype.jump = PlayerQuad.prototype.jump;
+PlayerQuadDelta.prototype.recover = PlayerObject.prototype.recover;
+PlayerQuadDelta.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerQuadDelta.prototype.land = PlayerQuad.prototype.land;
 PlayerQuadDelta.prototype.toss = PlayerObject.prototype.toss;
 PlayerQuadDelta.prototype.pickup = PlayerObject.prototype.pickup;

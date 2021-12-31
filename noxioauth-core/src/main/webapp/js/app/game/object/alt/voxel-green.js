@@ -27,6 +27,8 @@ PlayerVoxelGreen.prototype.ui = PlayerVoxel.prototype.ui;
 
 PlayerVoxelGreen.prototype.air  = PlayerVoxel.prototype.air;
 PlayerVoxelGreen.prototype.jump = PlayerVoxel.prototype.jump;
+PlayerVoxelGreen.prototype.recover = PlayerObject.prototype.recover;
+PlayerVoxelGreen.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerVoxelGreen.prototype.land = PlayerVoxel.prototype.land;
 PlayerVoxelGreen.prototype.toss = PlayerObject.prototype.toss;
 PlayerVoxelGreen.prototype.pickup = PlayerObject.prototype.pickup;

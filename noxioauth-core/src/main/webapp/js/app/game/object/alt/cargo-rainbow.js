@@ -19,6 +19,8 @@ PlayerCargoRainbow.prototype.ui = PlayerCargo.prototype.ui;
 
 PlayerCargoRainbow.prototype.air  = PlayerCargo.prototype.air;
 PlayerCargoRainbow.prototype.jump = PlayerCargo.prototype.jump;
+PlayerCargoRainbow.prototype.recover = PlayerObject.prototype.recover;
+PlayerCargoRainbow.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerCargoRainbow.prototype.land = PlayerCargo.prototype.land;
 PlayerCargoRainbow.prototype.toss = PlayerObject.prototype.toss;
 PlayerCargoRainbow.prototype.pickup = PlayerObject.prototype.pickup;

@@ -57,6 +57,12 @@ RespawnTouchUI.prototype.generate = function() {
   if(main.unlocks.has("CHAR_INFERNO")) { SPEC.push([
     {id: "inf_n", mat: this.game.display.getMaterial("character.inferno.ui.iconlarge"), lock: !main.unlocks.has("CHAR_INFERNO")}
   ]);}
+  if(main.unlocks.has("CHAR_XOB")) { SPEC.push([
+    {id: "xob_n", mat: this.game.display.getMaterial("character.xob.ui.iconlarge"), lock: !main.unlocks.has("CHAR_XOB")}
+  ]);}
+  if(main.unlocks.has("CHAR_POLY")) { SPEC.push([
+    {id: "pol_n", mat: this.game.display.getMaterial("character.poly.ui.iconlarge"), lock: !main.unlocks.has("CHAR_POLY")}
+  ]);}
   if(main.unlocks.has("CHAR_CUBE")) { SPEC.push([
     {id: "cub_n", mat: this.game.display.getMaterial("character.cube.ui.iconlarge"), lock: !main.unlocks.has("CHAR_CUBE")}
   ]);}

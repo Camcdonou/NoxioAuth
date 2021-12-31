@@ -24,6 +24,8 @@ PlayerCrateGold.prototype.ui = PlayerCrate.prototype.ui;
 
 PlayerCrateGold.prototype.air  = PlayerCrate.prototype.air;
 PlayerCrateGold.prototype.jump = PlayerCrate.prototype.jump;
+PlayerCrateGold.prototype.recover = PlayerObject.prototype.recover;
+PlayerCrateGold.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerCrateGold.prototype.land = PlayerCrate.prototype.land;
 PlayerCrateGold.prototype.toss = PlayerObject.prototype.toss;
 PlayerCrateGold.prototype.pickup = PlayerObject.prototype.pickup;

@@ -19,6 +19,8 @@ PlayerQuadRainbow.prototype.ui = PlayerQuad.prototype.ui;
 
 PlayerQuadRainbow.prototype.air  = PlayerQuad.prototype.air;
 PlayerQuadRainbow.prototype.jump = PlayerQuad.prototype.jump;
+PlayerQuadRainbow.prototype.recover = PlayerObject.prototype.recover;
+PlayerQuadRainbow.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerQuadRainbow.prototype.land = PlayerQuad.prototype.land;
 PlayerQuadRainbow.prototype.toss = PlayerObject.prototype.toss;
 PlayerQuadRainbow.prototype.pickup = PlayerObject.prototype.pickup;

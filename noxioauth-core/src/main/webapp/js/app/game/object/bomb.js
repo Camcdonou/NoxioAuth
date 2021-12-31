@@ -22,7 +22,7 @@ function BombObject(game, oid, pos, permutation, team, color) {
   this.timer = 0;
   
   /* Decal */
-  this.targetCircle = new Decal(this.game, "object.target.targetcircle", util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 0.4, 0.0, util.vec4.make(1,1,1,1), 15, 0, 0);
+  this.targetCircle = new Decal(this.game, "object.generic.decal.targetcirclesm", util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 1.0, 0.0, util.vec4.make(1,1,1,1), 15, 0, 0);
 };
 
 BombObject.prototype.update = function(data) {
@@ -74,7 +74,7 @@ BombObject.prototype.update = function(data) {
   /* Timers */
   
   /* Step Effects */
-  this.targetCircle.step(util.vec2.toVec3(this.pos, this.height > 0. ? 0. : this.height), 0.4, 0.0);
+  this.targetCircle.step(util.vec2.toVec3(this.pos, this.height > 0. ? 0. : this.height), 1.0, 0.0);
   for(var i=0;i<this.effects.length;i++) {
     if(this.effects[i].active()) { this.effects[i].step(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)); }
     else { this.effects.splice(i--, 1); }

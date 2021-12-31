@@ -4,16 +4,17 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="HandheldFriendly" content="true">
         <meta name="viewport" id="meta-zoom" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=0">
-        <link rel="icon" href="img/aes/icon.png?v=_1.1.2:524_">
-        <link rel="stylesheet" type="text/css" href="css/app.css?v=_1.1.2:524_">
-        <link rel="stylesheet" type="text/css" href="css/error.css?v=_1.1.2:524_">
-        <link rel="stylesheet" type="text/css" href="css/info.css?v=_1.1.2:524_">
-        <link rel="stylesheet" type="text/css" href="css/footer.css?v=_1.1.2:524_">
-        <link rel="stylesheet" type="text/css" href="css/setting.css?v=_1.1.2:524_">
-        <link rel="stylesheet" type="text/css" href="css/buy.css?v=_1.1.2:524_">
-        <link rel="stylesheet" type="text/css" href="css/admin.css?v=_1.1.2:524_">
-        <link rel="stylesheet" type="text/css" href="css/custom.css?v=_1.1.2:524_">
-        <link rel="stylesheet" type="text/css" href="css/gauss.css?v=_1.1.2:524_">
+        <link rel="icon" href="img/aes/icon.png?v=_2.0.0:671_">
+        <link rel="stylesheet" type="text/css" href="css/app.css?v=_2.0.0:671_">
+        <link rel="stylesheet" type="text/css" href="css/error.css?v=_2.0.0:671_">
+        <link rel="stylesheet" type="text/css" href="css/info.css?v=_2.0.0:671_">
+        <link rel="stylesheet" type="text/css" href="css/footer.css?v=_2.0.0:671_">
+        <link rel="stylesheet" type="text/css" href="css/setting.css?v=_2.0.0:671_">
+        <link rel="stylesheet" type="text/css" href="css/buy.css?v=_2.0.0:671_">
+        <link rel="stylesheet" type="text/css" href="css/admin.css?v=_2.0.0:671_">
+        <link rel="stylesheet" type="text/css" href="css/custom.css?v=_2.0.0:671_">
+        <link rel="stylesheet" type="text/css" href="css/advcustom.css?v=_2.0.0:671_">
+        <link rel="stylesheet" type="text/css" href="css/gauss.css?v=_2.0.0:671_">
         <script>
           /* Prevent phones from zooming screen. The webapp handles this. */
           document.addEventListener('touchmove', function(event) {
@@ -116,7 +117,7 @@
           <div id="auth-about-about" class="menu sub about">Noxio/20XX.io  _VER  © InfernoPlus 2020</div>
       </div>
       <div id="auth-link" class="link" style="display: none">
-        <div class="link-redi" onclick="window.open('https://old.reddit.com/r/20xxio/')"></div>
+        <div class="link-disc" onclick="window.open('https://discord.com/invite/sexy-sans-fanclub')"></div>
         <div class="link-twit" onclick="window.open('https://twitter.com/Inferbro')"></div>
         <div class="link-patr" onclick="window.open('https://www.patreon.com/user?u=4680665')"></div>
       </div>
@@ -133,9 +134,11 @@
           <div id="online-unlock-3" class="menu sub btn" onclick="main.menu.unlock.show('FEATURE')">Features</div>
         <div id="online-setting" class="menu cat" onclick="main.menu.online.items.setting.show()">Settings</div>
           <div id="online-setting-1" class="menu sub btn" onclick="main.menu.stat.show()">Stats</div>
+          <div id="online-setting-6" class="menu sub btn" onclick="window.open('./leaderboard.html')">Leaderboard</div>
           <!--<div id="online-setting-2" class="menu sub btn" onclick="">Controls</div>-->
           <div id="online-setting-3" class="menu sub btn" onclick="main.menu.setgraphic.show()">Graphics</div>
           <div id="online-setting-4" class="menu sub btn" onclick="main.menu.setgame.show()">Game</div>
+          <div id="online-setting-7" class="menu sub btn" onclick="window.open('./editor')">Map Editor</div>
           <div id="online-setting-5" class="menu sub btn" onclick="window.open('./help.html')">Help</div>
         <div id="online-buy" class="menu cat" onclick="main.menu.online.items.buy.onEnter()">Buy</div>
         <div id="online-admin" class="menu cat" onclick="main.menu.online.items.admin.onEnter()">Admin</div>
@@ -196,6 +199,7 @@
             <div class='setgame-spc'></div>
             <div class='setgame-name'>Use Custom Sound</div>
             <div class='setgame-name'>Upload Custom Sound</div>
+            <div class='setgame-name'>Upload Custom Map</div> 
             <div class='setgame-spc'></div>
             <div class='setgame-name'>Hide Custom Colors</div>
             <div class='setgame-name'>Hide Alternate Characters</div>
@@ -215,6 +219,7 @@
             <div class='setgame-spc'></div>
             <div class='setgame-tog' id='setgame-usesound'></div>
             <div class='setgame-upl'><input type="file" name="file" accept=".wav" id="setgame-snd-file" onchange="main.menu.setgame.uploadSound()"/><span id="setgame-snd-data" class="setgame-snd-fn">...</span></div>
+            <div class='setgame-upl'><input type="file" name="file" accept=".map" id="setgame-map-file" onchange="main.menu.setgame.uploadMap()"/><span id="setgame-map-data" class="setgame-snd-fn">...</span></div>
             <div class='setgame-spc'></div>
             <div class='setgame-tog' id='setgame-hidecolor' onclick='main.menu.setgame.toggle(0)'></div>
             <div class='setgame-tog' id='setgame-hidealt' onclick='main.menu.setgame.toggle(1)'></div>
@@ -337,7 +342,12 @@
         <div class="left-container">
           <div id="lobby-server" class="menu loc">...</div>
           <div id="lobby-name" class="menu cat selected not-btn">...</div>
-          <div id="lobby-custom" class="menu cat" onclick="main.menu.lobby.items.custom.onEnter()">Custom</div>
+          <div id="lobby-custom" class="menu cat" onclick="main.menu.lobby.items.custom.show()">Custom</div>
+            <div id="lobby-custom-1" class="menu sub btn" onclick="main.menu.custom.show()">Basic</div>
+            <div id="lobby-custom-2" class="menu sub btn" onclick="main.menu.advcustom.show()">Advanced</div>
+          <div id="lobby-private" class="menu cat" onclick="main.menu.lobby.items.private.show()">Private</div>
+            <div id="lobby-private-pass" class="menu sub fld"><input id="lobby-private-pass-inp" class="inp" type="text" placeholder="Private Game Name"/></div>
+            <div id="lobby-private-enter" class="menu sub btn ico-blip" onclick="main.menu.lobby.items.private.onEnter()"></div>
           <div id="lobby-leave" class="menu cat" onclick="main.menu.lobby.items.leave.onEnter()">Back</div>
         </div>
         <div class="right-container">
@@ -360,6 +370,10 @@
           <div id="custom-create" class="cstm-back" onclick="main.menu.custom.create()">Create</div>
           <div id="custom-back" class="cstm-back" onclick="main.menu.custom.back()">Back</div>
         </div>
+      </div>
+      
+      <!-- Custom Game Creation -->
+      <div id="advcustom" class="" style="display: none">
       </div>
       
       <!-- Game -->
@@ -437,6 +451,7 @@
       <script src="js/app/menu/admin-menu.js"></script>
       <script src="js/app/menu/lobby-menu.js"></script>
       <script src="js/app/menu/custom-menu.js"></script>
+      <script src="js/app/menu/custom-adv-menu.js"></script>
       <script src="js/app/menu/game-menu.js"></script>
       <script src="js/app/menu/menu.js"></script>
       
@@ -504,6 +519,9 @@
       <script src="js/app/game/object/block.js"></script>
       <script src="js/app/game/object/cargo.js"></script>
       <script src="js/app/game/object/cube.js"></script>
+      <script src="js/app/game/object/poly.js"></script>
+      <script src="js/app/game/object/bit.js"></script>
+      <script src="js/app/game/object/xob.js"></script>
       <script src="js/app/game/object/bomb.js"></script>
       <script src="js/app/game/object/flag.js"></script>
       <script src="js/app/game/object/hill.js"></script>
@@ -559,14 +577,19 @@
       <script src="js/app/game/effect/particle/blip.js"></script>
       <script src="js/app/game/effect/particle/blip-delta.js"></script>
       <script src="js/app/game/effect/particle/dash.js"></script>
+      <script src="js/app/game/effect/particle/bit-blip.js"></script>
+      <script src="js/app/game/effect/particle/bit-dash.js"></script>
       <script src="js/app/game/effect/particle/stun.js"></script>
       <script src="js/app/game/effect/particle/bloodsplat.js"></script>
       <script src="js/app/game/effect/particle/shatter.js"></script>
+      <script src="js/app/game/effect/particle/shatter-small.js"></script>
       <script src="js/app/game/effect/particle/slash.js"></script>
       <script src="js/app/game/effect/particle/riposte.js"></script>
       <script src="js/app/game/effect/particle/ready.js"></script>
       <script src="js/app/game/effect/particle/smoke.js"></script>
       <script src="js/app/game/effect/particle/airjump.js"></script>
+      <script src="js/app/game/effect/particle/recovery.js"></script>
+      <script src="js/app/game/effect/particle/recoverjump.js"></script>
       <script src="js/app/game/effect/particle/explosion-small.js"></script>
       <script src="js/app/game/effect/particle/box-blip-rainbow.js"></script>
       <script src="js/app/game/effect/particle/box-dash-rainbow.js"></script>

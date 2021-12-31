@@ -23,6 +23,11 @@ LobbyState.prototype.joinLobby = function(lid) {
   main.menu.connect.show("Joining game lobby", 0);
 };
 
+LobbyState.prototype.joinLobbyByName = function(lobnam) {
+  this.send({type: "b06", lobbyName: lobnam});
+  main.menu.connect.show("Joining private game lobby", 0);
+};
+
 LobbyState.prototype.createLobby = function(settings) {
   this.send({type: "b03", settings: "lobby: " + JSON.stringify(settings)});
   main.menu.connect.show("Creating game lobby", 0);

@@ -22,6 +22,8 @@ PlayerCrateRainbow.prototype.ui = PlayerCrate.prototype.ui;
 
 PlayerCrateRainbow.prototype.air  = PlayerCrate.prototype.air;
 PlayerCrateRainbow.prototype.jump = PlayerCrate.prototype.jump;
+PlayerCrateRainbow.prototype.recover = PlayerObject.prototype.recover;
+PlayerCrateRainbow.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerCrateRainbow.prototype.land = PlayerCrate.prototype.land;
 PlayerCrateRainbow.prototype.toss = PlayerObject.prototype.toss;
 PlayerCrateRainbow.prototype.pickup = PlayerObject.prototype.pickup;

@@ -28,6 +28,9 @@ PlayerBlockVoice.prototype.jump = function() {
   this.effects.push(NxFx.block.alt.voice.jump.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
 };
 
+PlayerBlockVoice.prototype.recover = PlayerObject.prototype.recover;
+PlayerBlockVoice.prototype.recoverJump = PlayerObject.prototype.recoverJump;
+
 PlayerBlockVoice.prototype.land = PlayerBlock.prototype.land;
 PlayerBlockVoice.prototype.toss = PlayerObject.prototype.toss;
 PlayerBlockVoice.prototype.pickup = PlayerObject.prototype.pickup;

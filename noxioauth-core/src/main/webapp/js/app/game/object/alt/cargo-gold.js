@@ -20,6 +20,8 @@ PlayerCargoGold.prototype.ui = PlayerCargo.prototype.ui;
 
 PlayerCargoGold.prototype.air  = PlayerCargo.prototype.air;
 PlayerCargoGold.prototype.jump = PlayerCargo.prototype.jump;
+PlayerCargoGold.prototype.recover = PlayerObject.prototype.recover;
+PlayerCargoGold.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerCargoGold.prototype.land = PlayerCargo.prototype.land;
 PlayerCargoGold.prototype.toss = PlayerObject.prototype.toss;
 PlayerCargoGold.prototype.pickup = PlayerObject.prototype.pickup;

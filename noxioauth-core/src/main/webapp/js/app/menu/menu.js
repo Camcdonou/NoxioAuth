@@ -31,6 +31,7 @@ function Menu() {
     {id: "admin", obj: new AdminMenu()},
     {id: "lobby", obj: new LobbyMenu()},
     {id: "custom", obj: new CustomMenu()},
+    {id: "advcustom", obj: new AdvCustomMenu()},
     {id: "game", obj: new GameMenu()}
   ];
   

@@ -56,8 +56,11 @@ NxFx.hit = {
 };
 
 /* global ParticleAirJump */
+/* global ParticleRecoveryJump */
+/* global ParticleRecovery */
 /* global ParticleBloodSplat */
 /* global ParticleShatter */
+/* global ParticleBlockCharge */
 NxFx.player = {
   jump: new EffectDefinition(
     "Player-Jump", util.vec3.make(0, 0, 0), 0, true,
@@ -70,6 +73,22 @@ NxFx.player = {
     [
       {class: ParticleAirJump, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: false, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/air0.wav", "character/generic/air1.wav", "character/generic/air2.wav"], 0.35, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  recover: new EffectDefinition(
+    "Player-Recover", util.vec3.make(0, 0, 0), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerBlock.REST_LIGHT, 0.0), PlayerBlock.REST_LIGHT], [2.65, 1.55], 9, "slow"], attachment: true, delay: 0},
+      {class: ParticleBlockCharge, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBlock.COLORA, PlayerBlock.COLORB], attachment: true, delay: 0},
+      {class: ParticleRecovery, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: true, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/generic/recover0.wav", 0.35, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  recoverJump: new EffectDefinition(
+    "Player-Recover-Jump", util.vec3.make(0, 0, 0.01), 0, true,
+    [
+      {class: ParticleRecoveryJump, params: ["<game *>", "<vec3 pos>", "<vec3 vel>"], attachment: false, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/air0.wav", "character/generic/air1.wav", "character/generic/air2.wav"], 0.85, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   land: new EffectDefinition(
@@ -134,6 +153,35 @@ NxFx.box = {
     ]
   )
 };
+/* global ParticleShatterSmall */
+/* global ParticleBitBlip */
+/* global ParticleBitDash */
+NxFx.bit = {
+  blip: new EffectDefinition(
+    "Bit-Blip", util.vec3.make(0, 0, 0.35), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerBox.BLIP_COLOR_A, 0.6), util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 0.45), util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 0)], [1.75, 3.5], 18, "fast"], attachment: true, delay: 0},
+      {class: ParticleBitBlip, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBox.BLIP_COLOR_A, PlayerBox.BLIP_COLOR_B], attachment: true, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/poly/blip0.wav", 0.2, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  dash: new EffectDefinition(
+    "Bit-Dash", util.vec3.make(0, 0, 0.15), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerBox.BLIP_COLOR_A, 0.6), util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 0.45), util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 0)], [0.65, 3.0], 30, "fast"], attachment: false, delay: 0},
+      {class: ParticleBitDash, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBox.BLIP_COLOR_A, PlayerBox.BLIP_COLOR_B], attachment: true, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/poly/dash0.wav", 0.225, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  shatter: new EffectDefinition(
+    "Bit-Shatter", util.vec3.make(0, 0, 0), 0 , false,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.make(1., 1., 1., .2), util.vec4.make(1., 1., 1., 0.)], [0.9, 1.55], 18, "fast"], attachment: true, delay: 0},
+      {class: ParticleShatterSmall, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", util.vec4.make(1., 1., 1., 1.), util.vec4.make(1., 1., 1., .75)], attachment: false, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/shatter0.wav", "character/generic/shatter1.wav", "character/generic/shatter2.wav"], 0.7, 0.0, "effect"], attachment: false, delay: 0}
+    ]
+  )
+};
 
 /* global PlayerCrate */
 /* global ParticleBlip */
@@ -193,7 +241,7 @@ NxFx.voxel = {
     [
       {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerBox.BLIP_COLOR_A, 0.15), util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 1.0)], [1.75, 3.5], 7, "linear"], attachment: true, delay: 0},
       {class: ParticleVoxelCharge, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBox.BLIP_COLOR_A, PlayerBox.BLIP_COLOR_B], attachment: true, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/voxel/recall0.wav", 0.7, 0.0, "effect"], attachment: true, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/voxel/recall0.wav", 0.9, 0.0, "effect"], attachment: true, delay: 0}
     ]
   ),
   vanish: new EffectDefinition(
@@ -371,6 +419,17 @@ NxFx.cube = {
       {class: ParticleCubeDetonateBlip, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBox.BLIP_COLOR_A, PlayerBox.BLIP_COLOR_B], attachment: false, delay: 0},
       {class: ParticleVoxelRecall, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBox.BLIP_COLOR_A, PlayerBox.BLIP_COLOR_B], attachment: false, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", "character/voxel/recall1.wav", 0.75, 0.0, "effect"], attachment: false, delay: 0}
+    ]
+  )
+};
+
+NxFx.xob = {
+  charge: new EffectDefinition(
+    "Xob-Charge", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerBox.BLIP_COLOR_A, 0.15), util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 1.0)], [1.75, 3.5], 4, "linear"], attachment: true, delay: 0},
+      {class: ParticleVoxelCharge, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBox.BLIP_COLOR_A, PlayerBox.BLIP_COLOR_B], attachment: true, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/xob/rewind0.wav", 0.8, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
 };

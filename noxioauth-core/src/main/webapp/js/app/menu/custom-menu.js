@@ -277,6 +277,10 @@ CustomMenu.prototype.generateSettings = function() {
   gen += "<div class='menu sub drop combo'>";
   gen += "<span class='combo-l'>Max Players&nbsp;</span>";
   gen += "<input class='combo-r' type='number' onchange='main.menu.custom.setMax(this.value)' placeholder='Default'/></div>";
+  
+  gen += "<div class='menu sub drop combo' onclick=''>";
+  gen += "<span class='combo-l'>Private&nbsp;</span>";
+  gen += "<input class='combo-r' type='text' onclick='main.menu.custom.setPrivate(this)' placeholder='Default'/></div>";
   for(var i=0;i<type.settings.length;i++) {
     var set = type.settings[i];
     switch(set.type) {
@@ -295,7 +299,7 @@ CustomMenu.prototype.generateSettings = function() {
       case "bool" : {
         gen += "<div class='menu sub drop combo' onclick=''>";
         gen += "<span class='combo-l'>" + set.name + "&nbsp;</span>";
-        gen += "<input id='custom-set-' class='combo-r' type='text' onclick='main.menu.custom.setBool(\"" + set.id + "\", this)' placeholder='Default'/></div>";
+        gen += "<input class='combo-r' type='text' onclick='main.menu.custom.setBool(\"" + set.id + "\", this)' placeholder='Default'/></div>";
         break;
       }
     }
@@ -329,6 +333,11 @@ CustomMenu.prototype.setNam = function(val) {
 CustomMenu.prototype.setMax = function(val) {
   if(val === undefined || val.trim() === "") { delete this.selectedSettings.max_players; return; }
   this.selectedSettings.max_players = parseInt(val);
+};
+
+CustomMenu.prototype.setPrivate = function(ele) {
+  this.selectedSettings.private = this.selectedSettings.private===1?0:1;
+  ele.value = this.selectedSettings.private===1?"On":"Off";
 };
 
 CustomMenu.prototype.setInt = function(val, id) {

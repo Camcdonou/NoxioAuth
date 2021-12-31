@@ -28,6 +28,8 @@ PlayerBoxFour.prototype.ui = PlayerBox.prototype.ui;
 
 PlayerBoxFour.prototype.air  = PlayerBox.prototype.air;
 PlayerBoxFour.prototype.jump = PlayerBox.prototype.jump;
+PlayerBoxFour.prototype.recover = PlayerObject.prototype.recover;
+PlayerBoxFour.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerBoxFour.prototype.land = PlayerBox.prototype.land;
 PlayerBoxFour.prototype.toss = PlayerObject.prototype.toss;
 PlayerBoxFour.prototype.pickup = PlayerObject.prototype.pickup;

@@ -20,6 +20,8 @@ PlayerCargoDelta.prototype.ui = PlayerCargo.prototype.ui;
 
 PlayerCargoDelta.prototype.air  = PlayerCargo.prototype.air;
 PlayerCargoDelta.prototype.jump = PlayerCargo.prototype.jump;
+PlayerCargoDelta.prototype.recover = PlayerObject.prototype.recover;
+PlayerCargoDelta.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerCargoDelta.prototype.land = PlayerCargo.prototype.land;
 PlayerCargoDelta.prototype.toss = PlayerObject.prototype.toss;
 PlayerCargoDelta.prototype.pickup = PlayerObject.prototype.pickup;

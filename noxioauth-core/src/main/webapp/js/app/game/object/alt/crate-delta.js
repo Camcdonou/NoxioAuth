@@ -24,6 +24,8 @@ PlayerCrateDelta.prototype.ui = PlayerCrate.prototype.ui;
 
 PlayerCrateDelta.prototype.air  = PlayerCrate.prototype.air;
 PlayerCrateDelta.prototype.jump = PlayerCrate.prototype.jump;
+PlayerCrateDelta.prototype.recover = PlayerObject.prototype.recover;
+PlayerCrateDelta.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerCrateDelta.prototype.land = PlayerCrate.prototype.land;
 PlayerCrateDelta.prototype.toss = PlayerObject.prototype.toss;
 PlayerCrateDelta.prototype.pickup = PlayerObject.prototype.pickup;

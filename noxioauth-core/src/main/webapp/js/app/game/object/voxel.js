@@ -23,7 +23,10 @@ function PlayerVoxel(game, oid, pos, team, color) {
   /* Timers */
   this.chargeTimer = 0;
   this.blipCooldown = 0;
-
+  
+  /* Decal */
+  this.indicator = new Decal(this.game, "character.xob.decal.rewindpoint", util.vec2.toVec3(this.pos, Math.min(this.height, 0.)), util.vec3.make(0.0, 0.0, 1.0), 1.0, 0, util.vec4.make(1,1,1,0), 0, 0, 0);
+  
   /* UI */
   this.uiMeters = [
     {type: "bar", iconMat: this.game.display.getMaterial("character.generic.ui.metera"), length: 12, scalar: 1.0},
@@ -59,6 +62,11 @@ PlayerVoxel.prototype.timers = function() {
   if(this.chargeTimer > 0) { this.chargeTimer--; this.glow = 1-(this.chargeTimer/PlayerVoxel.FLASH_CHARGE_LENGTH); }
   else { this.glow = 0; }
   if(this.blipCooldown > 0) { this.blipCooldown--; }
+  
+  /* Not really a timer but we are just updating it here for simplicity */
+  var color = this.getColor();
+  var dcolor = util.vec3.toVec4((this.team === -1 && this.color === 0 ? util.vec3.make(1, 1, 1) : color), this.markLocation ? 1. : 0.); // Make decal white for default boys.
+  this.indicator.setColor(dcolor);
 };
 
 PlayerVoxel.prototype.ui = function() {
@@ -68,6 +76,8 @@ PlayerVoxel.prototype.ui = function() {
 
 PlayerVoxel.prototype.air  = PlayerObject.prototype.air;
 PlayerVoxel.prototype.jump = PlayerObject.prototype.jump;
+PlayerVoxel.prototype.recover = PlayerObject.prototype.recover;
+PlayerVoxel.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerVoxel.prototype.land = PlayerObject.prototype.land;
 
 PlayerVoxel.prototype.stun = function() {
@@ -111,6 +121,8 @@ PlayerVoxel.prototype.mark = function() {
   this.effects.push(NxFx.voxel.mark.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
   this.markLocation = util.vec2.copy(this.pos);
   this.markEffect = NxFx.voxel.location.trigger(this.game, util.vec2.toVec3(this.markLocation, 0), util.vec2.toVec3(this.vel, this.vspeed));
+  
+  this.indicator.step(util.vec2.toVec3(this.markLocation, 0.), 1.0, 0);
   this.effects.push(this.markEffect);
 };
 
@@ -130,7 +142,12 @@ PlayerVoxel.prototype.setLook = PlayerObject.prototype.setLook;
 PlayerVoxel.prototype.setSpeed = PlayerObject.prototype.setSpeed;
 
 PlayerVoxel.prototype.getColor = PlayerObject.prototype.getColor;
-PlayerVoxel.prototype.getDraw = PlayerObject.prototype.getDraw;
+PlayerVoxel.prototype.getDraw = function(geometry, decals, lights, bounds) {
+  PlayerObject.prototype.getDraw.call(this, geometry, decals, lights, bounds);
+  if(this.oid === this.game.control) {
+    this.indicator.getDraw(decals, bounds);
+  }
+};
 
 PlayerVoxel.prototype.destroy = PlayerObject.prototype.destroy;
 

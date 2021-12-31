@@ -104,6 +104,8 @@ PlayerQuad.prototype.ui = function() {
 
 PlayerQuad.prototype.air  = PlayerObject.prototype.air;
 PlayerQuad.prototype.jump = PlayerObject.prototype.jump;
+PlayerQuad.prototype.recover = PlayerObject.prototype.recover;
+PlayerQuad.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerQuad.prototype.land = PlayerObject.prototype.land;
 
 PlayerQuad.prototype.stun = PlayerObject.prototype.stun;

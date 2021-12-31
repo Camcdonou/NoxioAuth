@@ -19,6 +19,8 @@ PlayerBlockWindow.prototype.ui = PlayerBlock.prototype.ui;
 
 PlayerBlockWindow.prototype.air  = PlayerBlock.prototype.air;
 PlayerBlockWindow.prototype.jump = PlayerBlock.prototype.jump;
+PlayerBlockWindow.prototype.recover = PlayerObject.prototype.recover;
+PlayerBlockWindow.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerBlockWindow.prototype.land = PlayerBlock.prototype.land;
 PlayerBlockWindow.prototype.toss = PlayerObject.prototype.toss;
 PlayerBlockWindow.prototype.pickup = PlayerObject.prototype.pickup;

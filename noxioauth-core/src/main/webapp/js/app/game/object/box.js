@@ -62,6 +62,8 @@ PlayerBox.prototype.ui = function() {
 
 PlayerBox.prototype.air  = PlayerObject.prototype.air;
 PlayerBox.prototype.jump = PlayerObject.prototype.jump;
+PlayerBox.prototype.recover = PlayerObject.prototype.recover;
+PlayerBox.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerBox.prototype.land = PlayerObject.prototype.land;
 
 PlayerBox.prototype.stun = PlayerObject.prototype.stun;

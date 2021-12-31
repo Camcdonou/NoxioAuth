@@ -2,7 +2,7 @@
 /* global main */
 /* global util */
 /* global Function */
-/* global PlayerBox, PlayerCrate, PlayerVoxel, PlayerQuad, PlayerBlock, PlayerInferno, PlayerCargo, PlayerCube */
+/* global PlayerBox, PlayerCrate, PlayerVoxel, PlayerQuad, PlayerBlock, PlayerInferno, PlayerCargo, PlayerCube, PlayerPoly, PlayerPolyBit, PlayerXob */
 
 /* Define Game Packet Handler Class */
 function PackHand(game) {
@@ -66,6 +66,9 @@ PackHand.prototype.createObject = function(data) {
     case "blk" : { objs.push(new (Function.prototype.bind.apply(PlayerBlock.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
     case "crg" : { objs.push(new (Function.prototype.bind.apply(PlayerCargo.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
     case "cub" : { objs.push(new (Function.prototype.bind.apply(PlayerCube.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "pol" : { objs.push(new (Function.prototype.bind.apply(PlayerPoly.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "bit" : { objs.push(new (Function.prototype.bind.apply(PlayerPolyBit.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
+    case "xob" : { objs.push(new (Function.prototype.bind.apply(PlayerXob.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
     case "inf" : { objs.push(new (Function.prototype.bind.apply(PlayerInferno.classByPermutation(permutation),[null, this.game, oid, pos, team, color]))); break; }
     /* Gameplay Object Classes :: These do not use permutation dictionaries */
     case "flg" : { this.game.objects.push(new FlagObject(this.game, oid, pos, permutation, team, color)); break; }

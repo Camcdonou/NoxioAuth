@@ -26,22 +26,25 @@ function PlayerObject(game, oid, pos, permutation, team, color) {
   /* Settings */
   this.radius = 0.5; this.weight = 1.0; this.friction = 0.725;
   this.moveSpeed = 0.0375; this.jumpHeight = 0.175; this.cullRadius = 1.5;
+  this.scale = 1.0;
   
   /* State */
   this.glow = 0.0;          // Scalar from 0 to 1, used to shift color to white for things like quads counter
   this.objective = false;   // If this is flagged then this played is considered a gametype "objective" and will be globally visible and marked.
 
   /* Timers */
+  this.recoverGlow = 0.;
   
   /* Decal */
   var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
-  this.targetCircle = new Decal(this.game, "character.generic.decal.targetcircle", util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), util.vec3.make(0.0, 0.0, 1.0), 1.1, angle, util.vec4.make(1,1,1,1), 15, 0, 0);
+  this.targetCircle = new Decal(this.game, "character.generic.decal.targetcircle", util.vec2.toVec3(this.pos, Math.min(this.height, 0.)), util.vec3.make(0.0, 0.0, 1.0), 1.1, angle, util.vec4.make(1,1,1,0), 15, 0, 0);
 };
 
 PlayerObject.CAMERA_SHAKE_LIGHT = 0.075;
 PlayerObject.CAMERA_SHAKE_MEDIUM = 0.1;
 PlayerObject.CAMERA_SHAKE_HEAVY = 0.25;
 PlayerObject.CAMERA_SHAKE_CRITICAL = 0.45;
+PlayerObject.RECOVERY_IMPACT = 4;
 
 PlayerObject.prototype.update = function(data) {
   /* Apply update data to object */
@@ -52,11 +55,18 @@ PlayerObject.prototype.update = function(data) {
   
   /* Step Effects */
   var angle = (util.vec2.angle(util.vec2.make(1, 0), this.look)*(this.look.y>0?-1:1))+(Math.PI*0.5);
-  this.targetCircle.step(util.vec2.toVec3(this.pos, this.height > 0. ? 0. : this.height), 1.1, angle);
+  this.targetCircle.step(util.vec2.toVec3(this.pos, Math.min(this.height, 0.)), 1.1*this.scale, angle);
   for(var i=0;i<this.effects.length;i++) {
     if(this.effects[i].active()) { this.effects[i].step(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)); }
     else { this.effects.splice(i--, 1); }
   }
+  
+  if(this.recoverGlow > 0. ) {
+    this.recoverGlow -= .075;
+    this.recoverGlow = Math.max(0., this.recoverGlow);
+    this.glow = this.recoverGlow;
+  }
+  
   
   /* UI */
   this.ui();
@@ -109,6 +119,8 @@ PlayerObject.prototype.effectSwitch = function(e) {
     case "xpl" : { this.explode(); return true; }
     case "fal" : { this.fall(); return true; }
     case "air" : { this.air(); return true; }
+    case "rcv" : { this.recover(); return true; }
+    case "rcvj" : { this.recoverJump(); return true; }
     case "jmp" : { this.jump(); return true; }
     case "lnd" : { this.land(); return true; }
     case "tos" : { this.toss(); return true; }
@@ -132,6 +144,18 @@ PlayerObject.prototype.air = function() {
 
 PlayerObject.prototype.jump = function() {
   this.effects.push(NxFx.player.jump.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+};
+
+// Begin charging recover jump
+PlayerObject.prototype.recover = function() {
+  this.effects.push(NxFx.player.recover.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  this.recoverGlow = 1.0;
+};
+
+// Actual recovery jump
+PlayerObject.prototype.recoverJump = function() {
+  this.effects.push(NxFx.player.recoverJump.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  //this.game.putCameraShake(this, PlayerObject.CAMERA_SHAKE_LIGHT);
 };
 
 PlayerObject.prototype.land = function() {
@@ -253,7 +277,7 @@ PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
       {name: "color", data: util.vec3.toArray(color)},
       {name: "angle", data: [0., 0., 0.]},
       {name: "rotation", data: 0},           // Shadows still use old 1f z-rotation. @TODO: Convert shadows over to "angle" 3f rotation 
-      {name: "scale", data: 1.0}
+      {name: "scale", data: this.scale}
     ];
     geometry.push({model: this.model, material: this.material, uniforms: playerUniformData});
     for(var i=0;i<this.effects.length;i++) {

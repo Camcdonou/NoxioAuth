@@ -29,6 +29,8 @@ PlayerBoxGold.prototype.ui = PlayerBox.prototype.ui;
 
 PlayerBoxGold.prototype.air  = PlayerBox.prototype.air;
 PlayerBoxGold.prototype.jump = PlayerBox.prototype.jump;
+PlayerBoxGold.prototype.recover = PlayerObject.prototype.recover;
+PlayerBoxGold.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerBoxGold.prototype.land = PlayerBox.prototype.land;
 PlayerBoxGold.prototype.toss = PlayerObject.prototype.toss;
 PlayerBoxGold.prototype.pickup = PlayerObject.prototype.pickup;

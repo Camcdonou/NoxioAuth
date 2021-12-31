@@ -29,7 +29,7 @@ function PlayerCargo(game, oid, pos, team, color) {
   this.kickCooldown = 0;
   
   /* Decal */
-  this.indicator = new Decal(this.game, "character.cargo.decal.indicator", util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), util.vec3.make(0.0, 0.0, 1.0), 1.1, 0, util.vec4.make(1,1,1,1), 0, 0, 0);
+  this.indicator = new Decal(this.game, "character.cargo.decal.indicator", util.vec2.toVec3(this.pos, -Math.min(this.height, 0.)), util.vec3.make(0.0, 0.0, 1.0), 1.1, 0, util.vec4.make(1,1,1,1), 0, 0, 0);
   
   /* UI */
   this.uiMeters = [
@@ -54,7 +54,7 @@ PlayerCargo.prototype.update = function(data) {
   /* Step Effects */
   if(this.chargeTimer>0) {
     var angle = (util.vec2.angle(util.vec2.make(1, 0), this.punchDirection)*(this.punchDirection.y>0?-1:1))+(Math.PI*0.5);
-    this.indicator.step(util.vec2.toVec3(util.vec2.add(this.pos, util.vec2.scale(this.punchDirection, PlayerCargo.PUNCH_HITBOX_OFFSET*1.13)), Math.min(this.height, 0.0)), 1.1, angle);
+    this.indicator.step(util.vec2.toVec3(util.vec2.add(this.pos, util.vec2.scale(this.punchDirection, PlayerCargo.PUNCH_HITBOX_OFFSET*1.13)), Math.min(this.height, 0.)), 1.1, angle);
     if(Math.floor(this.chargeTimer/5)%2) { this.indicator.setColor(util.vec4.make(1, 1, 1, 1)); }
     else { this.indicator.setColor(util.vec4.make(1, 0, 0, 1)); }
   }
@@ -87,6 +87,8 @@ PlayerCargo.prototype.ui = function() {
 
 PlayerCargo.prototype.air  = PlayerObject.prototype.air;
 PlayerCargo.prototype.jump = PlayerObject.prototype.jump;
+PlayerCargo.prototype.recover = PlayerObject.prototype.recover;
+PlayerCargo.prototype.recoverJump = PlayerObject.prototype.recoverJump;
 PlayerCargo.prototype.land = PlayerObject.prototype.land;
 
 PlayerCargo.prototype.stun = function() {
