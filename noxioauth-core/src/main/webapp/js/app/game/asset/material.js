@@ -53,6 +53,8 @@ Asset.prototype.material.map.tin = {};
 Asset.prototype.material.object = {};
 Asset.prototype.material.object.bomb = {};
 Asset.prototype.material.object.zone = {};
+Asset.prototype.material.object.tele = {};
+Asset.prototype.material.object.jumper = {};
 Asset.prototype.material.object.flag = {};
 Asset.prototype.material.object.hill = {};
 Asset.prototype.material.object.generic = {};
@@ -2318,6 +2320,36 @@ Asset.prototype.material.object.zone.zone = {
   bloom: "false",
   texture0: "multi/default",
   texture1: "object/zone/gradient",
+};
+
+/* Source File: telenter.mat */
+Asset.prototype.material.object.tele.telenter = {
+  name: "object.tele.telenter",
+  shader: "mapobjpulse",
+  shadow: "false",
+  bloom: "false",
+  texture0: "multi/default",
+  texture1: "object/tele/telenter",
+};
+
+/* Source File: telexit.mat */
+Asset.prototype.material.object.tele.telexit = {
+  name: "object.tele.telexit",
+  shader: "mapobjpulse",
+  shadow: "false",
+  bloom: "false",
+  texture0: "multi/default",
+  texture1: "object/tele/telexit",
+};
+
+/* Source File: jumper.mat */
+Asset.prototype.material.object.jumper.jumper = {
+  name: "object.jumper.jumper",
+  shader: "mapobjpulse",
+  shadow: "false",
+  bloom: "false",
+  texture0: "multi/default",
+  texture1: "object/jumper/jumper",
 };
 
 /* Source File: flag.mat */

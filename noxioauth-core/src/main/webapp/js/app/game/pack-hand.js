@@ -76,6 +76,11 @@ PackHand.prototype.createObject = function(data) {
     case "flz" : { this.game.objects.push(new FlagZoneObject(this.game, oid, pos, permutation, team, color)); break; }
     case "zon" : { this.game.objects.push(new ZoneObject(this.game, oid, pos, permutation, team, color)); break; }
     case "bmb" : { this.game.objects.push(new BombObject(this.game, oid, pos, permutation, team, color)); break; }
+    case "teln" : { this.game.objects.push(new Telenter(this.game, oid, pos, permutation, team, color)); break; }
+    case "telx" : { this.game.objects.push(new Telexit(this.game, oid, pos, permutation, team, color)); break; }
+    case "void" : { this.game.objects.push(new Void(this.game, oid, pos, permutation, team, color)); break; }
+    case "jmpr" : { this.game.objects.push(new Jumper(this.game, oid, pos, permutation, team, color)); break; }
+    case "bmpr" : { this.game.objects.push(new Bumper(this.game, oid, pos, permutation, team, color)); break; }
     default : { main.menu.error.showErrorException("Game Exception", "Recieved object creation for '" + type + "' which does not exist.", JSON.stringify(data)); main.close(); break; }
   }
 };

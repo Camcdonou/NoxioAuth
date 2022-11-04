@@ -20,6 +20,7 @@ Asset.prototype.model.map = {};
 Asset.prototype.model.map.copper = {};
 Asset.prototype.model.map.gold = {};
 Asset.prototype.model.map.iron = {};
+Asset.prototype.model.map.generic = {};
 Asset.prototype.model.map.tin = {};
 Asset.prototype.model.object = {};
 Asset.prototype.model.object.bomb = {};

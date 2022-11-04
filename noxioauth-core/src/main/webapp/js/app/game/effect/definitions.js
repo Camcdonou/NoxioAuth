@@ -8,6 +8,49 @@
 /* Effect definitions. EffectDefinition objects in this class are called ''''''statically'''''' to generate effects. */
 var NxFx = {};
 
+NxFx.map = {
+  telenter: new EffectDefinition(
+    "Map-Teleport-Enter", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerBlock.COLORA, 1.0), util.vec4.copy3(PlayerBlock.COLORB, 0)], [2.45, 1.25], 18, "fast"], attachment: false, delay: 0},
+      {class: ParticleVoxelVanish, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBlock.COLORA, PlayerBlock.COLORB], attachment: false, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/xob/rewind0.wav", 0.7, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  telexit: new EffectDefinition(
+    "Map-Teleport-Exit", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerBlock.COLORA, 1.0), util.vec4.copy3(PlayerBlock.COLORB, 0)], [2.45, 1.25], 18, "fast"], attachment: false, delay: 0},
+      {class: ParticleVoxelVanish, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBlock.COLORA, PlayerBlock.COLORB], attachment: false, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/box/dash0.wav", 0.3, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  voided: new EffectDefinition(
+    "Map-Void", util.vec3.make(0, 0, 0.5), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerCrateBlack.LIGHT_COLOR_A, util.vec4.copy3(PlayerCrateBlack.LIGHT_COLOR_A, 0.75), util.vec4.copy3(PlayerCrateBlack.LIGHT_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
+      {class: ParticleVoxelRecall, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCrateBlack.FX_COLOR_A, PlayerCrateBlack.FX_COLOR_B], attachment: false, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", "object/void/succ.wav", 0.6, 0.0, "effect"], attachment: false, delay: 0}
+    ]
+  ),
+  bumper: new EffectDefinition(
+    "Map-Bumper", util.vec3.make(0, 0, 0.5), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerCrateBlack.LIGHT_COLOR_A, util.vec4.copy3(PlayerCrateBlack.LIGHT_COLOR_A, 0.75), util.vec4.copy3(PlayerCrateBlack.LIGHT_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: true, delay: 0},
+      {class: ParticleVoxelRecall, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerCrateBlack.FX_COLOR_A, PlayerCrateBlack.FX_COLOR_B], attachment: false, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/voxel/recall1.wav", 0.6, 0.0, "effect"], attachment: false, delay: 0}
+    ]
+  ),
+  jumper: new EffectDefinition(
+    "Map-Jumper", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerBlock.REST_LIGHT, 0.7), util.vec4.copy3(PlayerBlock.REST_LIGHT, 0.0)], [1.5, 2.55], 15, "fast"], attachment: true, delay: 0},
+      {class: ParticleBlockSlap, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBlock.COLORA, PlayerBlock.COLORB], attachment: true, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", "object/jumper/boing.wav", 0.35, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  )
+};
+
 /* global PlayerBox */
 /* global ParticleStun */
 /* global ParticleZap */

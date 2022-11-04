@@ -1195,6 +1195,28 @@ Asset.prototype.shader.post_msaa = {
   fragment: "precision mediump float;\n\nuniform sampler2D texture0;\nuniform sampler2D texture6;   // Game World\nuniform sampler2D texture7;   // UI\nuniform sampler2D texture8;   // Sky\nuniform sampler2D texture9;   // Game World Bloom\nuniform sampler2D texture10;  // Game World Depth\nuniform sampler2D texture11;  // Game World Bloom Depth\n\nuniform float bloomTextureAspect; // To adjust the vertical/horizontal radius of bloom blurring\nuniform float bloomTextureScale;  // To adjust for the amount texture space actually used by the fbo\n\nvarying vec2 vUVworld[3];\nvarying vec2 vUVui;\nvarying vec2 vUVsky;\n\nvoid main(void) {\n  vec4 worldSampA = texture2D(texture6, vUVworld[0]);\n  vec4 worldSampB = texture2D(texture6, vUVworld[1]);\n  vec4 worldSampC = texture2D(texture6, vUVworld[2]);\n\n  vec4 world = (worldSampA+worldSampB+worldSampC)/3.; /* @TODO: Great Value MSAA / Should sample pixels in area based on fbo//actual resolution */\n  vec4 ui = texture2D(texture7, vUVui);\n  vec4 sky = texture2D(texture8, vUVsky);\n\n  // Sky + World\n  vec3 color = vec3((world.a*world.rgb)+((1.-world.a)*sky.rgb));\n\n  // + UI\n  color = ((1. - ui.a) * color) + (ui.rgb * ui.a);\n  \n  gl_FragColor = vec4(color, 1.);\n}\n",
 };
 
+/* Source File: mapobjpulseg */
+Asset.prototype.shader.mapobjpulse = {
+  name: "mapobjpulse",
+  attributes: [
+    {type: "vec3", name: "position"},
+    {type: "vec3", name: "texcoord"},
+  ],
+  uniforms: [
+    {type: "mat4", name: "Pmatrix"},
+    {type: "mat4", name: "Vmatrix"},
+    {type: "mat4", name: "Mmatrix"},
+    {type: "vec3", name: "transform"},
+    {type: "vec3", name: "scale"},
+    {type: "int", name: "frame"},
+    {type: "sampler2D", name: "texture0"},
+    {type: "sampler2D", name: "texture1"},
+    {type: "vec3", name: "color"},
+  ],
+  vertex: "precision mediump float;\n\nattribute vec3 position;\nattribute vec3 texcoord;\n\nuniform mat4 Pmatrix;\nuniform mat4 Vmatrix;\nuniform mat4 Mmatrix;\n\nuniform vec3 transform;\nuniform vec3 scale; /* Change to size */\n\nuniform int frame;\n\nvarying vec2 vUV;\nvarying float ffo;\n\nvec3 rotateZ(vec3 a, float r) {\n    float cosDegrees = cos(r);\n    float sinDegrees = sin(r);\n\n    float x = (a.x * cosDegrees) + (a.y * sinDegrees);\n    float y = (a.x * -sinDegrees) + (a.y * cosDegrees);\n\n    return vec3(x, y, a.z);\n}\n\n\nvoid main(void) {\n  float ff = float(frame);\n  vec3 cs = scale * (1.0 + (0.1 * sin(ff * 0.05)));\n  float r = ff * 0.032;\n  vec4 cPos = vec4((rotateZ(position,r)*cs)+transform, 1.);\n\n  vUV=texcoord.st;\n  gl_Position = Pmatrix*Vmatrix*Mmatrix*cPos;\n}\n",
+  fragment: "precision mediump float;\n\n/* Texture Samples */\nuniform sampler2D texture0;\nuniform sampler2D texture1;\n\n/* General */\nuniform vec3 color;\nvarying vec2 vUV;\nvarying float ffo;\n\nvoid main(void) {\n\n  vec4 diffuse = texture2D(texture0, vUV+vec2(ffo*0.0067, 0.0));\n  vec4 gradient = texture2D(texture1, vUV);\n\n  gl_FragColor = vec4(gradient.rgb+(diffuse.rgb*.25), gradient.a)*vec4(color, 1.);\n}\n",
+};
+
 /* Source File: orbg */
 Asset.prototype.shader.orb = {
   name: "orb",
