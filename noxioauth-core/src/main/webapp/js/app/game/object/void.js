@@ -12,10 +12,10 @@ function Void(game, oid, pos, permutation, team, color) {
   this.material = this.game.display.getMaterial("map.tin.orb");
   
   /* Settings */
-  this.cullRadius = 1.0;          // Radius at which to cull this object and all of it's effects.
+  this.cullRadius = 3.0;          // Radius at which to cull this object and all of it's effects.
   
   /* State */
-  this.size = util.vec2.make(1, 1);
+  this.scale = 1.5 + ((Math.min(7, Math.max(2, team)) - 2) * 0.65);
 };
 
 Void.prototype.update = function(data) {
@@ -44,7 +44,7 @@ Void.prototype.getDraw = function(geometry, decals, lights, bounds) {
     var teleUniformData = [
       {name: "transform", data: [this.pos.x, this.pos.y, 0]},
       {name: "rotation", data: 0},
-      {name: "scale", data: 1.5}
+      {name: "scale", data: this.scale}
     ];
     geometry.push({model: this.model, material: this.material, uniforms: teleUniformData});
   }

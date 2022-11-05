@@ -15,7 +15,7 @@ function Bumper(game, oid, pos, permutation, team, color) {
   this.cullRadius = 1.0;          // Radius at which to cull this object and all of it's effects.
   
   /* State */
-  this.size = util.vec2.make(1, 1);
+  this.scale = 1.0 + (Math.min(4, Math.max(0, team)) * 0.85);
 };
 
 Bumper.prototype.update = function(data) {
@@ -27,7 +27,8 @@ Bumper.prototype.update = function(data) {
 };
 
 Bumper.prototype.fx = function() {
-    this.game.putEffect(NxFx.map.bumper.trigger(this.game, util.vec2.toVec3(this.pos, 0), util.vec3.create()));
+    if(this.scale <= 1.5) { this.game.putEffect(NxFx.map.bumper.trigger(this.game, util.vec2.toVec3(this.pos, 0), util.vec3.create())); }
+    else { this.game.putEffect(NxFx.map.bumperBig.trigger(this.game, util.vec2.toVec3(this.pos, 0), util.vec3.create())); }
 };
 
 Bumper.prototype.setPos = GameObject.prototype.setPos;
@@ -44,7 +45,7 @@ Bumper.prototype.getDraw = function(geometry, decals, lights, bounds) {
     var bumperUniformData = [
       {name: "transform", data: [this.pos.x, this.pos.y, 0]},
       {name: "rotation", data: 0},
-      {name: "scale", data: 1.25}
+      {name: "scale", data: this.scale}
     ];
     geometry.push({model: this.model, material: this.material, uniforms: bumperUniformData});
   }
