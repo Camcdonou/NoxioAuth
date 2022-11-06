@@ -53,6 +53,7 @@ Asset.prototype.material.map.tin = {};
 Asset.prototype.material.object = {};
 Asset.prototype.material.object.bomb = {};
 Asset.prototype.material.object.zone = {};
+Asset.prototype.material.object.ball = {};
 Asset.prototype.material.object.tele = {};
 Asset.prototype.material.object.jumper = {};
 Asset.prototype.material.object.flag = {};
@@ -2320,6 +2321,15 @@ Asset.prototype.material.object.zone.zone = {
   bloom: "false",
   texture0: "multi/default",
   texture1: "object/zone/gradient",
+};
+
+/* Source File: ball.mat */
+Asset.prototype.material.object.ball.ball = {
+  name: "object.ball.ball",
+  shader: "ball",
+  shadow: "false",
+  bloom: "orb",
+  texture0: "multi/multi_dif",
 };
 
 /* Source File: telenter.mat */

@@ -44,6 +44,10 @@ function Announcer(game) {
     off  :: Offense
     def  :: Defense
     rnd  :: Round Over
+    rts  :: Red Team Score (BALL)
+    bts  :: Blue Team Score (BALL)
+    brs  :: Ball Reset (BALL)
+    spb  :: Sports Ball (BALL)
     t60  :: 1 Minute Remaining
     t30  :: 30 Seconds Reamining
     t10  :: 10 Seconds Remaining
@@ -142,6 +146,11 @@ Announcer.prototype.announce = function(code) {
     case "fr"  : { longShort("announcer/flagreturn.wav"); break; }
     case "fs" : { longShort("announcer/flagstolen.wav"); break; }
     case "ft" : { longShort("announcer/flagtaken.wav"); break; }
+    
+    case "rts" : { longShort("announcer/ballred.wav", "Red Team Scored"); break; }
+    case "bts"  : { longShort("announcer/ballblue.wav", "Blue Team Scored"); break; }
+    case "brs" : { longShort("announcer/ballreset.wav"); break; }
+    case "spb" : { longShort("announcer/sportsball.wav", "Sports Ball"); break; }
     
     case "t60" : { longShort("announcer/oneminute.wav", "1 Minute Remaining", false); break; }
     case "t30" : { longShort("announcer/thirtyseconds.wav", "30 Seconds Remaining", false); break; }

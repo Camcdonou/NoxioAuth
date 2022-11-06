@@ -9,8 +9,8 @@
 function BallObject(game, oid, pos, permutation, team, color) {
   GameObject.call(this, game, oid, pos, permutation, team, color);
   
-  this.model = this.game.display.getModel("multi.box");
-  this.material = this.game.display.getMaterial("object.flag.flag");
+  this.model = this.game.display.getModel("map.tin.orb");
+  this.material = this.game.display.getMaterial("object.ball.ball");
 
   /* Settings */
   this.radius = 0.1; this.friction = 0.725;
@@ -113,7 +113,7 @@ BallObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
       {name: "color", data: util.vec3.toArray(color)},
       {name: "angle", data: [0., 0., 0.]}, 
       {name: "rotation", data: 0},           // Shadows still use old 1f z-rotation. @TODO: Convert shadows over to "angle" 3f rotation 
-      {name: "scale", data: 0.15}
+      {name: "scale", data: 0.575}
     ];
     geometry.push({model: this.model, material: this.material, uniforms: flagUniformData});
     for(var i=0;i<this.effects.length;i++) {
