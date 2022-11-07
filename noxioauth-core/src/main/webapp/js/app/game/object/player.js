@@ -131,6 +131,8 @@ PlayerObject.prototype.effectSwitch = function(e) {
     case "csb" : { this.game.putCameraShake(this, PlayerObject.CAMERA_SHAKE_MEDIUM); return true; }
     case "csc" : { this.game.putCameraShake(this, PlayerObject.CAMERA_SHAKE_HEAVY); return true; }
     case "csd" : { this.game.putCameraShake(this, PlayerObject.CAMERA_SHAKE_CRITICAL); return true; }
+    case "tbst" : { this.effects.push(NxFx.player.tossBoost.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed))); return true; }
+    case "pbst" : { this.effects.push(NxFx.player.pickupBoost.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed))); return true; }
     default : { main.menu.warning.show("Invalid effect value: '" + e + "' @ Player.js :: effectSwitch()"); return false; }
   }
 };

@@ -17,12 +17,16 @@ function BallObject(game, oid, pos, permutation, team, color) {
   this.cullRadius = 3.0;
 
   /* State */
+  this.lastPos = pos;
   this.onBase = 1;                 // 1 -> Flag is on flagstand | 0 -> Flag is not on the flag stand and should draw on hud
 
   this.targetCircle = new Decal(this.game, "object.generic.decal.targetcirclesm", util.vec2.toVec3(this.pos, Math.min(this.height, 0.0)), {x: 0.0, y: 0.0, z: 1.0}, 1.0, 0.0, util.vec4.make(1,1,1,1), 15, 0, 0);
 };
 
 BallObject.prototype.update = function(data) {
+  /* Last location */
+  this.lastPos = this.pos;
+  
   var pos = util.vec2.parse(data.shift());
   var vel = util.vec2.parse(data.shift());
   var height = parseFloat(data.shift());
@@ -58,16 +62,27 @@ BallObject.prototype.update = function(data) {
       case "hfxrb" : { this.stunFire("rainbow"); return true; }
       case "hfxrt" : { this.stunFire("retro"); return true; }
       case "crt" : { this.criticalHit(); return true; }
+      case "balr" : { this.ballReset(); return true; }
+      case "bals" : { this.ballScore(); return true; }
       default : { main.menu.warning.show("Invalid effect value: '" + effects[i] + "' @ Flag.js :: update()"); break; }
     }
   }
-  
+    
   /* Step Effects */
   this.targetCircle.step(util.vec2.toVec3(this.pos, this.height > 0. ? 0. : this.height), 1.0, 0.0);
   for(var i=0;i<this.effects.length;i++) {
     if(this.effects[i].active()) { this.effects[i].step(util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)); }
     else { this.effects.splice(i--, 1); }
   }
+};
+
+BallObject.prototype.ballReset = function() {
+  this.game.putEffect(NxFx.map.ballReset.trigger(this.game, util.vec2.toVec3(this.lastPos, 0), util.vec3.create()));
+  this.game.putEffect(NxFx.map.ballReset.trigger(this.game, util.vec2.toVec3(this.pos, 0), util.vec3.create()));
+};
+
+BallObject.prototype.ballScore = function() {
+  this.game.putEffect(NxFx.map.ballScore.trigger(this.game, util.vec2.toVec3(this.pos, 0), util.vec3.create()));
 };
 
 BallObject.prototype.land = function() {

@@ -58,6 +58,20 @@ NxFx.map = {
       {class: ParticleBlockSlap, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBlock.COLORA, PlayerBlock.COLORB], attachment: true, delay: 0},
       {class: SpatialSoundInstance, params: ["<sound *>", "object/jumper/boing.wav", 0.35, 0.0, "effect"], attachment: true, delay: 0}
     ]
+  ),
+  ballReset: new EffectDefinition(
+    "Ball-Reset", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerBlock.COLORA, 1.0), util.vec4.copy3(PlayerBlock.COLORB, 0)], [2.45, 1.25], 18, "fast"], attachment: false, delay: 0},
+      {class: ParticleVoxelVanish, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBlock.COLORA, PlayerBlock.COLORB], attachment: false, delay: 0}
+    ]
+  ),
+  ballScore: new EffectDefinition(
+    "Ball-Score", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerBlock.COLORA, 1.0), util.vec4.copy3(PlayerBlock.COLORB, 0)], [2.45, 1.25], 18, "fast"], attachment: false, delay: 0},
+      {class: ParticleVoxelVanish, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBlock.COLORA, PlayerBlock.COLORB], attachment: false, delay: 0}
+    ]
   )
 };
 
@@ -181,6 +195,22 @@ NxFx.player = {
   fall: new EffectDefinition(
     "Player-Fall", util.vec3.make(0, 0, 0.25), 0, true,
     [
+    ]
+  ),
+  pickupBoost: new EffectDefinition(
+    "Pickup-Boost", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerQuad.COLOR_A, 0.55), util.vec4.copy3(PlayerQuad.COLOR_B, 0.0)], [1.25, 2.15], 18, "fast"], attachment: true, delay: 0},
+      {class: ParticleReady, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerQuad.COLOR_A, PlayerQuad.COLOR_B], attachment: true, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/generic/pickup1.wav", 0.3, 0.0, "effect"], attachment: true, delay: 0}
+    ]
+  ),
+  tossBoost: new EffectDefinition(
+    "Player-Toss", util.vec3.make(0, 0, 0.25), 0 , true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerBlock.COLORA, 1.0), util.vec4.copy3(PlayerBlock.COLORB, 0)], [2.45, 1.25], 18, "fast"], attachment: false, delay: 0},
+      {class: ParticleVoxelVanish, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBlock.COLORA, PlayerBlock.COLORB], attachment: true, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", ["character/generic/toss1.wav"], 0.425, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
 };

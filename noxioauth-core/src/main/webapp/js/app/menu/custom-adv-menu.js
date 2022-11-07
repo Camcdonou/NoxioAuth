@@ -21,13 +21,8 @@ function AdvCustomMenu() {
   var loadSettings = JSON.parse(localStorage.getItem("customGameSettings"));
   if(loadSettings) { this.settings = loadSettings; }
   
-  this.maps = [
-    {id: 'final', name: "Final Destination"},
-    {id: 'combat', name: "Combat Zone"},
-    {id: 'x', name: "ech"},
-    {id: 'x', name: "e"},
-    {id: 'x', name: "ech"},
-    {id: 'x', name: "ech"}
+  this.maps = [ // Temp. Filled out by a rest request for maps
+    {id: 'final', name: "Final Destination"}
   ];
   
   this.gametypes = [
@@ -142,6 +137,16 @@ function AdvCustomMenu() {
     {
       name: "Assault",
       id: "assault",
+      team: true,
+      settings: [
+        {name: "Score", id: "score_to_win", type: "#"},
+        {name: "Respawn", id: "respawn_time", type: "# Frames"},
+        {name: "Auto-Balance", id: "auto_balance", type: "0/1"}
+      ]
+    },
+    {
+      name: "Sports Ball",
+      id: "sportsball",
       team: true,
       settings: [
         {name: "Score", id: "score_to_win", type: "#"},
