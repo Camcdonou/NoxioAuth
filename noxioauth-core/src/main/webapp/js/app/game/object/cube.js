@@ -37,7 +37,8 @@ PlayerCube.BLIP_REFUND_POWER = 5;
 PlayerCube.BLIP_POWER_MAX = 30;
 PlayerCube.BOMB_POWER_COST = 50;
 PlayerCube.BOMB_POWER_MAX = 100;
-PlayerCube.BOMB_FUSE_LENGTH = 40;
+PlayerCube.BOMB_FUSE_LENGTH = 65;
+PlayerCube.BOMB_SHORTEN = 35;
 
 PlayerCube.prototype.update = function(data) {
   PlayerObject.prototype.update.call(this, data);
@@ -108,7 +109,10 @@ PlayerCube.prototype.detonate = function(bomb) {
 };
 
 PlayerCube.prototype.taunt = function() {
-
+  this.effects.push(NxFx.cube.shorten.trigger(this.game, util.vec2.toVec3(this.pos, this.height), util.vec2.toVec3(this.vel, this.vspeed)));
+  for(var i=0;i<this.bombs.length;i++) {
+    this.bombs[i].time = Math.max(0, this.bombs[i].time-PlayerCube.BOMB_SHORTEN);
+  }
 };
 
 PlayerCube.prototype.setPos = PlayerObject.prototype.setPos;

@@ -21,7 +21,7 @@ ParticleCubeCharge.prototype.create = function() {
   var colorA = function() { return util.vec4.copy(parent.colorA); };
   var colorB = function() { return util.vec4.copy(parent.colorB); };
 
-  for(var i=0;i<6;i++) {
+  for(var i=0;i<9;i++) {
     this.pushPart({
       model: square,
       material: markMat,
@@ -34,12 +34,12 @@ ParticleCubeCharge.prototype.create = function() {
         this.properties.color.w += (this.max*0.5)-this.length<=0?0.15:-0.15;
         this.properties.tone.w += (this.max*0.5)-this.length<=0?0.15:-0.15;
       },
-      properties: {offset: util.vec3.make(0,0,-0.2), scale: .75 + (1.25-((i+1)/7)), color: util.vec4.copy3(colorA(), 0.05), tone: util.vec4.copy3(colorB(), 0.25), rotation: Math.random()*6.4}
+      properties: {offset: util.vec3.make(0,0,-0.2), scale: .75 + (1.25-((i+1)/9)), color: util.vec4.copy3(colorA(), 0.05), tone: util.vec4.copy3(colorB(), 0.25), rotation: Math.random()*6.4}
     });
   }
   
   var up = util.vec3.make(0.,0.,1.);
-  for(var i=0;i<47;i++) {
+  for(var i=0;i<60;i++) {
     var r = util.vec3.random();
     var axAng = util.vec3.angle(up, r);
     var l = 10+Math.floor(Math.random()*4);
@@ -56,7 +56,7 @@ ParticleCubeCharge.prototype.create = function() {
         this.properties.offset = util.vec3.add(this.properties.offset, this.properties.vel);
         this.properties.vel = util.vec3.scale(this.properties.vel, 0.965);
       },
-      properties: {offset: util.vec3.scale(r, 1. + (.75-((i+1)/47))), vel: util.vec3.scale(r, -0.075), scale: 0.4, angle: axAng, color: util.vec4.copy3(colorA(), 0.35), tone: util.vec4.copy3(colorB(), 0)}
+      properties: {offset: util.vec3.scale(r, 1. + (.75-((i+1)/60))), vel: util.vec3.scale(r, -0.075), scale: 0.4, angle: axAng, color: util.vec4.copy3(colorA(), 0.35), tone: util.vec4.copy3(colorB(), 0)}
     });
   }
 };

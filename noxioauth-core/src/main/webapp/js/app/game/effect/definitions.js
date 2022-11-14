@@ -488,20 +488,27 @@ NxFx.cube = {
   charge: new EffectDefinition(
     "Cube-Charge", util.vec3.make(0, 0, 0.25), 0, true,
     [
-      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerBox.BLIP_COLOR_A, 0.8), util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 1.0)], [2.15, 0.85], 35, "slow"], attachment: false, delay: 0},
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerBox.BLIP_COLOR_A, 0.8), util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 1.0)], [2.15, 0.85], 60, "slow"], attachment: false, delay: 0},
       {class: ParticleCubeCharge, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBox.BLIP_COLOR_A, PlayerBox.BLIP_COLOR_B], attachment: false, delay: 0},
-      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerBox.BLIP_COLOR_A, 0.15), util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 1.0)], [1.75, 3.5], 7, "linear"], attachment: false, delay: 35},
-      {class: ParticleVoxelCharge, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBox.BLIP_COLOR_A, PlayerBox.BLIP_COLOR_B], attachment: false, delay: 35},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/voxel/recall0.wav", 0.7, 0.0, "effect"], attachment: false, delay: 35}
+      {class: ParticleVoxelCharge, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBox.BLIP_COLOR_A, PlayerBox.BLIP_COLOR_B], attachment: false, delay: 35}
     ]
   ),
   detonate: new EffectDefinition(
     "Cube-Detonate", util.vec3.make(0, 0, 0.5), 0, true,
     [
-      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerBox.BLIP_COLOR_A, util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 0.75), util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: false, delay: 0},
+      {class: PointLightInterp, params: ["<vec3 pos>", [PlayerBox.BLIP_COLOR_A, util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 0.75), util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 0)], [2.75, 4.5], 18, "fast"], attachment: false, delay: 5},
       {class: ParticleCubeDetonateBlip, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBox.BLIP_COLOR_A, PlayerBox.BLIP_COLOR_B], attachment: false, delay: 0},
       {class: ParticleVoxelRecall, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBox.BLIP_COLOR_A, PlayerBox.BLIP_COLOR_B], attachment: false, delay: 0},
-      {class: SpatialSoundInstance, params: ["<sound *>", "character/voxel/recall1.wav", 0.75, 0.0, "effect"], attachment: false, delay: 0}
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/voxel/recall1.wav", 0.75, 0.0, "effect"], attachment: false, delay: 5},
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/voxel/recall0.wav", 0.7, 0.0, "effect"], attachment: false, delay: 0}
+    ]
+  ),
+  shorten: new EffectDefinition(
+    "Cube-Shorten", util.vec3.make(0, 0, 0.25), 0, true,
+    [
+      {class: PointLightInterp, params: ["<vec3 pos>", [util.vec4.copy3(PlayerBox.BLIP_COLOR_A, 0.5), util.vec4.copy3(PlayerBox.BLIP_COLOR_B, 0.0)], [1.0, 2.5], 6, "linear"], attachment: true, delay: 0},
+      {class: ParticleVoxelCharge, params: ["<game *>", "<vec3 pos>", "<vec3 vel>", PlayerBox.BLIP_COLOR_A, PlayerBox.BLIP_COLOR_B], attachment: true, delay: 0},
+      {class: SpatialSoundInstance, params: ["<sound *>", "character/cube/shorten0.wav", 0.25, 0.0, "effect"], attachment: true, delay: 0}
     ]
   )
 };

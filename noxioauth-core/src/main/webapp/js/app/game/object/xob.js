@@ -40,7 +40,7 @@ function PlayerXob(game, oid, pos, team, color) {
 };
 
 /* Constants */
-PlayerXob.BLIP_POWER_MAX = 35;
+PlayerXob.BLIP_POWER_MAX = 27;
 PlayerXob.BLIP_REFUND_POWER = 5;
 PlayerXob.REWIND_POWER_ADD = 40;
 PlayerXob.REWIND_POWER_MAX = 60;
