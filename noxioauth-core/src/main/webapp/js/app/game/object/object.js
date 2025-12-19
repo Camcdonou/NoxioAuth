@@ -19,6 +19,7 @@ function GameObject(game, oid, pos, permutation, team, color) {
   this.hide = false;
   
   this.pos = pos;
+  this.prevPos = pos;
   this.vel = util.vec2.create();
   
   this.permutation = permutation;
@@ -28,6 +29,7 @@ function GameObject(game, oid, pos, permutation, team, color) {
   this.effects = [];
   
   this.height = 0.0;
+  this.prevHeight = 0.0;
   this.vspeed = 0.0;
 };
 
@@ -41,6 +43,7 @@ GameObject.prototype.update = function(data) {
 };
 
 GameObject.prototype.setPos = function(pos) {
+  this.prevPos = this.pos;
   this.pos = pos;
 };
 
@@ -49,11 +52,12 @@ GameObject.prototype.setVel = function(vel) {
 };
 
 GameObject.prototype.setHeight = function(height, vspeed) {
+  this.prevHeight = this.height;
   this.height = height;
   this.vspeed = vspeed;
 };
 
-GameObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
+GameObject.prototype.getDraw = function(geometry, decals, lights, bounds, alpha) {
   /* NO. */
 };
 

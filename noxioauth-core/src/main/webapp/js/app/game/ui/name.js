@@ -13,7 +13,7 @@ function NameUI(game, ui, name) {
 NameUI.prototype.setVisible = GenericUI.prototype.setVisible;
 NameUI.prototype.show = GenericUI.prototype.show;
 NameUI.prototype.hide = GenericUI.prototype.hide;
-NameUI.prototype.refresh = function() {
+NameUI.prototype.refresh = function(alpha) {
   this.clear();
   
   var parent = this;
@@ -34,7 +34,9 @@ NameUI.prototype.refresh = function() {
   for(var i=0;i<this.game.objects.length;i++) {
       var obj = this.game.objects[i];
     if(obj.name && !obj.hide) {
-      names.push({name: this.game.objects[i].name, pos: util.vec2.toVec3(obj.pos, obj.height+0.75), icon: obj.icon?obj.icon:DEFAULTICON});
+      var rpos = util.vec2.lerp(obj.prevPos, obj.pos, alpha);
+      var rh = (obj.height * alpha) + (obj.prevHeight * (1.0 - alpha));
+      names.push({name: this.game.objects[i].name, pos: util.vec2.toVec3(rpos, rh+0.75), icon: obj.icon?obj.icon:DEFAULTICON});
     }
   }
   

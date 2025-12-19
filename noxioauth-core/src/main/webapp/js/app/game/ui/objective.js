@@ -25,15 +25,21 @@ ObjectiveUI.prototype.clearTimer = function() {
   this.timer = undefined;
 };
 
+ObjectiveUI.prototype.stepTimer = function() {
+  if(this.timer && this.timer.time > 0) {
+    this.timer.time--;
+  }
+};
+
 ObjectiveUI.prototype.setVisible = GenericUI.prototype.setVisible;
 ObjectiveUI.prototype.show = GenericUI.prototype.show;
 ObjectiveUI.prototype.hide = GenericUI.prototype.hide;
-ObjectiveUI.prototype.refresh = function() {
+ObjectiveUI.prototype.refresh = function(alpha) {
   this.clear();
-  this.generate();
+  this.generate(alpha);
 };
 
-ObjectiveUI.prototype.generate = function() {
+ObjectiveUI.prototype.generate = function(alpha) {
   if(!this.game.objects) { return; }                                  // Initial generate() call must be ignored for safety!
                                                                       // This is because we look at game objects to place nametags on them.
   var parent = this;
@@ -56,37 +62,39 @@ ObjectiveUI.prototype.generate = function() {
   var objectives = [];
   for(var i=0;i<this.game.objects.length;i++) {
     var obj = this.game.objects[i];
+    var rpos = util.vec2.lerp(obj.prevPos, obj.pos, alpha);
+    var rh = (obj.height * alpha) + (obj.prevHeight * (1.0 - alpha));
     if(obj.type() === "flg" && obj.onBase === 0 && !obj.hide) {
-      var dist = util.vec2.distance(obj.pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
+      var dist = util.vec2.distance(rpos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
       var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
-      objectives.push({mat: flagMat, pos: util.vec2.toVec3(obj.pos, obj.height+1.0), color: util.vec3.toVec4(obj.getColor(), 1.), fade: fade, offset: 0});
+      objectives.push({mat: flagMat, pos: util.vec2.toVec3(rpos, rh+1.0), color: util.vec3.toVec4(obj.getColor(), 1.), fade: fade, offset: 0});
     }
     else if(obj.type() === "hil" && !obj.hide) {
-      var dist = util.vec2.distance(obj.pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
+      var dist = util.vec2.distance(rpos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
       var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
-      objectives.push({mat: kingMat, pos: util.vec2.toVec3(obj.pos, obj.height+1.0), color: util.vec3.toVec4(obj.getColor(), 1.), fade: fade, offset: 0});
+      objectives.push({mat: kingMat, pos: util.vec2.toVec3(rpos, rh+1.0), color: util.vec3.toVec4(obj.getColor(), 1.), fade: fade, offset: 0});
     }
     else if(obj.type() === "zon" && !obj.hide) {
-      var dist = util.vec2.distance(obj.pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
+      var dist = util.vec2.distance(rpos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
       var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
-      objectives.push({mat: zoneMat, pos: util.vec2.toVec3(obj.pos, obj.height+1.0), color: util.vec3.toVec4(obj.getColor(), 1.), fade: fade, offset: 0});
+      objectives.push({mat: zoneMat, pos: util.vec2.toVec3(rpos, rh+1.0), color: util.vec3.toVec4(obj.getColor(), 1.), fade: fade, offset: 0});
     }
 //    else if(obj.type() === "bmb" && !obj.hide) {
 //      if(!obj.armed) {
-//        var dist = util.vec2.distance(obj.pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
+//        var dist = util.vec2.distance(rpos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
 //        var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
-//        objectives.push({mat: bombMat, pos: util.vec2.toVec3(obj.pos, obj.height+1.0), team: -1, fade: fade, offset: 0});
+//        objectives.push({mat: bombMat, pos: util.vec2.toVec3(rpos, rh+1.0), team: -1, fade: fade, offset: 0});
 //      }
 //      else {
-//        var dist = util.vec2.distance(obj.pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
+//        var dist = util.vec2.distance(rpos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
 //        var time = Math.ceil(obj.timer/30);
-//        objectives.push({text: time + "", pos: util.vec2.toVec3(obj.pos, obj.height+1.0), team: -1, fade: 1, offset: 0});
+//        objectives.push({text: time + "", pos: util.vec2.toVec3(rpos, rh+1.0), team: -1, fade: 1, offset: 0});
 //      }
 //    }
     else if(obj.objective && !obj.hide) {
-      var dist = util.vec2.distance(obj.pos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
+      var dist = util.vec2.distance(rpos, util.vec2.inverse(util.vec3.toVec2(this.game.display.camera.pos)));
       var fade = Math.min(Math.max(0, dist-this.ICON_FADE_RANG)/this.ICON_FADE_DIST, 1);
-      objectives.push({mat: ultMat, pos: util.vec2.toVec3(obj.pos, obj.height+1.0), color: util.vec3.toVec4(obj.getColor(), 1.), fade: fade, offset: 32});
+      objectives.push({mat: ultMat, pos: util.vec2.toVec3(rpos, rh+1.0), color: util.vec3.toVec4(obj.getColor(), 1.), fade: fade, offset: 32});
     }
   }
   
@@ -130,11 +138,9 @@ ObjectiveUI.prototype.generate = function() {
   }
   
   if(this.timer) {
-    if(this.timer.time > 0) { this.timer.time--; }
-    
     var ts = 24;
     var tv = ts*0.15;
-    var millis = this.timer.time*30;
+    var millis = this.timer.time*33.333; // 30 FPS to millis
     var seconds = parseInt((millis / 1000) % 60);
     var minutes = parseInt((millis / (1000*60)) % 60);
     var TIMER = " " + this.timer.text + " " + (minutes < 10?("0" + minutes):minutes) + ":" + (seconds < 10?("0" + seconds):seconds) + " ";

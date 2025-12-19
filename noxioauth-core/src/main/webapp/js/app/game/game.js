@@ -193,10 +193,7 @@ NoxioGame.prototype.doUpdate = function(packet) {
   this.packHand.gameDataUpdate(packet);
   
   /* Update Camera */
-  var obj = this.getObject(this.control);                                               // Get the object that the player controls
-  if(obj) { this.display.camera.setPos({x: -obj.pos.x, y: -obj.pos.y, z: 0.0}); }       // Update camera to player's object position
-  this.display.camera.update();                                                         // Update camera interpolation
-  this.map.sky.step();                                                                  // Step skybox 1 frame
+  // Camera update moved to Display.draw() for smooth interpolation
   
   /* Step world effects */
   for(var i=0;i<this.effects.length;i++) {
@@ -209,6 +206,7 @@ NoxioGame.prototype.doUpdate = function(packet) {
   
   /* Update timers */
   if(this.respawnTimer>0) { this.respawnTimer--; }
+  this.ui.objective.stepTimer();
   
   this.frame++;
 };
@@ -542,31 +540,35 @@ NoxioGame.prototype.draw = function() {
         this.doUpdate(packet);
         initial = false;
     }
-    this.queueInput = setTimeout(function() { if(main.inGame()) { main.game.doInput(); }}, 1);
                   /* DEBUG CTIME START */
                   /* */ this.debug.ctime.pop();
                   /* */ this.debug.ctime.unshift(util.time.now() - start);
                   /* DEBUG CTIME END */
-    if(this.ready && this.serverReady) {  // Don't draw or play sound until game is fully loaded
-                  /* DEBUG FPS START */
-                  /* */ var start = util.time.now();
-                  /* DEBUG FPS END */
-      this.ui.drawStep();                 // Update ui elements that track ingame objects (nameplates, objectives)
-      this.display.draw();                // Draw game
-      this.sound.update();                // Update 3d audio center            
-                  /* DEBUG FPS START */
-                  /* */ var finish = util.time.now();
-                  /* */ this.debug.frames.pop();
-                  /* */ this.debug.dtime.pop();
-                  /* */ this.debug.frames.unshift(finish);
-                  /* */ this.debug.dtime.unshift(finish - start);
-                  /* DEBUG FPS END */
-    }
     if(!this.ready || !this.serverReady) {
       this.loading();                     // Update loading screen
     }
     this.deltaFDLC = util.time.now();
   }
+
+  if(this.ready && this.serverReady) {  // Don't draw or play sound until game is fully loaded
+    var alpha = (now - this.deltaFDLC) / this.SERVER_TICK_RATE;
+    alpha = Math.max(0, Math.min(1, alpha));
+
+    /* Update Camera */
+    var obj = this.getObject(this.control);
+    if(obj) {
+      var rpos = util.vec2.lerp(obj.prevPos, obj.pos, alpha);
+      this.display.camera.setPos({x: -rpos.x, y: -rpos.y, z: 0.0});
+      this.display.camera.immediate();
+    }
+    this.display.camera.update(); // Step camera timers/shake
+
+    this.ui.drawStep(alpha);                 // Update ui elements that track ingame objects (nameplates, objectives)
+    this.display.draw(alpha);           // Draw game
+    this.sound.update();                // Update 3d audio center            
+  }
+
+  this.doInput();
   
   this.nextFrame = this.requestAnimFrameFunc.call(window, function() { if(main.inGame()) { main.game.draw(); }}); // Javascript 🙄
 };

@@ -19,9 +19,9 @@ function PlayerXob(game, oid, pos, team, color) {
   
   /* State */
   this.doRewind = false;
-  this.prevPos = {};
+  this.rewindHistory = {};
   for(var i=0;i<PlayerXob.REWIND_LENGTH;i++) {
-    this.prevPos[i] = this.pos;
+    this.rewindHistory[i] = this.pos;
   }
 
   /* Timers */
@@ -76,14 +76,14 @@ PlayerXob.prototype.timers = function() {
   // Not really a timer but we are doing it's updates on timer call for simplicity
   var roll = [this.pos];
   for(var i=0;i<PlayerXob.REWIND_LENGTH-1;i++) {
-    roll[i+1] = this.prevPos[i];
+    roll[i+1] = this.rewindHistory[i];
   }
-  this.prevPos = roll;
+  this.rewindHistory = roll;
   
   var color = this.getColor();
   var dcolor = util.vec3.toVec4((this.team === -1 && this.color === 0 ? util.vec3.make(1, 1, 1) : color), 1.); // Make decal white for default boys.
   
-  this.indicator.step(util.vec2.toVec3(this.prevPos[PlayerXob.REWIND_LENGTH-1], 0.), 1.0, 0);
+  this.indicator.step(util.vec2.toVec3(this.rewindHistory[PlayerXob.REWIND_LENGTH-1], 0.), 1.0, 0);
   this.indicator.setColor(dcolor);
 };
 
@@ -144,8 +144,8 @@ PlayerXob.prototype.setLook = PlayerObject.prototype.setLook;
 PlayerXob.prototype.setSpeed = PlayerObject.prototype.setSpeed;
 
 PlayerXob.prototype.getColor = PlayerObject.prototype.getColor;
-PlayerXob.prototype.getDraw = function(geometry, decals, lights, bounds) {
-  PlayerObject.prototype.getDraw.call(this, geometry, decals, lights, bounds);
+PlayerXob.prototype.getDraw = function(geometry, decals, lights, bounds, alpha) {
+  PlayerObject.prototype.getDraw.call(this, geometry, decals, lights, bounds, alpha);
   if(this.oid === this.game.control) {
     this.indicator.getDraw(decals, bounds);
   }

@@ -131,7 +131,7 @@ GameUI.prototype.inputStep = function(tch, imp, state, window) {
 };
 
 /* This step function is called before a frame draw. A such it only updates nameplates and objective markers. */
-GameUI.prototype.drawStep = function() {
+GameUI.prototype.drawStep = function(alpha) {
   if(this.flags.main) {
     this.name.hide();
     this.objective.hide();
@@ -153,7 +153,23 @@ GameUI.prototype.drawStep = function() {
         keyboard: this.game.input.keyboard,
         touch: []
       },
-      util.vec2.make(this.game.display.window.width, this.game.display.window.height)
+      util.vec2.make(this.game.display.window.width, this.game.display.window.height),
+      alpha
+    );
+  
+  this.objective.step(
+      {
+        mouse: [],
+        keyboard: [],
+        touch: []
+      },
+      {
+        mouse: this.game.input.mouse,
+        keyboard: this.game.input.keyboard,
+        touch: []
+      },
+      util.vec2.make(this.game.display.window.width, this.game.display.window.height),
+      alpha
     );
 };
 

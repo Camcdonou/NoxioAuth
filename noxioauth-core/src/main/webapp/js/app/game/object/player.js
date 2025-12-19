@@ -21,6 +21,7 @@ function PlayerObject(game, oid, pos, permutation, team, color) {
   GameObject.call(this, game, oid, pos, permutation, team, color);
   
   this.look = util.vec2.make(0.0, 1.0);  // Normalized direction player is facing
+  this.prevLook = this.look;
   this.speed = 0.0;                      // Current scalar of max movement speed <0.0 to 1.0>
   
   /* Settings */
@@ -249,6 +250,7 @@ PlayerObject.prototype.setVel = GameObject.prototype.setVel;
 PlayerObject.prototype.setHeight = GameObject.prototype.setHeight;
 
 PlayerObject.prototype.setLook = function(look) {
+  this.prevLook = this.look;
   this.look = look;
 };
 
@@ -265,9 +267,11 @@ PlayerObject.prototype.getColor = function() {
   return colors[0];
 };
 
-PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
+PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds, alpha) {
   var exbounds = util.matrix.expandPolygon(bounds, this.cullRadius);
-  if(util.intersection.pointPoly(this.pos, exbounds)) {
+  var rpos = util.vec2.lerp(this.prevPos, this.pos, alpha);
+  var rh = (this.height * alpha) + (this.prevHeight * (1.0 - alpha));
+  if(util.intersection.pointPoly(rpos, exbounds)) {
     var color = this.getColor();
     var dcolor = this.team === -1 && this.color === 0 ? util.vec3.make(1, 1, 1) : color; // Make decal white for default boys.
     color = util.vec3.lerp(color, util.vec3.make(1.0, 1.0, 1.0), this.glow); // Mix that glow in~
@@ -275,17 +279,22 @@ PlayerObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
     this.targetCircle.setColor(util.vec3.toVec4(dcolor, 1));
     
     var playerUniformData = [
-      {name: "transform", data: [this.pos.x, this.pos.y, this.height]},
+      {name: "transform", data: [rpos.x, rpos.y, rh]},
       {name: "color", data: util.vec3.toArray(color)},
       {name: "angle", data: [0., 0., 0.]},
       {name: "rotation", data: 0},           // Shadows still use old 1f z-rotation. @TODO: Convert shadows over to "angle" 3f rotation 
       {name: "scale", data: this.scale}
     ];
     geometry.push({model: this.model, material: this.material, uniforms: playerUniformData});
+    
+    /* Decal Interpolation */
+    var rlook = util.vec2.normalize(util.vec2.lerp(this.prevLook, this.look, alpha));
+    var rangle = (util.vec2.angle(util.vec2.make(1, 0), rlook)*(rlook.y>0?-1:1))+(Math.PI*0.5);
+    
     for(var i=0;i<this.effects.length;i++) {
       this.effects[i].getDraw(geometry, decals, lights, bounds);
     }
-    this.targetCircle.getDraw(decals, bounds);
+    this.targetCircle.getDraw(decals, bounds, util.vec2.toVec3(rpos, Math.min(rh, 0.)), rangle);
   }
 };
 

@@ -13,6 +13,10 @@ import org.infpls.noxio.auth.module.auth.util.ID;
 import org.infpls.noxio.auth.module.auth.util.Oak;
 import org.springframework.dao.DataAccessException;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /* UserDao handles both user info and logged in user NoxioSessions.
    This is because theres is an overlap in data here
    and seperating these things seems counter-intuitive.
@@ -20,11 +24,19 @@ import org.springframework.dao.DataAccessException;
 
 public class UserDao {
   private final DaoContainer dao;
-  private final List<NoxioSession> sessions; /* This is a list of all active user NoxioSessions. */
+  private final Map<String, NoxioSession> sessionsByWsId; /* Look up session by WebSocket ID */
+  private final Map<String, NoxioSession> sessionsByUser; /* Look up session by Username */
+
+  private LeaderboardCache leaderboardCache;
+  private static final long LEADERBOARD_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+  private final ExecutorService statExecutor;
 
   public UserDao(final DaoContainer dao) {
     this.dao = dao;
-    sessions = Collections.synchronizedList(new ArrayList());
+    sessionsByWsId = new ConcurrentHashMap<>();
+    sessionsByUser = new ConcurrentHashMap<>();
+    statExecutor = Executors.newFixedThreadPool(2);
   }
   
   public synchronized boolean createUser(final String user, final String email, final String hash) throws IOException {
@@ -311,6 +323,10 @@ public class UserDao {
   }
   
   public List<UserStats> getLeaderboard(int max) throws IOException {
+    if (leaderboardCache != null && leaderboardCache.isValid(max)) {
+      return leaderboardCache.data;
+    }
+
     try {
       final List<UserStats> res = new ArrayList();
       final List<Map<String,Object>> results = dao.jdbc.queryForList(
@@ -320,6 +336,7 @@ public class UserDao {
       for(int i=0;i<results.size();i++) {
         res.add(new UserStats(results.get(i)));
       }
+      leaderboardCache = new LeaderboardCache(res, max);
       return res;
     }
     catch(DataAccessException ex) {
@@ -331,29 +348,46 @@ public class UserDao {
       throw new IOException("SQL Error during user stats retrieval.");
     }
   }
+
+  private class LeaderboardCache {
+    final List<UserStats> data;
+    final long timestamp;
+    final int max;
+
+    LeaderboardCache(List<UserStats> data, int max) {
+      this.data = data;
+      this.max = max;
+      this.timestamp = System.currentTimeMillis();
+    }
+
+    boolean isValid(int requestedMax) {
+      return max >= requestedMax && (System.currentTimeMillis() - timestamp) < LEADERBOARD_CACHE_TTL;
+    }
+  }
   
-  public void saveUserStats(final UserStats us) throws IOException {
-    try {
-      dao.jdbc.update(
-        "UPDATE STATS SET " +
-        "UPDATED = NOW(), CREDITS=?, LIFECREDITS=?, KEELL=?, DEATH=?, GAMEWIN=?, GAMELOSE=?, BETRAYED=?, BETRAYL=?, " +
-        "FIRSTBLOOD=?, KILLJOY=?, ENDEDREIGN=?, FLAGCAPTURE=?, FLAGDEFENSE=?, HILLCONTROL=?, PERFECT=?, HUMILIATION=?, " +
-        "MKX02=?, MKX03=?, MKX04=?, MKX05=?, MKX06=?, MKX07=?, MKX08=?, MKX09=?, MKX10=?, MKX11=?, MKX12=?, MKX13=?, MKX14=?, MKX15=?, MKX16=?, MKX17=?, MKX18=?, MKX19=?, MKX20=?, " +
-        "KSX05=?, KSX10=?, KSX15=?, KSX20=?, KSX25=?, KSX30=?, " +
-        "CUMRES=? " +
-        "WHERE UID=?",
-              us.getCredits(), us.lifeCredits, us.kill, us.death, us.gameWin, us.gameLose, us.betrayed, us.betrayl,
-              us.firstBlood, us.killJoy, us.endedReign, us.flagCapture, us.flagDefense, us.hillControl, us.perfect, us.humiliation,
-              us.mkx02, us.mkx03, us.mkx04, us.mkx05, us.mkx06, us.mkx07, us.mkx08, us.mkx09, us.mkx10, us.mkx11, us.mkx12, us.mkx13, us.mkx14, us.mkx15, us.mkx16, us.mkx17, us.mkx18, us.mkx19, us.mkx20,
-              us.ksx05, us.ksx10, us.ksx15, us.ksx20, us.ksx25, us.ksx30,
-              us.cumRes,
-              us.uid
-      );
-    }
-    catch(DataAccessException ex) {
-      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
-      throw new IOException("SQL Error during user stats save.");
-    }
+  public void saveUserStats(final UserStats us) {
+    statExecutor.submit(() -> {
+      try {
+        dao.jdbc.update(
+          "UPDATE STATS SET " +
+          "UPDATED = NOW(), CREDITS=?, LIFECREDITS=?, KEELL=?, DEATH=?, GAMEWIN=?, GAMELOSE=?, BETRAYED=?, BETRAYL=?, " +
+          "FIRSTBLOOD=?, KILLJOY=?, ENDEDREIGN=?, FLAGCAPTURE=?, FLAGDEFENSE=?, HILLCONTROL=?, PERFECT=?, HUMILIATION=?, " +
+          "MKX02=?, MKX03=?, MKX04=?, MKX05=?, MKX06=?, MKX07=?, MKX08=?, MKX09=?, MKX10=?, MKX11=?, MKX12=?, MKX13=?, MKX14=?, MKX15=?, MKX16=?, MKX17=?, MKX18=?, MKX19=?, MKX20=?, " +
+          "KSX05=?, KSX10=?, KSX15=?, KSX20=?, KSX25=?, KSX30=?, " +
+          "CUMRES=? " +
+          "WHERE UID=?",
+                us.getCredits(), us.lifeCredits, us.kill, us.death, us.gameWin, us.gameLose, us.betrayed, us.betrayl,
+                us.firstBlood, us.killJoy, us.endedReign, us.flagCapture, us.flagDefense, us.hillControl, us.perfect, us.humiliation,
+                us.mkx02, us.mkx03, us.mkx04, us.mkx05, us.mkx06, us.mkx07, us.mkx08, us.mkx09, us.mkx10, us.mkx11, us.mkx12, us.mkx13, us.mkx14, us.mkx15, us.mkx16, us.mkx17, us.mkx18, us.mkx19, us.mkx20,
+                us.ksx05, us.ksx10, us.ksx15, us.ksx20, us.ksx25, us.ksx30,
+                us.cumRes,
+                us.uid
+        );
+      }
+      catch(DataAccessException ex) {
+        Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
+      }
+    });
   }
   
   public UserUnlocks getUserUnlocks(final String uid) throws IOException {
@@ -419,45 +453,46 @@ public class UserDao {
     
   public synchronized NoxioSession createSession(final WebSocketSession webSocket, DaoContainer dao) throws IOException {
     NoxioSession session = NoxioSession.create(webSocket, dao);
-    sessions.add(session);
+    sessionsByWsId.put(webSocket.getId(), session);
     return session;
   }
   
   public synchronized NoxioSession createSessionGuest(final WebSocketSession webSocket, DaoContainer dao) throws IOException {
     NoxioSession session = NoxioSessionGuest.create(webSocket, dao);
-    sessions.add(session);
+    sessionsByWsId.put(webSocket.getId(), session);
     return session;
+  }
+
+  public synchronized void registerLoggedInSession(final NoxioSession session) {
+    if(session.loggedIn()) {
+      sessionsByUser.put(session.getUser(), session);
+    }
   }
   
   public synchronized void destroySession(final WebSocketSession webSocket) throws IOException {
-    for(int i=0;i<sessions.size();i++) {
-      final NoxioSession s = sessions.get(i);
-      if(s.getWebSocketId().equals(webSocket.getId())) {
-        try { s.destroy(); sessions.remove(i); }
-        catch(Exception ex) { Oak.log(Oak.Type.SESSION, Oak.Level.ERR, "Failed to remove session.", ex); }
-        return;
+    final NoxioSession s = sessionsByWsId.remove(webSocket.getId());
+    if (s != null) {
+      if (s.loggedIn()) {
+        sessionsByUser.remove(s.getUser());
       }
+      try { s.destroy(); }
+      catch(Exception ex) { Oak.log(Oak.Type.SESSION, Oak.Level.ERR, "Failed to destroy session.", ex); }
     }
   }
   
   public synchronized NoxioSession getSessionByUser(final String user) {
-    for(int i=0;i<sessions.size();i++) {
-      final NoxioSession s = sessions.get(i);
-      if(s.loggedIn()) {
-        if(s.getUser().equals(user)) {
-          try { s.sendPacket(new PacketS02()); } catch(IOException ex) { Oak.log(Oak.Type.SESSION, Oak.Level.ERR, "Failed to send hearbeat.", ex); }  // @TODO: This is a jank fix that heartbeats a session when someone trys to log in on it while its already logged in.
-          return s;
-        }
-      }
+    final NoxioSession s = sessionsByUser.get(user);
+    if(s != null && s.loggedIn()) {
+      try { s.sendPacket(new PacketS02()); } catch(IOException ex) { Oak.log(Oak.Type.SESSION, Oak.Level.ERR, "Failed to send hearbeat.", ex); }  // @TODO: This is a jank fix that heartbeats a session when someone trys to log in on it while its already logged in.
+      return s;
     }
     return null;
   }
 
   /* Sends a message to all online users */
   public void sendGlobalMessage(String message) {
-    for(int i=0;i<sessions.size();i++) {
+    for(NoxioSession s : sessionsByWsId.values()) {
       try {
-        final NoxioSession s = sessions.get(i);
         if(s.isOpen()) { s.sendPacket(new PacketS45(message)); }
       }
       catch(Exception ex) { Oak.log(Oak.Type.SESSION, Oak.Level.ERR, "Failed to send global message to user."); }

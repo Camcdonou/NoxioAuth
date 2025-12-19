@@ -33,11 +33,12 @@ HillObject.prototype.getColor = function() {
   return util.kalide.getColorsAuto(3, -1)[0];
 };
 
-HillObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
+HillObject.prototype.getDraw = function(geometry, decals, lights, bounds, alpha) {
   var exbounds = util.matrix.expandPolygon(bounds, this.cullRadius);
-  if(util.intersection.pointPoly(this.pos, exbounds)) {
+  var rpos = util.vec2.lerp(this.prevPos, this.pos, alpha);
+  if(util.intersection.pointPoly(rpos, exbounds)) {
     var hillUniformData = [
-      {name: "transform", data: [this.pos.x, this.pos.y, 0]},
+      {name: "transform", data: [rpos.x, rpos.y, 0]},
       {name: "scale", data: [this.size.x, this.size.y, 1.0]},
       {name: "color", data: [1,1,1]}
     ];

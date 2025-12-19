@@ -304,7 +304,7 @@ Display.prototype.updateFramebuffer = function(name) {
   }
 };
 
-Display.prototype.draw = function() {
+Display.prototype.draw = function(alpha) {
   /* Update Canvas Size & Camera */
   if(this.container.clientWidth < 1 || this.container.clientHeight < 1) { return; } // Draw window not visible. Don't draw.
   this.window.width = this.container.clientWidth;                                   // Does not enforce aspect ratio so it can be made ultra widescreen if desired.
@@ -372,7 +372,7 @@ Display.prototype.draw = function() {
   this.game.map.getDraw(mapGeom, preCalcBounds);
 
   for(var i=0;i<this.game.objects.length;i++) {
-    if(!this.game.objects[i].hide) { this.game.objects[i].getDraw(objGeom, decals, lights, bounds); }
+    if(!this.game.objects[i].hide) { this.game.objects[i].getDraw(objGeom, decals, lights, bounds, alpha); }
   }
   for(var i=0;i<this.game.effects.length;i++) {
     var exbounds = util.matrix.expandPolygon(bounds, 1.0);  /* @TODO: fixed bounding radius for effects... */
