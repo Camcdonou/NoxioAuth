@@ -20,14 +20,7 @@ public class Validation {
     if(undefHash.equals(in) || xxundefHash.equals(in)) { return "Don't use 'undefined' as a password, it's a bad idea."; }
     return null;
   }
-  
-  public static String validEmail(final String in) {
-    if(in.length() < 3) { return "Email address is to short."; }
-    if(in.length() > 255) { return "Email address cannot exceed 255 characters."; }
-    if(!in.contains("@")) { return "This Email address does not appear to be valid."; }
-    return null;
-  }
-  
+
   public static boolean isAlphaNumeric(final String in) {
     return in.matches("[a-zA-Z0-9]*");
   }

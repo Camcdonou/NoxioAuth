@@ -16,7 +16,7 @@ CREATE TABLE USERS (
  UID  varchar(32) NOT NULL,
  NAME varchar(32) NOT NULL,
  DISPLAY varchar(32) NOT NULL,
- EMAIL varchar(256) NOT NULL,
+ EMAIL varchar(256) NULL,
  HASH    char(60) binary NOT NULL,
  TYPE varchar(5) NOT NULL,
  SUPPORTER bool NOT NULL DEFAULT FALSE,

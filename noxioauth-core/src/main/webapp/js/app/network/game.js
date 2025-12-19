@@ -24,18 +24,22 @@ Game.prototype.isConnected = function () {
 };
 
 Game.prototype.connect = function(address, port) {
-  
+
   this.address = address;
   this.port = port;
-  
+
   if(this.isConnected()) {
     main.menu.error.showError("Connection Error", "Attempting to open multiple connections.");
     main.close();
     return;
   }
 
-  this.webSocket = new WebSocket("ws://" + address + ":" + port + "/nxg/game");
-  main.menu.connect.show("Connecting @" + address + ":" + port, 0);
+  // Use wss:// for HTTPS pages, ws:// for HTTP pages
+  var wsProtocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+  var portStr = String(port);
+  var portSuffix = (portStr === "443" || portStr === "80") ? "" : ":" + portStr;
+  this.webSocket = new WebSocket(wsProtocol + address + portSuffix + "/nxg/game");
+  main.menu.connect.show("Connecting @" + address + portSuffix, 0);
 
   this.webSocket.onopen = function(event){
     if(event.type !== "open") {

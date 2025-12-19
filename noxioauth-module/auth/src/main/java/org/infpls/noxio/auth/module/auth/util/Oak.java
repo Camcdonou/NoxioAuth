@@ -36,9 +36,14 @@ public class Oak {
   private static final List<Log> LOGS = new ArrayList();
   public static void open() {
     if(LOGS.size()>0) { return; }
+    Settable.update(); // Ensure settings are loaded before getting file path
     final String folder = Settable.getFilePath();
+    if(folder == null) {
+      System.err.println("Oak.open :: FILE_PATH not configured, logging disabled!");
+      return;
+    }
     final Type fs[] = Type.values();
-    
+
     for(int i=0;i<fs.length;i++) {
       final String file = FILE + fs[i].name() + EXTEN;
       final Log l = new Log(fs[i], folder, file);
@@ -82,7 +87,10 @@ public class Oak {
   }
   
   public static void log(Type type, Level level, String src, String msg, Exception ex) {
-    get(type).write(level, src, msg, ex);
+    Log log = get(type);
+    if(log != null) {
+      log.write(level, src, msg, ex);
+    }
   }
   
   public static class Log {

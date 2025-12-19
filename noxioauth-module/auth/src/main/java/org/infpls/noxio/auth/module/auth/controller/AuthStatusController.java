@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthStatusController {
     @RequestMapping(value = "/status", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody ResponseEntity getStatus() {
-        return new ResponseEntity("{\"status\":\"OK\"}", HttpStatus.OK);
+        return new ResponseEntity("{\"status\":\"OK\",\"version\":\"1.0.1-websocket-ping-auth\",\"build\":\"2025-12-18-002\"}", HttpStatus.OK);
     }
 }

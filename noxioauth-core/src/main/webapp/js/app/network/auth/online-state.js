@@ -25,8 +25,12 @@ OnlineState.prototype.getServerInfo = function() {
 
 /* Checks the status of game servers via AJAX */
 OnlineState.prototype.checkServerStatus = function(ind, info) {
+  // Use HTTPS for port 443, HTTP for other ports
+  var port = String(info.port);
+  var protocol = (port === "443") ? "https://" : "http://";
+  var portSuffix = (port === "443" || port === "80") ? "" : ":" + port;
   $.ajax({
-    url: "http://" + info.domain + ":" + info.port + "/nxg/info",
+    url: protocol + info.domain + portSuffix + "/nxg/info",
     type: 'GET',
     timeout: 5000,
     success: function(data) { main.menu.online.items.server.updateServerInfo(ind, info, data); },

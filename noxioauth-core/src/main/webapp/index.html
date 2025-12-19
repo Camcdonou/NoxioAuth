@@ -109,12 +109,16 @@
           <div id="auth-login-login" class="menu sub btn ico-blip" onclick="main.menu.auth.items.login.onEnter()"></div>
         <div id="auth-create" class="menu cat" onclick="main.menu.auth.items.create.show()">New User</div>
           <div id="auth-create-username" class="menu sub fld"><input id="auth-create-username-input" class="inp" type="text" placeholder="Username"/></div>
-          <div id="auth-create-email" class="menu sub fld"><input id="auth-create-email-input" class="inp" type="text" placeholder="Email"/></div>
           <div id="auth-create-password-a" class="menu sub fld"><input id="auth-create-password-a-input" class="inp" type="password" placeholder="Password"/></div>
           <div id="auth-create-password-b" class="menu sub fld"><input id="auth-create-password-b-input" class="inp" type="password" placeholder="Confirm Password"/></div>
+          <div id="auth-create-warning" class="menu sub" style="font-size:11px; color:#999; padding:4px 8px; line-height:1.3;">⚠ Use a unique password. Server hosts can see encrypted password data.</div>
           <div id="auth-create-create" class="menu sub btn ico-blip" onclick="main.menu.auth.items.create.onEnter()"></div>
         <div id="auth-about" class="menu cat" onclick="main.menu.auth.items.about.show()">About</div>
           <div id="auth-about-about" class="menu sub about">Noxio/20XX.io  _VER  © InfernoPlus 2022</div>
+        <div class="menu" style="font-size:10px; color:#888; padding:12px 8px; line-height:1.4; text-align:center; border-top:1px solid #333; margin-top:8px;">
+          ⓘ This server is community-hosted and not operated by the original creator.<br/>
+          No support or guarantees provided. Use at your own risk.
+        </div>
       </div>
       <div id="auth-link" class="link" style="display: none">
         <div class="link-disc" onclick="window.open('https://discord.com/invite/sexy-sans-fanclub')"></div>
@@ -440,8 +444,6 @@
       <script src="js/app/menu/rank-menu.js"></script>
       <script src="js/app/menu/connect-menu.js"></script>
       <script src="js/app/menu/auth-menu.js"></script>
-      <script src="js/app/menu/verify-menu.js"></script>
-      <script src="js/app/menu/reset-menu.js"></script>
       <script src="js/app/menu/online-menu.js"></script>
       <script src="js/app/menu/unlock-menu.js"></script>
       <script src="js/app/menu/stat-menu.js"></script>

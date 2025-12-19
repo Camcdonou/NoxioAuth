@@ -20,8 +20,6 @@ function Menu() {
     {id: "rank", obj: new RankMenu()}, // Displays as a widget at the bottom, independantly shown/hidden by other menus.
     {id: "connect", obj: new ConnectMenu()},
     {id: "auth", obj: new AuthMenu()},
-    {id: "verify", obj: new VerifyMenu()},
-    {id: "reset", obj: new ResetMenu()},
     {id: "online", obj: new OnlineMenu()},
     {id: "unlock", obj: new UnlockMenu()},
     {id: "stat", obj: new StatMenu()},

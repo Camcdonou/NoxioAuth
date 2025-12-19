@@ -46,18 +46,17 @@ function AuthMenu() {
       show: show,
       items: [
         document.getElementById("auth-create-username"),
-        document.getElementById("auth-create-email"),
         document.getElementById("auth-create-password-a"),
         document.getElementById("auth-create-password-b"),
+        document.getElementById("auth-create-warning"),
         document.getElementById("auth-create-create")
       ],
       onEnter: function() {
         var u = document.getElementById("auth-create-username-input");
-        var e = document.getElementById("auth-create-email-input");
         var pa = document.getElementById("auth-create-password-a-input");
         var pb = document.getElementById("auth-create-password-b-input");
         if(pa.value !== pb.value) { main.menu.warning.show("Your passwords do not match."); return; }
-        parent.create(u.value, e.value, pa.value);
+        parent.create(u.value, pa.value);
         pa.value = ""; pb.value = "";
       }
     },
@@ -81,7 +80,6 @@ function AuthMenu() {
   this.items.create.items[0].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.create.items[4].click(); } });
   this.items.create.items[1].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.create.items[4].click(); } });
   this.items.create.items[2].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.create.items[4].click(); } });
-  this.items.create.items[3].addEventListener("keyup", function(evt) { if(evt.keyCode === 13) { tmp.items.create.items[4].click(); } });
 };
 
 AuthMenu.prototype.guest = function() {
@@ -92,17 +90,16 @@ AuthMenu.prototype.login = function(user, pass) {
   main.net.connect(user, pass);
 };
 
-AuthMenu.prototype.create = function(user, email, pass) {
-  main.menu.connect.show("Sending Verification Email");
+AuthMenu.prototype.create = function(user, pass) {
+  main.menu.connect.show("Creating Account");
   $.ajax({
-    url: "http://" + window.location.host + "/nxc/auth/create",
+    url: window.location.protocol + "//" + window.location.host + "/nxc/auth/create",
     type: 'POST',
-    data: JSON.stringify({user: user, hash: sha256("20"+pass+"xx"), email: email}),
+    data: JSON.stringify({user: user, hash: sha256("20"+pass+"xx")}),
     contentType : 'application/json',
     timeout: 120000,
     success: function() {
-      main.menu.connect.show("Email Sent");
-      main.menu.warning.show("Check your spam folder if you can't find it.");
+      main.menu.connect.show("Account Created");
       reset(5000);
     },
     error: function(data) {
