@@ -4,7 +4,10 @@
 /* This class contains all user defined settings */
 /* These are saved to the server and loaded when you login */
 
-function Settings() { this.skeys = []; }
+function Settings() { 
+  this.skeys = []; 
+  this.graphics = { frameLimit: 60, showFPS: false }; // Default to 60 FPS, FPS display off
+}
 
 /* Loads the servers settings info in to this class. */
 Settings.prototype.load = function(settings) {
@@ -13,6 +16,15 @@ Settings.prototype.load = function(settings) {
     this[keys[i]] = settings[keys[i]];
   }
   this.skeys = keys;
+
+  if (this.graphics) {
+    if (this.graphics.frameLimit === undefined) {
+      this.graphics.frameLimit = 60;
+    }
+    if (this.graphics.showFPS === undefined) {
+      this.graphics.showFPS = false;
+    }
+  }
 };
 
 /* Uses saved keylist generate a settings object and then send it to the server to save */

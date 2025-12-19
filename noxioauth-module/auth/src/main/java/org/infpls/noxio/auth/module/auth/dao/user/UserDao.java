@@ -55,14 +55,14 @@ public class UserDao {
         "INSERT into SETTINGS ( " +
         "UID, UPDATED, " +
         "VOLMASTER, VOLMUSIC, VOLVOICE, VOLANNOUNCER, VOLUI, VOLFX, " +
-        "GFXUPGAME, GFXUPUI, GFXUPSKY, GFXSHADOWSIZE, GFXSAFEMODE, GFXBLOOM, " +
+        "GFXUPGAME, GFXUPUI, GFXUPSKY, GFXSHADOWSIZE, GFXSAFEMODE, GFXBLOOM, GFXFRAMELIMIT, GFXSHOWFPS, " +
         "CONENABLEGAMEPAD, CONACTIONA, CONACTIONB, CONJUMP, CONTAUNT, CONTOSS, CONSCOREBOARD, " +
         "GAMCOLOR, GAMREDCOLOR, GAMBLUECOLOR, GAMCUSTOMMESSAGEA, GAMCUSTOMMESSAGEB, GAMUSECUSTOMSOUND, GAMCUSTOMSOUNDFILE, GAMLAGCOMP, " +
         "TOGDISABLEALTS, TOGDISABLECUSTOMSOUND, TOGDISABLECOLOR, TOGDISABLELOG, TOGDISABLEMETER " +
-        ") VALUES ( ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        ") VALUES ( ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
               uid, 
               us.volume.master, us.volume.music, us.volume.voice, us.volume.announcer, us.volume.ui, us.volume.fx,
-              us.graphics.upGame, us.graphics.upUi, us.graphics.upSky, us.graphics.shadowSize, us.graphics.safeMode, us.graphics.bloom,
+              us.graphics.upGame, us.graphics.upUi, us.graphics.upSky, us.graphics.shadowSize, us.graphics.safeMode, us.graphics.bloom, us.graphics.frameLimit, us.graphics.showFPS,
               us.control.enableGamepad, us.control.actionA, us.control.actionB, us.control.jump, us.control.taunt, us.control.toss, us.control.scoreboard,
               us.game.color, us.game.redColor, us.game.blueColor, us.game.customMessageA, us.game.customMessageB, us.game.useCustomSound, us.game.getCustomSoundFile(), us.game.lagComp,
               us.toggle.disableAlts, us.toggle.disableCustomSound, us.toggle.disableColor, us.toggle.disableLog, us.toggle.disableMeter
@@ -282,13 +282,13 @@ public class UserDao {
         "UPDATE SETTINGS SET " +
         "UPDATED=NOW(), " +
         "VOLMASTER=?, VOLMUSIC=?, VOLVOICE=?, VOLANNOUNCER=?, VOLUI=?, VOLFX=?, " +
-        "GFXUPGAME=?, GFXUPUI=?, GFXUPSKY=?, GFXSHADOWSIZE=?, GFXSAFEMODE=?, GFXBLOOM=?, " +
+        "GFXUPGAME=?, GFXUPUI=?, GFXUPSKY=?, GFXSHADOWSIZE=?, GFXSAFEMODE=?, GFXBLOOM=?, GFXFRAMELIMIT=?, GFXSHOWFPS=?, " +
         "CONENABLEGAMEPAD=?, CONACTIONA=?, CONACTIONB=?, CONJUMP=?, CONTAUNT=?, CONTOSS=?, CONSCOREBOARD=?, " +
         "GAMCOLOR=?, GAMREDCOLOR=?, GAMBLUECOLOR=?, GAMCUSTOMMESSAGEA=?, GAMCUSTOMMESSAGEB=?, GAMUSECUSTOMSOUND=?, GAMCUSTOMSOUNDFILE=?, GAMLAGCOMP=?, " +
         "TOGDISABLEALTS=?, TOGDISABLECUSTOMSOUND=?, TOGDISABLECOLOR=? , TOGDISABLELOG=?, TOGDISABLEMETER=? " +
         "WHERE UID=?",
               us.volume.master, us.volume.music, us.volume.voice, us.volume.announcer, us.volume.ui, us.volume.fx,
-              us.graphics.upGame, us.graphics.upUi, us.graphics.upSky, us.graphics.shadowSize, us.graphics.safeMode, us.graphics.bloom,
+              us.graphics.upGame, us.graphics.upUi, us.graphics.upSky, us.graphics.shadowSize, us.graphics.safeMode, us.graphics.bloom, us.graphics.frameLimit, us.graphics.showFPS,
               us.control.enableGamepad, us.control.actionA, us.control.actionB, us.control.jump, us.control.taunt, us.control.toss, us.control.scoreboard,
               us.game.color, us.game.redColor, us.game.blueColor, us.game.customMessageA, us.game.customMessageB, us.game.useCustomSound, us.game.getCustomSoundFile(), us.game.lagComp,
               us.toggle.disableAlts, us.toggle.disableCustomSound, us.toggle.disableColor, us.toggle.disableLog, us.toggle.disableMeter,

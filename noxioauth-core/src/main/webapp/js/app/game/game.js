@@ -48,6 +48,7 @@ function NoxioGame(name, settings, map) {
   this.chatMsgOut = [];               // Chat messages to send to server on next doInput()
   this.touchMode = false;             // Flagged true if we are using touch screen based controls
   this.lastTo = {x: 0.0, y: 1.0};    // Last valid move direction sent to server
+  this.lastRenderTime = util.time.now(); // Track time of last render for FPS capping
   
   this.thumb = {id: undefined, origin: undefined, offset: undefined}; // Touch control thumbstick values
   this.tchAction = [];                                                // Hacky fix for touch controls
@@ -225,16 +226,12 @@ NoxioGame.prototype.update = function(tick) {
   this.debug.stime.pop();
   this.debug.stime.unshift(tick);
   
-  var sAvg = 0, dAvg = 0, cAvg = 0, fAvg = 0;
+  var sAvg = 0, dAvg = 0, cAvg = 0;
   for(var i=0;i<this.debug.ss;i++) {
     sAvg += this.debug.stime[i];
     cAvg += this.debug.ctime[i];
     dAvg += this.debug.dtime[i];
   }
-  for(var i=0;i<this.debug.ss-1&&this.debug.frames[i+1]!==0;i++) {
-    fAvg += this.debug.frames[i] - this.debug.frames[i+1];
-  }
-  this.debug.fAvg = (1000*(i/(this.debug.ss-1)))/(fAvg/(this.debug.ss-1));
   this.debug.sAvg = sAvg/this.debug.ss;
   this.debug.cAvg = cAvg/this.debug.ss;
   this.debug.dAvg = dAvg/this.debug.ss;
@@ -524,6 +521,24 @@ NoxioGame.prototype.putCameraShake = function(object, magnitude) {
 NoxioGame.prototype.draw = function() {
   var now = util.time.now();
   
+  /* FPS Capping */
+  var frameLimit = main.settings.graphics.frameLimit || 0;
+  if (frameLimit > 0) {
+    var minInterval = 1000 / frameLimit;
+    if (now - this.lastRenderTime < minInterval - 1) { // 1ms safety margin for browser timing
+      this.nextFrame = this.requestAnimFrameFunc.call(window, function() { if(main.inGame()) { main.game.draw(); }});
+      return;
+    }
+  }
+  
+  var frameDelta = now - this.lastRenderTime;
+  if (frameDelta > 0) {
+    var currentFPS = 1000 / frameDelta;
+    if (this.debug.fAvg === 0) { this.debug.fAvg = currentFPS; }
+    else { this.debug.fAvg = 0.95 * this.debug.fAvg + 0.05 * currentFPS; }
+  }
+  this.lastRenderTime = now;
+
   /* Carry over time debt to eliminate micro-jitters. */
   /* If we are at least 75% through a tick, or we have extra packets to clear, process frames. */
   if((now - this.deltaFDLC) / this.SERVER_TICK_RATE > 0.75 || this.packetFDLC.length > this.FDLC_MAX) {
