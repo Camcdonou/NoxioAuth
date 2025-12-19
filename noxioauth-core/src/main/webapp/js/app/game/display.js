@@ -63,8 +63,6 @@ Display.prototype.setupWebGL = function() {
   if(maxUniform < 64) { main.menu.error.showError("GLSL returned MAX_VERTEX_UNIFORM_VECTORS as : " + maxUniform); return false; }
   if(maxTexture < 16) { main.menu.error.showError("GLSL returned MAX_VERTEX_TEXTURE_IMAGE_UNITS as : " + maxTexture); return false; }
   this.PL_UNIFORM_MAX = maxUniform * 0.33; this.LL_UNIFORM_MAX = maxUniform * 0.33;
-  console.log("##GLSL UNIFORM MAX: " + maxUniform); /** @DEBUG **/
-  console.log("##GLSL TEXTURE MAX: " + maxTexture);
   
   if(!this.createTexture("multi/default")) { return false; }
   if(!this.createCube(["multi/cube0","multi/cube1","multi/cube2","multi/cube3","multi/cube4","multi/cube5"])) { return false; }

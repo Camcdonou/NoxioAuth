@@ -14,7 +14,6 @@ ToolProperties.prototype.update = function() {
   main.editor.map.name = spl[0];
   main.editor.map.description = spl[1];
   main.editor.map.gametypes = spl[2].split(",");
-  console.log(main.editor.map);
 };
 
 ToolProperties.prototype.show = function() {

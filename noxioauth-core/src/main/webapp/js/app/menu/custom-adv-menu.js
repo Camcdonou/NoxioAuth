@@ -321,9 +321,14 @@ AdvCustomMenu.prototype.show = function() {
     main.menu.lobby.show();
   };
   
+  var address = main.net.game.address;
+  var port = String(main.net.game.port);
+  var protocol = (port === "443") ? "https://" : "http://";
+  var portSuffix = (port === "443" || port === "80") ? "" : ":" + port;
+
   /* Get stock map list */
   $.ajax({
-    url: "/nxg/maps",
+    url: protocol + address + portSuffix + "/nxg/maps",
     type: 'GET',
     timeout: 3000,
     success: function(data1) { yee1(data1); },
