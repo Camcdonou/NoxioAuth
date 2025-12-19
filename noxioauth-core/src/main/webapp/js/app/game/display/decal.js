@@ -43,8 +43,10 @@ Decal.prototype.move = function(pos, size, angle) {
 
 Decal.prototype.setColor = function(color) { this.color = color; };
 
-Decal.prototype.getDraw = function(decals, bounds) {
-  decals.push({geometry: this.geometry, material: this.material, pos: this.pos, normal: this.normal, size: 1.0/this.size, angle: this.angle, color: util.vec4.copy3(this.color, this.color.w*this.fade)});
+Decal.prototype.getDraw = function(decals, bounds, pos, angle) {
+  var p = pos ? pos : this.pos;
+  var a = angle !== undefined ? angle : this.angle;
+  decals.push({geometry: this.geometry, material: this.material, pos: p, normal: this.normal, size: 1.0/this.size, angle: a, color: util.vec4.copy3(this.color, this.color.w*this.fade)});
 };
 
 Decal.prototype.active = function() {

@@ -16,7 +16,8 @@ public class Settable {
   private static String PAYPAL_ID, PAYPAL_SECRET, PAYPAL_CANCEL, PAYPAL_PROCESS;// Paypal settings
   private static String FILE_PATH;                                              // File Store settings
   private static List<ServerInfo> GAME_SERVERS;                                 // Game Server settings
-  
+  private static Set<String> WHITELIST;                                         // Whitelisted IP addresses
+
   /* Checks if the settings finle ( FILE ) has been changed or yet to be loaded and reads it into this class */
   public static synchronized void update() {
     if(!INIT) { read(); INIT = true; }
@@ -53,13 +54,17 @@ public class Settable {
       FILE_PATH = file.get("path").getAsString();
 
       GAME_SERVERS = new ArrayList();
+      WHITELIST = new HashSet<>();
+      WHITELIST.add("127.0.0.1");
+      WHITELIST.add("0:0:0:0:0:0:0:1");
       for(int i=0;i<gameServers.size();i++) {
         final JsonObject serv = gameServers.get(i).getAsJsonObject();
         final String name = serv.get("name").getAsString();
         final String domain = serv.get("domain").getAsString();
-        final String address = serv.get("address").getAsString();
+        final String address = serv.get("address").getAsString().trim();
         final int port = serv.get("port").getAsInt();
         GAME_SERVERS.add(new ServerInfo(name, domain, address, port));
+        WHITELIST.add(address);
       }
     }
     catch(IOException ex) {
@@ -97,11 +102,14 @@ public class Settable {
   public static List<ServerInfo> getGameServerInfo() { return GAME_SERVERS; }
   
   public static boolean isWhiteListed(String addr) {
-    for(int i=0;i<GAME_SERVERS.size();i++) {
-      if(GAME_SERVERS.get(i).address.equals(addr)) {
-        return true;
-      }
+    if (addr == null) return false;
+    String cleanAddr = addr.trim();
+    if (cleanAddr.startsWith("::ffff:")) {
+      cleanAddr = cleanAddr.substring(7);
     }
-    return false;
+    if (cleanAddr.startsWith("172.18.0.") || cleanAddr.startsWith("172.17.0.")) {
+      return true;
+    }
+    return WHITELIST != null && WHITELIST.contains(cleanAddr);
   }
 }

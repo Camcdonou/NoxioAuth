@@ -30,7 +30,7 @@ public class GameServerComController {
     /* Validate that this request is made from a white listed game server */
     if(!Settable.isWhiteListed(request.getRemoteAddr())) {
       Oak.log(Oak.Type.HTTPS, Oak.Level.WARN, "Unknown address made request :" + request.getRemoteAddr());
-      return new ResponseEntity("{\"type\":\"l03\", \"message\":\"Invalid request.\"}", HttpStatus.FORBIDDEN);
+      return new ResponseEntity("{\"type\":\"l03\", \"message\":\"Unauthorized Game Server: " + request.getRemoteAddr() + "\"}", HttpStatus.FORBIDDEN);
     }
     
     NoxioSession session = dao.getUserDao().getSessionByUser(user);
@@ -54,7 +54,7 @@ public class GameServerComController {
     /* Validate that this request is made from a white listed game server */
     if(!Settable.isWhiteListed(request.getRemoteAddr())) {
       Oak.log(Oak.Type.HTTPS, Oak.Level.WARN, "GameServerComController::reportStats() - Unknown address made request :" + request.getRemoteAddr() + " ... " + data);
-      return new ResponseEntity("{\"type\":\"h09\", \"message\":\"Invalid request.\"}", HttpStatus.FORBIDDEN);
+      return new ResponseEntity("{\"type\":\"h09\", \"message\":\"Unauthorized Game Server: " + request.getRemoteAddr() + "\"}", HttpStatus.FORBIDDEN);
     }
     
     final Gson gson = new GsonBuilder().create();

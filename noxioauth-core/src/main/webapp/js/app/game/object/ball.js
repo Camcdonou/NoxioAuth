@@ -115,16 +115,18 @@ BallObject.prototype.getColor = function() {
   return colors[0];
 };
 
-BallObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
+BallObject.prototype.getDraw = function(geometry, decals, lights, bounds, alpha) {
   var exbounds = util.matrix.expandPolygon(bounds, this.cullRadius);
-  if(util.intersection.pointPoly(this.pos, exbounds)) {
+  var rpos = util.vec2.lerp(this.prevPos, this.pos, alpha);
+  var rh = (this.height * alpha) + (this.prevHeight * (1.0 - alpha));
+  if(util.intersection.pointPoly(rpos, exbounds)) {
     var color = this.getColor();
     var dcolor = this.team === -1 && this.color === 0 ? util.vec3.make(1, 1, 1) : color; // Make decal white for default boys.
     
     this.targetCircle.setColor(util.vec3.toVec4(dcolor, 1));
     
     var flagUniformData = [
-      {name: "transform", data: [this.pos.x, this.pos.y, this.height]},
+      {name: "transform", data: [rpos.x, rpos.y, rh]},
       {name: "color", data: util.vec3.toArray(color)},
       {name: "angle", data: [0., 0., 0.]}, 
       {name: "rotation", data: 0},           // Shadows still use old 1f z-rotation. @TODO: Convert shadows over to "angle" 3f rotation 
@@ -134,7 +136,7 @@ BallObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
     for(var i=0;i<this.effects.length;i++) {
       this.effects[i].getDraw(geometry, decals, lights, bounds);
     }
-    this.targetCircle.getDraw(decals, bounds);
+    this.targetCircle.getDraw(decals, bounds, util.vec2.toVec3(rpos, Math.min(rh, 0.0)));
   }
 };
 

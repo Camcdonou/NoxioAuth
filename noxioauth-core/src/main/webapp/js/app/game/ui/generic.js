@@ -57,18 +57,18 @@ GenericUI.prototype.hide = function() {
 };
 
 /* ABSTRACT -- Called at the start of each step, if you want to rebuild the ui elements every frame then override this */
-GenericUI.prototype.refresh = function() { };
+GenericUI.prototype.refresh = function(alpha) { };
 
 /* ABSTRACT --Called at construction, override this method and build your elements in here */
 GenericUI.prototype.generate = function() { };
 
 /* Steps UI and returns true if imp input is absorbed by a UI element */
 /* Window is a Vec2 of the size, in pixels, of the game window for this draw */
-GenericUI.prototype.step = function(imp, state, window) {
+GenericUI.prototype.step = function(imp, state, window, alpha) {
   if(this.hidden) { this.fade = Math.max(0, Math.min(this.FADE_TIME, this.fade-1)); return false; }
   this.fade = Math.max(0, Math.min(this.FADE_TIME, this.fade+1));
   
-  this.refresh();
+  this.refresh(alpha);
   var hit = false;
   for(var i=0;i<this.containers.length;i++) {
     var elements = this.containers[i].elements;

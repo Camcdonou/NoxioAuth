@@ -114,9 +114,11 @@ BombObject.prototype.detonate = function() {
 
 };
 
-BombObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
+BombObject.prototype.getDraw = function(geometry, decals, lights, bounds, alpha) {
   var exbounds = util.matrix.expandPolygon(bounds, this.cullRadius);
-  if(util.intersection.pointPoly(this.pos, exbounds)) {
+  var rpos = util.vec2.lerp(this.prevPos, this.pos, alpha);
+  var rh = (this.height * alpha) + (this.prevHeight * (1.0 - alpha));
+  if(util.intersection.pointPoly(rpos, exbounds)) {
     var color, dcolor;
     switch(this.team) {
       case  0 : { color = util.vec3.make(0.7539, 0.2421, 0.2421); break; }
@@ -128,7 +130,7 @@ BombObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
     this.targetCircle.setColor(util.vec3.toVec4(dcolor, 1));
     
     var bombUniformData = [
-      {name: "transform", data: [this.pos.x, this.pos.y, this.height]},
+      {name: "transform", data: [rpos.x, rpos.y, rh]},
       {name: "color", data: util.vec3.toArray(color)},
       {name: "rotation", data: 0.0},
       {name: "scale", data: 1.0}
@@ -137,7 +139,7 @@ BombObject.prototype.getDraw = function(geometry, decals, lights, bounds) {
     for(var i=0;i<this.effects.length;i++) {
       this.effects[i].getDraw(geometry, decals, lights, bounds);
     }
-    this.targetCircle.getDraw(decals, bounds);
+    this.targetCircle.getDraw(decals, bounds, util.vec2.toVec3(rpos, Math.min(rh, 0.0)));
   }
 };
 
