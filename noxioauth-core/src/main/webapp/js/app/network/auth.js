@@ -101,6 +101,13 @@ Auth.prototype.login = function(packet) {
   main.settings.load(packet.settings);
   main.setStats(packet.stats);
   main.unlocks.load(packet.unlocks);
+
+  /* Persistence: Save credentials if not a guest */
+  if (!main.net.guest && main.net.tempHash) {
+    localStorage.setItem("noxio_user", main.net.user);
+    localStorage.setItem("noxio_hash", main.net.tempHash);
+  }
+  main.net.tempHash = undefined;
 };
 
 Auth.prototype.accountUpdate = function(packet) {

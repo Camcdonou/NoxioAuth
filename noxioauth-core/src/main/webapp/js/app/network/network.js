@@ -11,10 +11,12 @@ function Network () {
   this.sid = undefined;    // Session ID
   this.type = undefined;   // The type of account, list of types in org.infpls.noxio.auth.module.auth.dao.user.User
   this.guest = undefined;  // Boolean flag for if the account is a guest or a normal account.
+  
+  this.tempHash = undefined; // Temporary storage for hash to persist on success
 };
 
 /* Opens connection to server */
-Network.prototype.connect = function(user, pass) {
+Network.prototype.connect = function(user, pass, isHash) {
   if(this.loggedIn()) { main.close(); return; }
   if(this.auth.isConnected()) { this.auth.close(); }
   
@@ -27,7 +29,9 @@ Network.prototype.connect = function(user, pass) {
   }
   else {
     this.auth.establish("auth");
-    pak = {type: "s10", user: user, hash: sha256("20"+pass+"xx")};
+    var hash = isHash ? pass : sha256("20"+pass+"xx");
+    this.tempHash = hash;
+    pak = {type: "s10", user: user, hash: hash};
   }
   var waitForReady = function() { 
     setTimeout(function() {

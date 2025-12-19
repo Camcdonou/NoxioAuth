@@ -18,6 +18,13 @@ Main.prototype.init = function() {
   this.gauss.show();
   this.menu.init();
   this.afk.init();
+
+  /* Persistence: Auto-login if credentials exist */
+  var user = localStorage.getItem("noxio_user");
+  var hash = localStorage.getItem("noxio_hash");
+  if (user && hash) {
+    this.net.connect(user, hash, true);
+  }
 };
 
 Main.prototype.setStats = function(stats) {
@@ -86,6 +93,8 @@ main.init();
 function reset(delay) {
   if(delay) { setTimeout(function() { reset(); }, delay); return; }
   
+  localStorage.removeItem("noxio_user");
+  localStorage.removeItem("noxio_hash");
   main.close();
   location.reload();
 };
