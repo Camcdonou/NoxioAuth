@@ -23,24 +23,19 @@ function SettingGraphicMenu() {
     {setting: "upGame", value: 0.5, element: document.getElementById("setgraphic-game-0")},
     {setting: "upGame", value: 1.0, element: document.getElementById("setgraphic-game-1")},
     {setting: "upGame", value: 1.5, element: document.getElementById("setgraphic-game-2")},
-    {setting: "upGame", value: 2.0, element: document.getElementById("setgraphic-game-3")}
+    {setting: "upGame", value: 2.0, element: document.getElementById("setgraphic-game-3")},
+    {setting: "frameLimit", value: 30, element: document.getElementById("setgraphic-fps-0")},
+    {setting: "frameLimit", value: 60, element: document.getElementById("setgraphic-fps-1")},
+    {setting: "frameLimit", value: 0, element: document.getElementById("setgraphic-fps-2")},
+    {setting: "showFPS", value: false, element: document.getElementById("setgraphic-fps-show-0")},
+    {setting: "showFPS", value: true, element: document.getElementById("setgraphic-fps-show-1")}
   ];
   var parent = this;
-  this.btns[0].element.onclick = function() { parent.set(0); };
-  this.btns[1].element.onclick = function() { parent.set(1); };
-  this.btns[2].element.onclick = function() { parent.set(2); };
-  this.btns[3].element.onclick = function() { parent.set(3); };
-  this.btns[4].element.onclick = function() { parent.set(4); };
-  this.btns[5].element.onclick = function() { parent.set(5); };
-  this.btns[6].element.onclick = function() { parent.set(6); };  
-  this.btns[7].element.onclick = function() { parent.set(7); };
-  this.btns[8].element.onclick = function() { parent.set(8); };
-  this.btns[9].element.onclick = function() { parent.set(9); };
-  this.btns[10].element.onclick = function() { parent.set(10); };
-  this.btns[11].element.onclick = function() { parent.set(11); };
-  this.btns[12].element.onclick = function() { parent.set(12); };
-  this.btns[13].element.onclick = function() { parent.set(13); };
-  this.btns[14].element.onclick = function() { parent.set(14); };
+  for(var i=0;i<this.btns.length;i++) {
+    (function(ind) {
+      parent.btns[ind].element.onclick = function() { parent.set(ind); };
+    })(i);
+  }
 
   this.btnBack.onclick = function() { parent.back(); };
 };

@@ -145,10 +145,17 @@ MeterUI.prototype.generate = function() {
   var PING        = "Ping [ " + this.game.ping + "ms ]";
   var PING_LENGTH = util.font.textLength(PING, fontName, s) + (to*2);
   
+  var HUD_STATUS = PING;
+  if (main.settings.graphics.showFPS) {
+    var fps = this.game.debug.fAvg.toFixed(0);
+    HUD_STATUS += " | FPS [ " + fps + " ]";
+  }
+  var STATUS_LENGTH = util.font.textLength(HUD_STATUS, fontName, s) + (to*2);
+
   container.add({
     neutral: {
-      block: [new GenericUIBlock(util.vec2.make(to,h), util.vec2.make(PING_LENGTH,ts), clear, colorMat)],
-      text:  [new GenericUIText(util.vec2.make(to,h), ts, (this.game.ping > 250 ? sred : swhite), fontName, fontMat, PING)]
+      block: [new GenericUIBlock(util.vec2.make(to,h), util.vec2.make(STATUS_LENGTH,ts), clear, colorMat)],
+      text:  [new GenericUIText(util.vec2.make(to,h), ts, (this.game.ping > 250 ? sred : swhite), fontName, fontMat, HUD_STATUS)]
     },
     step: function(imp, state, window) { return false; },
     isHovered: false

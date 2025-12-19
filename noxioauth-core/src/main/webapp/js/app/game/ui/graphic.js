@@ -106,8 +106,8 @@ GraphicUI.prototype.generate = function() {
   });
   h += s+s;
   
-  var gq, mq, kq, sq, bq;
-  var gnxt, mnxt, knxt, snxt, bnxt;
+  var gq, mq, kq, sq, bq, fq, fsq;
+  var gnxt, mnxt, knxt, snxt, bnxt, fnxt, fsnxt;
   var sets = main.settings.graphics;
   switch(sets.upGame) {
     case 0.5 :  { gq = "Low"; gnxt = 1.0; break; }
@@ -132,13 +132,24 @@ GraphicUI.prototype.generate = function() {
   }
   if(sets.bloom) { bq = "On"; bnxt = false; }
   else { bq = "Off"; bnxt = true; }
+
+  switch(sets.frameLimit) {
+    case 30 : { fq = "30 FPS"; fnxt = 60; break; }
+    case 60 : { fq = "60 FPS"; fnxt = 0; break; }
+    default  : { fq = "Uncapped"; fnxt = 30; break; }
+  }
+
+  if(sets.showFPS) { fsq = "On"; fsnxt = false; }
+  else { fsq = "Off"; fsnxt = true; }
   
   var SPEC = [
     {nam: "Game Quality", txt: gq, fld: "upGame", nxt: gnxt},
     {nam: "Menu Quality", txt: mq, fld: "upUi", nxt: mnxt},
     {nam: "Sky Quality", txt: kq, fld: "upSky", nxt: knxt},
     {nam: "Shadow Quality", txt: sq, fld: "shadowSize", nxt: snxt},
-    {nam: "Bloom", txt: bq, fld: "bloom", nxt: bnxt}
+    {nam: "Bloom", txt: bq, fld: "bloom", nxt: bnxt},
+    {nam: "Frame Rate", txt: fq, fld: "frameLimit", nxt: fnxt},
+    {nam: "Show FPS", txt: fsq, fld: "showFPS", nxt: fsnxt}
   ];
   
   for(var i=0;i<SPEC.length;i++) {
