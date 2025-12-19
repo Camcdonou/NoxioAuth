@@ -182,10 +182,6 @@ NoxioGame.prototype.handlePacket = function(packet) {
 /* Handles PacketG10, this packet updates the gamestate and is essentially a "frame". */
 NoxioGame.prototype.updatePacket = function(packet) {
   this.packetFDLC.push(packet);
-  while(this.packetFDLC.length > this.FDLC_MAX) {
-    packet = this.packetFDLC.shift();
-    this.doUpdate(packet);
-  }
 };
 
 NoxioGame.prototype.doUpdate = function(packet) {
@@ -528,7 +524,9 @@ NoxioGame.prototype.putCameraShake = function(object, magnitude) {
 NoxioGame.prototype.draw = function() {
   var now = util.time.now();
   
-  if((now - this.deltaFDLC) / this.SERVER_TICK_RATE > 0.75) {
+  /* Carry over time debt to eliminate micro-jitters. */
+  /* If we are at least 75% through a tick, or we have extra packets to clear, process frames. */
+  if((now - this.deltaFDLC) / this.SERVER_TICK_RATE > 0.75 || this.packetFDLC.length > this.FDLC_MAX) {
     this.delta = now;
                   /* DEBUG CTIME START */
                   /* */ var start = util.time.now();
@@ -539,7 +537,12 @@ NoxioGame.prototype.draw = function() {
         var packet = this.packetFDLC.shift();
         this.doUpdate(packet);
         initial = false;
+        this.deltaFDLC += this.SERVER_TICK_RATE; // Consume 33ms of time debt
     }
+    
+    /* Safety: if we are still way behind (e.g. tab was backgrounded), snap deltaFDLC to now */
+    if (now - this.deltaFDLC > 500) { this.deltaFDLC = now; }
+
                   /* DEBUG CTIME START */
                   /* */ this.debug.ctime.pop();
                   /* */ this.debug.ctime.unshift(util.time.now() - start);
@@ -547,7 +550,6 @@ NoxioGame.prototype.draw = function() {
     if(!this.ready || !this.serverReady) {
       this.loading();                     // Update loading screen
     }
-    this.deltaFDLC = util.time.now();
   }
 
   if(this.ready && this.serverReady) {  // Don't draw or play sound until game is fully loaded
