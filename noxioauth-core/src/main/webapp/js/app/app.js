@@ -32,8 +32,13 @@ Main.prototype.startGame = function(name, settings, map) {
     if(attempt > 0) { main.menu.connect.show("Retrying..."); }
     else { main.menu.connect.show("Downloading map file...", 0); }
 
+    // Use HTTPS for port 443, HTTP for other ports
+    var portStr = String(port);
+    var protocol = (portStr === "443") ? "https://" : "http://";
+    var portSuffix = (portStr === "443" || portStr === "80") ? "" : ":" + portStr;
+
     $.ajax({
-      url: "http://" + address + ":" + port + "/nxg/map/" + map,
+      url: protocol + address + portSuffix + "/nxg/map/" + map,
       type: 'GET',
 //      contentType: 'application/json',
       timeout: 3000,

@@ -174,4 +174,3 @@ yarn-error.log*
 *.tar.gz
 *.rar
 *.7z
-noxioauth-core/src/main/resources/noxio.properties

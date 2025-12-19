@@ -8,33 +8,18 @@ function Auth () {
 };
 
 Auth.prototype.establish = function(socket) {
-  /* List of addresses to attempt to connect on. 
-     Try current domain first then a list of backup addresses for testing & etc...
-  */
-  var addresses = [
-    window.location.host,
-    "infernoplus.com",
-    "localhost:7001",
-    "68.35.135.107:7001",
-    "10.0.0.253:7001"
-  ];
-  
-  var getStatus = function(r) {
-    if(r>=addresses.length) {
-      main.menu.connect.show("Failed to retrieve server status", 1);
-      return;
-    }
-    main.menu.connect.show("Checking server status @" + addresses[r], 0);
-    $.ajax({
-      url: "http://" + addresses[r] + "/nxc/status",
-      type: 'GET',
-      timeout: 3000,
-      success: function() { main.net.auth.connect(addresses[r], socket); },
-      error: function() { getStatus(++r); }
-    });
-  };
-  
-  getStatus(0);
+  /* Use current page's host and protocol */
+  var address = window.location.host;
+  var protocol = window.location.protocol; // http: or https:
+
+  main.menu.connect.show("Checking server status @" + address, 0);
+  $.ajax({
+    url: protocol + "//" + address + "/nxc/status",
+    type: 'GET',
+    timeout: 3000,
+    success: function() { main.net.auth.connect(address, socket); },
+    error: function() { main.menu.connect.show("Failed to retrieve server status", 1); }
+  });
 };
 
 Auth.prototype.isConnected = function () {
@@ -48,7 +33,9 @@ Auth.prototype.connect = function(address, socket){
     return;
   }
 
-  this.webSocket = new WebSocket("ws://" + address + "/nxc/" + socket);
+  // Use wss:// for HTTPS pages, ws:// for HTTP pages
+  var wsProtocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+  this.webSocket = new WebSocket(wsProtocol + address + "/nxc/" + socket);
   main.menu.connect.show("Connecting @" + address, 0);
 
   this.webSocket.onopen = function(event){

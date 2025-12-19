@@ -61,7 +61,7 @@ function OnlineMenu() {
         }
         else { //Server Online
           elm.classList.add("btn");
-          elm.onclick = function() { main.net.connectGame(info.domain, data.port); };
+          elm.onclick = function() { main.net.connectGame(info.domain, info.port); };
           elm.innerHTML = data.location + " | " + data.users + " online<svg class='ico-serv' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg' version='1.1'><circle cx='100' cy='100' r='85' fill='none' stroke='currentColor' stroke-width='30' /></svg>";
         }
       },

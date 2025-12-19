@@ -21,18 +21,10 @@ import org.springframework.dao.DataAccessException;
 public class UserDao {
   private final DaoContainer dao;
   private final List<NoxioSession> sessions; /* This is a list of all active user NoxioSessions. */
-  
-  /* User accounts that are pending creation. Once email is validated they are created. */
-  private final List<PendingUser> pending;
-  
-  /* Pending password resets. */
-  private final List<PendingReset> resets;
-  
+
   public UserDao(final DaoContainer dao) {
     this.dao = dao;
     sessions = Collections.synchronizedList(new ArrayList());
-    pending = Collections.synchronizedList(new ArrayList());
-    resets = Collections.synchronizedList(new ArrayList());
   }
   
   public synchronized boolean createUser(final String user, final String email, final String hash) throws IOException {
@@ -45,7 +37,7 @@ public class UserDao {
     try {
       dao.jdbc.update(
         "INSERT into USERS ( UID, NAME, DISPLAY, EMAIL, HASH, TYPE, SUPPORTER, CREATED, UPDATED, LASTLOGIN, SUSPENDUNTIL ) VALUES ( ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), NOW(), ? )",
-              uid, user, user, email, sash, User.Type.FREE.name(), false, null
+              uid, user, user, email, sash, User.Type.FULL.name(), false, null
       );
       dao.jdbc.update(
         "INSERT into SETTINGS ( " +
@@ -138,28 +130,7 @@ public class UserDao {
     }
     return null;
   }
-  
-  public User getUserByEmail(final String email) throws IOException {
-    try {
-      final List<Map<String,Object>> results = dao.jdbc.queryForList(
-        "SELECT * FROM USERS WHERE EMAIL=?",
-        email
-      );
-      if(results.size() > 0) {
-        return new User(results.get(0));
-      }
-    }
-    catch(DataAccessException ex) {
-      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
-      throw new IOException("SQL Error during user lookup.");
-    }
-    catch(ClassCastException | NullPointerException ex) {
-      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
-      throw new IOException("SQL Error during user lookup.");
-    }
-    return null;
-  }
-  
+
   public void changeUserPassword(final User usr, final String hash) throws IOException {
     final String sash = Hash.bcrypt(hash);
     try {
@@ -425,7 +396,7 @@ public class UserDao {
   public List<UserInfo> getAdminInfo() throws IOException {
     try {
       final List<Map<String,Object>> results = dao.jdbc.queryForList(
-        "SELECT " + 
+        "SELECT " +
         "USERS.UID, USERS.NAME, USERS.DISPLAY, USERS.EMAIL, USERS.TYPE, USERS.SUPPORTER, USERS.CREATED, USERS.UPDATED, USERS.LASTLOGIN, USERS.SUSPENDUNTIL, " +
         "SETTINGS.GAMCUSTOMSOUNDFILE, SETTINGS.GAMCUSTOMMESSAGEA, SETTINGS.GAMCUSTOMMESSAGEB " +
         "FROM USERS INNER JOIN SETTINGS ON USERS.UID=SETTINGS.UID"
@@ -481,39 +452,7 @@ public class UserDao {
     }
     return null;
   }
-  
-  public synchronized void createPending(String user, String hash, String email, String verification) throws IOException {
-    for(int i=0;i<pending.size();i++) {
-      final PendingUser pu = pending.get(i);
-      if(pu.name.equals(user)) { pending.remove(pu); }
-    }
-    pending.add(new PendingUser(user, hash, email, verification));
-  }
-  
-  public synchronized PendingUser getPending(String user, String verification) {
-    for(int i=0;i<pending.size();i++) {
-      final PendingUser pu = pending.get(i);
-      if(pu.name.equals(user) && pu.verification.equals(verification)) { pending.remove(pu); return pu; }
-    }
-    return null;
-  }
-  
-  public synchronized void createReset(String user, String email, String verification) throws IOException {
-    for(int i=0;i<resets.size();i++) {
-      final PendingReset pu = resets.get(i);
-      if(pu.name.equals(user)) { resets.remove(pu); }
-    }
-    resets.add(new PendingReset(user, email, verification));
-  }
-  
-  public synchronized PendingReset getReset(String verification) {
-    for(int i=0;i<resets.size();i++) {
-      final PendingReset pu = resets.get(i);
-      if(pu.verification.equals(verification)) { resets.remove(pu); return pu; }
-    }
-    return null;
-  }
-  
+
   /* Sends a message to all online users */
   public void sendGlobalMessage(String message) {
     for(int i=0;i<sessions.size();i++) {
@@ -522,20 +461,6 @@ public class UserDao {
         if(s.isOpen()) { s.sendPacket(new PacketS45(message)); }
       }
       catch(Exception ex) { Oak.log(Oak.Type.SESSION, Oak.Level.ERR, "Failed to send global message to user."); }
-    }
-  }
-  
-  public static class PendingUser {
-    public final String name, hash, email, verification;
-    public PendingUser(String name, String hash, String email, String verification) {
-      this.name = name; this.hash = hash; this.email = email; this.verification = verification;
-    }
-  }
-  
-  public static class PendingReset {
-    public final String name, email, verification;
-    public PendingReset(String name, String email, String verification) {
-      this.name = name; this.email = email; this.verification = verification;
     }
   }
 }

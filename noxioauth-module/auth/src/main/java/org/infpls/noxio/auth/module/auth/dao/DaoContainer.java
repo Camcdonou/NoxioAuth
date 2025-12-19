@@ -1,7 +1,6 @@
 package org.infpls.noxio.auth.module.auth.dao;
 
 import org.infpls.noxio.auth.module.auth.dao.file.FileDao;
-import org.infpls.noxio.auth.module.auth.dao.mail.MailDao;
 import org.infpls.noxio.auth.module.auth.dao.pay.PaymentDao;
 import org.springframework.stereotype.Component;
 
@@ -22,19 +21,16 @@ public class DaoContainer {
   private FileDao fileDao;
 
   private final UserDao userDao;
-  private final MailDao mailDao;
   private final PaymentDao paymentDao;
-  
+
   public DaoContainer() {
     Settable.update();                  // This call to Settable.update() ensures all properties are loaded before we start using them.
     Oak.open();                         // Starts logging
     userDao = new UserDao(this);
-    mailDao = new MailDao();
     paymentDao = new PaymentDao(this);
   }
 
   public UserDao getUserDao() { return userDao;  }
-  public MailDao getMailDao() { return mailDao;  }
   public FileDao getFileDao() { return fileDao;  }
   public PaymentDao getPaymentDao() { return paymentDao;  }
 }
