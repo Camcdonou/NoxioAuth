@@ -203,7 +203,7 @@
             <div class='setgame-spc'></div>
             <div class='setgame-name'>Use Custom Sound</div>
             <div class='setgame-name'>Upload Custom Sound</div>
-            <div class='setgame-name'>Upload Custom Map</div> 
+            <div class='setgame-name'>Manage Custom Maps</div> 
             <div class='setgame-spc'></div>
             <div class='setgame-name'>Hide Custom Colors</div>
             <div class='setgame-name'>Hide Alternate Characters</div>
@@ -223,7 +223,7 @@
             <div class='setgame-spc'></div>
             <div class='setgame-tog' id='setgame-usesound'></div>
             <div class='setgame-upl'><input type="file" name="file" accept=".wav" id="setgame-snd-file" onchange="main.menu.setgame.uploadSound()"/><span id="setgame-snd-data" class="setgame-snd-fn">...</span></div>
-            <div class='setgame-upl'><input type="file" name="file" accept=".map" id="setgame-map-file" onchange="main.menu.setgame.uploadMap()"/><span id="setgame-map-data" class="setgame-snd-fn">...</span></div>
+            <div class='setgame-upl'><span class='setgame-btn small' onclick='main.menu.setgame.showMapManager()'>Manage</span><span id="setgame-map-status" class="setgame-snd-fn">...</span></div>
             <div class='setgame-spc'></div>
             <div class='setgame-tog' id='setgame-hidecolor' onclick='main.menu.setgame.toggle(0)'></div>
             <div class='setgame-tog' id='setgame-hidealt' onclick='main.menu.setgame.toggle(1)'></div>
@@ -240,6 +240,19 @@
       </div>
       <div id="setgame-modal" class="setgame-modal" style="display: none">
           <div id="setgame-modal-cont" class='setgame-modal-cont'>...</div>
+      </div>
+
+      <!-- Map Manager Modal -->
+      <div id="map-manager-modal" class="setgame-modal" style="display: none">
+          <div class='setgame-modal-cont map-manager-cont'>
+              <div class='tool-header'>Map Manager</div>
+              <div id="map-manager-list" class="map-manager-list"></div>
+              <div class="map-manager-footer">
+                  <input type="file" accept=".map" id="map-manager-file" style="display:none" onchange="main.menu.setgame.uploadMap()"/>
+                  <span id="map-manager-upload-btn" class='setgame-btn' onclick="document.getElementById('map-manager-file').click()">Upload New Map</span>
+                  <span class='setgame-btn' onclick="main.menu.setgame.hideMapManager()">Close</span>
+              </div>
+          </div>
       </div>
       
       <!-- Settings Graphics Menu -->

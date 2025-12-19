@@ -42,8 +42,10 @@ function SettingGameMenu() {
   };
   
   this.map = {
-    file: document.getElementById("setgame-map-file"),
-    data: document.getElementById("setgame-map-data")
+    modal: document.getElementById("map-manager-modal"),
+    list: document.getElementById("map-manager-list"),
+    file: document.getElementById("map-manager-file"),
+    status: document.getElementById("setgame-map-status")
   };
   
   this.toggles = [
@@ -86,7 +88,19 @@ SettingGameMenu.prototype.update = function() {
   this.generateColorBtns(this.colorValues.redColor, util.kalide.getRedsNoTruncate(main.settings.game.redColor));
   this.generateColorBtns(this.colorValues.blueColor, util.kalide.getBluesNoTruncate(main.settings.game.blueColor));
   this.sound.data.innerHTML = main.settings.game.customSoundFile ? main.settings.game.customSoundFile : "";
-  this.map.data.innerHTML = "";
+  
+  /* Update map status */
+  var tmp = this;
+  $.ajax({
+    url: "/nxc/file/maps",
+    type: 'GET',
+    timeout: 3000,
+    success: function(data) {
+      var count = 0;
+      for(var i=0;i<data.length;i++) { if(data[i].author === main.net.user) { count++; } }
+      tmp.map.status.innerHTML = count + " / 10 Maps";
+    }
+  });
   
   if(this.message.a.value && this.message.a.value !== this.message.va) { main.settings.game.customMessageA = this.message.a.value; this.changed = true; }
   if(this.message.b.value && this.message.b.value !== this.message.vb) { main.settings.game.customMessageB = this.message.b.value; this.changed = true; }
@@ -186,12 +200,74 @@ SettingGameMenu.prototype.uploadMap = function() {
     function(fn) {
       main.menu.warning.show("File uploaded successfully!");
       tmp.map.file.value = "";
+      tmp.refreshMapList();
       tmp.update();
     },
     function(error){
       main.menu.warning.show(error.responseText);
     }
   );
+};
+
+SettingGameMenu.prototype.showMapManager = function() {
+  if(!main.unlocks.has("FT_LOBBY")) {
+    main.menu.warning.show("You must unlock Custom Lobbies to manage custom maps.");
+    return;
+  }
+  this.refreshMapList();
+  this.map.modal.style.display = "block";
+};
+
+SettingGameMenu.prototype.hideMapManager = function() {
+  this.map.modal.style.display = "none";
+};
+
+SettingGameMenu.prototype.refreshMapList = function() {
+  var tmp = this;
+  this.map.list.innerHTML = "Loading maps...";
+  $.ajax({
+    url: "/nxc/file/maps",
+    type: 'GET',
+    timeout: 3000,
+    success: function(data) {
+      var gen = "";
+      var count = 0;
+      for(var i=0;i<data.length;i++) {
+        if(data[i].author === main.net.user) {
+          count++;
+          gen += "<div class='map-manager-item'>";
+          gen += "<span class='map-name'>" + data[i].name + "</span>";
+          gen += "<span class='setgame-btn small' onclick='main.menu.setgame.deleteMap(\"" + data[i].id + "\")'>Delete</span>";
+          gen += "</div>";
+        }
+      }
+      if(count === 0) { gen = "<div class='map-manager-empty'>No custom maps uploaded.</div>"; }
+      tmp.map.list.innerHTML = gen;
+      tmp.map.status.innerHTML = count + " / 10 Maps";
+    },
+    error: function() {
+      tmp.map.list.innerHTML = "Error loading map list.";
+    }
+  });
+};
+
+SettingGameMenu.prototype.deleteMap = function(id) {
+  var tmp = this;
+  if(!confirm("Are you sure you want to delete this map?")) { return; }
+  
+  $.ajax({
+    url: "/nxc/file/map/delete",
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify({user: main.net.user, sid: main.net.sid, filename: id}),
+    success: function() {
+      tmp.refreshMapList();
+      tmp.update();
+    },
+    error: function(error) {
+      main.menu.warning.show("Failed to delete map: " + error.responseJSON.message);
+    }
+  });
 };
 
 SettingGameMenu.prototype.updateToggles = function() {

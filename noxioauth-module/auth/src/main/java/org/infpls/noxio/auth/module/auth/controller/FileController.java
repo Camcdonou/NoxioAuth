@@ -8,6 +8,7 @@ import org.infpls.noxio.auth.module.auth.dao.DaoContainer;
 import org.infpls.noxio.auth.module.auth.dao.file.FileDao;
 import org.infpls.noxio.auth.module.auth.dao.user.UserUnlocks;
 import org.infpls.noxio.auth.module.auth.session.NoxioSession;
+import org.infpls.noxio.auth.module.auth.util.ID;
 import org.infpls.noxio.auth.module.auth.util.Oak;
 import org.infpls.noxio.auth.module.auth.util.Scung;
 import org.infpls.noxio.auth.module.auth.util.WavFile;
@@ -36,7 +37,7 @@ public class FileController {
   @RequestMapping(value = "/file/sound", method = RequestMethod.POST, consumes = {"multipart/form-data"})
   public @ResponseBody ResponseEntity uploadSound(@RequestPart("creds") String creds, @RequestPart("file") MultipartFile file) {
     final Gson gson = new GsonBuilder().create();
-    final UserUploadCredintials uuc = gson.fromJson(creds, UserUploadCredintials.class);
+    final UserFileCredentials uuc = gson.fromJson(creds, UserFileCredentials.class);
     
     /* validate */
     final NoxioSession session = dao.getUserDao().getSessionByUser(uuc.user);
@@ -101,9 +102,10 @@ public class FileController {
       try {
         final String data = Scung.readFile(maps.get(i));
         final String[] spl = data.split(";", 2);
-        final String mid = m.getFilename().split("\\.", 2)[0];
+        final String fid = m.getFilename().split("\\.", 2)[0];
         final String mn = spl[0];
-        mapList.add(new MapInfo(mid, mn, mid));
+        final String author = fid.contains("_") ? fid.split("_")[0] : fid;
+        mapList.add(new MapInfo(fid, mn, author));
       }
       catch(IOException ex) {
         Oak.log(Oak.Type.SYSTEM, Oak.Level.ERR, "Error parsing custom map: " + m.getFilename(), ex);
@@ -125,12 +127,10 @@ public class FileController {
     }
   }
   
-  
-
   @RequestMapping(value = "/file/map", method = RequestMethod.POST, consumes = {"multipart/form-data"})
   public @ResponseBody ResponseEntity uploadMap(@RequestPart("creds") String creds, @RequestPart("file") MultipartFile file) {
     final Gson gson = new GsonBuilder().create();
-    final UserUploadCredintials uuc = gson.fromJson(creds, UserUploadCredintials.class);
+    final UserFileCredentials uuc = gson.fromJson(creds, UserFileCredentials.class);
     
     /* validate */
     final NoxioSession session = dao.getUserDao().getSessionByUser(uuc.user);
@@ -138,31 +138,61 @@ public class FileController {
       return new ResponseEntity("Invalid credentials.", HttpStatus.NOT_ACCEPTABLE);
     }
     
-    if(!session.getUnlocks().has(UserUnlocks.Key.FT_SOUND)) {
+    if(!session.getUnlocks().has(UserUnlocks.Key.FT_LOBBY)) {
       return new ResponseEntity("You do not have this feature unlocked!", HttpStatus.NOT_ACCEPTABLE);
     }
     
     if(file.getSize() > 1000000) {
       return new ResponseEntity("Filesize exceeds 1MB.", HttpStatus.NOT_ACCEPTABLE);
     }
-    
-    /* delete old map file if it exists */
-    if(!dao.getFileDao().deleteFile(FileDao.Type.MAP, session.getUser())) {
-      return new ResponseEntity("Failed to delete old map file. Contact support if this problem persists.", HttpStatus.NOT_ACCEPTABLE);
+
+    /* check limit */
+    List<Resource> maps = dao.getFileDao().getFiles(FileDao.Type.MAP);
+    int count = 0;
+    for(Resource r : maps) {
+        if(r.getFilename().startsWith(session.getUser() + "_") || r.getFilename().equals(session.getUser() + ".map")) {
+            count++;
+        }
+    }
+    if(count >= 10) {
+        return new ResponseEntity("You have reached the 10 map limit. Delete an existing map to upload a new one.", HttpStatus.NOT_ACCEPTABLE);
     }
       
     /* write */
-    if(dao.getFileDao().putFile(FileDao.Type.MAP, file, session.getUser()) == null) {
+    final String filename = session.getUser() + "_" + ID.generate6();
+    if(dao.getFileDao().putFile(FileDao.Type.MAP, file, filename) == null) {
       return new ResponseEntity("Failed to upload file.", HttpStatus.NOT_ACCEPTABLE);
     }
     
     return new ResponseEntity("OK", HttpStatus.OK);
   }
+
+  @RequestMapping(value = "/file/map/delete", method = RequestMethod.POST, consumes = {"application/json"})
+  public @ResponseBody ResponseEntity deleteMap(@RequestBody String data) {
+    final Gson gson = new GsonBuilder().create();
+    final UserFileCredentials udc = gson.fromJson(data, UserFileCredentials.class);
+    
+    /* validate */
+    final NoxioSession session = dao.getUserDao().getSessionByUser(udc.user);
+    if(session == null || !session.getSessionId().equals(udc.sid) || session.isGuest()) {
+      return new ResponseEntity("{\"message\":\"Invalid credentials.\"}", HttpStatus.NOT_ACCEPTABLE);
+    }
+    
+    if(!udc.filename.startsWith(udc.user + "_") && !udc.filename.equals(udc.user)) {
+       return new ResponseEntity("{\"message\":\"You do not own this map.\"}", HttpStatus.FORBIDDEN);
+    }
+
+    if(!dao.getFileDao().deleteFile(FileDao.Type.MAP, udc.filename)) {
+      return new ResponseEntity("{\"message\":\"Failed to delete map file.\"}", HttpStatus.NOT_ACCEPTABLE);
+    }
+    
+    return new ResponseEntity("{\"message\":\"OK\"}", HttpStatus.OK);
+  }
   
-  public class UserUploadCredintials {
-    public final String user, sid;
-    public UserUploadCredintials(String user, String sid) {
-      this.user = user; this.sid = sid;
+  public static class UserFileCredentials {
+    public final String user, sid, filename;
+    public UserFileCredentials(String user, String sid, String filename) {
+      this.user = user; this.sid = sid; this.filename = filename;
     }
   }
   
