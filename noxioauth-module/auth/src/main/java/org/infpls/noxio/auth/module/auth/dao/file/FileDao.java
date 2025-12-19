@@ -43,20 +43,18 @@ public class FileDao {
     for(Type t : Type.values()) {
       final File fsType = new File(path + t.path);
       if(fsType.exists() && !fsType.isDirectory()) { Oak.log(Oak.Type.SYSTEM, Oak.Level.ERR, "FileDao::init() - Filestore type path is not a valid directory!"); }
-      if(!fsType.exists()) { if(!fsDir.mkdirs()) { Oak.log(Oak.Type.SYSTEM, Oak.Level.ERR, "FileDao::init() - Failed to create filestore type directory!"); } }
+      if(!fsType.exists()) { if(!fsType.mkdirs()) { Oak.log(Oak.Type.SYSTEM, Oak.Level.ERR, "FileDao::init() - Failed to create filestore type directory!"); } }
     }
   }
   
   public String putFile(Type t, MultipartFile f) {
-    final String filename = ID.generate16();
+    final String filename = ID.generate32();
     return putFile(t, f, filename);
   }
   
   public String putFile(Type t, MultipartFile f, String filename) {
     try {
       final File file = new File(Settable.getFilePath() + t.path + "/" + filename + t.ext);
-      if(file.exists()) { throw new IOException("File unexpectedly exists. Abort!"); }
-      file.createNewFile();
       f.transferTo(file);
     }
     catch(IOException ex) {
@@ -81,9 +79,11 @@ public class FileDao {
     File f = new File(Settable.getFilePath() + t.path);
     File[] files = f.listFiles();
     List<Resource> rscs = new ArrayList();
-    for(int i=0;i<files.length;i++) {
-      Resource rsc = resourceLoader.getResource("file:" + files[i]);
-      rscs.add(rsc);
+    if(files != null) {
+      for(int i=0;i<files.length;i++) {
+        Resource rsc = resourceLoader.getResource("file:" + files[i]);
+        rscs.add(rsc);
+      }
     }
     return rscs;
   }

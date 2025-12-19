@@ -47,7 +47,7 @@ Main.prototype.startGame = function(name, settings, map) {
         main.menu.game.show();
       },
       error: function(data) {
-        if(attempt > 2) { main.menu.error.showError("Map Error", "Failed to download map: " + map); console.log(data); /* @TODO: Remove this after fixing map download bug */ }
+        if(attempt > 2) { main.menu.error.showError("Map Error", "Failed to download map: " + map); }
         else { downloadAndStart(name, settings, address, port, map, attempt+1); }
       }
     });

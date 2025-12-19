@@ -30,7 +30,6 @@ ToolFile.prototype.save = function() { //@TODO: Move to file.js where load funct
 };
 
 ToolFile.prototype.reload = function() {
-  console.log("stub");
 };
 
 ToolFile.prototype.show = function() {
