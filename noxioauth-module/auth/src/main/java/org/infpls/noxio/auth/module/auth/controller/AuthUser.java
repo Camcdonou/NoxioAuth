@@ -66,7 +66,8 @@ public class AuthUser {
 
       }
       catch(Exception ex) {
-          return new ResponseEntity("{\"message\":\"Unknown exception while processing user creation.\"}", HttpStatus.CONFLICT);
+          ex.printStackTrace(); // Log the actual exception to console/docker logs
+          return new ResponseEntity("{\"message\":\"Unknown exception while processing user creation: " + ex.getMessage() + "\"}", HttpStatus.CONFLICT);
       }
   }
 
