@@ -12,6 +12,10 @@ import org.infpls.noxio.auth.module.auth.session.PacketS02;
 import org.infpls.noxio.auth.module.auth.util.ID;
 import org.infpls.noxio.auth.module.auth.util.Oak;
 import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -42,54 +46,86 @@ public class UserDao {
   public synchronized boolean createUser(final String user, final String email, final String hash) throws IOException {
     User u = getUserByName(user);
     if(u != null) { return false; }
-    
+
     final String uid = ID.generate32();
     final String sash = Hash.bcrypt(hash);
     final UserSettings us = new UserSettings(uid);
+
+    // Use transaction to ensure all inserts succeed or all fail
     try {
-      dao.jdbc.update(
-        "INSERT into USERS ( UID, NAME, DISPLAY, EMAIL, HASH, TYPE, SUPPORTER, CREATED, UPDATED, LASTLOGIN, SUSPENDUNTIL ) VALUES ( ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), NOW(), ? )",
-              uid, user, user, email, sash, User.Type.FULL.name(), false, null
-      );
-      dao.jdbc.update(
-        "INSERT into SETTINGS ( " +
-        "UID, UPDATED, " +
-        "VOLMASTER, VOLMUSIC, VOLVOICE, VOLANNOUNCER, VOLUI, VOLFX, " +
-        "GFXUPGAME, GFXUPUI, GFXUPSKY, GFXSHADOWSIZE, GFXSAFEMODE, GFXBLOOM, GFXFRAMELIMIT, GFXSHOWFPS, " +
-        "CONENABLEGAMEPAD, CONACTIONA, CONACTIONB, CONJUMP, CONTAUNT, CONTOSS, CONSCOREBOARD, " +
-        "GAMCOLOR, GAMREDCOLOR, GAMBLUECOLOR, GAMCUSTOMMESSAGEA, GAMCUSTOMMESSAGEB, GAMUSECUSTOMSOUND, GAMCUSTOMSOUNDFILE, GAMLAGCOMP, " +
-        "TOGDISABLEALTS, TOGDISABLECUSTOMSOUND, TOGDISABLECOLOR, TOGDISABLELOG, TOGDISABLEMETER " +
-        ") VALUES ( ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-              uid, 
-              us.volume.master, us.volume.music, us.volume.voice, us.volume.announcer, us.volume.ui, us.volume.fx,
-              us.graphics.upGame, us.graphics.upUi, us.graphics.upSky, us.graphics.shadowSize, us.graphics.safeMode, us.graphics.bloom, us.graphics.frameLimit, us.graphics.showFPS,
-              us.control.enableGamepad, us.control.actionA, us.control.actionB, us.control.jump, us.control.taunt, us.control.toss, us.control.scoreboard,
-              us.game.color, us.game.redColor, us.game.blueColor, us.game.customMessageA, us.game.customMessageB, us.game.useCustomSound, us.game.getCustomSoundFile(), us.game.lagComp,
-              us.toggle.disableAlts, us.toggle.disableCustomSound, us.toggle.disableColor, us.toggle.disableLog, us.toggle.disableMeter
-      );
-      dao.jdbc.update(
-        "INSERT into STATS ( " +
-        "UID, UPDATED, CREDITS, LIFECREDITS, KEELL, DEATH, GAMEWIN, GAMELOSE, BETRAYED, BETRAYL, " +
-        "FIRSTBLOOD, KILLJOY, ENDEDREIGN, FLAGCAPTURE, FLAGDEFENSE, HILLCONTROL, PERFECT, HUMILIATION, " +
-        "MKX02, MKX03, MKX04, MKX05, MKX06, MKX07, MKX08, MKX09, MKX10, MKX11, MKX12, MKX13, MKX14, MKX15, MKX16, MKX17, MKX18, MKX19, MKX20, " +
-        "KSX05, KSX10, KSX15, KSX20, KSX25, KSX30, " +
-        "CUMRES " +
-        ") VALUES ( ?, NOW(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ? )",
-              uid, (int)(Math.random()*37)
-      );
-      dao.jdbc.update(
-        "INSERT into UNLOCKS ( " +
-        "UID, UPDATED " +
-        ") VALUES ( ?, NOW() )",
-              uid
-      );
+      DataSourceTransactionManager txManager = new DataSourceTransactionManager(dao.jdbc.getDataSource());
+      TransactionTemplate txTemplate = new TransactionTemplate(txManager);
+
+      Boolean result = txTemplate.execute(new TransactionCallback<Boolean>() {
+        @Override
+        public Boolean doInTransaction(TransactionStatus status) {
+          try {
+            Oak.log(Oak.Type.SQL, Oak.Level.INFO, "Creating user: " + user + " with UID: " + uid);
+
+            // Insert into USERS table
+            dao.jdbc.update(
+              "INSERT into USERS ( UID, NAME, DISPLAY, EMAIL, HASH, TYPE, SUPPORTER, CREATED, UPDATED, LASTLOGIN, SUSPENDUNTIL ) VALUES ( ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), NOW(), ? )",
+                    uid, user, user, email, sash, User.Type.FULL.name(), false, null
+            );
+            Oak.log(Oak.Type.SQL, Oak.Level.INFO, "Inserted into USERS table");
+
+            // Insert into SETTINGS table
+            dao.jdbc.update(
+              "INSERT into SETTINGS ( " +
+              "UID, UPDATED, " +
+              "VOLMASTER, VOLMUSIC, VOLVOICE, VOLANNOUNCER, VOLUI, VOLFX, " +
+              "GFXUPGAME, GFXUPUI, GFXUPSKY, GFXSHADOWSIZE, GFXSAFEMODE, GFXBLOOM, GFXFRAMELIMIT, GFXSHOWFPS, " +
+              "CONENABLEGAMEPAD, CONACTIONA, CONACTIONB, CONJUMP, CONTAUNT, CONTOSS, CONSCOREBOARD, " +
+              "GAMCOLOR, GAMREDCOLOR, GAMBLUECOLOR, GAMCUSTOMMESSAGEA, GAMCUSTOMMESSAGEB, GAMUSECUSTOMSOUND, GAMCUSTOMSOUNDFILE, GAMLAGCOMP, " +
+              "TOGDISABLEALTS, TOGDISABLECUSTOMSOUND, TOGDISABLECOLOR, TOGDISABLELOG, TOGDISABLEMETER " +
+              ") VALUES ( ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    uid,
+                    us.volume.master, us.volume.music, us.volume.voice, us.volume.announcer, us.volume.ui, us.volume.fx,
+                    us.graphics.upGame, us.graphics.upUi, us.graphics.upSky, us.graphics.shadowSize, us.graphics.safeMode, us.graphics.bloom, us.graphics.frameLimit, us.graphics.showFPS,
+                    us.control.enableGamepad, us.control.actionA, us.control.actionB, us.control.jump, us.control.taunt, us.control.toss, us.control.scoreboard,
+                    us.game.color, us.game.redColor, us.game.blueColor, us.game.customMessageA, us.game.customMessageB, us.game.useCustomSound, us.game.getCustomSoundFile(), us.game.lagComp,
+                    us.toggle.disableAlts, us.toggle.disableCustomSound, us.toggle.disableColor, us.toggle.disableLog, us.toggle.disableMeter
+            );
+            Oak.log(Oak.Type.SQL, Oak.Level.INFO, "Inserted into SETTINGS table");
+
+            // Insert into STATS table
+            dao.jdbc.update(
+              "INSERT into STATS ( " +
+              "UID, UPDATED, CREDITS, LIFECREDITS, KEELL, DEATH, GAMEWIN, GAMELOSE, BETRAYED, BETRAYL, " +
+              "FIRSTBLOOD, KILLJOY, ENDEDREIGN, FLAGCAPTURE, FLAGDEFENSE, HILLCONTROL, PERFECT, HUMILIATION, " +
+              "MKX02, MKX03, MKX04, MKX05, MKX06, MKX07, MKX08, MKX09, MKX10, MKX11, MKX12, MKX13, MKX14, MKX15, MKX16, MKX17, MKX18, MKX19, MKX20, " +
+              "KSX05, KSX10, KSX15, KSX20, KSX25, KSX30, " +
+              "CUMRES " +
+              ") VALUES ( ?, NOW(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ? )",
+                    uid, (int)(Math.random()*37)
+            );
+            Oak.log(Oak.Type.SQL, Oak.Level.INFO, "Inserted into STATS table");
+
+            // Insert into UNLOCKS table
+            dao.jdbc.update(
+              "INSERT into UNLOCKS ( " +
+              "UID, UPDATED " +
+              ") VALUES ( ?, NOW() )",
+                    uid
+            );
+            Oak.log(Oak.Type.SQL, Oak.Level.INFO, "Inserted into UNLOCKS table");
+            Oak.log(Oak.Type.SQL, Oak.Level.INFO, "User creation successful for: " + user);
+
+            return true;
+          } catch(DataAccessException ex) {
+            Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error during account creation - transaction will rollback!", ex);
+            status.setRollbackOnly();
+            throw ex;
+          }
+        }
+      });
+
+      return result != null && result;
     }
     catch(DataAccessException ex) {
       Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
-      throw new IOException("SQL Error during account creation.");
+      throw new IOException("SQL Error during account creation: " + ex.getMessage());
     }
-    
-    return true;
   }
   
   /* Return error message string or null if valid */
