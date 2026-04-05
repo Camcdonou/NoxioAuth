@@ -27,12 +27,15 @@ public class GameServerComController {
   /* If not OK then returns type: l03 and a message */
   @RequestMapping(value = "/validate/{user}/{sid}", method = RequestMethod.GET, produces = "application/json")
   public @ResponseBody ResponseEntity userStatus(HttpServletRequest request, @PathVariable(value="user") final String user, @PathVariable(value="sid") final String sid) {
+    final String remoteAddr = request.getRemoteAddr();
+    Oak.log(Oak.Type.HTTPS, Oak.Level.INFO, "Validate request from: " + remoteAddr + " for user: " + user);
+
     /* Validate that this request is made from a white listed game server */
-    if(!Settable.isWhiteListed(request.getRemoteAddr())) {
-      Oak.log(Oak.Type.HTTPS, Oak.Level.WARN, "Unknown address made request :" + request.getRemoteAddr());
-      return new ResponseEntity("{\"type\":\"l03\", \"message\":\"Unauthorized Game Server: " + request.getRemoteAddr() + "\"}", HttpStatus.FORBIDDEN);
+    if(!Settable.isWhiteListed(remoteAddr)) {
+      Oak.log(Oak.Type.HTTPS, Oak.Level.WARN, "Unauthorized validation request from: " + remoteAddr + " (user: " + user + ")");
+      return new ResponseEntity("{\"type\":\"l03\", \"message\":\"Unauthorized Game Server: " + remoteAddr + "\"}", HttpStatus.FORBIDDEN);
     }
-    
+
     NoxioSession session = dao.getUserDao().getSessionByUser(user);
 
     final Gson gson = new GsonBuilder().create();

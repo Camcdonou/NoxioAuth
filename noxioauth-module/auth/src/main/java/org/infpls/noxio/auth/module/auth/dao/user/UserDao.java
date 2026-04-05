@@ -148,12 +148,12 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
-      throw new IOException("SQL Error during user lookup.");
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error during getUserByName('" + user + "'): " + ex.getClass().getSimpleName() + " - " + ex.getMessage(), ex);
+      throw new IOException("SQL Error during user lookup for: " + user);
     }
     catch(ClassCastException | NullPointerException ex) {
-      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
-      throw new IOException("SQL Error during user lookup.");
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error during getUserByName('" + user + "'): " + ex.getMessage(), ex);
+      throw new IOException("SQL Data Error during user lookup for: " + user);
     }
     return null;
   }
@@ -169,12 +169,12 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
-      throw new IOException("SQL Error during user lookup.");
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error during getUserByUid('" + uid + "'): " + ex.getClass().getSimpleName() + " - " + ex.getMessage(), ex);
+      throw new IOException("SQL Error during user lookup for UID: " + uid);
     }
     catch(ClassCastException | NullPointerException ex) {
-      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
-      throw new IOException("SQL Error during user lookup.");
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error during getUserByUid('" + uid + "'): " + ex.getMessage(), ex);
+      throw new IOException("SQL Data Error during user lookup for UID: " + uid);
     }
     return null;
   }
@@ -302,16 +302,16 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
-      throw new IOException("SQL Error during user settings retrieval.");
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error during getUserSettings('" + uid + "'): " + ex.getClass().getSimpleName() + " - " + ex.getMessage(), ex);
+      throw new IOException("SQL Error during settings retrieval for UID: " + uid);
     }
     catch(ClassCastException | NullPointerException ex) {
-      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
-      throw new IOException("SQL Error during user settings retrieval.");
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error during getUserSettings('" + uid + "'): " + ex.getMessage(), ex);
+      throw new IOException("SQL Data Error during settings retrieval for UID: " + uid);
     }
     return null;
   }
-    
+
   public void saveUserSettings(final UserSettings us) throws IOException {
     try {
       dao.jdbc.update(
@@ -332,11 +332,11 @@ public class UserDao {
       );
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
-      throw new IOException("SQL Error during user settings save.");
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error during saveUserSettings('" + us.uid + "'): " + ex.getClass().getSimpleName() + " - " + ex.getMessage(), ex);
+      throw new IOException("SQL Error during settings save for UID: " + us.uid);
     }
   }
-    
+
   public UserStats getUserStats(final String uid) throws IOException {
     try {
       final List<Map<String,Object>> results = dao.jdbc.queryForList(
@@ -348,12 +348,12 @@ public class UserDao {
       }
     }
     catch(DataAccessException ex) {
-      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
-      throw new IOException("SQL Error during user stats retrieval.");
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error during getUserStats('" + uid + "'): " + ex.getClass().getSimpleName() + " - " + ex.getMessage(), ex);
+      throw new IOException("SQL Error during stats retrieval for UID: " + uid);
     }
     catch(ClassCastException | NullPointerException ex) {
-      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error!", ex);
-      throw new IOException("SQL Error during user stats retrieval.");
+      Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Data Mapping Error during getUserStats('" + uid + "'): " + ex.getMessage(), ex);
+      throw new IOException("SQL Data Error during stats retrieval for UID: " + uid);
     }
     return null;
   }
@@ -421,7 +421,7 @@ public class UserDao {
         );
       }
       catch(DataAccessException ex) {
-        Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error!", ex);
+        Oak.log(Oak.Type.SQL, Oak.Level.CRIT, "SQL Error during saveUserStats('" + us.uid + "'): " + ex.getClass().getSimpleName() + " - " + ex.getMessage(), ex);
       }
     });
   }

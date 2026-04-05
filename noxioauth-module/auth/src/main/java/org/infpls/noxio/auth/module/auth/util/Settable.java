@@ -107,9 +107,38 @@ public class Settable {
     if (cleanAddr.startsWith("::ffff:")) {
       cleanAddr = cleanAddr.substring(7);
     }
-    if (cleanAddr.startsWith("172.18.0.") || cleanAddr.startsWith("172.17.0.")) {
+
+    // Check explicit whitelist first
+    if (WHITELIST != null && WHITELIST.contains(cleanAddr)) {
       return true;
     }
-    return WHITELIST != null && WHITELIST.contains(cleanAddr);
+
+    // Docker private network ranges (172.16.0.0 - 172.31.255.255)
+    // This covers all default Docker bridge networks
+    if (isDockerPrivateIP(cleanAddr)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /* Check if IP is in Docker's private network range */
+  private static boolean isDockerPrivateIP(String ip) {
+    // Docker uses 172.16.0.0/12 (172.16.0.0 - 172.31.255.255)
+    // Common Docker bridge networks: 172.17.x.x, 172.18.x.x, etc.
+    if (ip.startsWith("172.")) {
+      try {
+        String[] parts = ip.split("\\.");
+        if (parts.length >= 2) {
+          int second = Integer.parseInt(parts[1]);
+          if (second >= 16 && second <= 31) {
+            return true;
+          }
+        }
+      } catch (NumberFormatException e) {
+        // Invalid IP format, fall through
+      }
+    }
+    return false;
   }
 }
