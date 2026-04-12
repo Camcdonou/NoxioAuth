@@ -23,7 +23,7 @@ SoundData.prototype.onload = function(request, context) {
     },
     function() {  // Error
       main.menu.warning.show("Failed to decode audio file: " + tmp.path);
-      tmp.buffer = main.game.sound.getSound("multi/default.wav", 1., 0., "ui").data.buffer; // @TODO: Hack! If audio fails to decode we go to default.wav's buffer
+      tmp.buffer = main.game.sound.getSound("multi/default.mp3", 1., 0., "ui").data.buffer; // @TODO: Hack! If audio fails to decode we go to default.mp3's buffer
     }
   );
 };

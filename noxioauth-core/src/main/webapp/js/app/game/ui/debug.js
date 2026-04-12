@@ -65,7 +65,7 @@ DebugUI.prototype.generate = function() {
       if(imp.mouse[i].btn === 0) {
         var align = container.makeAlign(window);
         var over = parent.pointInElement(imp.mouse[i].pos, this, window, align);
-        if(over) { this.onClick(); parent.play("ui/button1.wav", 0.5, 0.0); return true; }
+        if(over) { this.onClick(); parent.play("ui/button1.mp3", 0.5, 0.0); return true; }
       }
     }
     return false;
@@ -149,7 +149,7 @@ DebugUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(l,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(a+o,h+v), s, sblack, fontName, fontMat, GEN)],
-      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
+      sound: {path: "ui/button0.mp3", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.game.generateCache(); },
@@ -169,7 +169,7 @@ DebugUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(l,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(a+o,h+v), s, sblack, fontName, fontMat, CHEAT)],
-      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
+      sound: {path: "ui/button0.mp3", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { window.open("https://www.youtube.com/watch?v=oHg5SJYRHA0",'_blank'); }, // Oof
@@ -189,7 +189,7 @@ DebugUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(l,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(a+o,h+v), s, sblack, fontName, fontMat, CLOSE)],
-      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
+      sound: {path: "ui/button0.mp3", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.ui.flags.debug = false; },

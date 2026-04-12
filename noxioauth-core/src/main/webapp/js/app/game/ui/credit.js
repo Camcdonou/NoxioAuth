@@ -28,10 +28,10 @@ CreditUI.prototype.add = function(amount, ssfxId) {
   this.last = main.stats.credits;
   
   switch(ssfxId) {
-    case 0 : { this.play("ui/score0.wav", 0.5, 0.0); break; }  // Accumulation Points
-    case 1 : { this.play("ui/score1.wav", 0.5, 0.0); break; }  // Kill
-    case 2 : { this.play("ui/score2.wav", 0.5, 0.0); break; }  // Big Multi Kill
-    case 3 : { this.play("ui/score1.wav", 0.5, 0.0); break; }  // Objective
+    case 0 : { this.play("ui/score0.mp3", 0.5, 0.0); break; }  // Accumulation Points
+    case 1 : { this.play("ui/score1.mp3", 0.5, 0.0); break; }  // Kill
+    case 2 : { this.play("ui/score2.mp3", 0.5, 0.0); break; }  // Big Multi Kill
+    case 3 : { this.play("ui/score1.mp3", 0.5, 0.0); break; }  // Objective
     default : { break; }
   }
 };

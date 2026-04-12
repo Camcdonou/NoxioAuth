@@ -20,7 +20,7 @@ public class FileDao {
   private ResourceLoader resourceLoader;
   
   public static enum Type {
-    SOUND("/sound", ".wav"),
+    SOUND("/sound", ".mp3"),
     MAP("/map", ".map");
     
     public final String path, ext;

@@ -54,7 +54,7 @@ AudioUI.prototype.generate = function() {
       if(imp.mouse[i].btn === 0) {
         var align = menuContainer.makeAlign(window);
         var over = parent.pointInElement(imp.mouse[i].pos, this, window, align);
-        if(over) { this.onClick(); parent.play("ui/button1.wav", 0.5, 0.0); return true; }
+        if(over) { this.onClick(); parent.play("ui/button1.mp3", 0.5, 0.0); return true; }
       }
     }
     return false;
@@ -127,7 +127,7 @@ AudioUI.prototype.generate = function() {
     hover: {
       block: [new GenericUIBlock(util.vec2.make(0,h), util.vec2.make(w,s), swhite, colorMat)],
       text:  [new GenericUIText(util.vec2.make(o,h+v), s, sblack, fontName, fontMat, BACK)],
-      sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
+      sound: {path: "ui/button0.mp3", gain: 0.25, shift: 0.0}
     },
     step: protoOnClick,
     onClick: function() { parent.ui.sub = "setting"; },

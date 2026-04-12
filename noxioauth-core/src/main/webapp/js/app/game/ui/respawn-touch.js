@@ -146,7 +146,7 @@ RespawnTouchUI.prototype.generate = function() {
       var align = container.makeAlign(window);
       var over = parent.pointInElement(imp.mouse[i].pos, this, window, align);
       if(imp.mouse[i].btn === 0) {
-        if(over) { this.onClick(); parent.game.forceSpawn = true; parent.play("ui/button2.wav", 0.5, 0.0); return true; }
+        if(over) { this.onClick(); parent.game.forceSpawn = true; parent.play("ui/button2.mp3", 0.5, 0.0); return true; }
         else { this.offClick(); return false; }
       }
       else {
@@ -210,7 +210,7 @@ RespawnTouchUI.prototype.generate = function() {
           new GenericUIBlock(util.vec2.make(o,h), util.vec2.make(b,b), sblack, SPEC[i][0].mat)
         ],
         text:  [],
-        sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
+        sound: {path: "ui/button0.mp3", gain: 0.25, shift: 0.0}
       },
       step: protoOnClick,
       onClick: function() { parent.game.charSelect = this.charId; },
@@ -236,7 +236,7 @@ RespawnTouchUI.prototype.generate = function() {
             new GenericUIBlock(util.vec2.make(bho,hh), util.vec2.make(bh,bh), sblack, SPEC[i][j].mat)
           ],
           text:  [],
-          sound: {path: "ui/button0.wav", gain: 0.25, shift: 0.0}
+          sound: {path: "ui/button0.mp3", gain: 0.25, shift: 0.0}
         },
         step: protoOnClick,
         onClick: function() { parent.game.charSelect = this.charId; },

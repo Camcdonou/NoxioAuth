@@ -189,7 +189,7 @@ NoxioEditor.prototype.compile = function() {
   for(var i=0;i<this.display.materials.length;i++) {
     data += this.display.materials[i].name + (i<this.display.materials.length-1?",":";\n");
   }
-  data += "multi/default.wav\n\n";
+  data += "multi/default.mp3\n\n";
   
   return data;
 };

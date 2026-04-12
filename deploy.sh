@@ -18,7 +18,7 @@ rm -r /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/audio/*
 cd /home/inferno/dev/NoxioAsset/asset/texture/
 find . -iname '*.png' | cpio -pdm /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/img/game
 cd /home/inferno/dev/NoxioAsset/asset/audio/
-find . -iname '*.wav' | cpio -pdm /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/audio
+find . -iname '*.mp3' | cpio -pdm /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/audio
 cd /home/inferno/dev/NoxioAuth
 cp /home/inferno/dev/NoxioAsset/asset/shader.js /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/js/app/game/asset/shader.js
 cp /home/inferno/dev/NoxioAsset/asset/material.js /home/inferno/dev/NoxioAuth/noxioauth-core/src/main/webapp/js/app/game/asset/material.js

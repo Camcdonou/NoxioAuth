@@ -22,7 +22,7 @@ ErrorMenu.prototype.showError = function(title, message) {
   this.modal.style.display = "block";
   this.title.innerHTML = title;
   this.message.innerHTML = "<p>" + message + "</p>";
-  this.footer.innerHTML = "If you don't know what happened please report this error to infernoplusofficial@gmail...";
+  this.footer.innerHTML = "Beep boop, o_O an issue happen. Complain to someone on the <a href='https://20XX.io' target='_blank'>20XX.io</a> discord server";
 };
 
 ErrorMenu.prototype.showErrorException = function(title, message, trace) {
@@ -30,7 +30,7 @@ ErrorMenu.prototype.showErrorException = function(title, message, trace) {
   this.modal.style.display = "block";
   this.title.innerHTML = title;
   this.message.innerHTML = "<p>" + message + "</p><div style='margin-bottom:12px;height:120px;width:100%;font-size:80%;border:1px solid #ccc;background-color:#DDDDDD;overflow:auto;'>" + trace.replace(/\n/g, "<br/>"); + "</div>";
-  this.footer.innerHTML = "If you don't know what happened please report this error to infernoplusofficial@gmail.com...";
+  this.footer.innerHTML = "Beep boop, o_O an issue happen. Complain to someone on the <a href='https://20XX.io' target='_blank'>20XX.io</a> discord server";
 };
 
 ErrorMenu.prototype.hide = function() {
